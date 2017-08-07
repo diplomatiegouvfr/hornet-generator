@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.papyrus.designer.popup?after=codegen">
+         <command
+               commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
+               label="Generate code"
+               style="push"
+               tooltip="Generate code">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.eclipse.papyrus.editor.category"
+            defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.GenerateCodeHandler"
+            description="Generate code"
+            id="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
+            name="Generate code">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.eclipse.papyrus.infra.core.sasheditor.preferences.generalcategory"
+            class="fr.gouv.diplomatie.papyrus.codegen.ui.preferences.CodeGenPreferencePage"
+            id="fr.gouv.diplomatie.papyrus.codegen.ui.command.CodeGenPreferencePage"
+            name="Code Generation">
+      </page>
+   </extension>
+
+</plugin>
