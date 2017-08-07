@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.papyrus.designer.languages.common.extensionpoints.languageProjectSupport">
+      <client
+            class="fr.gouv.diplomatie.papyrus.codegen.LangProjectSupport"
+            language="TypescriptGenerator">
+      </client>
+   </extension>
+
+</plugin>
