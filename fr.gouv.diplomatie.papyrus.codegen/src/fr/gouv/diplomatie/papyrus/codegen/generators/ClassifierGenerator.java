@@ -4,6 +4,7 @@ import org.eclipse.papyrus.infra.tools.file.IPFileSystemAccess;
 import org.eclipse.uml2.uml.Classifier;
 
 import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierAttributesInterfaceGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierDtoClassGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierMetierClassGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierModelGenerator;
 
@@ -27,10 +28,10 @@ public class ClassifierGenerator {
 		
 	}
 	
-	public static void generateMetier(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
+	public static void generateMetierClass(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName());
 
-		String fileName = GeneratorUtils.getMetierPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, ClassifierMetierClassGenerator.generateCode(clazz).toString());
 		
@@ -39,8 +40,9 @@ public class ClassifierGenerator {
 	public static void generateDto(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateDto : "  + clazz.getName());
 
-		String path = "";
-		String fileName = path + "";
+		String fileName = GeneratorUtils.getDtoClassPath(clazz) + ".ts";
+		
+		fileSystemAccess.generateFile(fileName, ClassifierDtoClassGenerator.generateCode(clazz).toString());
 		
 		
 	}

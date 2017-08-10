@@ -14,6 +14,42 @@ class ClassifierUtils{
 		return clazz.name + "Attributes"
 	}
 	
+	static def getMetierClassName(Classifier clazz){
+		return clazz.name + "Metier"
+	}
+	
+	static def getDtoClassName(Classifier clazz){
+		return clazz.name + "DTO"
+	}
+	
+	/**
+	 * retourne le chemin du fichier de la classe Model
+	 */
+	static def getModelPath(Classifier clazz){
+		return GeneratorUtils.getModelPath(clazz)
+	}
+	
+	/**
+	 * retourne le chemin du fichier de l'interface Attributes
+	 */
+	static def getAttributesInterfacePath(Classifier clazz){
+		return GeneratorUtils.getAttributesInterfacePath(clazz)
+	}
+	
+	/**
+	 * retourne le chemin du fichier de la classe metier
+	 */
+	static def getMetierClassPath(Classifier clazz){
+		return GeneratorUtils.getMetierClassPath(clazz)
+	}
+	
+	/**
+	 * retourne le chemin du fichier de la classe dto
+	 */
+	static def getDtoClassPath(Classifier clazz){
+		return GeneratorUtils.getDtoClassPath(clazz)
+	}
+	
 	/**
 	 * retourne la classe Stereotype 
 	 */
@@ -118,17 +154,15 @@ class ClassifierUtils{
 		return attributes
 	}
 	
-	/**
-	 * retourne le chemin du fichier de model
-	 */
-	static def getModelPath(Classifier clazz){
-		return GeneratorUtils.getModelPath(clazz)
+	static def getAllReferencesTo(Classifier ofClass){
+		val model = ofClass.model
+		val classes = ModelUtils.getAllClasses(model)
+		val references = newArrayList()
+		for(classe : classes){
+			references.addAll(ClassifierUtils.getMultivaluedReferencesToType(classe as Classifier, ofClass))
+		}
+		return references
 	}
 	
-	/**
-	 * retourne le chemin du fichier de model
-	 */
-	static def getAttributesInterfacePath(Classifier clazz){
-		return GeneratorUtils.getAttributesInterfacePath(clazz)
-	}
+	
 }

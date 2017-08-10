@@ -1,24 +1,25 @@
 package fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass
 
-import org.eclipse.uml2.uml.AssociationClass
-import org.eclipse.uml2.uml.Property
-
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils
+import org.eclipse.uml2.uml.AssociationClass
 import org.eclipse.uml2.uml.Classifier
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
+import org.eclipse.uml2.uml.Property
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.PropertyUtils
-import org.eclipse.uml2.uml.Type
-import java.util.ArrayList
+import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
 
-public class AssociationClassAttributesInterfaceGenerator{
+public class AssociationClassMetierClassGenerator{
 	
 	static def generateCode(AssociationClass clazz){
 		'''
+		import Bean from "hornet-js-bean/src/decorators/Bean";
+		import Map from "hornet-js-bean/src/decorators/Map";
+		
 		«clazz.generateImports»
 		
-		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» {
-			«clazz.generateAttributes()»
+		@Bean
+		export class «ClassifierUtils.getMetierClassName(clazz)»{
+			«clazz.generateAttributes("")»
 		}
 		'''
 	}
@@ -27,95 +28,95 @@ public class AssociationClassAttributesInterfaceGenerator{
 	 * génère les imports
 	 */
 	static def generateImports(AssociationClass clazz){
-		val attributesTypes = clazz.generateAttributesImports(newArrayList())
 		'''
-		«attributesTypes.fold("")[acc, type |
-			acc +  '''
-			import { «ClassifierUtils.getAttributesInterfaceName(type as Classifier)» } from "«ClassifierUtils.getAttributesInterfacePath(type as Classifier)»";
-			'''
-		]»
+		«clazz.generateAttributesImports»
 		'''
 	}
 	
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(AssociationClass clazz, ArrayList<Type> types){
+	 static def generateAttributesImports(AssociationClass clazz){
 	 	val attributes = clazz.memberEnds.filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
 		val attributesValueObject = clazz.memberEnds.filter[ attribut |
 			(Utils.isValueObject(attribut.type))
 		]
+		var types = newArrayList()
 		for(attribut : attributes){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
 			}
 		}
-		attributesValueObject.forEach[attribut|
+		'''
+		«types.fold("")[acc, type |
+			acc +  '''
+			import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
+			'''
+		]»
+		«attributesValueObject.fold("")[acc, attribut |
 			var type = attribut.type
 			if(type instanceof Classifier){
-				type.generateAttributesImports(types)
+				acc+ '''«type.generateAttributesImports»'''
 			}
-		]
-		return types
+		]»
+		'''
 	 }
 	 
 	 /**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
+	 static def generateAttributesImports(Classifier clazz){
 	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
 		val attributesValueObject =ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isValueObject(attribut.type))
 		]
+		var types = newArrayList()
 		for(attribut : attributes){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
 			}
 		}
-		attributesValueObject.forEach[ attribut |
+		'''
+		«types.fold("")[acc, type |
+			acc +  '''
+			import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
+			'''
+		]»
+		«attributesValueObject.fold("")[acc, attribut |
 			var type = attribut.type
 			if(type instanceof Classifier){
-				type.generateAttributesImports(types)
+				acc+ '''«type.generateAttributesImports»'''
 			}
-		]
-		return types
+		]»
+		'''
 	 }
 	 
-	 static def generateAttributes(AssociationClass clazz){
+	 /**
+	  * génère les attributs
+	  */
+	 static def generateAttributes(AssociationClass clazz, String additionnalName){
 	 	val attributes = clazz.memberEnds
 	 	'''
 	 	«attributes.fold("")[acc, attribut |
-	 		acc + '''«attribut.generatePropertyAttributes»'''
+	 		acc + '''«attribut.generatePropertyAttributes(additionnalName)»'''
 	 	]»
 	 	'''
 	 }
 	 
-	 static def generatePropertyAttributes(Property property){
+	 static def generatePropertyAttributes(Property property, String additionnalName){
 	 	val type = property.type
 	 	if(type instanceof Classifier){
 		 	if(Utils.isEntity(type)){
-		 		val ids = ClassifierUtils.getId(type)
-		 		var array = ""
-		 		var endArray = ""
-		 		if(property.multivalued){
-		 			array = "Array<"
-		 			endArray = ">"
-		 		}
 		 		'''
-		 		
-		 		«ids.fold("")[acc, id |
-		 			acc + '''«property.generatePropertyIdAttribute(id)»'''
-		 		]»
-		 		«property.name»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
-		 		get«Utils.getFirstToUpperCase(property.name)»(): Promise<«array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»>;
+		 		«property.generateRefAttributes(additionnalName)»
 		 		'''
 		 	}else if (Utils.isValueObject(type)){
 		 		'''
-		 		«type.generateAttributes(property.name)»
+		 		«type.generateAttributes(Utils.addAdditionnalName(additionnalName, property.name))»
 		 		'''
 		 	}
 	 	}
@@ -170,11 +171,9 @@ public class AssociationClassAttributesInterfaceGenerator{
 	static def generateEntityAttributes(Property property, String additonnalName){
 		val type = property.type
 		if(type instanceof Classifier){
-			val ids = ClassifierUtils.getId(type)
-			ids.fold("")[acc , id |
-				acc + '''
-				«property.generateEntityAttribute(id, additonnalName)»'''
-			]
+			'''
+			«property.generateEntityAttribute(additonnalName)»
+			'''
 		}else{
 			''''''
 		}
@@ -184,12 +183,23 @@ public class AssociationClassAttributesInterfaceGenerator{
 		/**
 	 * génère un attribut de type entity
 	 */
-	static def generateEntityAttribute(Property property, Property id,  String additionnalName){
-		val type = id.type
-		val propName =  Utils.addAdditionnalName(additionnalName, id.name) + Utils.getFirstToUpperCase(property.name)
-		'''
-		«propName»?: «TypeUtils.getTypescriptType(type)»;
-		'''
+	static def generateEntityAttribute(Property property, String additionnalName){
+		val type = property.type
+		val propName =  Utils.addAdditionnalName(additionnalName, property.name)
+		var array = ""
+		var endArray = ""
+		if(property.multivalued){
+			array = "Array<"
+			endArray = ">"
+		} 
+		if(type instanceof Classifier){
+			'''
+			
+			«Utils.generateComments(property)»
+			@Map(«ClassifierUtils.getMetierClassName(type)»)
+			«propName»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
+			'''
+		}
 	}
 	
 	/**
@@ -198,15 +208,41 @@ public class AssociationClassAttributesInterfaceGenerator{
 	static def generateBasicAttribute(Property property, String additionnalName){
 		var name = Utils.addAdditionnalName(additionnalName, property.name)
 		'''
-		«name»?: «TypeUtils.getTypescriptType(property.type)»;
+		
+		«Utils.generateComments(property)»
+		@Map()
+		«name»: «TypeUtils.getTypescriptType(property.type)»;
 		'''
 	}
 	 
-	 static def generatePropertyIdAttribute(Property property, Property id){
-	 	val name = id.name + Utils.getFirstToUpperCase(property.name)
-	 	'''
-	 	«name»: «TypeUtils.getTypescriptType(id.type)»;
-	 	'''
+	 static def generateRefAttributes(Property property, String additionnalName){
+	 	val type = property.type
+		if(type instanceof Classifier){
+			'''
+			«property.generateRefAttribute(additionnalName)»
+			'''
+		}else{
+			''''''
+		}
 	 }
-	
+	 
+	 static def generateRefAttribute(Property property, String additionnalName){
+		val name = Utils.addAdditionnalName(additionnalName, property.name)
+	 	val type = property.type
+	 	var array = ""
+		var endArray = ""
+		if(property.multivalued){
+			array = "Array<"
+			endArray = ">"
+		} 
+		if(type instanceof Classifier){
+		 	'''
+		 	
+		 	«Utils.generateComments(property)»
+		 	@Map(«array»«ClassifierUtils.getMetierClassName(type)»«endArray»)
+		 	«name»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
+		 	'''
+	 	}
+	 }
+	 
 }

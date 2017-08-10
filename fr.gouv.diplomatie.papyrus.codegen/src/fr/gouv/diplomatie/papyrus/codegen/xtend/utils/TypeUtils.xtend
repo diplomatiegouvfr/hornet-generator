@@ -43,4 +43,24 @@ class TypeUtils{
 			return 'string'
 		}
 	}
+	
+	static def getMetierTypescriptType(Type type){
+		if(type.name == "Boolean" || type.name == "EBoolean"){
+			return 'boolean'
+		}else if(type.name == "Integer"){
+			return 'number'
+		}else if(type.name == "BigInterger" || type.name == "EBigInteger"){
+			return 'number'
+		}else if(type.name == "Real"){
+			return 'number'
+		}else if(type.name == "EDouble"){
+			return 'number'
+		}else if(type.name == "EFloat"){
+			return 'number'
+		}else if(type.name == "EDate" || type.name == "Date"){
+			return 'Date'
+		}else{
+			return 'string'
+		}
+	}
 }

@@ -154,4 +154,18 @@ class Utils{
 		return result
 	}
 	
+	/**
+	 * si additionnalName est définit ajoute le nom additionnel devant le champs 
+	 */
+	static def addAdditionnalName(String additionnalName, String name){
+		var newName =""
+		if(additionnalName != "" && additionnalName !==null){
+			newName = additionnalName + Utils.getFirstToUpperCase(name)
+		}else{
+			newName = name
+		}
+		
+		return newName
+	}
+	
 }

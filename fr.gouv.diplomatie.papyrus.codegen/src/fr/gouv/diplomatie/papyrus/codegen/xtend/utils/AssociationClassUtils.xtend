@@ -11,4 +11,11 @@ class AssociationClassUtils{
 		return clazz.name + "Model"
 	}
 	
+	/**
+	 * retourne le nom de la classe model
+	 */
+	static def getDtoName(AssociationClass clazz ){
+		return clazz.name + "Dto"
+	}
+	
 }

@@ -113,6 +113,13 @@ class PropertyUtils {
 	}
 	
 	/**
+	 * retourne le nom du model d'une propriété multivaluée
+	 */
+	static def getMultivaluedPropertyDtoName(Property property){
+		'''«property.getOwnerName»«Utils.getFirstToUpperCase(property.name)»DTO'''
+	}
+	
+	/**
 	 * retourne le nom de l'attribut d'une reference multivaluée
 	 */
 	static def String getReferenceAttributeName(Property property, Property id, Classifier clazz){

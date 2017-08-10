@@ -8,6 +8,8 @@ import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ModelUtils
+import org.eclipse.uml2.uml.Type
+import java.util.ArrayList
 
 public class ClassifierAttributesInterfaceGenerator {
 	
@@ -17,9 +19,9 @@ public class ClassifierAttributesInterfaceGenerator {
 		
 		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» «clazz.generateExtends»{
 			«clazz.generateAttributes("")»
-			«clazz.generateMultiValuedEntityAttributes("")»
+			««««clazz.generateMultiValuedEntityAttributes("")»
 			
-			«clazz.generateNotPrimitiveTypeAttributes»
+			«clazz.generateNotPrimitiveTypeAttributes("")»
 		}
 		'''
 	}
@@ -28,9 +30,14 @@ public class ClassifierAttributesInterfaceGenerator {
 	 * génère les imports
 	 */
 	static def generateImports(Classifier clazz){
+		val attributesTypes = clazz.generateAttributesImports(newArrayList())
 		'''
 		«clazz.generateExtendsImports»
-		«clazz.generateAttributesImports»
+		«attributesTypes.fold("")[acc, type |
+			acc +  '''
+			import { «ClassifierUtils.getAttributesInterfaceName(type as Classifier)» } from "«ClassifierUtils.getAttributesInterfacePath(type as Classifier)»";
+			'''
+		]»
 		'''
 	}
 	
@@ -52,23 +59,27 @@ public class ClassifierAttributesInterfaceGenerator {
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(Classifier clazz){
+	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
 	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
-		var types = newArrayList()
+		val attributesValueObject = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			(Utils.isValueObject(attribut.type))
+		]
+		
 		for(attribut : attributes){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
 			}
 		}
-		'''
-		«types.fold("")[acc, type |
-			acc +  '''
-			import { «ClassifierUtils.getAttributesInterfaceName(type as Classifier)» } from "«ClassifierUtils.getAttributesInterfacePath(type as Classifier)»";
-			'''
-		]»
-		'''
+		
+		attributesValueObject.forEach[attribut |
+			var type = attribut.type
+			if(type instanceof Classifier){
+				type.generateAttributesImports(types)
+			}
+		]
+		return types
 	 }
 	
 	/**
@@ -89,6 +100,9 @@ public class ClassifierAttributesInterfaceGenerator {
 		}
 	}
 	
+	/**
+	 * génère les attributs simples de la classe
+	 */
 	static def generateAttributes(Classifier clazz, String additionnalName){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
 		'''
@@ -111,7 +125,7 @@ public class ClassifierAttributesInterfaceGenerator {
 	 * génère un attribut de l'interface
 	 */
 	static def generateBasicAttribute(Property property, String additionnalName){
-		var name = additionnalName.addAdditionnalName(property.name)
+		var name = Utils.addAdditionnalName(additionnalName, property.name)
 		'''
 		«name»?: «TypeUtils.getTypescriptType(property.type)»;
 		'''
@@ -133,7 +147,7 @@ public class ClassifierAttributesInterfaceGenerator {
 	 * génère un attribut de type value Object
 	 */
 	static def generateValueObjectAttribute(Property property, String additionnalName){
-		val name = additionnalName.addAdditionnalName(property.name)
+		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		val type = property.type
 		if(type instanceof Classifier){
 			return '''«type.generateAttributes(name)»
@@ -150,10 +164,12 @@ public class ClassifierAttributesInterfaceGenerator {
 		val type = property.type
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
-			ids.fold("")[acc , id |
+			'''
+			«ids.fold("")[acc , id |
 				acc + '''
 				«property.generateEntityAttribute(id, additonnalName)»'''
-			]
+			]»
+			'''
 		}else{
 			''''''
 		}
@@ -165,7 +181,8 @@ public class ClassifierAttributesInterfaceGenerator {
 	 */
 	static def generateEntityAttribute(Property property, Property id,  String additonnalName){
 		val type = id.type
-		val propName =  additonnalName.addAdditionnalName(id.name) + Utils.getFirstToUpperCase(property.name)
+		val propName =  Utils.addAdditionnalName(additonnalName, id.name) + Utils.getFirstToUpperCase(property.name)
+		
 		'''
 		«propName»?: «TypeUtils.getTypescriptType(type)»;
 		'''
@@ -225,12 +242,25 @@ public class ClassifierAttributesInterfaceGenerator {
 	 *  génère l'attribut lié au lien multivalué du model  - id
 	 */
 	static def generateReferenceAttributeAssocation(Property property, Property id, Classifier clazz, String additionnalName){
-		var field =  property.association.ownedEnds.get(0)
+		val field =  property.association.ownedEnds.get(0)
 		val name = id.name + Utils.getFirstToUpperCase(field.name)
-		var fieldName = additionnalName.addAdditionnalName(name)
-		'''
-		«fieldName»?: «TypeUtils.getTypescriptType(id.type)»;
-		'''
+		var fieldName = Utils.addAdditionnalName(additionnalName, name)
+		val refName = field.name
+		var array = ""
+		var endArray = ""
+		if(field.isMultivalued){
+			array = "Array<"
+			endArray =">"
+		}
+		val type = field.type
+		if(type instanceof Classifier){
+			'''
+			
+			«fieldName»?: «TypeUtils.getTypescriptType(id.type)»;
+			«refName»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
+			get«Utils.getFirstToUpperCase(refName)»(): Promise<«array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»>;
+			'''
+		}
 	}
 	
 	/**
@@ -253,7 +283,7 @@ public class ClassifierAttributesInterfaceGenerator {
 		val fromClass = property.owner
 		if(fromClass instanceof Classifier){
 			val name = property.name + Utils.getFirstToUpperCase(id.name)
-			val fieldName = additionnalName.addAdditionnalName(name)
+			val fieldName = Utils.addAdditionnalName(additionnalName, name)
 			'''
 			«fieldName»?: «TypeUtils.getTypescriptType(property.type)»'''
 		}
@@ -285,38 +315,40 @@ public class ClassifierAttributesInterfaceGenerator {
 	/**
 	 * génère les attributs multivalués ou de type non primitifs
 	 */
-	static def generateNotPrimitiveTypeAttributes(Classifier clazz){
+	static def generateNotPrimitiveTypeAttributes(Classifier clazz, String additionnalName){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
-			(attribut.multivalued || Utils.isEntity(attribut.type) || (Utils.isValueObject(attribut.type) && attribut.multivalued))
+			(attribut.multivalued || Utils.isEntity(attribut.type) || Utils.isValueObject(attribut.type))
 		]
 		'''
 		«attributes.fold("")[acc, attribut|
  			acc + '''
- 			«attribut.generateNotPrimitiveTypeAttribut()»'''	
+ 			«attribut.generateNotPrimitiveTypeAttribut(additionnalName)»'''	
  		]»
  		'''
 	}
 	
-	static def generateNotPrimitiveTypeAttribut(Property property){
+	static def generateNotPrimitiveTypeAttribut(Property property, String additionnalName){
 		if(Utils.isEntity(property.type)){
-			'''«property.generateNPTEntityAttribut»'''
+			'''«property.generateNPTEntityAttribut(additionnalName)»'''
 		}else if(Utils.isValueObject(property.type)){
-			'''«property.generateNPTValueObjectAttribut»'''
+			'''«property.generateNPTValueObjectAttribut(additionnalName)»'''
 		}else if(property.multivalued){
+			var name = Utils.addAdditionnalName(additionnalName, property.name)
 			'''
-			«property.name»: Array<«TypeUtils.getTypescriptType(property.type)»>;
+			«name»: Array<«TypeUtils.getTypescriptType(property.type)»>;
 			
 			'''
 		}
 	}
 	
-	static def generateNPTEntityAttribut(Property property){
+	static def generateNPTEntityAttribut(Property property, String additionnalName){
 		var name = "";
+		/* 
 		if(property.association !== null && property.association.name!== null){
 			name = property.association.name
-		}else{
-			name = "ref" + Utils.getFirstToUpperCase(property.name)
-		}
+		}else{*/
+			name = Utils.addAdditionnalName(additionnalName,property.name)
+		//}
 		
 		if(property.type instanceof Classifier){
 			if(property.multivalued){
@@ -335,37 +367,13 @@ public class ClassifierAttributesInterfaceGenerator {
 		}
 	}
 	
-	static def generateNPTValueObjectAttribut(Property property){
-		var name = "";
-		if(property.association !== null && property.association.name!== null){
-			name = property.association.name
-		}else{
-			name = "ref" + Utils.getFirstToUpperCase(property.name)
+	static def generateNPTValueObjectAttribut(Property property, String additionnalName){
+		val type = property.type
+		if(type instanceof Classifier){
+			val name = Utils.addAdditionnalName(additionnalName, property.name)
+			type.generateNotPrimitiveTypeAttributes(name)
 		}
 		
-		if(property.type instanceof Classifier){
-			if(property.multivalued){
-				'''
-				«name»: Array<«ClassifierUtils.getAttributesInterfaceName(property.type as Classifier)»>;
-				get«Utils.getFirstToUpperCase(name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(property.type as Classifier)»>>;
-				
-				'''
-			}
-		}
-	}
-	
-	/**
-	 * si additionnalName est définit ajoute le nom additionnel devant le champs 
-	 */
-	static def addAdditionnalName(String additionnalName, String name){
-		var newName =""
-		if(additionnalName != "" && additionnalName !==null){
-			newName = additionnalName + Utils.getFirstToUpperCase(name)
-		}else{
-			newName = name
-		}
-		
-		return newName
 	}
 	
 }

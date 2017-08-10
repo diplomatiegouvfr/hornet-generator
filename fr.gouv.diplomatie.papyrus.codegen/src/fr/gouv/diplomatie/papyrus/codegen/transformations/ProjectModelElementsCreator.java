@@ -1,7 +1,5 @@
 package fr.gouv.diplomatie.papyrus.codegen.transformations;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.papyrus.designer.languages.common.base.HierarchyLocationStrategy;
@@ -56,6 +54,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	protected void generateClass(Classifier clazz) {
 		ClassifierGenerator.generateModel(clazz, fileSystemAccess);
 		ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
+		ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
 		ClassifierGenerator.generateDto(clazz, fileSystemAccess);
 	}
 	
@@ -66,6 +65,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	protected void generateAssociationClass(AssociationClass clazz) {
 		AssociationClassGenerator.generateModel(clazz, fileSystemAccess);
 		AssociationClassGenerator.generateAttributesInterface(clazz, fileSystemAccess);
+		AssociationClassGenerator.generateMetierClass(clazz, fileSystemAccess);
 		AssociationClassGenerator.generateDto(clazz, fileSystemAccess);
 	}
 	
