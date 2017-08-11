@@ -10,6 +10,15 @@ class Utils{
 	public static var MODEL_ATTRIBUTE = 'attribute';
 	public static var MODEL_ATTRIBUTE_LENGTH = 'length';
 	public static var MODEL_KEYATTRIBUTE = 'keyAttribute';
+	public static var MODEL_SEQUENCE = 'sequence';
+	public static var MODEL_SEQUENCE_STARTWITH = 'startWith';
+	public static var MODEL_SEQUENCE_INCREMENTBY = 'incrementBy';
+	public static var MODEL_SEQUENCE_HASMINVALUE = 'hasMinValue';
+	public static var MODEL_SEQUENCE_MINVALUE = 'minValue';
+	public static var MODEL_SEQUENCE_HASMAXVALUE = 'hasMaxValue';
+	public static var MODEL_SEQUENCE_MAXVALUE = 'maxValue';
+	public static var MODEL_SEQUENCE_CACHE = 'cache';
+	public static var MODEL_SEQUENCE_CYCLE = 'cycle';
 	
 	/**
 	 * génère une chaine a partir d'une liste
@@ -48,11 +57,18 @@ class Utils{
 		return (elem.getStereotype(MODEL_ENTITY) !==null && !(elem.getStereotype(MODEL_ENTITY).empty))
 	}
 	
-		/**
+	/**
 	 * teste si un element est de type valueObject
 	 */
 	static def isValueObject(NamedElement elem){
 		return (elem.getStereotype(MODEL_VALUEOBJECT) !==null && !(elem.getStereotype(MODEL_VALUEOBJECT).empty))
+	}
+	
+	/**
+	 * teste si un element est de type sequence
+	 */
+	static def isSequence(NamedElement elem){
+		return (elem.getStereotype(MODEL_SEQUENCE) !==null && !(elem.getStereotype(MODEL_SEQUENCE).empty))
 	}
 	
 	/**
@@ -67,16 +83,16 @@ class Utils{
 	/**
 	 * retourne la valeur de la propriété liée au stereotype
 	 */
-	static def getStereotypePropertyValue(NamedElement clazz, String stereoname, String property){
-		if(clazz.getStereotype(stereoname) ===null || clazz.getStereotype(stereoname).empty)
+	static def getStereotypePropertyValue(NamedElement elem, String stereoname, String property){
+		if(elem.getStereotype(stereoname) ===null || elem.getStereotype(stereoname).empty)
 		return null
 		
-		val stereotype = clazz.getStereotype(stereoname).get(0);
+		val stereotype = elem.getStereotype(stereoname).get(0);
 		
 		if(stereotype === null)
 			return null
 			 		
-		return clazz.getValue(stereotype ,property);
+		return elem.getValue(stereotype ,property);
 	}
 	
 	/**

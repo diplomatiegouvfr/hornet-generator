@@ -63,4 +63,24 @@ class TypeUtils{
 			return 'string'
 		}
 	}
+	
+	static def getDatabaseType(Type type){
+		if(type.name == "Boolean" || type.name == "EBoolean"){
+			return 'boolean'
+		}else if(type.name == "Integer"){
+			return 'integer'
+		}else if(type.name == "BigInterger" || type.name == "EBigInteger"){
+			return 'bigint'
+		}else if(type.name == "Real"){
+			return 'real'
+		}else if(type.name == "EDouble"){
+			return 'double precision'
+		}else if(type.name == "EFloat"){
+			return 'decimal'
+		}else if(type.name == "EDate" || type.name == "Date"){
+			return 'timestamp'
+		}else {
+			return 'character'
+		}
+	}
 }

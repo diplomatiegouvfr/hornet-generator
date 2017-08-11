@@ -78,16 +78,14 @@ public class ClassifierModelGenerator {
 	 */
 	static def generateAttributes(Classifier clazz, String additionnalName){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
-		'''
-		«attributes.fold("")[acc, attribut|
+		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
  				acc + ''',
  				''' + '''«attribut.generateAttributDefinition(additionnalName)»'''
  			}else{
  				acc + '''«attribut.generateAttributDefinition(additionnalName)»'''
  			}		
- 		]»
-		'''
+ 		]»'''
 		
 	}
 	
@@ -147,8 +145,9 @@ public class ClassifierModelGenerator {
 		if(type instanceof Classifier){
 			val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(type)
 			val hasAttributes = (!attributes.empty && attributes !== null)
-			return '''«type.generateAttributes(name)»
-			«type.generateMultiValuedEntityAttributes(hasAttributes, name)»'''
+			return '''«type.generateAttributes(name)»'''
+			//«««type.generateMultiValuedEntityAttributes(hasAttributes, name)»
+			
 		}else{
 			''''''
 		}
@@ -577,7 +576,7 @@ public class ClassifierModelGenerator {
 	
 	static def generateNPTModelIdAttributes(Property property, Property id){
 		val type = property.type
-		val idName = Utils.addAdditionnalName(id.name, property.name)
+		val idName = Utils.addAdditionnalName(id.name, type.name)
 		if(type instanceof Classifier){
 			'''
 			"«idName»":{
