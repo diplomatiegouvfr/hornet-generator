@@ -279,9 +279,7 @@ public class ClassifierDtoClassGenerator{
 	 	val type = property.type
 	 	val owner = property.owner
 	 	if(property.association !== null){
-	 		val members = property.association.ownedEnds
-	 		val member = members.get(0)
-	 		if(type != owner && member.multivalued){
+	 		if(type != owner){
 		 		'''
 		 		«property.generateNPTypeAssociationDto»
 		 		'''

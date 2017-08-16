@@ -11,6 +11,7 @@ public class GeneratorUtils {
 	
 	public static final String MODEL_REPOSITORY = "src" + File.separator + "models" + File.separator;
 	public static final String DATABASE_REPOSITORY = "database" + File.separator ;
+	public static final String DAO_REPOSITORY = "src" + File.separator  + "dao" + File.separator ;
 	
 	public static String getModelPath(Classifier clazz) {
 		return MODEL_REPOSITORY +  "models" + File.separator + "model-" + Utils.toTypescriptFileName(clazz.getName());
@@ -30,6 +31,10 @@ public class GeneratorUtils {
 	
 	public static String getDatabaseScriptPath(Package pakkage) {
 		return DATABASE_REPOSITORY + "createTablesPostgres";
+	}
+	
+	public static String getModelDaoPath(Package pakkage) {
+		return DAO_REPOSITORY + "model-dao";
 	}
 
 }

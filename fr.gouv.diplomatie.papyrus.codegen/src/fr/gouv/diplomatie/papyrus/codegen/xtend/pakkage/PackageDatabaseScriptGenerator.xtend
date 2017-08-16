@@ -24,6 +24,8 @@ public class PackageDatabaseScriptGenerator{
 		'''
 		«classes.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateTable()»'''
+		]»«classes.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateAlters()»'''
 		]»
 		«associationsClasses.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
@@ -37,16 +39,21 @@ public class PackageDatabaseScriptGenerator{
 		)
 		'''
 		
-		CREATE TABLE «Utils.toSnakeCase(clazz.name)»{
+		CREATE TABLE «Utils.toSnakeCase(clazz.name)»(
 			«clazz.generateAttributes("")»
-		}
+		);
 		«clazz.generateIds»
-		
+				
 		«attributes.fold("")[acc, id |
 			acc + '''«id.generateSequence»'''
 		]»
-		«clazz.generateForeignKeys("")»
+		'''
+	}
+	
+	static def generateAlters(Classifier clazz){
+		'''
 		«clazz.generateMultivaluedAttributesTable»
+		«clazz.generateForeignKeys("", clazz)»
 		'''
 	}
 	
@@ -193,30 +200,29 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère les clés étrangères
 	 */
-	static def generateForeignKeys(Classifier clazz, String additionnalName){
+	static def generateForeignKeys(Classifier clazz, String additionnalName, Classifier fromClazz){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
 			((Utils.isEntity(attribut.type) && !(attribut.multivalued)) || (Utils.isValueObject(attribut.type) && !(attribut.multivalued)))
 		]
 		
-		'''
-		«attributes.fold("")[acc, attribut|
+		'''«attributes.fold("")[acc, attribut|
 			if(Utils.isEntity(attribut.type)){
-				acc + '''«attribut.generateForeignKey(additionnalName)»'''
-			}else{
-				acc + '''«(attribut.type as Classifier).generateForeignKeys(attribut.name)»'''
+				acc + '''«attribut.generateForeignKey(additionnalName, fromClazz)»'''
+			}else if(Utils.isValueObject(attribut.type)){
+				acc + '''«(attribut.type as Classifier).generateForeignKeys(attribut.name, fromClazz)»'''
 			}
-		]»
-		'''
+		]»'''
 	}
 	
 	/**
 	 * génère une clé étrangère
 	 */
-	static def generateForeignKey(Property property, String additionnalName){
+	static def generateForeignKey(Property property, String additionnalName, Classifier clazz){
 		val fromClass = property.owner
 		val toClass = property.type
 		if(fromClass instanceof Classifier){
 			if(toClass instanceof Classifier){
+				val propName = Utils.addAdditionnalName(additionnalName, property.name)
 				val ids = ClassifierUtils.getId(toClass)
 				var fieldToClass = ids.fold("")[acc, field |
 					
@@ -237,15 +243,16 @@ public class PackageDatabaseScriptGenerator{
 						acc + '''«Utils.toSnakeCase(name)»'''
 					}
 				]
-				
+				return
 				'''
 				
-				ALTER TABLE ONLY «Utils.toSnakeCase(fromClass.name)»
-				    ADD CONSTRAINT «Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(property.name)»_ids_fkey 
+				ALTER TABLE ONLY «Utils.toSnakeCase(clazz.name)»
+				    ADD CONSTRAINT «Utils.toSnakeCase(clazz.name)»_«Utils.toSnakeCase(propName)»_ids_fkey 
 				    FOREIGN KEY («fieldToClass») REFERENCES «Utils.toSnakeCase(toClass.name)»(«fieldInClass»);
 				'''
 			}
 		}
+		return ''''''
 	}
 	
 	static def generateMultivaluedAttributesTable(Classifier clazz){
@@ -253,11 +260,9 @@ public class PackageDatabaseScriptGenerator{
 			(attribut.multivalued)
 		]
 		
-		'''
-		«attributes.fold("")[acc, attribut |
+		'''«attributes.fold("")[acc, attribut |
 			acc + '''«attribut.generateMultivaluedAttributeTable»'''
-		]»
-		'''
+		]»'''
 	}
 	
 	static def generateMultivaluedAttributeTable(Property property){
@@ -268,11 +273,13 @@ public class PackageDatabaseScriptGenerator{
 			'''«property.generateMutilvaluedEntityTable»'''
 		}else if(Utils.isValueObject(type)){
 			'''«property.generateValueObjectEntityTable»'''
+		}else{
+			''''''
 		}
 	}
 	
 	static def generateMutilvaluedPTTable(Property property){
-		val type = property.type
+
 		val owner = property.owner
 		if(owner instanceof Classifier){
 			val tableName = owner.name + Utils.getFirstToUpperCase(property.name)
@@ -286,7 +293,7 @@ public class PackageDatabaseScriptGenerator{
 			]
 			'''
 			
-			CREATE TABLE «Utils.toSnakeCase(tableName)»{
+			CREATE TABLE «Utils.toSnakeCase(tableName)»(
 				«Utils.toSnakeCase(property.name)» «property.generateAttributType»«property.generateStringLength» NOT NULL,
 				«ids.fold("")[acc, id |
 					if(acc != ""){
@@ -296,7 +303,7 @@ public class PackageDatabaseScriptGenerator{
 						acc + '''«id.generateIdAttributeDefinition("")»'''
 					}
 				]»
-			}
+			);
 			
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
@@ -348,7 +355,7 @@ public class PackageDatabaseScriptGenerator{
 				]
 				'''
 				
-				CREATE TABLE «Utils.toSnakeCase(tableName)»{
+				CREATE TABLE «Utils.toSnakeCase(tableName)»(
 					«idsProps.fold("")[acc, id |
 						if(acc != ""){
 							acc + ''',
@@ -356,7 +363,7 @@ public class PackageDatabaseScriptGenerator{
 						}else{
 							acc + '''«id.generateMultiIdAttributeDefinition("")»'''
 						}
-					]»
+					]»,
 					«idsOwner.fold("")[acc, id |
 						if(acc != ""){
 							acc + ''',
@@ -365,7 +372,7 @@ public class PackageDatabaseScriptGenerator{
 							acc + '''«id.generateMultiIdAttributeDefinition("")»'''
 						}
 					]»
-				}
+				);
 				
 				ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 				    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(owner.name)»_ids_fkey
@@ -407,8 +414,8 @@ public class PackageDatabaseScriptGenerator{
 				]
 				'''
 				
-				CREATE TABLE «Utils.toSnakeCase(tableName)»{
-					«type.generateAttributes("")»
+				CREATE TABLE «Utils.toSnakeCase(tableName)»(
+					«type.generateAttributes("")»,
 					«idsOwner.fold("")[acc, id |
 						if(acc != ""){
 							acc + ''',
@@ -417,9 +424,7 @@ public class PackageDatabaseScriptGenerator{
 							acc + '''«id.generateIdAttributeDefinition("")»'''
 						}
 					]»
-				}
-				
-				«type.generateForeignKeys(property.name)»
+				);«type.generateForeignKeys(property.name, type)»
 				
 				ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 				    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
@@ -479,11 +484,11 @@ public class PackageDatabaseScriptGenerator{
 	
 	static def generateAssociationTable(AssociationClass clazz){
 		'''
-		CREATE TABLE «Utils.toSnakeCase(clazz.name)»{
-			«clazz.generateAssociationAttributes("")»
-		}
 		
-		«clazz.generateAssociationForeignKeys("")»
+		CREATE TABLE «Utils.toSnakeCase(clazz.name)»(
+			«clazz.generateAssociationAttributes("")»
+		);
+		«clazz.generateAssociationForeignKeys()»
 		'''
 	}
 	
@@ -505,19 +510,55 @@ public class PackageDatabaseScriptGenerator{
 	
 	static def generateAssociationForeignKeys(AssociationClass clazz){
 		val members = clazz.memberEnds
-		'''
-		«members.fold("")[acc, member |
+		'''«members.fold("")[acc, member |
 			acc + '''«member.generateAssociationForeignKeys»'''
-		]»
-		'''
+		]»'''
 	}
 	
 	static def generateAssociationForeignKeys(Property property){
-		/*val type
-		if()*/
-		'''
-		«TODO»
-		'''
+		val owner = property.owner
+		val type = property.type
+		if(type instanceof Classifier){
+			if(Utils.isEntity(type)){
+				return '''«property.generateAssociationForeignKeysEntity»'''
+			}else if (Utils.isValueObject(type)){
+				return '''«type.generateForeignKeys(property.name, owner as Classifier)»'''
+			}
+		}
+		''''''
+	}
+	
+	static def generateAssociationForeignKeysEntity(Property property){
+		val type = property.type
+		val owner = property.owner
+		if(type instanceof Classifier){
+			if(owner instanceof Classifier){
+				val ids = ClassifierUtils.getId(type)
+				val idsName = ids.fold("")[acc, id |
+					if(acc != ""){
+						acc + ''', «Utils.toSnakeCase(id.name)»'''
+					}else{
+						acc + '''«Utils.toSnakeCase(id.name)»'''
+					}
+				]
+				
+				val idsNameInClass = ids.fold("")[acc, id |
+					if(acc != ""){
+						acc + ''', «Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(type.name)»'''
+					}else{
+						acc + '''«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(type.name)»'''
+					}
+				]
+				return '''
+				
+				ALTER TABLE ONLY «Utils.toSnakeCase(owner.name)»
+					ADD CONSTRAINT «Utils.toSnakeCase(owner.name)»_«Utils.toSnakeCase(property.name)»_ids_fkey 
+					FOREIGN KEY («idsNameInClass») REFERENCES «Utils.toSnakeCase(type.name)»(«idsName»);
+				'''
+			}
+		}
+		return ''''''
+		
 	}
 	
 	static def generateAttributType(Property property){

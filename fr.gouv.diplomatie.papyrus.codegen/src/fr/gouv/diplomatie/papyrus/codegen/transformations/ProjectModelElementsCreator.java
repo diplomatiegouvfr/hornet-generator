@@ -44,7 +44,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	 */
 	protected void generatePackage(Package pakkage) {
 		PackageGenerator.generateDatabaseScript(pakkage, fileSystemAccess);
-		PackageGenerator.generateEntityDao(pakkage, fileSystemAccess);
+		PackageGenerator.generateModelDao(pakkage, fileSystemAccess);
 	}
 	
 	/**
