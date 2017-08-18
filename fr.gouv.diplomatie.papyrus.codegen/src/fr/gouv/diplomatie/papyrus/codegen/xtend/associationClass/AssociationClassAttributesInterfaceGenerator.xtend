@@ -150,14 +150,22 @@ public class AssociationClassAttributesInterfaceGenerator{
 		}
 	}
 	
-		/**
+	/**
 	 * génère un attribut de type value Object
 	 */
 	static def generateValueObjectAttribute(Property property, String additionnalName){
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		val type = property.type
+		var array = ""
+		var endArray = ""
+		if(property.isMultivalued){
+			array = "Array<"
+			endArray =">"
+		}
 		if(type instanceof Classifier){
 			return '''«type.generateAttributes(name)»
+			«property.name» : «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
+			get«Utils.getFirstToUpperCase(property.name)»(): «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
 			'''
 		}else{
 			''''''

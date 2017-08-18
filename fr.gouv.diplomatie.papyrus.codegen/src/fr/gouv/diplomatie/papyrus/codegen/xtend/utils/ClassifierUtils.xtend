@@ -3,6 +3,7 @@ package fr.gouv.diplomatie.papyrus.codegen.xtend.utils
 import org.eclipse.uml2.uml.Classifier
 import org.eclipse.uml2.uml.AttributeOwner
 import fr.gouv.diplomatie.papyrus.codegen.generators.GeneratorUtils
+import org.eclipse.uml2.uml.AssociationClass
 
 class ClassifierUtils{
 	
@@ -162,6 +163,25 @@ class ClassifierUtils{
 			references.addAll(ClassifierUtils.getMultivaluedReferencesToType(classe as Classifier, ofClass))
 		}
 		return references
+	}
+	
+	static def getLinkedAssociationClass(Classifier clazz){
+		val model = clazz.model
+		val associationsClasses = model.getOwnedTypes().filter[type|
+			if(type instanceof AssociationClass){
+				val members = type.ownedEnds
+				var isIn = false
+				for(member: members){
+					if(member.type == clazz){
+						isIn = true
+					}
+				}
+				return isIn
+			}else{
+				return false
+			}
+		]
+		return associationsClasses
 	}
 	
 	

@@ -8,6 +8,7 @@ import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
 import org.eclipse.uml2.uml.Type
 import java.util.ArrayList
+import org.eclipse.uml2.uml.AssociationClass
 
 public class ClassifierMetierClassGenerator {
 	
@@ -21,6 +22,8 @@ public class ClassifierMetierClassGenerator {
 		@Bean
 		export class «ClassifierUtils.getMetierClassName(clazz)» «clazz.generateExtends»{
 			«clazz.generateAttributes("")»
+			«IF Utils.isEntity(clazz)»«clazz.generateAssociationsAttributes»«ENDIF»
+			
 		}
 		'''
 	}
@@ -29,7 +32,7 @@ public class ClassifierMetierClassGenerator {
 	 * génère les imports
 	 */
 	static def generateImports(Classifier clazz){
-		val attributesTypes = clazz.generateAttributesImports(newArrayList())
+		val attributesTypes = clazz.generateAttributesImports(newArrayList(), clazz)
 		'''
 		«clazz.generateExtendsImports»
 		«attributesTypes.fold("")[acc, type |
@@ -54,11 +57,28 @@ public class ClassifierMetierClassGenerator {
 			''''''
 		}
 	}
+
+	
+	static def generateAssociationImport(AssociationClass clazz, Classifier fromClass){
+		val members = clazz.ownedEnds.filter[member |
+			member.type != fromClass
+		]
+		'''
+		«members.fold("")[acc, member |
+			val type = member.type
+			if(type instanceof Classifier){
+				acc + '''
+				import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
+				'''
+			}
+		]»
+		'''
+	}
 	
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
+	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types, Classifier fromClass){
 	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
@@ -70,12 +90,37 @@ public class ClassifierMetierClassGenerator {
 				types.add(attribut.type)
 			}
 		}
-		attributesValueObject.forEach[attribut |
+		/*attributesValueObject.forEach[attribut |
 			var type = attribut.type
 			if(type instanceof Classifier){
-				type.generateAttributesImports(types)
+				type.generateAttributesImports(types, fromClass)
 			}
-		]
+		]*/
+		
+		for(attribut : attributesValueObject){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
+			}
+		}
+		
+		/* ajout des import pour les classes d'association*/ 
+		if(Utils.isEntity(fromClass)){
+			val associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+			
+			associationsClasses.forEach[ asso |
+				if(asso instanceof AssociationClass){
+					val members = asso.ownedEnds.filter[member |
+						return member.type != fromClass
+					]
+					members.forEach[member |
+						val type = member.type
+						if(type instanceof Classifier && !types.contains(type)){
+							types.add(type)
+						}
+					]
+				}
+			]
+		}
 		return types
 	 }
 	 
@@ -136,7 +181,7 @@ public class ClassifierMetierClassGenerator {
 	 * génère un attribut de type value Object
 	 */
 	static def generateValueObjectAttribute(Property property, String additionnalName){
-		val name = Utils.addAdditionnalName(additionnalName, property.name)
+		/*val name = Utils.addAdditionnalName(additionnalName, property.name)
 		val type = property.type
 		if(type instanceof Classifier){
 			if(!property.multivalued){
@@ -145,6 +190,16 @@ public class ClassifierMetierClassGenerator {
 			}
 		}else{
 			''''''
+		}*/
+		val type = property.type
+		if(type instanceof Classifier){
+			val propName = Utils.addAdditionnalName(additionnalName, property.name)
+			'''
+			
+			«Utils.generateComments(property)»
+			@Map(«ClassifierUtils.getMetierClassName(type)»)
+			«propName»: «ClassifierUtils.getMetierClassName(type)»;
+			'''
 		}
 	}
 	
@@ -194,6 +249,38 @@ public class ClassifierMetierClassGenerator {
 		«Utils.generateComments(property)»
 		@Map()
 		«name»: «array»«TypeUtils.getMetierTypescriptType(property.type)»«endArray»;
+		'''
+	}
+	
+	/**
+	 * génère les attributs issus des associations
+	 */
+	static def generateAssociationsAttributes(Classifier clazz){
+		val associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+		
+		'''
+		«associationsClasses.fold("")[acc, asso |
+			acc + '''«(asso as AssociationClass).generateAssociationAttributes(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateAssociationAttributes(AssociationClass clazz, Classifier fromClass){
+		val members = clazz.ownedEnds.filter[member |
+			member.type != fromClass
+		]
+		'''
+		«members.fold("")[acc, member |
+			val type = member.type
+			if(type instanceof Classifier){
+				acc + 
+				'''
+				
+				@Map(«ClassifierUtils.getMetierClassName(type)»)
+				«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getMetierClassName(type)»>;
+				'''
+			}
+		]»
 		'''
 	}
 	

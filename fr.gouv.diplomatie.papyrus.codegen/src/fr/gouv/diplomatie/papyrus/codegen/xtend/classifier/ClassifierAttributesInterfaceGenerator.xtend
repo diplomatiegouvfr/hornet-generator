@@ -10,6 +10,7 @@ import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ModelUtils
 import org.eclipse.uml2.uml.Type
 import java.util.ArrayList
+import org.eclipse.uml2.uml.AssociationClass
 
 public class ClassifierAttributesInterfaceGenerator {
 	
@@ -22,6 +23,7 @@ public class ClassifierAttributesInterfaceGenerator {
 			««««clazz.generateMultiValuedEntityAttributes("")»
 			
 			«clazz.generateNotPrimitiveTypeAttributes("")»
+			«IF Utils.isEntity(clazz)»«clazz.generateAllAssociationClassAtributes()»«ENDIF»
 		}
 		'''
 	}
@@ -73,6 +75,22 @@ public class ClassifierAttributesInterfaceGenerator {
 			}
 		}
 		
+		if(Utils.isEntity(clazz)){
+			val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+			
+			assosiationClasses.forEach[asso |
+				val members = (asso as AssociationClass).ownedEnds.filter[end |
+					end.type != clazz
+				]
+				members.forEach[member |
+					val type = member.type
+					if(!types.contains(type)){
+						types.add(type)
+					}
+				]	
+			]
+		}
+	
 		attributesValueObject.forEach[attribut |
 			var type = attribut.type
 			if(type instanceof Classifier){
@@ -371,9 +389,47 @@ public class ClassifierAttributesInterfaceGenerator {
 		val type = property.type
 		if(type instanceof Classifier){
 			val name = Utils.addAdditionnalName(additionnalName, property.name)
-			type.generateNotPrimitiveTypeAttributes(name)
+			var array = ""
+			var endArray = ""
+			if(property.isMultivalued){
+				array = "Array<"
+				endArray =">"
+			}
+			'''
+			«type.generateNotPrimitiveTypeAttributes(name)»
+			«property.name» : «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
+			get«Utils.getFirstToUpperCase(property.name)»(): «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
+			
+			'''
+			
 		}
 		
+	}
+	
+	/**
+	 * génère les attributs liés aux classe d'association
+	 */
+	static def generateAllAssociationClassAtributes(Classifier clazz){
+		val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+		'''
+		«assosiationClasses.fold("")[acc, asso |
+			acc+ '''«(asso as AssociationClass).generateAssociationClassAtributes(clazz)»'''
+		]»'''
+	}
+	
+	static def generateAssociationClassAtributes(AssociationClass clazz, Classifier fromClass){
+		val members = clazz.ownedEnds.filter[end |
+			end.type != fromClass
+		]
+		val member = members.get(0)
+		val type = member.type
+		if(type instanceof Classifier){
+			'''
+			«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getAttributesInterfaceName(type)»>;
+			get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(type)»>>;
+			
+			'''
+		}
 	}
 	
 }

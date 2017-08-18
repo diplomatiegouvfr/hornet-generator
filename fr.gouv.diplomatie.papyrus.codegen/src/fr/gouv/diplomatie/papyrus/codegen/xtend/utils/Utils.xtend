@@ -2,6 +2,7 @@ package fr.gouv.diplomatie.papyrus.codegen.xtend.utils
 
 import org.eclipse.uml2.uml.NamedElement
 import java.io.File
+import java.util.ArrayList
 
 class Utils{
 	
@@ -182,6 +183,36 @@ class Utils{
 		}
 		
 		return newName
+	}
+	
+	/**
+	 * renvoie la liste en notation pointée
+	 */
+	static def String getListPoint(ArrayList<String> names){
+		var String result=""
+		for(String name : names){
+			if(result == ""){
+				result += name
+			}else{
+				result += '.' + name
+			}
+		}
+		return result
+	}
+	
+	/**
+	 * renvoie la liste en notation pointée
+	 */
+	static def String getNameFromList(ArrayList<String> names){
+		var String result=""
+		for(String name : names){
+			if(result == ""){
+				result += name
+			}else{
+				result += Utils.getFirstToUpperCase(name)
+			}
+		}
+		return result
 	}
 	
 }

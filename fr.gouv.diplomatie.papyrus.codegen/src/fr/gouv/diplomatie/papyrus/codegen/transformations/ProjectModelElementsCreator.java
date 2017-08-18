@@ -7,7 +7,6 @@ import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
 import org.eclipse.papyrus.infra.tools.file.ProjectBasedFileAccess;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
-import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.PackageableElement;
 
 import fr.gouv.diplomatie.papyrus.codegen.generators.AssociationClassGenerator;
@@ -34,6 +33,8 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 			generateAssociationClass((AssociationClass) packageableElement);
 		}else if(Utils.isEntity(packageableElement)) {
 			generateClass((Classifier) packageableElement);
+		}else if(Utils.isValueObject(packageableElement)) {
+			generateValueObject((Classifier)packageableElement);
 		}
 		
 	}
@@ -48,7 +49,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	}
 	
 	/**
-	 * Génère les fichiers liés à la classes
+	 * Génère les fichiers liés à la classe entity
 	 * @param clazz
 	 */
 	protected void generateClass(Classifier clazz) {
@@ -56,6 +57,15 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 		ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
 		ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
 		ClassifierGenerator.generateDto(clazz, fileSystemAccess);
+	}
+	
+	/**
+	 * Génère les fichiers liés à la classe valueObject
+	 * @param clazz
+	 */
+	protected void generateValueObject(Classifier clazz) {
+		ClassifierGenerator.generateValueObjectMetierClass(clazz, fileSystemAccess);
+		ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
 	}
 	
 	/**
@@ -67,12 +77,6 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 		AssociationClassGenerator.generateAttributesInterface(clazz, fileSystemAccess);
 		AssociationClassGenerator.generateMetierClass(clazz, fileSystemAccess);
 		AssociationClassGenerator.generateDto(clazz, fileSystemAccess);
-	}
-	
-	
-	@Override
-	protected boolean noCodeGen(Element element) {
-		return false;
 	}
 
 }

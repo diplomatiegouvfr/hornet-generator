@@ -42,9 +42,16 @@ public class ClassifierGenerator {
 
 		String fileName = GeneratorUtils.getDtoClassPath(clazz) + ".ts";
 		
-		fileSystemAccess.generateFile(fileName, ClassifierDtoClassGenerator.generateCode(clazz).toString());
+		fileSystemAccess.generateFile(fileName, ClassifierDtoClassGenerator.generateCode(clazz).toString());	
 		
+	}
+	
+	public static void generateValueObjectMetierClass(Classifier clazz,  IPFileSystemAccess fileSystemAccess) {
+		System.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName());
+
+		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
 		
+		fileSystemAccess.generateFile(fileName, ClassifierMetierClassGenerator.generateCode(clazz).toString());
 	}
 
 }

@@ -9,6 +9,7 @@ import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
 import org.eclipse.uml2.uml.Type
 import java.util.ArrayList
 import org.eclipse.uml2.uml.PrimitiveType
+import org.eclipse.uml2.uml.AssociationClass
 
 public class ClassifierDtoClassGenerator{
 	
@@ -22,7 +23,8 @@ public class ClassifierDtoClassGenerator{
 		
 		@Bean
 		export class «ClassifierUtils.getDtoClassName(clazz)» «clazz.generateExtends»{
-			«clazz.generateAttributes("")»
+			«clazz.generateAttributes»
+			«clazz.generateAssociationAttributes»
 		}
 		
 		«clazz.generateMultivaluedAttributeDto»
@@ -33,14 +35,14 @@ public class ClassifierDtoClassGenerator{
 	 * génère les imports
 	 */
 	static def generateImports(Classifier clazz){
-		//val attributesTypes = clazz.generateAttributesImports(newArrayList())
+		val attributesTypes = clazz.generateAttributesImports(newArrayList())
 		'''
 		«clazz.generateExtendsImports»
-		««««attributesTypes.fold("")[acc, type |
-		«««	acc +  '''
-		«««	import { «ClassifierUtils.getDtoClassName(type as Classifier)» } from "«ClassifierUtils.getDtoClassPath(type as Classifier)»";
-		«««	'''
-		«««]»
+		«attributesTypes.fold("")[acc, type |
+			acc +  '''
+			import { «ClassifierUtils.getDtoClassName(type as Classifier)» } from "«ClassifierUtils.getDtoClassPath(type as Classifier)»";
+			'''
+		]»
 		'''
 	}
 	
@@ -74,6 +76,24 @@ public class ClassifierDtoClassGenerator{
 				types.add(attribut.type)
 			}
 		}
+		
+		if(Utils.isEntity(clazz)){
+			val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+			
+			assosiationClasses.forEach[asso |
+				val members = (asso as AssociationClass).ownedEnds.filter[end |
+					end.type != clazz
+				]
+				val member = members.get(0)
+				val type = member.type		
+				if(!types.contains(asso) && Utils.isValueObject(type)){
+					types.add(asso)
+				}else if(!types.contains(type) && Utils.isEntity(type)){
+					types.add(type)
+				}
+			]
+		}
+		
 		attributesValueObject.forEach[attribut |
 			var type = attribut.type
 			if(type instanceof Classifier){
@@ -101,15 +121,39 @@ public class ClassifierDtoClassGenerator{
 		}
 	}
 	
+	static def generateAssociationAttributes(Classifier clazz){
+		val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+		'''
+		«assosiationClasses.fold("")[acc, asso |
+ 			acc+ '''«(asso as AssociationClass).generateAssociationClassAtributes(clazz)»'''
+ 		]»
+		'''
+	}
+	
 	/**
 	 * génère les attributs simples de la classe
 	 */
-	static def generateAttributes(Classifier clazz, String additionnalName){
+	static def generateAttributes(Classifier clazz){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz)
+		
 		'''
 		«attributes.fold("")[acc, attribut|
  			acc + '''
- 			«attribut.generateAttribut(additionnalName)»'''	
+ 			«attribut.generateAttribut(newArrayList())»'''	
+ 		]»
+ 		'''
+	}
+	
+		/**
+	 * génère les attributs simples de la classe
+	 */
+	static def generateAttributes(Classifier clazz, ArrayList<String> names){
+		val attributes = ClassifierUtils.getOwnedAttributes(clazz)
+		
+		'''
+		«attributes.fold("")[acc, attribut|
+ 			acc + '''
+ 			«attribut.generateAttribut(names)»'''	
  		]»
  		'''
 	}
@@ -117,34 +161,41 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère un attribut de la classe
 	 */
-	static def generateAttribut(Property property, String additionnalName){
+	static def generateAttribut(Property property, ArrayList<String> names){
 		if(PropertyUtils.isClassAttribute(property)){
-			'''«property.generateClassAttribute(additionnalName)»'''
+			'''«property.generateClassAttribute(names)»'''
 		}else{
-			'''«property.generateBasicAttribute(additionnalName)»'''
+			'''«property.generateBasicAttribute(names)»'''
 		}
 	}
 	
 	/**
 	 * génère un attribut lié a la classe
 	 */
-	static def generateClassAttribute(Property property, String additionnalName){
+	static def generateClassAttribute(Property property, ArrayList<String> names){
 		if(Utils.isValueObject(property.type)){
-			'''«property.generateValueObjectAttribute(additionnalName)»'''
+			'''«property.generateValueObjectAttribute(names)»'''
 		}else{
-			'''«property.generateEntityAttributes(additionnalName)»'''
+			'''«property.generateEntityAttributes(names)»'''
 		}
 	}
 	
 	/**
 	 * génère un attribut de type value Object
 	 */
-	static def generateValueObjectAttribute(Property property, String additionnalName){
-		val name = Utils.addAdditionnalName(additionnalName, property.name)
+	static def generateValueObjectAttribute(Property property, ArrayList<String> names){
+		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		val type = property.type
+		names.add(property.name)
 		if(type instanceof Classifier){
 			if(!property.multivalued){
-				return '''«type.generateAttributes(name)»
+				return '''«type.generateAttributes(names)»
+				'''
+			}else{
+				'''
+				
+				@Map()
+				«property.name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 				'''
 			}
 		}else{
@@ -155,32 +206,56 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère un attribut de type entity
 	 */
-	static def generateEntityAttributes(Property property, String additionnalName){
+	static def generateEntityAttributes(Property property, ArrayList<String> names){
 		val type = property.type
+		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		
 		if(type instanceof Classifier){
-			val ids = ClassifierUtils.getId(type)
-			'''
-			«ids.fold("")[acc, id |
-				acc + '''«property.generateEntityAttribute(id, additionnalName)»'''
-			]»
-			'''
+			if(!property.multivalued){
+				val ids = ClassifierUtils.getId(type)
+				'''
+				«ids.fold("")[acc, id |
+					acc + '''«property.generateEntityAttribute(id, names)»'''
+				]»
+				
+				@Map()
+				@Alias('«Utils.getListPoint(names)»')
+				«name»: «ClassifierUtils.getDtoClassName(type)»;
+				'''
+			}else{
+				'''
+				
+				@Map()
+				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
+				'''
+			}
 		}else{
 			''''''
 		}
 		
 	}
 	
-	static def generateEntityAttribute(Property property, Property id, String additionnalName){
-		val fieldName = Utils.addAdditionnalName(additionnalName, id.name) + Utils.getFirstToUpperCase(property.name)
-		val propName = Utils.addAdditionnalName(additionnalName, property.name)
+	static def generateEntityAttribute(Property property, Property id, ArrayList<String> names){
+		val fieldName = Utils.addAdditionnalName(Utils.getNameFromList(names), id.name) + Utils.getFirstToUpperCase(property.name)
+		val propName = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
+		names.add(property.name)
 		if(!property.multivalued){
-			'''
+			if(names.empty){
+				'''
+				
+				@Map()
+				@Alias('«fieldName»')
+				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
+				'''
+			}else{
+				'''
+				
+				@Map()
+				@Alias('«fieldName»', '«Utils.getListPoint(names)».«id.name»')
+				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
+				'''
+			}
 			
-			@Map()
-			@Alias('«propName».«id.name»')
-			«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
-			'''
 		}else{
 			''''''
 		}
@@ -190,8 +265,8 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère un attribut de l'interface
 	 */
-	static def generateBasicAttribute(Property property, String additionnalName){
-		var name = Utils.addAdditionnalName(additionnalName, property.name)
+	static def generateBasicAttribute(Property property, ArrayList<String> names){
+		var name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		if(!property.multivalued){
 			'''
 			
@@ -252,6 +327,9 @@ public class ClassifierDtoClassGenerator{
 						acc + '''«property.generateMultiValuedPrimitiveTypeDtoIdAttributes(id)»'''
 					}
 				]»
+				
+				@Map()
+				«Utils.getFirstToLowerCase(owner.name)»: «ClassifierUtils.getDtoClassName(owner)»;
 			}
 			'''
 		}else{
@@ -300,24 +378,30 @@ public class ClassifierDtoClassGenerator{
 	 		val member = members.get(0)
 			val idsOwner = ClassifierUtils.getId(owner)
 			val idsProp = ClassifierUtils.getId(member.type as Classifier)
-			
+			val type = property.type
 			'''
 			
 			export class «PropertyUtils.getMultivaluedPropertyDtoName(property)»{
 				«idsProp.fold("")[acc, id |
 					if(acc != ""){
-						acc + ''',«member.generateNPTDtoIdAttributes(id)»'''
+						acc + '''«member.generateNPTDtoIdAttributes(id)»'''
 					}else{
 						acc + '''«member.generateNPTDtoIdAttributes(id)»'''
 					}
 				]»
+				
+				@Map()
+				«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 				«idsOwner.fold("")[acc, id |
 					if(acc != ""){
-						acc + ''',«property.generateNPTDtoIdAttributes(id)»'''
+						acc + '''«property.generateNPTDtoIdAttributes(id)»'''
 					}else{
 						acc + '''«property.generateNPTDtoIdAttributes(id)»'''
 					}
 				]»
+				
+				@Map()
+				«Utils.getFirstToLowerCase(owner.name)»: «ClassifierUtils.getDtoClassName(owner)»;
 			}
 			'''
 		}else{
@@ -343,7 +427,7 @@ public class ClassifierDtoClassGenerator{
 		if(owner instanceof Classifier){
 			val idsOwner = ClassifierUtils.getId(owner)
 			val idsProp = ClassifierUtils.getId(property.type as Classifier)
-			
+			val type = property.type
 			'''
 			
 			export class «PropertyUtils.getMultivaluedPropertyDtoName(property)»{
@@ -354,6 +438,9 @@ public class ClassifierDtoClassGenerator{
 						acc + '''«id.generateNPTModelIdAttributes()»'''
 					}
 				]»
+				
+				@Map()
+				«Utils.getFirstToLowerCase(owner.name)»: «ClassifierUtils.getDtoClassName(owner)»;
 				«idsProp.fold("")[acc, id |
 					if(acc != ""){
 						acc + ''',«property.generateNPTDtoIdAttributes(id)»'''
@@ -361,6 +448,9 @@ public class ClassifierDtoClassGenerator{
 						acc + '''«property.generateNPTDtoIdAttributes(id)»'''
 					}
 				]»
+				
+				@Map()
+				«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 			}
 			'''
 		}else{
@@ -377,6 +467,29 @@ public class ClassifierDtoClassGenerator{
 				
 				@Map()
 				«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
+				'''
+			}
+		}
+	}
+	
+	static def generateAssociationClassAtributes(AssociationClass clazz, Classifier fromClass){
+		val members = clazz.ownedEnds.filter[end |
+			end.type != fromClass
+		]
+		val member = members.get(0)
+		val type = member.type
+		if(type instanceof Classifier){
+			if(Utils.isEntity(type)) {
+				'''
+				
+				@Map()
+				«Utils.getFirstToLowerCase(member.name)» : Array<«ClassifierUtils.getDtoClassName(type)»>;
+				'''
+			}else if(Utils.isValueObject(type)){
+				'''
+				
+				@Map()
+				«Utils.getFirstToLowerCase(member.name)» : Array<«ClassifierUtils.getDtoClassName(clazz)»>;
 				'''
 			}
 		}
