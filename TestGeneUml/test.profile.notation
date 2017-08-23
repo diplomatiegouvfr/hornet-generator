@@ -539,10 +539,6 @@
         <element xmi:type="uml:Property" href="test.profile.uml#_EONxwHdbEeevdc4A4HbIwA"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_EOznoXdbEeevdc4A4HbIwA"/>
       </children>
-      <children xmi:type="notation:Shape" xmi:id="_Hegd0HdbEeevdc4A4HbIwA" type="Property_ClassAttributeLabel">
-        <element xmi:type="uml:Property" href="test.profile.uml#_Hd3koHdbEeevdc4A4HbIwA"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_Hegd0XdbEeevdc4A4HbIwA"/>
-      </children>
       <styles xmi:type="notation:TitleStyle" xmi:id="_8AFSsndaEeevdc4A4HbIwA"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_8AFSs3daEeevdc4A4HbIwA"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_8AFStHdaEeevdc4A4HbIwA"/>
@@ -584,7 +580,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IixXOXdbEeevdc4A4HbIwA"/>
     </children>
     <element xmi:type="uml:Stereotype" href="test.profile.uml#_Iits0HdbEeevdc4A4HbIwA"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IiwwIXdbEeevdc4A4HbIwA" x="1940" y="240"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IiwwIXdbEeevdc4A4HbIwA" x="1320" y="500"/>
   </children>
   <children xmi:type="notation:Shape" xmi:id="_YTeZEH2sEeewMouPnyydfA" type="Stereotype_Shape">
     <children xmi:type="notation:DecorationNode" xmi:id="_YTfAIH2sEeewMouPnyydfA" type="Stereotype_NameLabel"/>
@@ -961,5 +957,12 @@
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_LyERgX2tEeewMouPnyydfA" points="[1320, 721, -643984, -643984]$[1100, 610, -643984, -643984]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Ly7NIH2tEeewMouPnyydfA" id="(0.10101010101010101,0.0)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Ly7NIX2tEeewMouPnyydfA" id="(0.8,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Connector" xmi:id="_nF6w0IZLEeeKqroFtKzwQQ" type="Extension_Edge" source="_IiwwIHdbEeevdc4A4HbIwA" target="_QvJiAHbHEeegdZhmvUhwtQ">
+    <styles xmi:type="notation:FontStyle" xmi:id="_nF6w0YZLEeeKqroFtKzwQQ"/>
+    <element xmi:type="uml:Extension" href="test.profile.uml#_nFiWUIZLEeeKqroFtKzwQQ"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_nF6w0oZLEeeKqroFtKzwQQ" points="[1320, 560, -643984, -643984]$[1120, 580, -643984, -643984]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_nGhNwIZLEeeKqroFtKzwQQ" id="(0.0,0.45112781954887216)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_nGhNwYZLEeeKqroFtKzwQQ" id="(1.0,0.4)"/>
   </edges>
 </notation:Diagram>
