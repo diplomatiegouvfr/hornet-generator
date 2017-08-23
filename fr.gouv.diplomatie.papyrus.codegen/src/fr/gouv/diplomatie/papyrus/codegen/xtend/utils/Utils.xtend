@@ -7,6 +7,14 @@ import java.util.ArrayList
 class Utils{
 	
 	public static var MODEL_ENTITY = 'entity';
+	
+	public static var MODEL_NOMENCLATURE = 'nomenclature';
+	public static var MODEL_NOMENCLATURE_VALEURS = 'valeurs';
+	
+	public static var MODEL_CODELIBELLENOMENCLATURE = 'CodeLibelleNomenclature';
+	public static var MODEL_CODELIBELLENOMENCLATURE_CODE = 'code';
+	public static var MODEL_CODELIBELLENOMENCLATURE_LIBELLE = 'libelle';
+	
 	public static var MODEL_VALUEOBJECT = 'valueObject';
 	public static var MODEL_ATTRIBUTE = 'attribute';
 	public static var MODEL_ATTRIBUTE_LENGTH = 'length';
@@ -55,21 +63,44 @@ class Utils{
 	 * teste si un element est de type entity
 	 */
 	static def isEntity(NamedElement elem){
-		return (elem.getStereotype(MODEL_ENTITY) !==null && !(elem.getStereotype(MODEL_ENTITY).empty))
+		if(elem !== null){
+			return (elem.getStereotype(MODEL_ENTITY) !==null && !(elem.getStereotype(MODEL_ENTITY).empty))
+		}else{
+			return false
+		}
 	}
 	
 	/**
 	 * teste si un element est de type valueObject
 	 */
 	static def isValueObject(NamedElement elem){
-		return (elem.getStereotype(MODEL_VALUEOBJECT) !==null && !(elem.getStereotype(MODEL_VALUEOBJECT).empty))
+		if(elem !== null){
+			return (elem.getStereotype(MODEL_VALUEOBJECT) !==null && !(elem.getStereotype(MODEL_VALUEOBJECT).empty))
+		}else{
+			return false
+		}
 	}
 	
 	/**
 	 * teste si un element est de type sequence
 	 */
 	static def isSequence(NamedElement elem){
-		return (elem.getStereotype(MODEL_SEQUENCE) !==null && !(elem.getStereotype(MODEL_SEQUENCE).empty))
+		if(elem !== null){
+			return (elem.getStereotype(MODEL_SEQUENCE) !==null && !(elem.getStereotype(MODEL_SEQUENCE).empty))	
+		}else{
+			return false
+		}
+	}
+	
+	/**
+	 * teste si un element est un enum
+	 */
+	static def isNomenclature(NamedElement elem){
+		if(elem !== null){
+			return (elem.getStereotype(MODEL_NOMENCLATURE) !== null && !(elem.getStereotype(MODEL_NOMENCLATURE).empty))
+		}else{
+			return false
+		}
 	}
 	
 	/**

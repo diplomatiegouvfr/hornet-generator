@@ -29,7 +29,7 @@ public class AssociationClassGenerator {
 	}
 	
 	public static void generateMetierClass(AssociationClass clazz, IPFileSystemAccess fileSystemAccess) {
-		System.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName());
+		System.out.println("ClassifierGenerator.generateMetierClass : "  + clazz.getName());
 
 		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
 		

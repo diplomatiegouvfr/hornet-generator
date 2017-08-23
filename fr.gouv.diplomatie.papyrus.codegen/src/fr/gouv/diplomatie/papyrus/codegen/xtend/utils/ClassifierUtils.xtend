@@ -52,6 +52,13 @@ class ClassifierUtils{
 	}
 	
 	/**
+	 * retourne le chemin du fichier de la classe enum
+	 */
+	static def getEnumClassPath(Classifier clazz){
+		return GeneratorUtils.getEnumPath(clazz)
+	}
+	
+	/**
 	 * retourne la classe Stereotype 
 	 */
 	static def getStereotype(Classifier clazz, String stereoname) {
@@ -81,6 +88,21 @@ class ClassifierUtils{
 	 */
 	static def getOwnedAttributes(Classifier clazz) {
 		val attributes = clazz.getOwnedAttributesWNull
+		if (attributes === null) {
+			emptySet
+		}
+		else {
+			attributes
+		}
+	}
+	
+	/**
+	 * renvoi les attributs de la classe
+	 * tableau vide si il y en a aucun
+	 * incluant ceux des interface et classes généralisées
+	 */
+	static def getAttributes(Classifier clazz) {
+		val attributes = clazz.getAllAttributes
 		if (attributes === null) {
 			emptySet
 		}
@@ -128,6 +150,18 @@ class ClassifierUtils{
 	 */
 	static def getMultivaluedOwnedAttributes(Classifier clazz){
 		val attributes = clazz.getOwnedAttributes
+		val multiAttributes = attributes.filter[attribut |
+			return (attribut.multivalued)
+		]
+		return multiAttributes
+	}
+	
+	/**
+	 * retourne les attributs multivalués
+	 * en incluant ceux venant des interfaces et des classes généralisées
+	 */
+	static def getAllMultivaluedAttributes(Classifier clazz){
+		val attributes = clazz.getAllAttributes
 		val multiAttributes = attributes.filter[attribut |
 			return (attribut.multivalued)
 		]
@@ -184,5 +218,13 @@ class ClassifierUtils{
 		return associationsClasses
 	}
 	
-	
+	/**
+	 * test si l'enum a des code ou non
+	 */
+	static def isEnumWithCode(Classifier clazz){
+		val valeurs = clazz.getOwnedAttributes
+		val value = valeurs.get(0)
+		val code = Utils.getStereotypePropertyValue(value, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
+		return (code !== null && code != "")
+	}
 }

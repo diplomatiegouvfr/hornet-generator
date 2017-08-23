@@ -15,10 +15,12 @@ import org.eclipse.uml2.uml.AssociationClass
 public class ClassifierAttributesInterfaceGenerator {
 	
 	static def generateCode(Classifier clazz){
+		//«clazz.generateExtendsAttributes»
 		'''
 		«clazz.generateImports»
 		
 		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» «clazz.generateExtends»{
+			
 			«clazz.generateAttributes("")»
 			««««clazz.generateMultiValuedEntityAttributes("")»
 			
@@ -65,13 +67,32 @@ public class ClassifierAttributesInterfaceGenerator {
 	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
+		
+		val attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			(Utils.isNomenclature(attribut.type))
+		]
+		
 		val attributesValueObject = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isValueObject(attribut.type))
 		]
 		
+		val interfaces = clazz.allRealizedInterfaces
+		
 		for(attribut : attributes){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
+			}
+		}
+		
+		for(attribut : attributesEnums){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
+			}
+		}
+		
+		for(interface : interfaces){
+			if(!types.contains(interface)){
+				types.add(interface)
 			}
 		}
 		
@@ -96,6 +117,9 @@ public class ClassifierAttributesInterfaceGenerator {
 			if(type instanceof Classifier){
 				type.generateAttributesImports(types)
 			}
+			if(!types.contains(type)){
+				types.add(type)
+			}
 		]
 		return types
 	 }
@@ -105,18 +129,41 @@ public class ClassifierAttributesInterfaceGenerator {
 	 */
 	static def generateExtends(Classifier clazz){
 		val parents = clazz.generalizations
+		val interfaces = clazz.directlyRealizedInterfaces
+		val extendsInterfaces = '''«interfaces.fold("")[acc, interface |
+			if(acc != ""){
+				acc + ''', «ClassifierUtils.getAttributesInterfaceName(interface)»''' 
+			}else{
+				acc + '''«ClassifierUtils.getAttributesInterfaceName(interface)»''' 
+			}
+		]»'''
 		if(parents.length > 0){
+			val parent = parents.get(0)
+			var separator = ""
+			if(interfaces !== null && !interfaces.empty){
+				separator = ","
+			}
+			'''extends «ClassifierUtils.getAttributesInterfaceName(parent.general)»«separator» «extendsInterfaces»'''
+		}else if(interfaces !== null && !interfaces.empty){
+			'''extends «extendsInterfaces»'''
+		}
+	}
+	
+	static def generateExtendsAttributes(Classifier clazz){
+		val parents = clazz.generalizations
+		
+		if(parents !== null && !parents.empty){
 			'''«parents.fold("")[acc, parent |
-				if(acc != ""){
-					acc + ''',«ClassifierUtils.getAttributesInterfaceName(parent.general)»'''
-				}else{
-					acc + '''extends «ClassifierUtils.getAttributesInterfaceName(parent.general)»'''
-				}
+				acc + 
+				'''
+				«Utils.getFirstToLowerCase(parent.general.name)»?: «ClassifierUtils.getAttributesInterfaceName(parent.general)»;
+				'''
 			]»'''
 		}else{
 			''''''
 		}
 	}
+	
 	
 	/**
 	 * génère les attributs simples de la classe
@@ -156,6 +203,8 @@ public class ClassifierAttributesInterfaceGenerator {
 	static def generateClassAttribute(Property property, String additionnalName){
 		if(Utils.isValueObject(property.type)){
 			'''«property.generateValueObjectAttribute(additionnalName)»'''
+		}else if(Utils.isNomenclature(property.type)){
+			'''«property.generateEnum(additionnalName)»'''
 		}else{
 			'''«property.generateEntityAttributes(additionnalName)»'''
 		}
@@ -173,6 +222,17 @@ public class ClassifierAttributesInterfaceGenerator {
 		}else{
 			''''''
 		}
+	}
+	
+	/**
+	 * génère une classe enum
+	 */
+	static def generateEnum(Property property, String additonnalName){
+		val propName =  Utils.addAdditionnalName(additonnalName, property.name) 
+		val type = property.type
+		'''
+		«propName»?: «ClassifierUtils.getAttributesInterfaceName(type as Classifier)»;
+		'''
 	}
 	
 	/**
@@ -352,10 +412,17 @@ public class ClassifierAttributesInterfaceGenerator {
 			'''«property.generateNPTValueObjectAttribut(additionnalName)»'''
 		}else if(property.multivalued){
 			var name = Utils.addAdditionnalName(additionnalName, property.name)
-			'''
-			«name»: Array<«TypeUtils.getTypescriptType(property.type)»>;
-			
-			'''
+			if(Utils.isNomenclature(property.type)){
+				'''
+				«name»: Array<«ClassifierUtils.getAttributesInterfaceName(property.type as Classifier)»>;
+				
+				'''
+			}else{
+				'''
+				«name»: Array<«TypeUtils.getTypescriptType(property.type)»>;
+				
+				'''
+			}
 		}
 	}
 	

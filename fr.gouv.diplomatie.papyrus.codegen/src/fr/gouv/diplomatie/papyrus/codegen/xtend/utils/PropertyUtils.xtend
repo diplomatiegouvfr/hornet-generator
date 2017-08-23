@@ -108,15 +108,17 @@ class PropertyUtils {
 	/**
 	 * retourne le nom du model d'une propriété multivaluée
 	 */
-	static def getMultivaluedPropertyModelName(Property property){
-		'''«property.getOwnerName»«Utils.getFirstToUpperCase(property.name)»Model'''
+	static def getMultivaluedPropertyModelName(Property property, Classifier fromClass){
+		val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
+		'''«Utils.getFirstToUpperCase(tableName)»Model'''
 	}
 	
 	/**
 	 * retourne le nom du model d'une propriété multivaluée
 	 */
-	static def getMultivaluedPropertyDtoName(Property property){
-		'''«property.getOwnerName»«Utils.getFirstToUpperCase(property.name)»DTO'''
+	static def getMultivaluedPropertyDtoName(Property property, Classifier fromClass){
+		val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
+		'''«Utils.getFirstToUpperCase(tableName)»DTO'''
 	}
 	
 	/**

@@ -29,7 +29,7 @@ public class ClassifierGenerator {
 	}
 	
 	public static void generateMetierClass(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
-		System.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName());
+		System.out.println("ClassifierGenerator.generateMetierClass : "  + clazz.getName());
 
 		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
 		
@@ -47,7 +47,7 @@ public class ClassifierGenerator {
 	}
 	
 	public static void generateValueObjectMetierClass(Classifier clazz,  IPFileSystemAccess fileSystemAccess) {
-		System.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName());
+		System.out.println("ClassifierGenerator.generateValueObjectMetierClass : "  + clazz.getName());
 
 		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
 		

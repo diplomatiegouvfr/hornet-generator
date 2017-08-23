@@ -7,6 +7,7 @@ import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils
 import org.eclipse.uml2.uml.PrimitiveType
+import org.eclipse.uml2.uml.Interface
 
 public class ClassifierModelGenerator {
 	
@@ -18,9 +19,11 @@ public class ClassifierModelGenerator {
 		import Sequelize = require("sequelize");
 		«clazz.generateImports»
 		
-		export var «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes = «clazz.generateAssignForExtends»{
-			«clazz.generateAttributes("")»
-		}«clazz.generateExtends»«clazz.generateAssignClose»
+		export var «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
+			«clazz.generateExtendsId»
+			«clazz.generateInterfacesAttributes»
+			«clazz.generateAttributes("", clazz)»
+		}
 		
 		«clazz.generateMultivaluedAttributeModels»
 		«««clazz.generateMultiValuedEntityAttributes(hasAttributes, "")»
@@ -31,59 +34,57 @@ public class ClassifierModelGenerator {
 	 * génère les imports
 	 */
 	static def generateImports(Classifier clazz){
-		'''
-		«clazz.generateExtendsImports»
-		'''
+		''''''
 	}
 	
 	/**
-	 * génère les imports lié aux extensions
+	 * génère les id de généralisations
 	 */
-	static def generateExtendsImports(Classifier clazz){
-		val parents = clazz.generalizations
-		if(parents.length > 0){
-			'''«parents.fold("")[acc, parent |
-				acc + '''import { «ClassifierUtils.getModelName(parent.general)» } from "«ClassifierUtils.getModelPath(parent.general)»";
-				'''
-			]»'''
-		}else{
-			''''''
+	static def generateExtendsId(Classifier clazz){
+		val extends = clazz.generalizations
+		if(extends !== null && !extends.empty){
+			val extend = extends.get(0)
+			val ids = ClassifierUtils.getId(extend.general)
+			val id = ids.get(0)
+			'''
+			«id.name»: {
+				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+				field: "«Utils.toSnakeCase(id.name)»",
+				allowNull: «PropertyUtils.isNullable(id)»,
+				references: {
+					model: "«ClassifierUtils.getModelName(extend.general)»",
+					key: "«Utils.toSnakeCase(id.name)»"
+				}
+			},'''
 		}
+		
 	}
 	
-	
-	/**
-	 * ajoute le assignIn pour les extends
-	 */
-	static def generateAssignForExtends(Classifier clazz){
-		val parents = clazz.generalizations
-		if(parents.length > 0){
-			'''_.assignIn('''
+	static def generateInterfacesAttributes(Classifier clazz){
+		val interfaces = clazz.directlyRealizedInterfaces
+		if(interfaces !== null && !interfaces.empty){
+			'''
+			«interfaces.fold("")[acc, interface |
+				acc + '''«interface.generateAttributes("", clazz)»'''
+			]»,
+			'''
 		}else{
 			''''''
 		}
-	}
-	
-	static def generateAssignClose(Classifier clazz){
-		val parents = clazz.generalizations
-		if(parents.length > 0){
-			''')'''
-		}else{
-			''''''
-		}
+		
 	}
 	
 	/**
 	 * Génère les attributs de la classe
 	 */
-	static def generateAttributes(Classifier clazz, String additionnalName){
+	static def generateAttributes(Classifier clazz, String additionnalName, Classifier fromClass){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
 		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
  				acc + ''',
- 				''' + '''«attribut.generateAttributDefinition(additionnalName)»'''
+ 				''' + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
  			}else{
- 				acc + '''«attribut.generateAttributDefinition(additionnalName)»'''
+ 				acc + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
  			}		
  		]»'''
 		
@@ -92,18 +93,18 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère un attribut
 	 */
-	static def generateAttributDefinition(Property property, String additionalName){
+	static def generateAttributDefinition(Property property, String additionalName, Classifier fromClass){
 		if(PropertyUtils.isID(property)){
-			'''«property.generateIdAttributeDefinition(additionalName)»'''
+			'''«property.generateIdAttributeDefinition(additionalName, fromClass)»'''
 		}else{
-			'''«property.generateNIdAttributeDefinition(additionalName)»'''
+			'''«property.generateNIdAttributeDefinition(additionalName, fromClass)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut id
 	 */
-	static def generateIdAttributeDefinition(Property property, String additionnalName){
+	static def generateIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		'''
 		«name»: {
@@ -117,35 +118,37 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère la définition d'un attribut qui n'est pas un id
 	 */
-	static def generateNIdAttributeDefinition(Property property, String additionnalName){
+	static def generateNIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
 		if(PropertyUtils.isClassAttribute(property)){
-			'''«property.generateClassAttributeDefinition(additionnalName)»'''
+			'''«property.generateClassAttributeDefinition(additionnalName, fromClass)»'''
 		}else{
-			'''«property.generateBasicAttributeDefinition(additionnalName)»'''
+			'''«property.generateBasicAttributeDefinition(additionnalName, fromClass)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut lié a la classe
 	 */
-	static def generateClassAttributeDefinition(Property property, String additionnalName){
+	static def generateClassAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
 		if(Utils.isValueObject(property.type)){
-			'''«property.generateValueObjectAttributeDefinition(additionnalName)»'''
+			'''«property.generateValueObjectAttributeDefinition(additionnalName, fromClass)»'''
+		}else if (Utils.isNomenclature(property.type)){
+			'''«property.generateEnumAttributeDefinition(additionnalName, fromClass)»'''
 		}else{
-			'''«property.generateEntityAttributesDefinition(additionnalName)»'''
+			'''«property.generateEntityAttributesDefinition(additionnalName, fromClass)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut de type value Object
 	 */
-	static def generateValueObjectAttributeDefinition(Property property, String additionnalName){
+	static def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		val type = property.type
 		if(type instanceof Classifier){
 			val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(type)
 			val hasAttributes = (!attributes.empty && attributes !== null)
-			return '''«type.generateAttributes(name)»'''
+			return '''«type.generateAttributes(name, fromClass)»'''
 			//«««type.generateMultiValuedEntityAttributes(hasAttributes, name)»
 			
 		}else{
@@ -175,15 +178,15 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributesDefinition(Property property, String additonnalName){
+	static def generateEntityAttributesDefinition(Property property, String additonnalName, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
 			ids.fold("")[acc , id |
 				if(acc != ""){
-					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName)»'''
+					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName, fromClass)»'''
 				}else{
-					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName)»'''
+					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, fromClass)»'''
 				}
 			]
 		}else{
@@ -192,10 +195,26 @@ public class ClassifierModelGenerator {
 		
 	}
 	
+	static def generateEnumAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+		val type = property.type
+		val sqlType = TypeUtils.getEnumSequelizeType(type as Classifier)
+		val propName = Utils.addAdditionnalName(additionnalName, property.name)
+		return '''
+			«propName»: {
+				type: Sequelize.«sqlType»,
+				field: "«Utils.toSnakeCase(propName)»",
+				allowNull: «PropertyUtils.isNullable(property)»,
+				references: {
+					model: "«ClassifierUtils.getModelName(type as Classifier)»",
+					key: "code"
+				}
+			}'''
+	}
+	
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName){
+	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass){
 		val type = property.type
 		val propName = Utils.addAdditionnalName(additionnalName, id.name) + Utils.getFirstToUpperCase(property.name)
 		return '''
@@ -204,7 +223,7 @@ public class ClassifierModelGenerator {
 				field: "«Utils.toSnakeCase(propName)»"«property.generateNIdAttributeDefaultValue»,
 				allowNull: «PropertyUtils.isNullable(property)»,
 				references: {
-					model: "«type.name»",
+					model: "«ClassifierUtils.getModelName(type as Classifier)»",
 					key: "«id.name»"
 				}
 			}'''
@@ -213,7 +232,7 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère la définition d'un attribut basique
 	 */
-	static def generateBasicAttributeDefinition(Property property, String additionnalName){
+	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
 		var name = Utils.addAdditionnalName(additionnalName, property.name)
 		'''
 		«name»: {
@@ -332,11 +351,10 @@ public class ClassifierModelGenerator {
 			field: "«Utils.toSnakeCase(fieldName)»",
 			allowNull: «PropertyUtils.isNullable(property)»,
 			references: {
-				model: "«fromClass.name»",
+				model: "«ClassifierUtils.getModelName(fromClass as Classifier)»",
 				key: "«id.name»"
 			}
-		}
-		'''
+		}'''
 	}
 	
 	static def generateReferenceAttributesNA(Property property, Classifier clazz, String additionnalName){
@@ -365,7 +383,7 @@ public class ClassifierModelGenerator {
 				field: "«Utils.toSnakeCase(fieldName)»",
 				allowNull: «PropertyUtils.isNullable(property)»,
 				references: {
-					model: "«fromClass.name»",
+					model: "«ClassifierUtils.getModelName(fromClass as Classifier)»",
 					key: "«id.name»"
 				}
 			}'''
@@ -389,200 +407,210 @@ public class ClassifierModelGenerator {
 			return (Utils.isEntity(type) && (attribut.multivalued))
 		]
 		
+		val multivaluedEnums = ownedAttributes.filter[attribut |
+			val type = attribut.type
+			return (Utils.isNomenclature(type) && (attribut.multivalued))
+		]
+		
+		val multivaluedValueObject = ownedAttributes.filter[attribut |
+			val type = attribut.type
+			return (Utils.isValueObject(type) && (attribut.multivalued))
+		]
+		
+		val interfaces = clazz.directlyRealizedInterfaces
+		
 		return '''
 		«primitiveAttributes.fold("")[acc, attribut|
-			acc + '''«attribut.generateMultiValuedPrimitiveTypeModel»'''
+			acc + '''«attribut.generateMultiValuedPrimitiveTypeModel(clazz)»'''
  		]»
 		«multiAttributes.fold("")[acc, attribut |
- 			acc + '''«attribut.generateMultiValuedNPTypeModel»'''
- 		]»
+ 			acc + '''«attribut.generateMultiValuedNPTypeModel(clazz)»'''
+ 		]»«multivaluedEnums.fold("")[acc, attribut |
+ 			acc + '''«attribut.generateMultiValuedEnumModel(clazz)»'''
+ 		]»«multivaluedValueObject.fold("")[acc, attribut |
+ 			acc + '''«attribut.generateMultiValuedVOModel(clazz)»'''
+ 		]»«interfaces.fold("")[acc, interface |
+	 		acc + '''«interface.generateInterfaceModels(clazz)»'''
+	 	]»
 		'''
 		
+	}
+	
+	static def generateMultivaluedAttribut(Property property, Classifier fromClass){
+		val type = property.type 
+		if(Utils.isEntity(type)){
+			'''«property.generateMultiValuedNPTypeModel(fromClass)»'''
+		}else if(Utils.isValueObject(type)){
+			'''«property.generateMultiValuedVOModel(fromClass)»'''
+		}else if(Utils.isNomenclature(type)){
+			'''«property.generateMultiValuedEnumModel(fromClass)»'''
+		}else{
+			'''«property.generateMultiValuedPrimitiveTypeModel(fromClass)»'''
+		}
 	}
 
 	/**
 	 * génère le model d'un attribut multivalué
 	 */
-	static def generateMultiValuedPrimitiveTypeModel(Property property){
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			val ids = ClassifierUtils.getId(owner)
-			'''
-			
-			export var «PropertyUtils.getMultivaluedPropertyModelName(property)»: Sequelize.DefineAttributes={
-				"«property.name»": {
-					type: «property.getAttributeSequelizeTypeDeclaration»,
-					field: "«Utils.toSnakeCase(property.name)»",
-					primaryKey: true,
-					allowNull: false
-				},
-				«ids.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«property.generateMultiValuedPrimitiveTypeModelIdAttributes(id)»'''
-					}else{
-						acc + '''«property.generateMultiValuedPrimitiveTypeModelIdAttributes(id)»'''
-					}
-				]»
-			}
-			'''
-		}else{
-			''''''
+	static def generateMultiValuedPrimitiveTypeModel(Property property, Classifier fromClass){
+		val ids = ClassifierUtils.getId(fromClass)
+		'''
+		
+		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+			«property.name»: {
+				type: «property.getAttributeSequelizeTypeDeclaration»,
+				field: "«Utils.toSnakeCase(property.name)»",
+				primaryKey: true,
+				allowNull: false
+			},
+			«ids.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«property.generateMultiValuedPrimitiveTypeModelIdAttributes(id, fromClass)»'''
+				}else{
+					acc + '''«property.generateMultiValuedPrimitiveTypeModelIdAttributes(id, fromClass)»'''
+				}
+			]»
 		}
+		'''
 	}
 	
-	static def generateMultiValuedPrimitiveTypeModelIdAttributes(Property property, Property id){
+	static def generateMultiValuedPrimitiveTypeModelIdAttributes(Property property, Property id, Classifier fromClass){
 		val idName = id.name
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			val name = idName + Utils.getFirstToUpperCase(owner.name)
-			'''
-			"«idName»":{
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
-				field: "«Utils.toSnakeCase(name)»",
-				allowNull: false,
-				references: {
-					model: "«owner.name»",
-					key: "«idName»"
-				}
+		val name = idName + Utils.getFirstToUpperCase(fromClass.name)
+		'''
+		«idName»:{
+			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+			field: "«Utils.toSnakeCase(name)»",
+			allowNull: false,
+			references: {
+				model: "«ClassifierUtils.getModelName(fromClass)»",
+				key: "«idName»"
 			}
-			'''
 		}
+		'''
 	}
 	
 	/**
 	 * génère les table d'association 
 	 */	
-	 static def generateMultiValuedNPTypeModel(Property property){
+	 static def generateMultiValuedNPTypeModel(Property property, Classifier fromClass){
 	 	val type = property.type
 	 	val owner = property.owner
 	 	if(property.association !== null){
 	 		if(type != owner){
 		 		'''
-		 		«property.generateNPTypeAssociationModel»
+		 		«property.generateNPTypeAssociationModel(fromClass)»
 		 		'''
 	 		}else{
 	 			''''''
 	 		}
 	 	}else{
 	 		'''
-	 		«property.generateNPTypeModel»
+	 		«property.generateNPTypeModel(fromClass)»
 	 		'''
 	 	}
 	}
 	
-	static def generateNPTypeAssociationModel(Property property){
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			val members = property.association.ownedEnds
-	 		val member = members.get(0)
-			val idsOwner = ClassifierUtils.getId(owner)
-			val idsProp = ClassifierUtils.getId(member.type as Classifier)
-			
-			'''
-			
-			export var «PropertyUtils.getMultivaluedPropertyModelName(property)»: Sequelize.DefineAttributes={
-				«idsProp.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«member.generateNPTAssociationModelIdAttributes(id)»'''
-					}else{
-						acc + '''«member.generateNPTAssociationModelIdAttributes(id)»'''
-					}
-				]»,
-				«idsOwner.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«property.generateNPTAssociationModelIdAttributes(id)»'''
-					}else{
-						acc + '''«property.generateNPTAssociationModelIdAttributes(id)»'''
-					}
-				]»
-			}
-			'''
-		}else{
-			''''''
+	static def generateNPTypeAssociationModel(Property property, Classifier fromClass){
+		val members = property.association.ownedEnds
+ 		val member = members.get(0)
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		val idsProp = ClassifierUtils.getId(member.type as Classifier)
+		'''
+		
+		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+			«idsProp.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«member.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+				}else{
+					acc + '''«member.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+				}
+			]»,
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«property.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+				}else{
+					acc + '''«property.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+				}
+			]»
 		}
+		'''
 	}
 	
-	static def generateNPTAssociationModelIdAttributes(Property property, Property id){
+	static def generateNPTAssociationModelIdAttributes(Property property, Property id, Classifier fromClass){
 		val type = property.type
 		val idName = Utils.addAdditionnalName(id.name, type.name)
 		if(type instanceof Classifier){
 			'''
-			"«idName»":{
+			«idName»:{
 				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 				field: "«Utils.toSnakeCase(idName)»",
 				allowNull: false,
 				references: {
-					model: "«type.name»",
+					model: "«ClassifierUtils.getModelName(type)»",
 					key: "«id.name»"
 				}
-			}
-			'''
+			}'''
 		}
 	}
 	
 	
-	static def generateNPTypeModel(Property property){
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			val idsOwner = ClassifierUtils.getId(owner)
-			val idsProp = ClassifierUtils.getId(property.type as Classifier)
-			
-			'''
-			
-			export var «PropertyUtils.getMultivaluedPropertyModelName(property)»: Sequelize.DefineAttributes={
-				«idsOwner.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«id.generateNPTModelIdAttributes()»'''
-					}else{
-						acc + '''«id.generateNPTModelIdAttributes()»'''
-					}
-				]»,
-				«idsProp.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«property.generateNPTModelIdAttributes(id)»'''
-					}else{
-						acc + '''«property.generateNPTModelIdAttributes(id)»'''
-					}
-				]»
-			}
-			'''
-		}else{
-			''''''
+	static def generateNPTypeModel(Property property, Classifier fromClass){
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		val idsProp = ClassifierUtils.getId(property.type as Classifier)
+		
+		'''
+		
+		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«id.generateNPTModelIdAttributes(fromClass)»'''
+				}else{
+					acc + '''«id.generateNPTModelIdAttributes(fromClass)»'''
+				}
+			]»,
+			«idsProp.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«property.generateNPTModelIdAttributes(id, fromClass)»'''
+				}else{
+					acc + '''«property.generateNPTModelIdAttributes(id, fromClass)»'''
+				}
+			]»
 		}
+		'''
 	}
 	
 	
-	static def generateNPTModelIdAttributes(Property id){
+	static def generateNPTModelIdAttributes(Property id, Classifier fromClass){
 		val type = id.owner
 		if(type instanceof Classifier){
 			val idName = Utils.addAdditionnalName(id.name, type.name)
 			if(type instanceof Classifier){
 				'''
-				"«idName»":{
+				«idName»:{
 					type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 					field: "«Utils.toSnakeCase(idName)»",
 					allowNull: false,
 					references: {
-						model: "«type.name»",
+						model: "«ClassifierUtils.getModelName(type)»",
 						key: "«id.name»"
 					}
-				}
-				'''
+				}'''
 			}
 		}
 	}
 	
-	static def generateNPTModelIdAttributes(Property property, Property id){
+	static def generateNPTModelIdAttributes(Property property, Property id, Classifier fromClass){
 		val type = property.type
 		val idName = Utils.addAdditionnalName(id.name, type.name)
 		if(type instanceof Classifier){
 			'''
-			"«idName»":{
+			«idName»:{
 				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 				field: "«Utils.toSnakeCase(idName)»",
 				allowNull: false,
 				references: {
-					model: "«type.name»",
+					model: "«ClassifierUtils.getModelName(type)»",
 					key: "«id.name»"
 				}
 			}
@@ -608,5 +636,65 @@ public class ClassifierModelGenerator {
 		}else{
 			''''''
 		}
+	}
+	
+	/**
+	 * génère une table d'association pour les enums */
+	static def generateMultiValuedEnumModel(Property property, Classifier fromClass){
+		val type = property.type
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		
+		'''
+		
+		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«id.generateNPTModelIdAttributes(fromClass)»'''
+				}else{
+					acc + '''«id.generateNPTModelIdAttributes(fromClass)»'''
+				}
+			]»,
+			code: {
+				type: Sequelize.«TypeUtils.getEnumSequelizeType(type as Classifier)»,
+				field: "code",
+				allowNull: false,
+				references: {
+					model: "«ClassifierUtils.getModelName(type as Classifier)»",
+					key: "code"
+				}
+			}
+		}
+		'''
+		
+	}
+	
+	static def generateMultiValuedVOModel(Property property, Classifier fromClass){
+		val type = property.type
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		
+		'''
+		
+		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«id.generateNPTModelIdAttributes(fromClass)»'''
+				}else{
+					acc + '''«id.generateNPTModelIdAttributes(fromClass)»'''
+				}
+			]»,
+			«(type as Classifier).generateAttributes(property.name, fromClass)»
+		}
+		'''
+	}
+	
+	static def generateInterfaceModels(Interface interf, Classifier fromClass){
+		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(interf)
+		
+		'''
+		«attributes.fold("")[acc, attribut|
+ 			acc + '''
+ 			«attribut.generateMultivaluedAttribut(fromClass)»'''	
+ 		]»
+ 		'''
 	}
 }

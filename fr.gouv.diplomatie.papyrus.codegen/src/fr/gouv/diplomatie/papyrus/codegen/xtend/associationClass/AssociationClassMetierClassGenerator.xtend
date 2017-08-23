@@ -7,6 +7,8 @@ import org.eclipse.uml2.uml.Classifier
 import org.eclipse.uml2.uml.Property
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
+import java.util.ArrayList
+import org.eclipse.uml2.uml.Type
 
 public class AssociationClassMetierClassGenerator{
 	
@@ -28,23 +30,45 @@ public class AssociationClassMetierClassGenerator{
 	 * génère les imports
 	 */
 	static def generateImports(AssociationClass clazz){
+		val attributesTypes = clazz.generateAttributesImports(newArrayList(), clazz)
 		'''
-		«clazz.generateAttributesImports»
+		«attributesTypes.fold("")[acc, type |
+			if(Utils.isNomenclature(type)){
+				acc +  '''
+				import { «Utils.getFirstToUpperCase(type.name)» } from "«ClassifierUtils.getEnumClassPath(type as Classifier)»";
+				'''
+			}else{
+				acc +  '''
+				import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
+				'''
+			}
+		]»
 		'''
 	}
 	
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(AssociationClass clazz){
+	 static def generateAttributesImports(AssociationClass clazz, ArrayList<Type> types, Classifier fromClass){
 	 	val attributes = clazz.memberEnds.filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
+		
+		val attributesEnums = clazz.memberEnds.filter[ attribut |
+			(Utils.isNomenclature(attribut.type))
+		]
+		
 		val attributesValueObject = clazz.memberEnds.filter[ attribut |
 			(Utils.isValueObject(attribut.type))
 		]
-		var types = newArrayList()
+		
 		for(attribut : attributes){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
+			}
+		}
+		
+		for(attribut : attributesEnums){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
 			}
@@ -55,13 +79,7 @@ public class AssociationClassMetierClassGenerator{
 				types.add(attribut.type)
 			}
 		}
-		'''
-		«types.fold("")[acc, type |
-			acc +  '''
-			import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
-			'''
-		]»
-		'''
+		return types
 	 }
 	 
 	 /**
@@ -146,6 +164,8 @@ public class AssociationClassMetierClassGenerator{
 	static def generateClassAttribute(Property property, String additionnalName){
 		if(Utils.isValueObject(property.type)){
 			'''«property.generateValueObjectAttribute(additionnalName)»'''
+		}else if(Utils.isNomenclature(property.type)){
+			'''«property.generateEnumAttribute(additionnalName)»'''
 		}else{
 			'''«property.generateEntityAttributes(additionnalName)»'''
 		}
@@ -177,13 +197,35 @@ public class AssociationClassMetierClassGenerator{
 	}
 	
 	/**
+	 * génère un attrbiut de type enum
+	 */
+	static def generateEnumAttribute(Property property, String additionnalName){
+		val type = property.type
+		val propName =  Utils.addAdditionnalName(additionnalName, property.name)
+		var array = ""
+		var endArray = ""
+		if(property.multivalued){
+			array = "Array<"
+			endArray = ">"
+		} 
+		if(type instanceof Classifier){
+			'''
+			
+			«Utils.generateComments(property)»
+			@Map()
+			«propName»: «array»«Utils.getFirstToUpperCase(type.name)»«endArray»;
+			'''
+		}
+	}
+	
+	/**
 	 * génère un attribut de type entity
 	 */
-	static def generateEntityAttributes(Property property, String additonnalName){
+	static def generateEntityAttributes(Property property, String additionnalName){
 		val type = property.type
 		if(type instanceof Classifier){
 			'''
-			«property.generateEntityAttribute(additonnalName)»
+			«property.generateEntityAttribute(additionnalName)»
 			'''
 		}else{
 			''''''

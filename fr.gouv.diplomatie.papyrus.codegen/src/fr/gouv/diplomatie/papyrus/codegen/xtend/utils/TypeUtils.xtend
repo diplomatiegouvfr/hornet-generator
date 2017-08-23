@@ -1,6 +1,7 @@
 package fr.gouv.diplomatie.papyrus.codegen.xtend.utils
 
 import org.eclipse.uml2.uml.Type;
+import org.eclipse.uml2.uml.Classifier
 
 class TypeUtils{
 	
@@ -82,5 +83,17 @@ class TypeUtils{
 		}else {
 			return 'character'
 		}
+	}
+	
+	static def getEnumType(Classifier type){
+		return "integer"
+	}
+	
+	static def getEnumSequelizeType(Classifier type){
+		return "INTEGER"
+	}
+	
+	static def getEnumTypescriptType(Classifier type){
+		return "number"
 	}
 }

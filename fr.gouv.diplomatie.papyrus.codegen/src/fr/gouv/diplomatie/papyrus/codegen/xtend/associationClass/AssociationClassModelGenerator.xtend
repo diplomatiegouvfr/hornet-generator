@@ -32,9 +32,9 @@ public class AssociationClassModelGenerator {
 		«members.fold("")[acc, member |
 			if(acc != ""){
 				acc + ''',
-				''' + '''«member.generateMemberAttributes»'''	
+				''' + '''«member.generateMemberAttributes(clazz)»'''	
 			}else{
-				acc + '''«member.generateMemberAttributes»'''
+				acc + '''«member.generateMemberAttributes(clazz)»'''
 			}
 		]»
 		'''
@@ -43,37 +43,37 @@ public class AssociationClassModelGenerator {
 	/**
 	 * génère les attribut liés à au membre de la classe d'association
 	 */
-	static def generateMemberAttributes(Property property){
+	static def generateMemberAttributes(Property property, Classifier fromClass){
 		val type = property.type
 		if(Utils.isEntity(type)){
-			'''«property.generateEntityMemberAttributes»'''
+			'''«property.generateEntityMemberAttributes(fromClass)»'''
+		}else if(Utils.isNomenclature(type)){
+			'''«property.generateEnumMemberAttributes(fromClass)»'''
 		}else if(Utils.isValueObject(type)){
-			'''«property.generateValueObjectMemberAttributes»'''
+			'''«property.generateValueObjectMemberAttributes(fromClass)»'''
 		}
 	}
 	
 	/**
 	 * génère les attributs liés à un membre de type entity
 	 */
-	static def generateEntityMemberAttributes(Property property){
+	static def generateEntityMemberAttributes(Property property, Classifier fromClass){
 		val ids = ClassifierUtils.getId(property.type as Classifier)
-		'''
-		«ids.fold("")[acc, id |
+		'''«ids.fold("")[acc, id |
 			if(acc != ""){
 				acc + ''',
-				'''  + '''«property.generateEntityMemberAttribute(id)»'''
+				'''  + '''«property.generateEntityMemberAttribute(id, fromClass)»'''
 			}else{
-				acc + '''«property.generateEntityMemberAttribute(id)»'''
+				acc + '''«property.generateEntityMemberAttribute(id, fromClass)»'''
 			}
-		]»
-		'''
+		]»'''
 		
 	}
 	
 	/**
 	 * génère l'attribut lié à un membre de type entity
 	 */
-	static def generateEntityMemberAttribute(Property property, Property id){
+	static def generateEntityMemberAttribute(Property property, Property id, Classifier fromClass){
 		val name = id.name + Utils.getFirstToUpperCase(property.name)
 		'''
 		«name»: {
@@ -82,8 +82,24 @@ public class AssociationClassModelGenerator {
 			allowNull: «PropertyUtils.isNullable(property)»,
 			primaryKey: true,
 			references: {
-				model: "«property.type.name»",
+				model: "«ClassifierUtils.getModelName(property.type as Classifier)»",
 				key: "«id.name»"
+			}
+		}'''
+	}
+	
+	static def generateEnumMemberAttributes(Property property, Classifier fromClass){
+		val name = property.name
+		val type = property.type
+		'''
+		«name»: {
+			type: Sequelize.«TypeUtils.getEnumSequelizeType(type as Classifier)»,
+			field: "«Utils.toSnakeCase(name)»",
+			allowNull: «PropertyUtils.isNullable(property)»,
+			primaryKey: true,
+			references: {
+				model: "«ClassifierUtils.getModelName(type as Classifier)»",
+				key: "code"
 			}
 		}'''
 	}
@@ -103,8 +119,8 @@ public class AssociationClassModelGenerator {
 	/**
 	 * génère les attributs liés a un membre de type valued object
 	 */
-	static def generateValueObjectMemberAttributes(Property property){
-		ClassifierModelGenerator.generateValueObjectAttributeDefinition(property,"")
+	static def generateValueObjectMemberAttributes(Property property, Classifier fromClass){
+		ClassifierModelGenerator.generateValueObjectAttributeDefinition(property,"",fromClass)
 	}
 	
 }

@@ -36,5 +36,9 @@ public class GeneratorUtils {
 	public static String getModelDaoPath(Package pakkage) {
 		return DAO_REPOSITORY + "model-dao";
 	}
+	
+	public static String getEnumPath(Classifier clazz) {
+		return MODEL_REPOSITORY  + "enum-" + Utils.toTypescriptFileName(clazz.getName());
+	}
 
 }

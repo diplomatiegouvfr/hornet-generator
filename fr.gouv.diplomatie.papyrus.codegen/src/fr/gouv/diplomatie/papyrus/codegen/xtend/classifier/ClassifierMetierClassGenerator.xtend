@@ -19,8 +19,10 @@ public class ClassifierMetierClassGenerator {
 		
 		«clazz.generateImports»
 		
+		«Utils.generateComments(clazz)»
 		@Bean
-		export class «ClassifierUtils.getMetierClassName(clazz)» «clazz.generateExtends»{
+		export class «ClassifierUtils.getMetierClassName(clazz)» «clazz.generateExtends»«clazz.generateImplements»{
+			«clazz.generateInterfaceAttributes»
 			«clazz.generateAttributes("")»
 			«IF Utils.isEntity(clazz)»«clazz.generateAssociationsAttributes»«ENDIF»
 			
@@ -36,9 +38,15 @@ public class ClassifierMetierClassGenerator {
 		'''
 		«clazz.generateExtendsImports»
 		«attributesTypes.fold("")[acc, type |
-			acc +  '''
-			import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
-			'''
+			if(Utils.isNomenclature(type)){
+				acc +  '''
+				import { «Utils.getFirstToUpperCase(type.name)» } from "«ClassifierUtils.getEnumClassPath(type as Classifier)»";
+				'''
+			}else{
+				acc +  '''
+				import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
+				'''
+			}
 		]»
 		'''
 	}
@@ -85,17 +93,31 @@ public class ClassifierMetierClassGenerator {
 		val attributesValueObject = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isValueObject(attribut.type))
 		]
+		
+		val attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			(Utils.isNomenclature(attribut.type))
+		]
+		
+		val interfaces = clazz.directlyRealizedInterfaces
+		
 		for(attribut : attributes){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
 			}
 		}
-		/*attributesValueObject.forEach[attribut |
-			var type = attribut.type
-			if(type instanceof Classifier){
-				type.generateAttributesImports(types, fromClass)
+		
+		for(attribut : attributesEnums){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
 			}
-		]*/
+		}
+		
+		for(interface : interfaces){
+			if(!types.contains(interface)){
+				types.add(interface)
+			}
+			interface.generateAttributesImports(types, fromClass)
+		}
 		
 		for(attribut : attributesValueObject){
 			if(!types.contains(attribut.type)){
@@ -130,16 +152,37 @@ public class ClassifierMetierClassGenerator {
 	static def generateExtends(Classifier clazz){
 		val parents = clazz.generalizations
 		if(parents.length > 0){
-			'''«parents.fold("")[acc, parent |
-				if(acc != ""){
-					acc + ''',«ClassifierUtils.getMetierClassName(parent.general)»'''
-				}else{
-					acc + '''extends «ClassifierUtils.getMetierClassName(parent.general)»'''
-				}
-			]»'''
+			val parent = parents.get(0)
+			'''extends «ClassifierUtils.getMetierClassName(parent.general)»'''
 		}else{
 			''''''
 		}
+	}
+	
+	static def generateImplements(Classifier clazz){
+		val parents = clazz.directlyRealizedInterfaces
+		if(parents.length > 0){
+			''' implements «parents.fold("")[acc, parent |
+				if(acc != ""){
+					acc + ''', «ClassifierUtils.getMetierClassName(parent)»'''
+				}else{
+					acc + '''«ClassifierUtils.getMetierClassName(parent)»'''
+				}
+			]»
+			'''
+			
+		}else{
+			''''''
+		}
+	}
+	
+	static def generateInterfaceAttributes(Classifier clazz){
+		val interfaces = clazz.directlyRealizedInterfaces
+		'''
+		«interfaces.fold("")[acc, interface |
+			acc + '''«interface.generateAttributes("")»'''
+		]»
+		'''
 	}
 	 
 	 /**
@@ -172,6 +215,8 @@ public class ClassifierMetierClassGenerator {
 	static def generateClassAttribute(Property property, String additionnalName){
 		if(Utils.isValueObject(property.type)){
 			'''«property.generateValueObjectAttribute(additionnalName)»'''
+		}else if(Utils.isNomenclature(property.type)){
+			'''«property.generateEnumAttribute(additionnalName)»'''
 		}else{
 			'''«property.generateEntityAttributes(additionnalName)»'''
 		}
@@ -194,13 +239,39 @@ public class ClassifierMetierClassGenerator {
 		val type = property.type
 		if(type instanceof Classifier){
 			val propName = Utils.addAdditionnalName(additionnalName, property.name)
+			var array =""
+			var endArray =""
+			if(property.multivalued){
+				array= "Array<"
+				endArray =">"
+			}
 			'''
 			
 			«Utils.generateComments(property)»
 			@Map(«ClassifierUtils.getMetierClassName(type)»)
-			«propName»: «ClassifierUtils.getMetierClassName(type)»;
+			«propName»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
 			'''
 		}
+	}
+	
+	/**
+	 * génère un attribut de type enum
+	 */
+	static def generateEnumAttribute(Property property, String additionnalName){
+		val propName = Utils.addAdditionnalName(additionnalName, property.name)
+		val type = property.type
+		var array =""
+		var endArray =""
+		if(property.multivalued){
+			array= "Array<"
+			endArray =">"
+		}
+		'''
+			
+		«Utils.generateComments(property)»
+		@Map()
+		«propName»: «array»«Utils.getFirstToUpperCase(type.name)»«endArray»;
+		'''
 	}
 	
 	/**
@@ -273,12 +344,22 @@ public class ClassifierMetierClassGenerator {
 		«members.fold("")[acc, member |
 			val type = member.type
 			if(type instanceof Classifier){
-				acc + 
-				'''
+				if(Utils.isNomenclature(type)){
+					acc + 
+					'''
+					
+					@Map()
+					«Utils.getFirstToLowerCase(clazz.name)»: Array<«Utils.getFirstToUpperCase(type.name)»>;
+					'''
+				}else{
+					acc + 
+					'''
+					
+					@Map(«ClassifierUtils.getMetierClassName(type)»)
+					«Utils.getFirstToLowerCase(member.name)»: Array<«ClassifierUtils.getMetierClassName(type)»>;
+					'''
+				}
 				
-				@Map(«ClassifierUtils.getMetierClassName(type)»)
-				«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getMetierClassName(type)»>;
-				'''
 			}
 		]»
 		'''

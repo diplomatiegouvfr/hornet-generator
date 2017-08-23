@@ -10,6 +10,7 @@ import org.eclipse.uml2.uml.Type
 import java.util.ArrayList
 import org.eclipse.uml2.uml.PrimitiveType
 import org.eclipse.uml2.uml.AssociationClass
+import org.eclipse.uml2.uml.Interface
 
 public class ClassifierDtoClassGenerator{
 	
@@ -23,7 +24,9 @@ public class ClassifierDtoClassGenerator{
 		
 		@Bean
 		export class «ClassifierUtils.getDtoClassName(clazz)» «clazz.generateExtends»{
-			«clazz.generateAttributes»
+			«clazz.generateExtendsAttributes»
+			«clazz.generateInterfaceAttributes»
+			«clazz.generateAttributes(clazz)»
 			«clazz.generateAssociationAttributes»
 		}
 		
@@ -71,10 +74,27 @@ public class ClassifierDtoClassGenerator{
 		val attributesValueObject = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isValueObject(attribut.type))
 		]
+		
+		val attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			(Utils.isNomenclature(attribut.type))
+		]
+		
+		val interfaces = clazz.directlyRealizedInterfaces
+		
 		for(attribut : attributes){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
 			}
+		}
+		
+		for(attribut : attributesEnums){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
+			}
+		}
+		
+		for(interface : interfaces){
+			interface.generateAttributesImports(types)
 		}
 		
 		if(Utils.isEntity(clazz)){
@@ -121,6 +141,25 @@ public class ClassifierDtoClassGenerator{
 		}
 	}
 	
+	/**
+	 * génère les attributs liés aux extends
+	 */
+	static def generateExtendsAttributes(Classifier clazz){
+		val parents = clazz.generalizations
+		if(parents !== null && !parents.empty){
+			'''«parents.fold("")[acc, parent |
+				acc + 
+				'''
+				
+				@Map()
+				«Utils.getFirstToLowerCase(parent.general.name)»: «ClassifierUtils.getDtoClassName(parent.general)»;
+				'''
+			]»'''
+		}else{
+			''''''
+		}
+	}
+	
 	static def generateAssociationAttributes(Classifier clazz){
 		val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
 		'''
@@ -130,16 +169,26 @@ public class ClassifierDtoClassGenerator{
 		'''
 	}
 	
+	static def generateInterfaceAttributes(Classifier clazz){
+		val interfaces = clazz.directlyRealizedInterfaces
+		'''
+		«interfaces.fold("")[acc, interface |
+			acc + '''«interface.generateAttributes(clazz)»'''
+		]»
+		'''
+	}
+	 
+	
 	/**
 	 * génère les attributs simples de la classe
 	 */
-	static def generateAttributes(Classifier clazz){
+	static def generateAttributes(Classifier clazz, Classifier fromClass){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz)
 		
 		'''
 		«attributes.fold("")[acc, attribut|
  			acc + '''
- 			«attribut.generateAttribut(newArrayList())»'''	
+ 			«attribut.generateAttribut(newArrayList(), fromClass)»'''	
  		]»
  		'''
 	}
@@ -147,13 +196,13 @@ public class ClassifierDtoClassGenerator{
 		/**
 	 * génère les attributs simples de la classe
 	 */
-	static def generateAttributes(Classifier clazz, ArrayList<String> names){
+	static def generateAttributes(Classifier clazz, ArrayList<String> names, Classifier fromClass){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz)
 		
 		'''
 		«attributes.fold("")[acc, attribut|
  			acc + '''
- 			«attribut.generateAttribut(names)»'''	
+ 			«attribut.generateAttribut(names, fromClass)»'''	
  		]»
  		'''
 	}
@@ -161,9 +210,9 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère un attribut de la classe
 	 */
-	static def generateAttribut(Property property, ArrayList<String> names){
+	static def generateAttribut(Property property, ArrayList<String> names, Classifier fromClass){
 		if(PropertyUtils.isClassAttribute(property)){
-			'''«property.generateClassAttribute(names)»'''
+			'''«property.generateClassAttribute(names, fromClass)»'''
 		}else{
 			'''«property.generateBasicAttribute(names)»'''
 		}
@@ -172,9 +221,9 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère un attribut lié a la classe
 	 */
-	static def generateClassAttribute(Property property, ArrayList<String> names){
+	static def generateClassAttribute(Property property, ArrayList<String> names, Classifier fromClass){
 		if(Utils.isValueObject(property.type)){
-			'''«property.generateValueObjectAttribute(names)»'''
+			'''«property.generateValueObjectAttribute(names, fromClass)»'''
 		}else{
 			'''«property.generateEntityAttributes(names)»'''
 		}
@@ -183,19 +232,22 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère un attribut de type value Object
 	 */
-	static def generateValueObjectAttribute(Property property, ArrayList<String> names){
+	static def generateValueObjectAttribute(Property property, ArrayList<String> names, Classifier fromClass){
 		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		val type = property.type
 		names.add(property.name)
 		if(type instanceof Classifier){
 			if(!property.multivalued){
-				return '''«type.generateAttributes(names)»
+				return 
+				'''
+				«type.generateAttributes(names, fromClass)»
 				'''
 			}else{
+				val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
 				'''
 				
 				@Map()
-				«property.name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
+				«name»: Array<«Utils.getFirstToUpperCase(tableName)»DTO>;
 				'''
 			}
 		}else{
@@ -204,26 +256,33 @@ public class ClassifierDtoClassGenerator{
 	}
 	
 	/**
-	 * génère un attribut de type entity
+	 * génère un attribut de type entity ou enum
 	 */
 	static def generateEntityAttributes(Property property, ArrayList<String> names){
 		val type = property.type
 		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
-		
+		val propName = Utils.getListPoint(names) + '.' + property.name 
+		//names.add(property.name)
 		if(type instanceof Classifier){
 			if(!property.multivalued){
 				val ids = ClassifierUtils.getId(type)
-				'''
+				var alias = ""
+				if(!names.empty){
+					alias = '''
+					@Alias('name', '«propName»')'''
+				}
+				return '''
 				«ids.fold("")[acc, id |
 					acc + '''«property.generateEntityAttribute(id, names)»'''
 				]»
 				
 				@Map()
-				@Alias('«Utils.getListPoint(names)»')
+				«alias»
 				«name»: «ClassifierUtils.getDtoClassName(type)»;
 				'''
+				
 			}else{
-				'''
+				return '''
 				
 				@Map()
 				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
@@ -284,6 +343,7 @@ public class ClassifierDtoClassGenerator{
 	 */
 	static def generateMultivaluedAttributeDto(Classifier clazz){
 		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(clazz)
+		
 		val primitiveAttributes = attributes.filter[attribut |
 			val type = attribut.type
 			return ( type instanceof PrimitiveType)
@@ -293,15 +353,19 @@ public class ClassifierDtoClassGenerator{
 
 		val multiAttributes = ownedAttributes.filter[attribut |
 			val type = attribut.type
-			return (Utils.isEntity(type) && (attribut.multivalued))
+			return ((Utils.isEntity(type) || Utils.isValueObject(type) || Utils.isNomenclature(type)) && (attribut.multivalued))
 		]
+		
+		val interfaces = clazz.directlyRealizedInterfaces
 		
 		return '''
 		«primitiveAttributes.fold("")[acc, attribut|
-			acc + '''«attribut.generateMultiValuedPrimitiveTypeDto»'''
+			acc + '''«attribut.generateMultiValuedPrimitiveTypeDto(clazz)»'''
  		]»
 		«multiAttributes.fold("")[acc, attribut |
- 			acc + '''«attribut.generateMultiValuedNPTypeDto»'''
+ 			acc + '''«attribut.generateMultiValuedNPTypeDto(clazz)»'''
+ 		]»«interfaces.fold("")[acc, interface |
+ 			acc + '''«interface.generateInterfaceMultivaluedDto(clazz)»'''
  		]»
 		'''
 		
@@ -310,103 +374,103 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère le model d'un attribut multivalué
 	 */
-	static def generateMultiValuedPrimitiveTypeDto(Property property){
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			val ids = ClassifierUtils.getId(owner)
-			'''
+	static def generateMultiValuedPrimitiveTypeDto(Property property, Classifier fromClass){
+		val ids = ClassifierUtils.getId(fromClass)
+		'''
+		
+		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)» {
 			
-			export class «PropertyUtils.getMultivaluedPropertyDtoName(property)» {
-				
-				@Map()
-				«property.name»: «TypeUtils.getMetierTypescriptType(property.type)»;
-				«ids.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«property.generateMultiValuedPrimitiveTypeDtoIdAttributes(id)»'''
-					}else{
-						acc + '''«property.generateMultiValuedPrimitiveTypeDtoIdAttributes(id)»'''
-					}
-				]»
-				
-				@Map()
-				«Utils.getFirstToLowerCase(owner.name)»: «ClassifierUtils.getDtoClassName(owner)»;
-			}
-			'''
-		}else{
-			''''''
+			@Map()
+			«property.name»: «TypeUtils.getMetierTypescriptType(property.type)»;
+			«ids.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«property.generateMultiValuedPrimitiveTypeDtoIdAttributes(id)»'''
+				}else{
+					acc + '''«property.generateMultiValuedPrimitiveTypeDtoIdAttributes(id)»'''
+				}
+			]»
+			
+			@Map()
+			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 		}
+		'''
 	}
 	
 	static def generateMultiValuedPrimitiveTypeDtoIdAttributes(Property property, Property id){
 		val idName = id.name
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			'''
-			
-			@Map()
-			«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
-			'''
-		}
+		'''
+		
+		@Map()
+		«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
+		'''
+		
 	}
 	
 	
 	/**
 	 * génère les table d'association 
 	 */	
-	 static def generateMultiValuedNPTypeDto(Property property){
-	 	val type = property.type
+	 static def generateMultiValuedNPTypeDto(Property property, Classifier fromClass){
+	 	if(Utils.isEntity(property.type)){
+	 		'''«property.generateMultiValuedEntityDto(fromClass)»'''
+	 	}else if(Utils.isValueObject(property.type)){
+	 		'''«property.generateMultiValuedValueObjectDto(fromClass)»'''
+	 	}else if (Utils.isNomenclature(property.type)){
+	 		'''«property.generateMultiValuedEnumDto(fromClass)»'''
+	 	}
+	 	
+	}
+	
+	static def generateMultiValuedEntityDto(Property property, Classifier fromClass){
+		val type = property.type
 	 	val owner = property.owner
 	 	if(property.association !== null){
 	 		if(type != owner){
 		 		'''
-		 		«property.generateNPTypeAssociationDto»
+		 		«property.generateNPTypeAssociationDto(fromClass)»
 		 		'''
 	 		}else{
 	 			''''''
 	 		}
 	 	}else{
 	 		'''
-	 		«property.generateNPTypeDto»
+	 		«property.generateNPTypeDto(fromClass)»
 	 		'''
 	 	}
 	}
 	
-	static def generateNPTypeAssociationDto(Property property){
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			val members = property.association.ownedEnds
-	 		val member = members.get(0)
-			val idsOwner = ClassifierUtils.getId(owner)
-			val idsProp = ClassifierUtils.getId(member.type as Classifier)
-			val type = property.type
-			'''
+	static def generateNPTypeAssociationDto(Property property, Classifier fromClass){
+		
+		val members = property.association.ownedEnds
+ 		val member = members.get(0)
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		val idsProp = ClassifierUtils.getId(member.type as Classifier)
+		val type = property.type
+		'''
+		
+		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
+			«idsProp.fold("")[acc, id |
+				if(acc != ""){
+					acc + '''«member.generateNPTDtoIdAttributes(id)»'''
+				}else{
+					acc + '''«member.generateNPTDtoIdAttributes(id)»'''
+				}
+			]»
 			
-			export class «PropertyUtils.getMultivaluedPropertyDtoName(property)»{
-				«idsProp.fold("")[acc, id |
-					if(acc != ""){
-						acc + '''«member.generateNPTDtoIdAttributes(id)»'''
-					}else{
-						acc + '''«member.generateNPTDtoIdAttributes(id)»'''
-					}
-				]»
-				
-				@Map()
-				«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
-				«idsOwner.fold("")[acc, id |
-					if(acc != ""){
-						acc + '''«property.generateNPTDtoIdAttributes(id)»'''
-					}else{
-						acc + '''«property.generateNPTDtoIdAttributes(id)»'''
-					}
-				]»
-				
-				@Map()
-				«Utils.getFirstToLowerCase(owner.name)»: «ClassifierUtils.getDtoClassName(owner)»;
-			}
-			'''
-		}else{
-			''''''
+			@Map()
+			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + '''«property.generateNPTDtoIdAttributes(id)»'''
+				}else{
+					acc + '''«property.generateNPTDtoIdAttributes(id)»'''
+				}
+			]»
+			
+			@Map()
+			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 		}
+		'''
 	}
 	
 	static def generateNPTDtoIdAttributes(Property property, Property id){
@@ -422,40 +486,35 @@ public class ClassifierDtoClassGenerator{
 	}
 	
 	
-	static def generateNPTypeDto(Property property){
-		val owner = property.owner
-		if(owner instanceof Classifier){
-			val idsOwner = ClassifierUtils.getId(owner)
-			val idsProp = ClassifierUtils.getId(property.type as Classifier)
-			val type = property.type
-			'''
+	static def generateNPTypeDto(Property property, Classifier fromClass){
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		val idsProp = ClassifierUtils.getId(property.type as Classifier)
+		val type = property.type
+		'''
+		
+		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«id.generateNPTModelIdAttributes()»'''
+				}else{
+					acc + '''«id.generateNPTModelIdAttributes()»'''
+				}
+			]»
 			
-			export class «PropertyUtils.getMultivaluedPropertyDtoName(property)»{
-				«idsOwner.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«id.generateNPTModelIdAttributes()»'''
-					}else{
-						acc + '''«id.generateNPTModelIdAttributes()»'''
-					}
-				]»
-				
-				@Map()
-				«Utils.getFirstToLowerCase(owner.name)»: «ClassifierUtils.getDtoClassName(owner)»;
-				«idsProp.fold("")[acc, id |
-					if(acc != ""){
-						acc + ''',«property.generateNPTDtoIdAttributes(id)»'''
-					}else{
-						acc + '''«property.generateNPTDtoIdAttributes(id)»'''
-					}
-				]»
-				
-				@Map()
-				«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
-			}
-			'''
-		}else{
-			''''''
+			@Map()
+			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+			«idsProp.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«property.generateNPTDtoIdAttributes(id)»'''
+				}else{
+					acc + '''«property.generateNPTDtoIdAttributes(id)»'''
+				}
+			]»
+			
+			@Map()
+			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
+		'''
 	}
 	
 	static def generateNPTModelIdAttributes(Property id){
@@ -491,8 +550,71 @@ public class ClassifierDtoClassGenerator{
 				@Map()
 				«Utils.getFirstToLowerCase(member.name)» : Array<«ClassifierUtils.getDtoClassName(clazz)»>;
 				'''
+			}else if(Utils.isNomenclature(type)){
+				'''
+				
+				@Map()
+				«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getDtoClassName(type)»>;
+				'''
 			}
 		}
+	}
+	
+	static def generateMultiValuedValueObjectDto(Property property, Classifier fromClass){
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		val type = property.type
+		'''
+		
+		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«id.generateNPTModelIdAttributes()»'''
+				}else{
+					acc + '''«id.generateNPTModelIdAttributes()»'''
+				}
+			]»
+			
+			@Map()
+			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+			«(type as Classifier).generateAttributes(newArrayList(property.name), type as Classifier)»
+			
+		}
+		'''
+	}
+	
+	
+	static def generateMultiValuedEnumDto(Property property, Classifier fromClass){
+		val idsOwner = ClassifierUtils.getId(fromClass)
+		val type = property.type
+		'''
+		
+		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
+			«idsOwner.fold("")[acc, id |
+				if(acc != ""){
+					acc + ''',«id.generateNPTModelIdAttributes()»'''
+				}else{
+					acc + '''«id.generateNPTModelIdAttributes()»'''
+				}
+			]»
+			
+			@Map()
+			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+			
+			@Map()
+			«Utils.getFirstToLowerCase(property.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
+		}
+		'''
+	}
+	
+	static def generateInterfaceMultivaluedDto(Interface interf, Classifier fromClass){
+		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(interf)
+		
+		'''
+		«attributes.fold("")[acc, attribut|
+ 			acc + '''
+ 			«attribut.generateMultiValuedNPTypeDto( fromClass)»'''	
+ 		]»
+ 		'''
 	}
 	
 }

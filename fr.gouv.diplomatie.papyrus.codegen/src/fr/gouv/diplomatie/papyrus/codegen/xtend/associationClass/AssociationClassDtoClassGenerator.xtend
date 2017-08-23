@@ -52,6 +52,10 @@ public class AssociationClassDtoClassGenerator{
 			(Utils.isValueObject(attribut.type))
 		]
 		
+		var attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			(Utils.isNomenclature(attribut.type))
+		]
+		
 		if(clazz instanceof AssociationClass){
 			attributes = clazz.ownedEnds.filter[ attribut |
 				(Utils.isEntity(attribut.type))
@@ -60,9 +64,19 @@ public class AssociationClassDtoClassGenerator{
 			attributesValueObject = clazz.ownedEnds.filter[ attribut |
 				(Utils.isValueObject(attribut.type))
 			]
+			
+			attributesEnums = clazz.ownedEnds.filter[ attribut |
+			(Utils.isNomenclature(attribut.type))
+			]
 		}
 		
 		for(attribut : attributes){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
+			}
+		}
+		
+		for(attribut : attributesEnums){
 			if(!types.contains(attribut.type)){
 				types.add(attribut.type)
 			}
@@ -108,6 +122,8 @@ public class AssociationClassDtoClassGenerator{
 	static def generateClassAttribute(Property property, ArrayList<String> names){
 		if(Utils.isValueObject(property.type)){
 			'''«property.generateValueObjectAttribute(names)»'''
+		}else if(Utils.isNomenclature(property.type)){
+			'''«property.generateEnumAttributes(names)»'''
 		}else{
 			'''«property.generateEntityAttributes(names)»'''
 		}
@@ -127,6 +143,21 @@ public class AssociationClassDtoClassGenerator{
 			}
 		}else{
 			''''''
+		}
+	}
+	
+	static def generateEnumAttributes(Property property, ArrayList<String> names){
+		val type = property.type
+		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
+		if(type instanceof Classifier){
+			'''
+			
+			@Map()
+			code«Utils.getFirstToUpperCase(name)»: number;
+			
+			@Map()
+			«name»: «ClassifierUtils.getDtoClassName(type)»;
+			'''
 		}
 	}
 	
