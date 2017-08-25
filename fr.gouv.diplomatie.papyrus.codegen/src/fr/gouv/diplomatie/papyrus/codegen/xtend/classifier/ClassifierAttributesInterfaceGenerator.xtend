@@ -100,15 +100,9 @@ public class ClassifierAttributesInterfaceGenerator {
 			val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
 			
 			assosiationClasses.forEach[asso |
-				val members = (asso as AssociationClass).ownedEnds.filter[end |
-					end.type != clazz
-				]
-				members.forEach[member |
-					val type = member.type
-					if(!types.contains(type)){
-						types.add(type)
-					}
-				]	
+				if(!types.contains(asso)){
+					types.add(asso)
+				}
 			]
 		}
 	
@@ -484,19 +478,16 @@ public class ClassifierAttributesInterfaceGenerator {
 		]»'''
 	}
 	
+	/**
+	 * génère les attributs liés a une table d'association
+	 */
 	static def generateAssociationClassAtributes(AssociationClass clazz, Classifier fromClass){
-		val members = clazz.ownedEnds.filter[end |
-			end.type != fromClass
-		]
-		val member = members.get(0)
-		val type = member.type
-		if(type instanceof Classifier){
-			'''
-			«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getAttributesInterfaceName(type)»>;
-			get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(type)»>>;
-			
-			'''
-		}
+		'''
+		«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
+		get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
+		
+		'''
+		
 	}
 	
 }

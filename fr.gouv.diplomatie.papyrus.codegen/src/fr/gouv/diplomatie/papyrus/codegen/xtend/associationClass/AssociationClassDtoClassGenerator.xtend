@@ -156,7 +156,7 @@ public class AssociationClassDtoClassGenerator{
 			code«Utils.getFirstToUpperCase(name)»: number;
 			
 			@Map()
-			«name»: «ClassifierUtils.getDtoClassName(type)»;
+			«Utils.getFirstToLowerCase(name)»: «ClassifierUtils.getDtoClassName(type)»;
 			'''
 		}
 	}
@@ -175,7 +175,7 @@ public class AssociationClassDtoClassGenerator{
 			]»
 			
 			@Map()
-			«name»: «ClassifierUtils.getDtoClassName(type)»;
+			«Utils.getFirstToLowerCase(name)»: «ClassifierUtils.getDtoClassName(type)»;
 			'''
 		}else{
 			''''''
@@ -206,14 +206,14 @@ public class AssociationClassDtoClassGenerator{
 				
 				@Map()
 				@Alias('«fieldName»', '«Utils.getListPoint(names)».«property.name».«id.name»')
-				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
+				«Utils.getFirstToLowerCase(fieldName)»: «TypeUtils.getMetierTypescriptType(id.type)»;
 				'''
 			}else{
 				'''
 				
 				@Map()
 				@Alias('«fieldName»', '«Utils.getFirstToLowerCase((type as Classifier).name)».«id.name»')
-				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
+				«Utils.getFirstToLowerCase(fieldName)»: «TypeUtils.getMetierTypescriptType(id.type)»;
 				'''
 			}
 			
@@ -233,7 +233,7 @@ public class AssociationClassDtoClassGenerator{
 			
 			@Map()
 			@Alias('«name»', '«Utils.getListPoint(names)».«property.name»')
-			«name»: «TypeUtils.getMetierTypescriptType(property.type)»;
+			«Utils.getFirstToLowerCase(name)»: «TypeUtils.getMetierTypescriptType(property.type)»;
 			'''
 		}else{
 			''''''

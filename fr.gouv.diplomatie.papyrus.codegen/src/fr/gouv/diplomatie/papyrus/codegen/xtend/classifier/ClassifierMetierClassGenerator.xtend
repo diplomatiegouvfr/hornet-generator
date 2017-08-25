@@ -130,17 +130,10 @@ public class ClassifierMetierClassGenerator {
 			val associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
 			
 			associationsClasses.forEach[ asso |
-				if(asso instanceof AssociationClass){
-					val members = asso.ownedEnds.filter[member |
-						return member.type != fromClass
-					]
-					members.forEach[member |
-						val type = member.type
-						if(type instanceof Classifier && !types.contains(type)){
-							types.add(type)
-						}
-					]
+				if(!types.contains(asso)){
+					types.add(asso)
 				}
+				
 			]
 		}
 		return types
@@ -249,7 +242,7 @@ public class ClassifierMetierClassGenerator {
 			
 			«Utils.generateComments(property)»
 			@Map(«ClassifierUtils.getMetierClassName(type)»)
-			«propName»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
+			«Utils.getFirstToLowerCase(propName)»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
 			'''
 		}
 	}
@@ -270,7 +263,7 @@ public class ClassifierMetierClassGenerator {
 			
 		«Utils.generateComments(property)»
 		@Map()
-		«propName»: «array»«Utils.getFirstToUpperCase(type.name)»«endArray»;
+		«Utils.getFirstToLowerCase(propName)»: «array»«Utils.getFirstToUpperCase(type.name)»«endArray»;
 		'''
 	}
 	
@@ -296,7 +289,7 @@ public class ClassifierMetierClassGenerator {
 			
 			«Utils.generateComments(property)»
 			@Map(«ClassifierUtils.getMetierClassName(type)»)
-			«propName»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
+			«Utils.getFirstToLowerCase(propName)»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
 			'''
 		}else{
 			''''''
@@ -319,7 +312,7 @@ public class ClassifierMetierClassGenerator {
 		
 		«Utils.generateComments(property)»
 		@Map()
-		«name»: «array»«TypeUtils.getMetierTypescriptType(property.type)»«endArray»;
+		«Utils.getFirstToLowerCase(name)»: «array»«TypeUtils.getMetierTypescriptType(property.type)»«endArray»;
 		'''
 	}
 	
@@ -337,32 +330,13 @@ public class ClassifierMetierClassGenerator {
 	}
 	
 	static def generateAssociationAttributes(AssociationClass clazz, Classifier fromClass){
-		val members = clazz.ownedEnds.filter[member |
-			member.type != fromClass
-		]
+	
 		'''
-		«members.fold("")[acc, member |
-			val type = member.type
-			if(type instanceof Classifier){
-				if(Utils.isNomenclature(type)){
-					acc + 
-					'''
-					
-					@Map()
-					«Utils.getFirstToLowerCase(clazz.name)»: Array<«Utils.getFirstToUpperCase(type.name)»>;
-					'''
-				}else{
-					acc + 
-					'''
-					
-					@Map(«ClassifierUtils.getMetierClassName(type)»)
-					«Utils.getFirstToLowerCase(member.name)»: Array<«ClassifierUtils.getMetierClassName(type)»>;
-					'''
-				}
+		
+		@Map(«ClassifierUtils.getMetierClassName(clazz)»)
+		«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getMetierClassName(clazz)»>;
+		'''
 				
-			}
-		]»
-		'''
 	}
 	
 }

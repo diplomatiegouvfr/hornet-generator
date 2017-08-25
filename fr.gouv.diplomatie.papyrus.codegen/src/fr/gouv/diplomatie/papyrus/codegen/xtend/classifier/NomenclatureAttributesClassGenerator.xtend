@@ -9,8 +9,10 @@ public class NomenclatureAttributesClassGenerator{
 		'''
 		
 		export class «ClassifierUtils.getAttributesInterfaceName(clazz)»{
+			
 			code?: number;
 			libelle?: string;
+			
 		}
 		'''
 	}

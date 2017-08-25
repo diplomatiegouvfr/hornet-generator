@@ -101,15 +101,8 @@ public class ClassifierDtoClassGenerator{
 			val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
 			
 			assosiationClasses.forEach[asso |
-				val members = (asso as AssociationClass).ownedEnds.filter[end |
-					end.type != clazz
-				]
-				val member = members.get(0)
-				val type = member.type		
-				if(!types.contains(asso) && Utils.isValueObject(type)){
+				if(!types.contains(asso) ){
 					types.add(asso)
-				}else if(!types.contains(type) && Utils.isEntity(type)){
-					types.add(type)
 				}
 			]
 		}
@@ -532,32 +525,12 @@ public class ClassifierDtoClassGenerator{
 	}
 	
 	static def generateAssociationClassAtributes(AssociationClass clazz, Classifier fromClass){
-		val members = clazz.ownedEnds.filter[end |
-			end.type != fromClass
-		]
-		val member = members.get(0)
-		val type = member.type
-		if(type instanceof Classifier){
-			if(Utils.isEntity(type)) {
-				'''
-				
-				@Map()
-				«Utils.getFirstToLowerCase(member.name)» : Array<«ClassifierUtils.getDtoClassName(type)»>;
-				'''
-			}else if(Utils.isValueObject(type)){
-				'''
-				
-				@Map()
-				«Utils.getFirstToLowerCase(member.name)» : Array<«ClassifierUtils.getDtoClassName(clazz)»>;
-				'''
-			}else if(Utils.isNomenclature(type)){
-				'''
-				
-				@Map()
-				«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getDtoClassName(type)»>;
-				'''
-			}
-		}
+		'''
+		
+		@Map()
+		«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getDtoClassName(clazz)»>;
+		'''
+		
 	}
 	
 	static def generateMultiValuedValueObjectDto(Property property, Classifier fromClass){

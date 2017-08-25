@@ -203,7 +203,7 @@ public class PackageDatabaseScriptGenerator{
 		val type = property.type
 		if(type instanceof Classifier){
 			var sqlType = TypeUtils.getEnumType(type)
-			'''«Utils.toSnakeCase(name)» «sqlType»'''
+			'''«Utils.toSnakeCase(name)» «sqlType» «property.generateNullable»'''
 		}
 	}
 	
@@ -212,7 +212,7 @@ public class PackageDatabaseScriptGenerator{
 	 */
 	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
 		var name = Utils.addAdditionnalName(additionnalName, property.name)
-		'''«Utils.toSnakeCase(name)» «property.generateAttributType»«property.generateStringLength»'''
+		'''«Utils.toSnakeCase(name)» «property.generateAttributType»«property.generateStringLength» «property.generateNullable»'''
 	}
 	
 	/**
@@ -241,7 +241,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass){
 		val propName = Utils.addAdditionnalName(additionnalName, id.name) + Utils.getFirstToUpperCase(property.name)
 		return 
-		'''«Utils.toSnakeCase(propName)» «id.generateAttributType»«id.generateStringLength»'''
+		'''«Utils.toSnakeCase(propName)» «id.generateAttributType»«id.generateStringLength» «property.generateNullable»'''
 	}
 	
 	/**
@@ -716,9 +716,9 @@ public class PackageDatabaseScriptGenerator{
 			
 			val idsNameInClass = ids.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(type.name)»'''
+					acc + ''', «Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(property.name)»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(type.name)»'''
+					acc + '''«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(property.name)»'''
 				}
 			]
 			return '''

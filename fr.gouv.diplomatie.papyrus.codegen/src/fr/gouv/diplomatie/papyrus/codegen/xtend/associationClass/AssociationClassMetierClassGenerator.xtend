@@ -190,7 +190,7 @@ public class AssociationClassMetierClassGenerator{
 			
 			«Utils.generateComments(property)»
 			@Map(«ClassifierUtils.getMetierClassName(type)»)
-			«name»: «ClassifierUtils.getMetierClassName(type)»;
+			«Utils.getFirstToLowerCase(name)»: «ClassifierUtils.getMetierClassName(type)»;
 			'''
 		}
 		
@@ -213,7 +213,7 @@ public class AssociationClassMetierClassGenerator{
 			
 			«Utils.generateComments(property)»
 			@Map()
-			«propName»: «array»«Utils.getFirstToUpperCase(type.name)»«endArray»;
+			«Utils.getFirstToLowerCase(propName)»: «array»«Utils.getFirstToUpperCase(type.name)»«endArray»;
 			'''
 		}
 	}
@@ -250,7 +250,7 @@ public class AssociationClassMetierClassGenerator{
 			
 			«Utils.generateComments(property)»
 			@Map(«ClassifierUtils.getMetierClassName(type)»)
-			«propName»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
+			«Utils.getFirstToLowerCase(propName)»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
 			'''
 		}
 	}
@@ -264,7 +264,7 @@ public class AssociationClassMetierClassGenerator{
 		
 		«Utils.generateComments(property)»
 		@Map()
-		«name»: «TypeUtils.getTypescriptType(property.type)»;
+		«Utils.getFirstToLowerCase(name)»: «TypeUtils.getTypescriptType(property.type)»;
 		'''
 	}
 	 
@@ -293,7 +293,7 @@ public class AssociationClassMetierClassGenerator{
 		 	
 		 	«Utils.generateComments(property)»
 		 	@Map(«array»«ClassifierUtils.getMetierClassName(type)»«endArray»)
-		 	«name»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
+		 	«Utils.getFirstToLowerCase(name)»: «array»«ClassifierUtils.getMetierClassName(type)»«endArray»;
 		 	'''
 	 	}
 	 }

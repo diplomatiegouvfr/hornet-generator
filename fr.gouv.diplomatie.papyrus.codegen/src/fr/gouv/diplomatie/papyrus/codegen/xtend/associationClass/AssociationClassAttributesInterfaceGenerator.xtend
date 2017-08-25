@@ -116,7 +116,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 		 		«ids.fold("")[acc, id |
 		 			acc + '''«property.generatePropertyIdAttribute(id)»'''
 		 		]»
-		 		«name»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
+		 		«Utils.getFirstToLowerCase(name)»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
 		 		get«Utils.getFirstToUpperCase(name)»(): Promise<«array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»>;
 		 		'''
 		 	}else if (Utils.isValueObject(type)){
@@ -133,7 +133,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 		 		'''
 		 		
 		 		code«Utils.getFirstToUpperCase(name)»: number;
-		 		«name»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
+		 		«Utils.getFirstToLowerCase(name)»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
 		 		get«Utils.getFirstToUpperCase(name)»(): Promise<«array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»>;
 		 		'''
 		 	}else{

@@ -53,7 +53,7 @@ public class ClassifierModelGenerator {
 				allowNull: «PropertyUtils.isNullable(id)»,
 				references: {
 					model: "«ClassifierUtils.getModelName(extend.general)»",
-					key: "«Utils.toSnakeCase(id.name)»"
+					key: "«id.name»"
 				}
 			},'''
 		}
@@ -515,22 +515,22 @@ public class ClassifierModelGenerator {
 		val members = property.association.ownedEnds
  		val member = members.get(0)
 		val idsOwner = ClassifierUtils.getId(fromClass)
-		val idsProp = ClassifierUtils.getId(member.type as Classifier)
+		val idsProp = ClassifierUtils.getId(property.type as Classifier)
 		'''
 		
 		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
 			«idsProp.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«member.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+					acc + ''',«property.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
 				}else{
-					acc + '''«member.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+					acc + '''«property.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
 				}
 			]»,
 			«idsOwner.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«property.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+					acc + ''',«member.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
 				}else{
-					acc + '''«property.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
+					acc + '''«member.generateNPTAssociationModelIdAttributes(id, fromClass)»'''
 				}
 			]»
 		}
@@ -639,7 +639,8 @@ public class ClassifierModelGenerator {
 	}
 	
 	/**
-	 * génère une table d'association pour les enums */
+	 * génère une table d'association pour les enums 
+	 */
 	static def generateMultiValuedEnumModel(Property property, Classifier fromClass){
 		val type = property.type
 		val idsOwner = ClassifierUtils.getId(fromClass)

@@ -287,6 +287,7 @@ class PackageModelDaoClassGenerator{
 	static def generateEntityRelation(Property property, Classifier fromClass, String additionnalName){
 		val type = property.type
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
+		
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(fromClass)
 			if(property.multivalued){
@@ -300,8 +301,9 @@ class PackageModelDaoClassGenerator{
 				]»
 				'''
 			}else{
+				val idsProp = ClassifierUtils.getId(type)
 				'''
-				«ids.fold("")[acc, id |
+				«idsProp.fold("")[acc, id |
 					val idName = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName,id.name + Utils.getFirstToUpperCase(property.name)))
 					acc + '''
 					SequelizeUtils.initRelationBelongsTo(«Utils.getFirstToLowerCase(fromClass.name)»Entity, ModelDAO.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»");
@@ -508,16 +510,32 @@ class PackageModelDaoClassGenerator{
 	}
 	
 	static def generateAssociationIdRelation(Property property, AssociationClass clazz, Classifier fromClass){
-		val members = clazz.ownedEnds.filter[member |
-			member.type != fromClass
-		]
-		val name = Utils.addAdditionnalName(property.name, fromClass.name)
+		val members = clazz.memberEnds.filter(member|
+			member.type == fromClass
+		)
 		'''
 		«members.fold("")[acc, member |
-			val type = member.type
-			acc + '''SequelizeUtils.initRelationBelongsToMany(«Utils.getFirstToLowerCase(fromClass.name)»Entity, ModelDAO.«Utils.getFirstToLowerCase(type.name)»Entity, "«member.name»", "«Utils.toSnakeCase(name)»", "«Utils.toSnakeCase(clazz.name)»");''' 
+			val name = Utils.addAdditionnalName(property.name, member.name)
+			acc +
+			'''
+			try {
+			       «Utils.getFirstToLowerCase(fromClass.name)»Entity.belongsToMany(ModelDAO.«Utils.getFirstToLowerCase(clazz.name)»Entity,
+			           {
+			               as: "«Utils.getFirstToLowerCase(clazz.name)»",
+			               through: "«Utils.toSnakeCase(clazz.name)»",
+			               foreignKey: "«Utils.toSnakeCase(name)»",
+			               otherKey: "«Utils.toSnakeCase(name)»"
+			           }
+			       );
+			   } catch (e) {
+			       if (e.name == "SequelizeAssociationError") {
+			
+			       }
+			}
+			//SequelizeUtils.initRelationBelongsToMany(«Utils.getFirstToLowerCase(fromClass.name)»Entity, ModelDAO.«Utils.getFirstToLowerCase(clazz.name)»Entity, "«Utils.getFirstToLowerCase(clazz.name)»", "«Utils.toSnakeCase(name)»", "«Utils.toSnakeCase(name)»", "«Utils.toSnakeCase(clazz.name)»");
+			'''
 		]»
-		'''
+		'''	
 	}
 	
 	static def generateVOAssociationRelation(AssociationClass clazz, Classifier fromClass){

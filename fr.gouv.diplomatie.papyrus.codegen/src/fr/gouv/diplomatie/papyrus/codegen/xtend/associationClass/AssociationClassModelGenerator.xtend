@@ -77,7 +77,7 @@ public class AssociationClassModelGenerator {
 		val name = id.name + Utils.getFirstToUpperCase(property.name)
 		'''
 		«name»: {
-			type: Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateIdAttributeTypeLength»,
+			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 			field: "«Utils.toSnakeCase(name)»",
 			allowNull: «PropertyUtils.isNullable(property)»,
 			primaryKey: true,

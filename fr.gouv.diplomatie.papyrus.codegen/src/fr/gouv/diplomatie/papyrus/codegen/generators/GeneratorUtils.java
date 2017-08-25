@@ -9,9 +9,10 @@ import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils;
 
 public class GeneratorUtils {
 	
-	public static final String MODEL_REPOSITORY = "src" + File.separator + "models" + File.separator;
+	public static final String SRC_REPOSITORY = "src" + File.separator;
+	public static final String MODEL_REPOSITORY = SRC_REPOSITORY + "models" + File.separator;
 	public static final String DATABASE_REPOSITORY = "database" + File.separator ;
-	public static final String DAO_REPOSITORY = "src" + File.separator  + "dao" + File.separator ;
+	public static final String DAO_REPOSITORY = SRC_REPOSITORY  + "dao" + File.separator ;
 	
 	public static String getModelPath(Classifier clazz) {
 		return MODEL_REPOSITORY +  "models" + File.separator + "model-" + Utils.toTypescriptFileName(clazz.getName());
