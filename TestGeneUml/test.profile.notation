@@ -580,7 +580,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IixXOXdbEeevdc4A4HbIwA"/>
     </children>
     <element xmi:type="uml:Stereotype" href="test.profile.uml#_Iits0HdbEeevdc4A4HbIwA"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IiwwIXdbEeevdc4A4HbIwA" x="1320" y="500"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IiwwIXdbEeevdc4A4HbIwA" x="1320" y="520"/>
   </children>
   <children xmi:type="notation:Shape" xmi:id="_YTeZEH2sEeewMouPnyydfA" type="Stereotype_Shape">
     <children xmi:type="notation:DecorationNode" xmi:id="_YTfAIH2sEeewMouPnyydfA" type="Stereotype_NameLabel"/>
