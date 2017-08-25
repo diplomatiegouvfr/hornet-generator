@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.eclipse.emf.ecore.dynamic_package" name="org.eclipse.emf.ecore.dynamic_package" schema="schema/org.eclipse.emf.ecore.dynamic_package.exsd"/>
+   <extension-point id="org.eclipse.papyrus.uml.extensionpoints.UMLProfile" name="org.eclipse.papyrus.uml.extensionpoints.UMLProfile" schema="schema/org.eclipse.papyrus.uml.extensionpoints.UMLProfile.exsd"/>
+   <extension-point id="org.eclipse.uml2.uml.dynamic_package" name="org.eclipse.uml2.uml.dynamic_package" schema="schema/org.eclipse.uml2.uml.dynamic_package.exsd"/>
+   <extension
+         point="org.eclipse.emf.ecore.dynamic_package">
+      <resource
+            uri="fr.gouv.diplomatie.papyrus.metamodele.resource1">
+      </resource>
+   </extension>
+	<extension
+         point="org.eclipse.emf.ecore.uri_mapping">
+      <mapping
+            source="pathmap://resources/metamodele/"
+            target="platform:/plugin/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/">
+      </mapping>
+   </extension>
+   <extension
+         point="org.eclipse.papyrus.uml.extensionpoints.UMLProfile">
+      <profile
+            description="Profile Hornet generateur"
+            name="Profile Hornet Generateur"
+            path="pathmap://resources/metamodele/metamodele.profile.uml"
+            provider="MAEDI">
+      </profile>
+   </extension>
+</plugin>
