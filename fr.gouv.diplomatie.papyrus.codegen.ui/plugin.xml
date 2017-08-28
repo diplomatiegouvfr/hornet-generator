@@ -8,9 +8,9 @@
             locationURI="popup:org.eclipse.papyrus.designer.popup?after=codegen">
          <command
                commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
-               label="Generate code"
+               label="Generate Hornet code"
                style="push"
-               tooltip="Generate code">
+               tooltip="Generate Hornet code">
          </command>
       </menuContribution>
    </extension>
@@ -21,7 +21,7 @@
             defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.GenerateCodeHandler"
             description="Generate code"
             id="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
-            name="Generate code">
+            name="Generate Hornet Code">
       </command>
    </extension>
    <extension
