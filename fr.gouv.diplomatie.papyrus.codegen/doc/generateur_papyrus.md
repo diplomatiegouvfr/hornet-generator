@@ -170,7 +170,7 @@ Les types primitifs gérés par le générateur sont les suivants:
 
 - Boolean et EBoolean
 - Integer
-- BigInterger et EBigInterger
+- EBigInteger
 - Real
 - EDouble
 - EFloat
