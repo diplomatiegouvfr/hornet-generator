@@ -3,7 +3,6 @@ package fr.gouv.diplomatie.papyrus.codegen.generators;
 import org.eclipse.papyrus.infra.tools.file.IPFileSystemAccess;
 import org.eclipse.uml2.uml.AssociationClass;
 
-
 import fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass.AssociationClassAttributesInterfaceGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass.AssociationClassDtoClassGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass.AssociationClassMetierClassGenerator;
