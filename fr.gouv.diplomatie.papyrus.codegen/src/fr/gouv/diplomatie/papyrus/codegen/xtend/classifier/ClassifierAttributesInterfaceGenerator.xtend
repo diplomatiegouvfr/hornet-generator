@@ -221,10 +221,12 @@ public class ClassifierAttributesInterfaceGenerator {
 	/**
 	 * génère une classe enum
 	 */
-	static def generateEnum(Property property, String additonnalName){
-		val propName =  Utils.addAdditionnalName(additonnalName, property.name) 
+	static def generateEnum(Property property, String additionnalName){
+		val propName =  Utils.addAdditionnalName(additionnalName, property.name) 
 		val type = property.type
+		val codeName = Utils.addAdditionnalName(additionnalName, "code" + Utils.getFirstToUpperCase(property.name)) 
 		'''
+		«codeName»?: number;
 		«propName»?: «ClassifierUtils.getAttributesInterfaceName(type as Classifier)»;
 		'''
 	}

@@ -130,9 +130,10 @@ public class AssociationClassAttributesInterfaceGenerator{
 		 			array = "Array<"
 		 			endArray = ">"
 		 		}
+		 		val codeName = Utils.addAdditionnalName(additionnalName, "code" + Utils.getFirstToUpperCase(property.name)) 
 		 		'''
 		 		
-		 		code«Utils.getFirstToUpperCase(name)»: number;
+		 		«codeName»: number;
 		 		«Utils.getFirstToLowerCase(name)»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
 		 		get«Utils.getFirstToUpperCase(name)»(): Promise<«array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»>;
 		 		'''

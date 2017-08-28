@@ -10,7 +10,7 @@ class TypeUtils{
 			return 'BOOLEAN'
 		}else if(type.name == "Integer"){
 			return 'INTEGER'
-		}else if(type.name == "BigInterger" || type.name == "EBigInteger"){
+		}else if(type.name == "BigInteger" || type.name == "EBigInteger"){
 			return 'BIGINT'
 		}else if(type.name == "Real"){
 			return 'FLOAT'
@@ -20,6 +20,8 @@ class TypeUtils{
 			return 'FLOAT'
 		}else if(type.name == "EDate" || type.name == "Date"){
 			return 'DATE'
+		}else if(type.name == "EByteArray"){
+			return 'BLOB'
 		}else{
 			return 'STRING'
 		}
@@ -30,7 +32,7 @@ class TypeUtils{
 			return 'boolean'
 		}else if(type.name == "Integer"){
 			return 'number'
-		}else if(type.name == "BigInterger" || type.name == "EBigInteger"){
+		}else if(type.name == "BigInteger" || type.name == "EBigInteger"){
 			return 'number'
 		}else if(type.name == "Real"){
 			return 'number'
@@ -40,6 +42,8 @@ class TypeUtils{
 			return 'number'
 		}else if(type.name == "EDate" || type.name == "Date"){
 			return 'string'
+		}else if(type.name == "EByteArray"){
+			return 'Buffer'
 		}else{
 			return 'string'
 		}
@@ -50,7 +54,7 @@ class TypeUtils{
 			return 'boolean'
 		}else if(type.name == "Integer"){
 			return 'number'
-		}else if(type.name == "BigInterger" || type.name == "EBigInteger"){
+		}else if(type.name == "BigInteger" || type.name == "EBigInteger"){
 			return 'number'
 		}else if(type.name == "Real"){
 			return 'number'
@@ -60,6 +64,8 @@ class TypeUtils{
 			return 'number'
 		}else if(type.name == "EDate" || type.name == "Date"){
 			return 'Date'
+		}else if(type.name == "EByteArray"){
+			return 'Buffer'
 		}else{
 			return 'string'
 		}
@@ -70,7 +76,7 @@ class TypeUtils{
 			return 'boolean'
 		}else if(type.name == "Integer"){
 			return 'integer'
-		}else if(type.name == "BigInterger" || type.name == "EBigInteger"){
+		}else if(type.name == "BigInteger" || type.name == "EBigInteger"){
 			return 'bigint'
 		}else if(type.name == "Real"){
 			return 'real'
@@ -80,6 +86,8 @@ class TypeUtils{
 			return 'decimal'
 		}else if(type.name == "EDate" || type.name == "Date"){
 			return 'timestamp'
+		}else if(type.name == "EByteArray"){
+			return 'bytea'
 		}else {
 			return 'character'
 		}

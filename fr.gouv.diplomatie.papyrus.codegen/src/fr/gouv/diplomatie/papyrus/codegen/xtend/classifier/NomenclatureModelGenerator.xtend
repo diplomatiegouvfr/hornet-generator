@@ -14,7 +14,8 @@ public class NomenclatureModelGenerator{
 			code: {
 				type: Sequelize.«TypeUtils.getEnumSequelizeType(clazz)»,
 				field: "code",
-				allowNull: false
+				allowNull: false,
+				primaryKey: true
 			},
 			libelle: {
 				type: Sequelize.INTEGER,

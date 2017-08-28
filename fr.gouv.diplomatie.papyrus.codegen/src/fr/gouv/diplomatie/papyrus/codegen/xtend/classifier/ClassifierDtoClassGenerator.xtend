@@ -217,6 +217,8 @@ public class ClassifierDtoClassGenerator{
 	static def generateClassAttribute(Property property, ArrayList<String> names, Classifier fromClass){
 		if(Utils.isValueObject(property.type)){
 			'''«property.generateValueObjectAttribute(names, fromClass)»'''
+		}else if(Utils.isNomenclature(property.type)){
+			'''«property.generateEnumAttributes(names)»'''
 		}else{
 			'''«property.generateEntityAttributes(names)»'''
 		}
@@ -285,6 +287,46 @@ public class ClassifierDtoClassGenerator{
 			''''''
 		}
 		
+	}
+	
+	static def generateEnumAttributes(Property property, ArrayList<String> names){
+		val type = property.type
+		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
+		val propName = Utils.getListPoint(names) + '.' + property.name 
+		val codeName = Utils.addAdditionnalName(Utils.getNameFromList(names), "code" + Utils.getFirstToUpperCase(property.name))
+		val codeAliasName = propName + '.code'
+		if(type instanceof Classifier){
+			if(!property.multivalued){
+				var alias = ""
+				var codeAlias = ""
+				if(!names.empty){
+					alias = '''
+					@Alias('name', '«propName»')'''
+					codeAlias = '''
+					@Alias('«codeAliasName»')'''
+					
+				}
+				return '''
+				
+				@Map()
+				«codeAlias»
+				«codeName»: number;
+				
+				@Map()
+				«alias»
+				«name»: «ClassifierUtils.getDtoClassName(type)»;
+				'''
+				
+			}else{
+				return '''
+				@Map()
+				«codeName»: Array<number>;
+				
+				@Map()
+				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
+				'''
+			}
+		}
 	}
 	
 	static def generateEntityAttribute(Property property, Property id, ArrayList<String> names){
@@ -451,7 +493,7 @@ public class ClassifierDtoClassGenerator{
 			]»
 			
 			@Map()
-			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
+			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 			«idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + '''«property.generateNPTDtoIdAttributes(id)»'''
@@ -461,7 +503,7 @@ public class ClassifierDtoClassGenerator{
 			]»
 			
 			@Map()
-			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
 		'''
 	}

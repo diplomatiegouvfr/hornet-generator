@@ -22,7 +22,7 @@ public class ClassifierModelGenerator {
 		export var «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
 			«clazz.generateExtendsId»
 			«clazz.generateInterfacesAttributes»
-			«clazz.generateAttributes("", clazz)»
+			«clazz.generateAttributes("", clazz, false)»
 		}
 		
 		«clazz.generateMultivaluedAttributeModels»
@@ -65,7 +65,7 @@ public class ClassifierModelGenerator {
 		if(interfaces !== null && !interfaces.empty){
 			'''
 			«interfaces.fold("")[acc, interface |
-				acc + '''«interface.generateAttributes("", clazz)»'''
+				acc + '''«interface.generateAttributes("", clazz, false)»'''
 			]»,
 			'''
 		}else{
@@ -77,14 +77,14 @@ public class ClassifierModelGenerator {
 	/**
 	 * Génère les attributs de la classe
 	 */
-	static def generateAttributes(Classifier clazz, String additionnalName, Classifier fromClass){
+	static def generateAttributes(Classifier clazz, String additionnalName, Classifier fromClass, Boolean isPrimaryKey){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
 		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
  				acc + ''',
- 				''' + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
+ 				''' + '''«attribut.generateAttributDefinition(additionnalName, fromClass,isPrimaryKey)»'''
  			}else{
- 				acc + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
+ 				acc + '''«attribut.generateAttributDefinition(additionnalName, fromClass, isPrimaryKey)»'''
  			}		
  		]»'''
 		
@@ -93,11 +93,11 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère un attribut
 	 */
-	static def generateAttributDefinition(Property property, String additionalName, Classifier fromClass){
+	static def generateAttributDefinition(Property property, String additionalName, Classifier fromClass, Boolean isPrimaryKey){
 		if(PropertyUtils.isID(property)){
 			'''«property.generateIdAttributeDefinition(additionalName, fromClass)»'''
 		}else{
-			'''«property.generateNIdAttributeDefinition(additionalName, fromClass)»'''
+			'''«property.generateNIdAttributeDefinition(additionalName, fromClass, isPrimaryKey)»'''
 		}
 	}
 	
@@ -118,37 +118,37 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère la définition d'un attribut qui n'est pas un id
 	 */
-	static def generateNIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateNIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean isPrimaryKey){
 		if(PropertyUtils.isClassAttribute(property)){
-			'''«property.generateClassAttributeDefinition(additionnalName, fromClass)»'''
+			'''«property.generateClassAttributeDefinition(additionnalName, fromClass, isPrimaryKey)»'''
 		}else{
-			'''«property.generateBasicAttributeDefinition(additionnalName, fromClass)»'''
+			'''«property.generateBasicAttributeDefinition(additionnalName, fromClass, isPrimaryKey)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut lié a la classe
 	 */
-	static def generateClassAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateClassAttributeDefinition(Property property, String additionnalName, Classifier fromClass,Boolean isPrimaryKey){
 		if(Utils.isValueObject(property.type)){
-			'''«property.generateValueObjectAttributeDefinition(additionnalName, fromClass)»'''
+			'''«property.generateValueObjectAttributeDefinition(additionnalName, fromClass, isPrimaryKey)»'''
 		}else if (Utils.isNomenclature(property.type)){
-			'''«property.generateEnumAttributeDefinition(additionnalName, fromClass)»'''
+			'''«property.generateEnumAttributeDefinition(additionnalName, fromClass, isPrimaryKey)»'''
 		}else{
-			'''«property.generateEntityAttributesDefinition(additionnalName, fromClass)»'''
+			'''«property.generateEntityAttributesDefinition(additionnalName, fromClass, isPrimaryKey)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut de type value Object
 	 */
-	static def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean isPrimaryKey){
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		val type = property.type
 		if(type instanceof Classifier){
 			val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(type)
 			val hasAttributes = (!attributes.empty && attributes !== null)
-			return '''«type.generateAttributes(name, fromClass)»'''
+			return '''«type.generateAttributes(name, fromClass, isPrimaryKey)»'''
 			//«««type.generateMultiValuedEntityAttributes(hasAttributes, name)»
 			
 		}else{
@@ -159,7 +159,7 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère la définition des attributs liés a un attribut de type value object
 	 */
-	static def generateValueObjectAttributDefinition(Property property, Property parentProperty, String additionnalName){
+/* 	static def generateValueObjectAttributDefinition(Property property, Property parentProperty, String additionnalName){
 		val propName = PropertyUtils.getValueObjectPropertyName(property, parentProperty)
 		var name = ""
 		if(additionnalName != "" && additionnalName!== null){
@@ -173,20 +173,20 @@ public class ClassifierModelGenerator {
 			field: "«Utils.toSnakeCase(name)»"«property.generateNIdAttributeDefaultValue»,
 			allowNull: «PropertyUtils.isNullable(property)»
 		}'''
-	}
+	}*/
 	
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributesDefinition(Property property, String additonnalName, Classifier fromClass){
+	static def generateEntityAttributesDefinition(Property property, String additonnalName, Classifier fromClass, Boolean isPrimaryKey){
 		val type = property.type
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
 			ids.fold("")[acc , id |
 				if(acc != ""){
-					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName, fromClass)»'''
+					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName, fromClass, isPrimaryKey)»'''
 				}else{
-					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, fromClass)»'''
+					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, fromClass, isPrimaryKey)»'''
 				}
 			]
 		}else{
@@ -195,15 +195,17 @@ public class ClassifierModelGenerator {
 		
 	}
 	
-	static def generateEnumAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateEnumAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean isPrimaryKey){
 		val type = property.type
 		val sqlType = TypeUtils.getEnumSequelizeType(type as Classifier)
 		val propName = Utils.addAdditionnalName(additionnalName, property.name)
+		var pk = '''primaryKey: true,'''
 		return '''
 			«propName»: {
 				type: Sequelize.«sqlType»,
 				field: "«Utils.toSnakeCase(propName)»",
-				allowNull: «PropertyUtils.isNullable(property)»,
+				allowNull: «PropertyUtils.isNullable(property)»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
+				«pk»«ENDIF»
 				references: {
 					model: "«ClassifierUtils.getModelName(type as Classifier)»",
 					key: "code"
@@ -214,14 +216,16 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass){
+	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass, Boolean isPrimaryKey){
 		val type = property.type
 		val propName = Utils.addAdditionnalName(additionnalName, id.name) + Utils.getFirstToUpperCase(property.name)
+		var pk = '''primaryKey: true,'''
 		return '''
 			«propName»: {
 				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateNIdAttributeTypeLength»,
-				field: "«Utils.toSnakeCase(propName)»"«property.generateNIdAttributeDefaultValue»,
-				allowNull: «PropertyUtils.isNullable(property)»,
+				field: "«Utils.toSnakeCase(propName)»",
+				allowNull: «PropertyUtils.isNullable(property)»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
+				«pk»«ENDIF»
 				references: {
 					model: "«ClassifierUtils.getModelName(type as Classifier)»",
 					key: "«id.name»"
@@ -232,12 +236,14 @@ public class ClassifierModelGenerator {
 	/**
 	 * génère la définition d'un attribut basique
 	 */
-	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean isPrimaryKey){
 		var name = Utils.addAdditionnalName(additionnalName, property.name)
+		var pk = '''primaryKey: true,'''
 		'''
 		«name»: {
 			type: «property.getAttributeSequelizeTypeDeclaration»,
-			field: "«Utils.toSnakeCase(name)»"«property.generateNIdAttributeDefaultValue»,
+			field: "«Utils.toSnakeCase(name)»",«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
+			«pk»«ENDIF»
 			allowNull: «PropertyUtils.isNullable(property)»
 		}'''
 	}
@@ -268,6 +274,7 @@ public class ClassifierModelGenerator {
 	
 	/**
 	 * génère la déclaration de la valeur par defaut
+	 * TODO : à refaire
 	 */
 	static def generateNIdAttributeDefaultValue(Property property){
 		val value = property.defaultValue
@@ -482,6 +489,7 @@ public class ClassifierModelGenerator {
 			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 			field: "«Utils.toSnakeCase(name)»",
 			allowNull: false,
+			primaryKey: true,
 			references: {
 				model: "«ClassifierUtils.getModelName(fromClass)»",
 				key: "«idName»"
@@ -546,6 +554,7 @@ public class ClassifierModelGenerator {
 				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 				field: "«Utils.toSnakeCase(idName)»",
 				allowNull: false,
+				primaryKey: true,
 				references: {
 					model: "«ClassifierUtils.getModelName(type)»",
 					key: "«id.name»"
@@ -591,6 +600,7 @@ public class ClassifierModelGenerator {
 					type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 					field: "«Utils.toSnakeCase(idName)»",
 					allowNull: false,
+					primaryKey: true,
 					references: {
 						model: "«ClassifierUtils.getModelName(type)»",
 						key: "«id.name»"
@@ -609,6 +619,7 @@ public class ClassifierModelGenerator {
 				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 				field: "«Utils.toSnakeCase(idName)»",
 				allowNull: false,
+				primaryKey: true,
 				references: {
 					model: "«ClassifierUtils.getModelName(type)»",
 					key: "«id.name»"
@@ -659,6 +670,7 @@ public class ClassifierModelGenerator {
 				type: Sequelize.«TypeUtils.getEnumSequelizeType(type as Classifier)»,
 				field: "code",
 				allowNull: false,
+				primaryKey: true,
 				references: {
 					model: "«ClassifierUtils.getModelName(type as Classifier)»",
 					key: "code"
@@ -683,7 +695,7 @@ public class ClassifierModelGenerator {
 					acc + '''«id.generateNPTModelIdAttributes(fromClass)»'''
 				}
 			]»,
-			«(type as Classifier).generateAttributes(property.name, fromClass)»
+			«(type as Classifier).generateAttributes(property.name, fromClass, true)»
 		}
 		'''
 	}

@@ -232,6 +232,21 @@ class Utils{
 	}
 	
 	/**
+	 * renvoie la liste des noms séparés par des virgules
+	 */
+	static def String getListComma(ArrayList<String> names){
+		var String result=""
+		for(String name : names){
+			if(result == ""){
+				result += name
+			}else{
+				result += ', ' + name
+			}
+		}
+		return result
+	}
+	
+	/**
 	 * renvoie la liste en notation pointée
 	 */
 	static def String getNameFromList(ArrayList<String> names){

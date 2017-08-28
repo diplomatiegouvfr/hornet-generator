@@ -149,11 +149,12 @@ public class AssociationClassDtoClassGenerator{
 	static def generateEnumAttributes(Property property, ArrayList<String> names){
 		val type = property.type
 		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
+		val codeName = Utils.addAdditionnalName(Utils.getNameFromList(names), "code" + Utils.getFirstToUpperCase(property.name)) 
 		if(type instanceof Classifier){
 			'''
 			
 			@Map()
-			code«Utils.getFirstToUpperCase(name)»: number;
+			«codeName»: number;
 			
 			@Map()
 			«Utils.getFirstToLowerCase(name)»: «ClassifierUtils.getDtoClassName(type)»;

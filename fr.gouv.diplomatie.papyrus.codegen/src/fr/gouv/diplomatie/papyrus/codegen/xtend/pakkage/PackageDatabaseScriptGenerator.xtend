@@ -10,6 +10,7 @@ import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
 import org.eclipse.uml2.uml.PrimitiveType
 import org.eclipse.uml2.uml.Interface
+import java.util.ArrayList
 
 public class PackageDatabaseScriptGenerator{
 	
@@ -442,6 +443,9 @@ public class PackageDatabaseScriptGenerator{
 		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
 		    FOREIGN KEY («idsName») REFERENCES «Utils.toSnakeCase(fromClass.name)»(«idsName»);
+		    
+		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
+		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«idsName», «Utils.toSnakeCase(property.name)»);
 		'''
 		
 	}
@@ -513,6 +517,9 @@ public class PackageDatabaseScriptGenerator{
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(type.name)»_ids_fkey
 			    FOREIGN KEY («idsPropsName») REFERENCES «Utils.toSnakeCase(type.name)»(«idsPropsBaseName»);
+			    
+			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
+			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«idsOwnerName», «idsPropsName»);
 			'''
 		}
 	}
@@ -541,6 +548,7 @@ public class PackageDatabaseScriptGenerator{
 					acc + '''«Utils.toSnakeCase(id.name)»'''
 				}
 			]
+			val pkeys = idsName + ', ' + Utils.getListComma(type.getAttributList(newArrayList(), property.name))
 			'''
 			
 			CREATE TABLE «Utils.toSnakeCase(tableName)»(
@@ -559,8 +567,37 @@ public class PackageDatabaseScriptGenerator{
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
 			    FOREIGN KEY («idsName») REFERENCES «Utils.toSnakeCase(fromClass.name)»(«idsName»);
+			    
+			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
+			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«pkeys»);
+			    
 			'''	
 		}	
+	}
+	
+	static def getAttributList(Classifier type, ArrayList<String> names, String additionnalName){
+		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(type)
+		attributes.forEach[attribut |
+			if(!PropertyUtils.isNullable(attribut)){
+				val attrType = attribut.type
+				val name = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, attribut.name))
+				if(Utils.isEntity(attrType)){
+					val ids = ClassifierUtils.getId(attrType as Classifier) 
+					ids.forEach[id |
+						var idName = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, id.name + Utils.getFirstToUpperCase(attribut.name)))
+						names.add(idName)
+					]
+				}else if(Utils.isNomenclature(attrType)){
+					names.add(name)
+				}else if(Utils.isValueObject(attrType)){
+					val voName = Utils.addAdditionnalName(additionnalName, attribut.name)
+					(attrType as Classifier).getAttributList(names, voName)
+				}else{
+					names.add(name)
+				}
+			}
+		]
+		return names
 	}
 	
 	/**
@@ -602,6 +639,9 @@ public class PackageDatabaseScriptGenerator{
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_code_fkey
 			    FOREIGN KEY (code) REFERENCES «Utils.toSnakeCase(type.name)»(code);
+			
+			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
+			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY («idsName», code);
 			'''	
 		}	
 		
@@ -662,7 +702,34 @@ public class PackageDatabaseScriptGenerator{
 			«clazz.generateAssociationAttributes("", clazz)»
 		);
 		«clazz.generateAssociationForeignKeys()»
+		
+		ALTER TABLE ONLY «Utils.toSnakeCase(clazz.name)»
+			ADD CONSTRAINT «Utils.toSnakeCase(clazz.name)»_pkey PRIMARY KEY («Utils.getListComma(clazz.getAssociationAttributList(newArrayList(), ""))»);
 		'''
+	}
+	
+	static def getAssociationAttributList(AssociationClass type, ArrayList<String> names, String additionnalName){
+		val attributes = type.memberEnds
+		attributes.forEach[attribut |
+			val attrType = attribut.type
+			val name = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, attribut.name))
+			
+			if(Utils.isEntity(attrType)){
+				val ids = ClassifierUtils.getId(attrType as Classifier) 
+				ids.forEach[id |
+					var idName = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, id.name + Utils.getFirstToUpperCase(attribut.name)))
+					names.add(idName)
+				]
+			}else if(Utils.isNomenclature(attrType)){
+				names.add(name)
+			}else if(Utils.isValueObject(attrType)){
+				val voName = Utils.addAdditionnalName(additionnalName, attribut.name)
+				(attrType as Classifier).getAttributList(names, voName)
+			}else{
+				names.add(name)
+			}
+		]
+		return names
 	}
 	
 		/**

@@ -176,6 +176,7 @@ Les types primitifs gérés par le générateur sont les suivants:
 - EFloat
 - EDate et Date
 - EString et String
+- EByteArray
 
 Toutes les multiplicités sont disponibles.
 
