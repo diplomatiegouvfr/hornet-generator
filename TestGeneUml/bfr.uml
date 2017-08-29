@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:test="http:///schemas/test/_0lktwIgVEeetMqdXDYZBDg/85" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/test/_0lktwIgVEeetMqdXDYZBDg/85 /TestGeneUml/test.profile.uml#_0lnxEIgVEeetMqdXDYZBDg">
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:test="http:///schemas/test/_obL4kIwHEeemwJGQk0Maeg/86" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/test/_obL4kIwHEeemwJGQk0Maeg/86 /TestGeneUml/test.profile.uml#_obMfoIwHEeemwJGQk0Maeg">
   <uml:Model xmi:id="_0wsIoIjFEeen7oIz5Q4Skw" name="bfr">
     <packagedElement xmi:type="uml:Class" xmi:id="_3s-6oIjFEeen7oIz5Q4Skw" name="Regroupant">
       <generalization xmi:type="uml:Generalization" xmi:id="_VjPfEIjOEeen7oIz5Q4Skw" general="_KuiqkIjHEeen7oIz5Q4Skw"/>
@@ -654,15 +654,15 @@
       <ownedEnd xmi:type="uml:Property" xmi:id="_N4CTYIl9EeerStftb-fMBA" name="utilisateur" type="_AUbkcIl9EeerStftb-fMBA" association="_N39a4Il9EeerStftb-fMBA"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_08zSAIjFEeen7oIz5Q4Skw">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_080gIIjFEeen7oIz5Q4Skw" source="PapyrusVersion">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_080gIYjFEeen7oIz5Q4Skw" key="Version" value="0.0.86"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_080gIojFEeen7oIz5Q4Skw" key="Comment" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_080gI4jFEeen7oIz5Q4Skw" key="Copyright" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_080gJIjFEeen7oIz5Q4Skw" key="Date" value="2017-08-23"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_080gJYjFEeen7oIz5Q4Skw" key="Author" value=""/>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_R4MgcIyOEeesZvzavGhHlg" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_R4MgcYyOEeesZvzavGhHlg" key="Version" value="0.0.87"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_R4MgcoyOEeesZvzavGhHlg" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_R4Mgc4yOEeesZvzavGhHlg" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_R4MgdIyOEeesZvzavGhHlg" key="Date" value="2017-08-28"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_R4MgdYyOEeesZvzavGhHlg" key="Author" value=""/>
       </eAnnotations>
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_08z5EIjFEeen7oIz5Q4Skw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-        <references xmi:type="ecore:EPackage" href="/TestGeneUml/test.profile.uml#_0lnxEIgVEeetMqdXDYZBDg"/>
+        <references xmi:type="ecore:EPackage" href="/TestGeneUml/test.profile.uml#_obMfoIwHEeemwJGQk0Maeg"/>
       </eAnnotations>
       <appliedProfile xmi:type="uml:Profile" href="/TestGeneUml/test.profile.uml#_eobYEHadEeegdZhmvUhwtQ"/>
     </profileApplication>

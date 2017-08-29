@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:test="http:///schemas/test/_0lktwIgVEeetMqdXDYZBDg/85" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/test/_0lktwIgVEeetMqdXDYZBDg/85 /TestGeneUml/test.profile.uml#_0lnxEIgVEeetMqdXDYZBDg">
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:test="http:///schemas/test/_obL4kIwHEeemwJGQk0Maeg/86" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/test/_obL4kIwHEeemwJGQk0Maeg/86 /TestGeneUml/test.profile.uml#_obMfoIwHEeemwJGQk0Maeg">
   <uml:Model xmi:id="_neHF8Iv_Eee_5c9liPN-YQ" name="AppliTutoriel">
     <packagedElement xmi:type="uml:Class" xmi:id="_ogd60Iv_Eee_5c9liPN-YQ" name="Partenaire" visibility="public">
       <ownedAttribute xmi:type="uml:Property" xmi:id="_I110wIwCEee_5c9liPN-YQ" name="id">
@@ -211,15 +211,15 @@
       <ownedEnd xmi:type="uml:Property" xmi:id="_4QZakIwDEee_5c9liPN-YQ" name="produit" type="_qo7cIIv_Eee_5c9liPN-YQ" association="_4QYMcIwDEee_5c9liPN-YQ"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_nnGC0Iv_Eee_5c9liPN-YQ">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_nnGp4Yv_Eee_5c9liPN-YQ" source="PapyrusVersion">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nnGp4ov_Eee_5c9liPN-YQ" key="Version" value="0.0.86"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nnGp44v_Eee_5c9liPN-YQ" key="Comment" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nnGp5Iv_Eee_5c9liPN-YQ" key="Copyright" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nnGp5Yv_Eee_5c9liPN-YQ" key="Date" value="2017-08-23"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nnGp5ov_Eee_5c9liPN-YQ" key="Author" value=""/>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_RW_Q0IyOEeesZvzavGhHlg" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_RW_Q0YyOEeesZvzavGhHlg" key="Version" value="0.0.87"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_RW_Q0oyOEeesZvzavGhHlg" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_RW_Q04yOEeesZvzavGhHlg" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_RW_Q1IyOEeesZvzavGhHlg" key="Date" value="2017-08-28"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_RW_Q1YyOEeesZvzavGhHlg" key="Author" value=""/>
       </eAnnotations>
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_nnGp4Iv_Eee_5c9liPN-YQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
-        <references xmi:type="ecore:EPackage" href="/TestGeneUml/test.profile.uml#_0lnxEIgVEeetMqdXDYZBDg"/>
+        <references xmi:type="ecore:EPackage" href="/TestGeneUml/test.profile.uml#_obMfoIwHEeemwJGQk0Maeg"/>
       </eAnnotations>
       <appliedProfile xmi:type="uml:Profile" href="/TestGeneUml/test.profile.uml#_eobYEHadEeegdZhmvUhwtQ"/>
     </profileApplication>
@@ -244,7 +244,6 @@
   <test:CodeLibelleNomenclature xmi:id="_gwVJ4IwAEee_5c9liPN-YQ" libelle="mr" base_Property="_d9mjkIwAEee_5c9liPN-YQ"/>
   <test:CodeLibelleNomenclature xmi:id="_jMwJAIwAEee_5c9liPN-YQ" code="1" libelle="mme" base_Property="_iaygkIwAEee_5c9liPN-YQ"/>
   <test:keyAttribute xmi:id="_qGHNgIwAEee_5c9liPN-YQ" base_Property="_n_iikIwAEee_5c9liPN-YQ"/>
-  <test:sequence xmi:id="_qGwGsIwAEee_5c9liPN-YQ" base_Property="_n_iikIwAEee_5c9liPN-YQ"/>
   <test:attribute xmi:id="_tNlUwIwAEee_5c9liPN-YQ" base_Property="_qxP1MIwAEee_5c9liPN-YQ" length="50"/>
   <test:attribute xmi:id="_wGnXYIwAEee_5c9liPN-YQ" base_Property="_tcCngIwAEee_5c9liPN-YQ" length="50"/>
   <test:keyAttribute xmi:id="_17xz8IwAEee_5c9liPN-YQ" base_Property="_0FQXMIwAEee_5c9liPN-YQ"/>

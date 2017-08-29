@@ -478,7 +478,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3Imo84v_Eee_5c9liPN-YQ"/>
     </children>
     <element xmi:type="uml:Class" href="AppliTutoriel.uml#_3IjlkIv_Eee_5c9liPN-YQ"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3Imo4Yv_Eee_5c9liPN-YQ" x="1280" y="80"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3Imo4Yv_Eee_5c9liPN-YQ" x="1280" y="60"/>
   </children>
   <children xmi:type="notation:Shape" xmi:id="_4a26-ov_Eee_5c9liPN-YQ" type="StereotypeComment">
     <styles xmi:type="notation:TitleStyle" xmi:id="_4a26-4v_Eee_5c9liPN-YQ"/>
@@ -748,8 +748,8 @@
     <styles xmi:type="notation:FontStyle" xmi:id="_XTqbIYwAEee_5c9liPN-YQ"/>
     <element xmi:type="uml:AssociationClass" href="AppliTutoriel.uml#_XTVD8IwAEee_5c9liPN-YQ"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_XTqbIowAEee_5c9liPN-YQ" points="[1458, 206, -643984, -643984]$[1458, 256, -643984, -643984]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_XUKxcIwAEee_5c9liPN-YQ" id="(0.5993265993265994,1.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_XUKxcYwAEee_5c9liPN-YQ" id="(0.6060606060606061,0.0)"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_XUKxcIwAEee_5c9liPN-YQ" id="(0.6060606060606061,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_XUKxcYwAEee_5c9liPN-YQ" id="(0.6127946127946128,0.0)"/>
   </edges>
   <edges xmi:type="notation:Connector" xmi:id="_XU1f0IwAEee_5c9liPN-YQ" type="AssociationClass_TetherEdge" source="_XTqbIIwAEee_5c9liPN-YQ" target="_XUYM0IwAEee_5c9liPN-YQ">
     <styles xmi:type="notation:FontStyle" xmi:id="_XU1f0YwAEee_5c9liPN-YQ"/>
