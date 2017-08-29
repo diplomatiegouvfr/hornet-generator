@@ -21,6 +21,7 @@
          point="org.eclipse.papyrus.uml.extensionpoints.UMLProfile">
       <profile
             description="Profile Hornet generateur"
+            iconpath="resources/metamodele/icon.png"
             name="Profile Hornet Generateur"
             path="pathmap://resources/metamodele/metamodele.profile.uml"
             provider="MAEDI">
