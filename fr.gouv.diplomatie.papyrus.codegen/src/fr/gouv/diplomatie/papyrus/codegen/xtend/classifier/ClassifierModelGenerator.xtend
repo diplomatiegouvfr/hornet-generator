@@ -106,9 +106,17 @@ public class ClassifierModelGenerator {
 	 */
 	static def generateIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
+		val isSequence = Utils.isSequence(property)
+		var auto = ""
+		if(isSequence){
+			auto = '''
+			
+			autoIncrement: true,
+			'''
+		}
 		'''
 		«name»: {
-			type: Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateIdAttributeTypeLength»,
+			type: Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateIdAttributeTypeLength»,«auto»
 			field: "«Utils.toSnakeCase(name)»",
 			allowNull: «PropertyUtils.isNullable(property)»,
 			primaryKey: true
@@ -241,7 +249,7 @@ public class ClassifierModelGenerator {
 		var pk = '''primaryKey: true,'''
 		'''
 		«name»: {
-			type: «property.getAttributeSequelizeTypeDeclaration»,
+			type: «property.getAttributeSequelizeTypeDeclaration»«property.generateNIdAttributeDefaultValue»,
 			field: "«Utils.toSnakeCase(name)»",«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
 			«pk»«ENDIF»
 			allowNull: «PropertyUtils.isNullable(property)»
@@ -277,10 +285,10 @@ public class ClassifierModelGenerator {
 	 * TODO : à refaire
 	 */
 	static def generateNIdAttributeDefaultValue(Property property){
-		val value = property.defaultValue
+		val value = PropertyUtils.getDefaultValue(property)
 		if(value !== null){
 			''',
-			defaultValue:"«value»"'''
+			''' + '''defaultValue:"«value»"'''
 		}else{
 			''''''
 		}

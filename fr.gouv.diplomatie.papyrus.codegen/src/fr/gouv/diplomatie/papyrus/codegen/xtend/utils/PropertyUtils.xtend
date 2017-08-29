@@ -130,6 +130,9 @@ class PropertyUtils {
 	
 	static def isNullable(Property property){
 		return (property.lower == 0)
-	}
+	}	
 	
+	static def getDefaultValue(Property property){
+		property.^default
+	}
 }

@@ -31,7 +31,8 @@ public class PackageDatabaseScriptGenerator{
 		'''
 		«classes.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateTable()»'''
-		]»«enums.fold("")[acc, clazz |
+		]»
+		«enums.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateEnumTable()»'''
 		]
 		»
@@ -841,6 +842,7 @@ public class PackageDatabaseScriptGenerator{
 		val hasCode = ClassifierUtils.isEnumWithCode(clazz)
 		var sqlType = TypeUtils.getEnumType(clazz)
 		'''
+		
 		CREATE TABLE «Utils.toSnakeCase(clazz.name)»(
 			code «sqlType» NOT NULL,
 			libelle integer
