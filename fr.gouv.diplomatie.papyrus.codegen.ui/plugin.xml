@@ -6,12 +6,32 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.eclipse.papyrus.designer.popup?after=codegen">
+            <menu
+               id="hornetMenu"
+               label="Hornet Generation">
          <command
                commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
-               label="Generate Hornet code"
+               label="Generate All Hornet code"
                style="push"
-               tooltip="Generate Hornet code">
+               tooltip="Generate All Hornet Code">
          </command>
+         <separator
+		       name="separator-id"
+		       visible="true">
+		</separator>
+         <command
+               commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.database"
+               label="Generate Database Script"
+               style="push"
+               tooltip="Generate Database Script">
+         </command>
+         <command
+               commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.models.metier"
+               label="Generate Class: Metier"
+               style="push"
+               tooltip="Generate Class: Metier">
+         </command>
+         </menu>
       </menuContribution>
    </extension>
    <extension
@@ -19,9 +39,23 @@
       <command
             categoryId="org.eclipse.papyrus.editor.category"
             defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.GenerateCodeHandler"
-            description="Generate code"
+            description="Generate All Hornet Code"
             id="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
-            name="Generate Hornet Code">
+            name="Generate All Hornet Code">
+      </command>
+       <command
+            categoryId="org.eclipse.papyrus.editor.category"
+            defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.GenerateDatabaseScriptHandler"
+            description="Generate Database Script"
+            id="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.database"
+            name="Generate Database Script">
+      </command>
+       <command
+            categoryId="org.eclipse.papyrus.editor.category"
+            defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.GenerateMetierClassHandler"
+            description="Generate Class: Metier"
+            id="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.models.metier"
+            name="Generate Class: Metier">
       </command>
    </extension>
    <extension

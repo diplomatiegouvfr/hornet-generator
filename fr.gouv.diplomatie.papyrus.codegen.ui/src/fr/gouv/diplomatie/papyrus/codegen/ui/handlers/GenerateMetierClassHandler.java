@@ -4,24 +4,24 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.uml2.uml.PackageableElement;
 
 import fr.gouv.diplomatie.papyrus.codegen.transformations.ProjectDatabaseScriptElementsCreator;
-import fr.gouv.diplomatie.papyrus.codegen.transformations.ProjectModelElementsCreator;
+import fr.gouv.diplomatie.papyrus.codegen.transformations.ProjectMetierElementsCreator;
 
-public class GenerateCodeHandler extends HornetCodeHandler {
+public class GenerateMetierClassHandler extends HornetCodeHandler {
 
-	public GenerateCodeHandler() {
+	public GenerateMetierClassHandler() {
 		super();
-		this.message = "= executing Generate code Handler";
+		this.message = "= executing Generate Metier Class Handler";
 	}
 	
 	@Override
 	public void initiateAndGenerate(IProject project, PackageableElement packageableElement) {
-		this.creator = new ProjectModelElementsCreator(project);
+		this.creator = new ProjectMetierElementsCreator(project);
 		generate(packageableElement);
 	}
 	
 	public void generate(ProjectDatabaseScriptElementsCreator modelElementsCreator, PackageableElement packageableElement) {
-		System.out.println("generate code Handler : generate()");
+		System.out.println("generate metier Class Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
-	
+
 }
