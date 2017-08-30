@@ -11,7 +11,7 @@ public class PackageGenerator {
 	public static void generateModelDao(Package pakkage, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("PackageGenerator.generateEntityDao : "  + pakkage.getName());
 		
-		String fileName = GeneratorUtils.getModelDaoPath(pakkage) + ".ts";
+		String fileName = GeneratorUtils.getModelDaoPath(pakkage, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, PackageModelDaoClassGenerator.generateCode(pakkage).toString());
 	}
@@ -19,7 +19,7 @@ public class PackageGenerator {
 	public static void generateDatabaseScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("PackageGenerator.generateDatabaseScript : "  + pakkage.getName());
 		
-		String fileName = GeneratorUtils.getDatabaseScriptPath(pakkage) + ".sql";
+		String fileName = GeneratorUtils.getDatabaseScriptPath(pakkage, false) + ".sql";
 		
 		fileSystemAccess.generateFile(fileName, PackageDatabaseScriptGenerator.generateCode(pakkage).toString());
 	}

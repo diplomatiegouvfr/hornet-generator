@@ -190,7 +190,13 @@ Toutes les multiplicités sont disponibles.
 
 ## La génération de code
 
-Une fois votre diagramme de classe terminé, faites un clic droit sur celui-ci -> Designer -> Generate Hornet Code
+Une fois votre diagramme de classe terminé, faites un clic droit sur celui-ci -> Designer -> Hornet Generation.
+
+Trois options sont disponibles:
+
+- Generate All Hornet Code: génère tous les fichiers
+- Generate Database Script: génère uniquement le script de création de la base de données
+- Generate Class: Metier: génère les classes metiers
 
 Le code sera générer dans un dossier src-gen dans votre projet.
 

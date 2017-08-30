@@ -288,7 +288,7 @@ public class ClassifierModelGenerator {
 		val value = PropertyUtils.getDefaultValue(property)
 		if(value !== null){
 			''',
-			''' + '''defaultValue:"«value»"'''
+			''' + '''defaultValue: "«value»"'''
 		}else{
 			''''''
 		}

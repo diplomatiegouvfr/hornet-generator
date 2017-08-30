@@ -35,7 +35,7 @@ class PackageModelDaoClassGenerator{
 		
 		export class ModelDAO implements IModelDAO {
 			
-			public static configDatabase: string = "configAppli";
+			public static configDatabase: string = "config";
 			configDatabase: string = ModelDAO.configDatabase;
 		
 			constructor() {

@@ -27,35 +27,35 @@ class ClassifierUtils{
 	 * retourne le chemin du fichier de la classe Model
 	 */
 	static def getModelPath(Classifier clazz){
-		return GeneratorUtils.getModelPath(clazz)
+		return GeneratorUtils.getModelPath(clazz, true)
 	}
 	
 	/**
 	 * retourne le chemin du fichier de l'interface Attributes
 	 */
 	static def getAttributesInterfacePath(Classifier clazz){
-		return GeneratorUtils.getAttributesInterfacePath(clazz)
+		return GeneratorUtils.getAttributesInterfacePath(clazz, true)
 	}
 	
 	/**
 	 * retourne le chemin du fichier de la classe metier
 	 */
 	static def getMetierClassPath(Classifier clazz){
-		return GeneratorUtils.getMetierClassPath(clazz)
+		return GeneratorUtils.getMetierClassPath(clazz, true)
 	}
 	
 	/**
 	 * retourne le chemin du fichier de la classe dto
 	 */
 	static def getDtoClassPath(Classifier clazz){
-		return GeneratorUtils.getDtoClassPath(clazz)
+		return GeneratorUtils.getDtoClassPath(clazz, true)
 	}
 	
 	/**
 	 * retourne le chemin du fichier de la classe enum
 	 */
 	static def getEnumClassPath(Classifier clazz){
-		return GeneratorUtils.getEnumPath(clazz)
+		return GeneratorUtils.getEnumPath(clazz, true)
 	}
 	
 	/**

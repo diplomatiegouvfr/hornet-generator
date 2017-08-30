@@ -13,7 +13,7 @@ public class ClassifierGenerator {
 	public static void generateModel(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateModel : "  + clazz.getName());
 
-		String fileName = GeneratorUtils.getModelPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getModelPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, ClassifierModelGenerator.generateCode(clazz).toString());
 		
@@ -22,7 +22,7 @@ public class ClassifierGenerator {
 	public static void generateAttributesInterface(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName());
 
-		String fileName = GeneratorUtils.getAttributesInterfacePath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getAttributesInterfacePath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, ClassifierAttributesInterfaceGenerator.generateCode(clazz).toString());
 		
@@ -31,7 +31,7 @@ public class ClassifierGenerator {
 	public static void generateMetierClass(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateMetierClass : "  + clazz.getName());
 
-		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getMetierClassPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, ClassifierMetierClassGenerator.generateCode(clazz).toString());
 		
@@ -40,7 +40,7 @@ public class ClassifierGenerator {
 	public static void generateDto(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateDto : "  + clazz.getName());
 
-		String fileName = GeneratorUtils.getDtoClassPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getDtoClassPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, ClassifierDtoClassGenerator.generateCode(clazz).toString());	
 		
@@ -49,7 +49,7 @@ public class ClassifierGenerator {
 	public static void generateValueObjectMetierClass(Classifier clazz,  IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateValueObjectMetierClass : "  + clazz.getName());
 
-		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getMetierClassPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, ClassifierMetierClassGenerator.generateCode(clazz).toString());
 	}

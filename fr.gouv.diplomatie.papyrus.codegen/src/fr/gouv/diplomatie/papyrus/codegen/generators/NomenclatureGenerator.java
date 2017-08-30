@@ -13,7 +13,7 @@ public class NomenclatureGenerator {
 	public static void generateEnumClass(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("NomenclatureGenerator.generateEnumClass : "  + clazz.getName());
 		
-		String fileName = GeneratorUtils.getEnumPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getEnumPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, NomenclatureEnumClassGenerator.generateCode(clazz).toString());
 		
@@ -22,7 +22,7 @@ public class NomenclatureGenerator {
 	public static void generateEnumModel(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("NomenclatureGenerator.generateEnumModel : "  + clazz.getName());
 		
-		String fileName = GeneratorUtils.getModelPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getModelPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, NomenclatureModelGenerator.generateCode(clazz).toString());
 		
@@ -31,7 +31,7 @@ public class NomenclatureGenerator {
 	public static void generateEnumDto(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("NomenclatureGenerator.generateEnumDto : "  + clazz.getName());
 		
-		String fileName = GeneratorUtils.getDtoClassPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getDtoClassPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, NomenclatureDtoClassGenerator.generateCode(clazz).toString());
 		
@@ -40,7 +40,7 @@ public class NomenclatureGenerator {
 	public static void generateEnumAttributesInterface(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("NomenclatureGenerator.generateEnumAttributesInterface : "  + clazz.getName());
 		
-		String fileName = GeneratorUtils.getAttributesInterfacePath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getAttributesInterfacePath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, NomenclatureAttributesClassGenerator.generateCode(clazz).toString());
 		

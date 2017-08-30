@@ -13,7 +13,7 @@ public class AssociationClassGenerator {
 	public static void generateModel(AssociationClass clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("AssociationClassGenerator.generateModel : "  + clazz.getName());
 		
-		String fileName = GeneratorUtils.getModelPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getModelPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, AssociationClassModelGenerator.generateCode(clazz).toString());
 		
@@ -22,7 +22,7 @@ public class AssociationClassGenerator {
 	public static void generateAttributesInterface(AssociationClass clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("AssociationClassGenerator.generateAttributesInterface : "  + clazz.getName());
 		
-		String fileName = GeneratorUtils.getAttributesInterfacePath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getAttributesInterfacePath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, AssociationClassAttributesInterfaceGenerator.generateCode(clazz).toString());
 	}
@@ -30,7 +30,7 @@ public class AssociationClassGenerator {
 	public static void generateMetierClass(AssociationClass clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("ClassifierGenerator.generateMetierClass : "  + clazz.getName());
 
-		String fileName = GeneratorUtils.getMetierClassPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getMetierClassPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, AssociationClassMetierClassGenerator.generateCode(clazz).toString());
 		
@@ -39,7 +39,7 @@ public class AssociationClassGenerator {
 	public static void generateDto(AssociationClass clazz, IPFileSystemAccess fileSystemAccess) {
 		System.out.println("AssociationClassGenerator.generateDto : "  + clazz.getName());
 		
-		String fileName = GeneratorUtils.getDtoClassPath(clazz) + ".ts";
+		String fileName = GeneratorUtils.getDtoClassPath(clazz, false) + ".ts";
 		
 		fileSystemAccess.generateFile(fileName, AssociationClassDtoClassGenerator.generateCode(clazz).toString());
 	}

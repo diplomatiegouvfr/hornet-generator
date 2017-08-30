@@ -46,6 +46,38 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	}
 	
 	/**
+	 * génère uniquement le script de database
+	 * @param packageableElement
+	 * @param progressMonitor
+	 */
+	public void generateDatabaseScript(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
+		if(packageableElement instanceof Package) {
+			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
+		}
+	}
+	
+	/**
+	 * génère uniquement les classes métier
+	 * @param packageableElement
+	 * @param progressMonitor
+	 */
+	public void generateClassMetier(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
+		if(packageableElement instanceof Package) {
+			generatePackage((Package) packageableElement);
+		}else if(packageableElement instanceof AssociationClass) {
+			AssociationClassGenerator.generateMetierClass((AssociationClass)packageableElement, fileSystemAccess);
+		}else if(Utils.isNomenclature(packageableElement)) {
+			NomenclatureGenerator.generateEnumClass((Classifier)packageableElement, fileSystemAccess);
+		}else if(Utils.isEntity(packageableElement)) {
+			ClassifierGenerator.generateMetierClass((Classifier)packageableElement, fileSystemAccess);
+		}else if(Utils.isValueObject(packageableElement)) {
+			ClassifierGenerator.generateValueObjectMetierClass((Classifier)packageableElement, fileSystemAccess);
+		}else if(packageableElement instanceof Interface) {
+			ClassifierGenerator.generateMetierClass((Interface)packageableElement, fileSystemAccess);
+		}
+	}
+	
+	/**
 	 * Génère les fichiers liés au package
 	 * @param pakkage
 	 */
