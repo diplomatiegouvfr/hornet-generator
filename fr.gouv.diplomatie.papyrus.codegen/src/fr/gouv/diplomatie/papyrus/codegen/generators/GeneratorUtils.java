@@ -23,30 +23,30 @@ public class GeneratorUtils {
 	
 	public static String getModelPath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
-			return MODEL_INCODE_REPOSITORY +  "models" + File.separator + "model-" + Utils.toTypescriptFileName(clazz.getName());
+			return MODEL_INCODE_REPOSITORY +  "models" + File.separator  + Utils.toTypescriptFileName(clazz.getName()) + "-model";
 		}
-		return MODEL_REPOSITORY +  "models" + File.separator + "model-" + Utils.toTypescriptFileName(clazz.getName());
+		return MODEL_REPOSITORY +  "models" + File.separator  + Utils.toTypescriptFileName(clazz.getName())+ "-model";
 	}
 	
 	public static String getAttributesInterfacePath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
-			return MODEL_INCODE_REPOSITORY +  "attributes" + File.separator + "attributes-" + Utils.toTypescriptFileName(clazz.getName());
+			return MODEL_INCODE_REPOSITORY +  "attributes" + File.separator + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
 		}
-		return MODEL_REPOSITORY +  "attributes" + File.separator + "attributes-" + Utils.toTypescriptFileName(clazz.getName());
+		return MODEL_REPOSITORY +  "attributes" + File.separator + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
 	}
 	
 	public static String getMetierClassPath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
-			return MODEL_INCODE_REPOSITORY +  "metier" + File.separator + "metier-" + Utils.toTypescriptFileName(clazz.getName());
+			return MODEL_INCODE_REPOSITORY +  "metier" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
 		}
-		return MODEL_REPOSITORY +  "metier" + File.separator + "metier-" + Utils.toTypescriptFileName(clazz.getName());
+		return MODEL_REPOSITORY +  "metier" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
 	}
 	
 	public static String getDtoClassPath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
-			return MODEL_INCODE_REPOSITORY +  "dto" + File.separator + "dto-" + Utils.toTypescriptFileName(clazz.getName());
+			return MODEL_INCODE_REPOSITORY +  "dto" + File.separator  + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
 		}
-		return MODEL_REPOSITORY +  "dto" + File.separator + "dto-" + Utils.toTypescriptFileName(clazz.getName());
+		return MODEL_REPOSITORY +  "dto" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
 	}
 	
 	public static String getDatabaseScriptPath(Package pakkage, Boolean inCode) {
@@ -65,9 +65,9 @@ public class GeneratorUtils {
 	
 	public static String getEnumPath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
-			return MODEL_INCODE_REPOSITORY + "enum-" + Utils.toTypescriptFileName(clazz.getName());
+			return MODEL_INCODE_REPOSITORY + Utils.toTypescriptFileName(clazz.getName()) + "-enum";
 		}
-		return MODEL_REPOSITORY  + "enum-" + Utils.toTypescriptFileName(clazz.getName());
+		return MODEL_REPOSITORY  +Utils.toTypescriptFileName(clazz.getName())+ "-enum";
 	}
 
 }

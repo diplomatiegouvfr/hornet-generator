@@ -195,7 +195,7 @@ public class ClassifierDtoClassGenerator{
 		'''
 		«attributes.fold("")[acc, attribut|
  			acc + '''
- 			«attribut.generateAttribut(names, fromClass)»'''	
+ 			«attribut.generateAttribut(newArrayList(names), fromClass)»'''	
  		]»
  		'''
 	}

@@ -99,7 +99,7 @@ public class AssociationClassDtoClassGenerator{
 		'''
 		«attributes.fold("")[acc, attribut|
  			acc + '''
- 			«attribut.generateAttribut(names)»'''	
+ 			«attribut.generateAttribut(newArrayList(names))»'''	
  		]»
  		'''
 	}

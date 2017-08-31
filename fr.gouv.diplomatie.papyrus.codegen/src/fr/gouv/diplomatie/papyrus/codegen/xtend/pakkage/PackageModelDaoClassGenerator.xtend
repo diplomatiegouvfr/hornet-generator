@@ -54,6 +54,12 @@ class PackageModelDaoClassGenerator{
 		    «classes.fold("")[acc, clazz |
     	    	acc + '''«(clazz as Classifier).generateEntityGetter»'''
     	    ]»
+		    «classes.fold("")[acc, clazz |
+    	        acc + '''«(clazz as Classifier).generateMultivaluedAttributesEntityGetter»'''
+    	    ]»
+		    «associationsClasses.fold("")[acc, clazz |
+		    	acc + '''«(clazz as Classifier).generateACEntityGetter»'''
+		    ]»
 			«enums.fold("")[acc, clazz |
     	    	acc + '''«(clazz as Classifier).generateEnumEntityGetter»'''
     	    ]»
@@ -225,10 +231,17 @@ class PackageModelDaoClassGenerator{
 	 * génère les relations d'une classe
 	 */
 	static def generateRelations(Classifier clazz, Classifier fromClass, String additionnalName){
-		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
+		var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
 			val type = attribut.type
 			return (Utils.isEntity(type) || Utils.isValueObject(type)) || Utils.isNomenclature(type) || attribut.multivalued
 		]
+		
+		if(clazz instanceof AssociationClass){
+			attributes = clazz.memberEnds.filter[attribut |
+				val type = attribut.type
+				return (Utils.isEntity(type) || Utils.isValueObject(type)) || Utils.isNomenclature(type) || attribut.multivalued
+			]
+		}
 		
 		val interfaces = clazz.directlyRealizedInterfaces
 		
@@ -236,9 +249,9 @@ class PackageModelDaoClassGenerator{
 		«attributes.fold("")[acc, attribut |
 			acc + '''«attribut.generateRelation(fromClass, additionnalName)»'''
 		]»
-		«interfaces.fold("")[acc, interface |
+		«IF clazz instanceof AssociationClass»«interfaces.fold("")[acc, interface |
 			acc + '''«interface.generateInterfaceRelations(fromClass)»'''
-		]»
+		]»«ENDIF»
 		'''
 	}
 	
@@ -618,4 +631,103 @@ class PackageModelDaoClassGenerator{
 		}
 	}
 	
+	/**
+	 * génère les entity getter des classe d'association
+	 */
+	static def generateACEntityGetter(Classifier clazz){
+		'''
+		
+		static get«Utils.getFirstToUpperCase(clazz.name)»Entity(): Sequelize.Model<any, any>{
+			var «Utils.getFirstToLowerCase(clazz.name)»Entity: Sequelize.Model<any, any> = ModelDAO.«Utils.getFirstToLowerCase(clazz.name)»Entity;
+			«clazz.generateRelations(clazz,"")»
+			return «Utils.getFirstToLowerCase(clazz.name)»Entity;
+		}
+		'''
+	}
+	
+	static def generateMultivaluedAttributesEntityGetter(Classifier clazz){
+		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(clazz)
+		val interfaces = clazz.directlyRealizedInterfaces
+		'''
+		«attributes.fold("")[acc, attribut |
+			val entityName = clazz.name + Utils.getFirstToUpperCase(attribut.name)
+			acc + '''«attribut.generateAttributEntityGetter(clazz, entityName)»'''
+		]»«interfaces.fold("")[acc, interface |
+			acc + '''«interface.generateInterfacesAttributesEntityGetter(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateAttributEntityGetter(Property property, Classifier fromClass, String entityName){
+		val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
+		val ids = ClassifierUtils.getId(fromClass)
+		val type = property.type
+		'''
+		
+		static get«tableName»Entity(): Sequelize.Model<any, any>{
+			var «Utils.getFirstToLowerCase(entityName)»Entity: Sequelize.Model<any, any> = ModelDAO.«Utils.getFirstToLowerCase(entityName)»Entity;
+			«ids.fold("")[acc, id |
+				if(Utils.isEntity(type)){
+					acc + '''SequelizeUtils.initRelationBelongsTo(«Utils.getFirstToLowerCase(entityName)»Entity, ModelDAO.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(fromClass.name)»");'''
+				}else{
+					acc + '''SequelizeUtils.initRelationBelongsTo(«Utils.getFirstToLowerCase(entityName)»Entity, ModelDAO.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(id.name)»");'''
+				}
+			]»
+			«property.generateMARelation(fromClass, "", entityName)»
+			return «Utils.getFirstToLowerCase(entityName)»Entity;
+		}
+		'''
+	}
+	
+	static def generateMARelation(Property property, Classifier fromClass, String additionnalName, String entityName){
+		val name = Utils.addAdditionnalName(additionnalName, property.name)
+		val type = property.type
+		if(type instanceof Classifier){
+			if(Utils.isEntity(type)){
+				val ids = ClassifierUtils.getId(type)
+				'''
+				«ids.fold("")[acc, id |
+					var idName =  Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(id.name, property.name))
+					var fieldName = Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(id.name, type.name))
+					if(additionnalName == ""){
+						idName = Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(id.name, type.name))
+						fieldName =  Utils.addAdditionnalName(additionnalName, type.name)
+					}
+					acc + '''SequelizeUtils.initRelationBelongsTo(«Utils.getFirstToLowerCase(entityName)»Entity, ModelDAO.«Utils.getFirstToLowerCase(type.name)»Entity, "«Utils.getFirstToLowerCase(fieldName)»", "«Utils.toSnakeCase(idName)»");'''
+				]»
+				'''
+			}else if(Utils.isValueObject(type)){
+				'''«property.generateVOMARelation(fromClass,name, entityName)»'''
+			}else if(Utils.isNomenclature(type)){
+				if(additionnalName == ""){
+					'''SequelizeUtils.initRelationBelongsTo(«Utils.getFirstToLowerCase(entityName)»Entity, ModelDAO.«Utils.getFirstToLowerCase(type.name)»Entity, "«Utils.getFirstToLowerCase(name)»", "code");'''
+				}else{
+					'''SequelizeUtils.initRelationBelongsTo(«Utils.getFirstToLowerCase(entityName)»Entity, ModelDAO.«Utils.getFirstToLowerCase(type.name)»Entity, "«Utils.getFirstToLowerCase(name)»", "«Utils.toSnakeCase(name)»");'''
+					
+				}
+			}
+		}
+	}
+	
+	static def generateVOMARelation( Property property, Classifier fromClass,String additionnalName, String entityName){
+		val type = property.type
+		val attributes = ClassifierUtils.getOwnedAttributes(type as Classifier)
+		
+		'''
+		«attributes.fold("")[acc, attribut |
+			acc + '''«attribut.generateMARelation(fromClass, additionnalName, entityName)»'''
+		]»
+		'''
+	}
+	
+	static def generateInterfacesAttributesEntityGetter(Interface interf, Classifier fromClass){
+		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(interf)
+		
+		'''
+		«attributes.fold("")[acc, attribut |
+			val entityName = fromClass.name + Utils.getFirstToUpperCase(attribut.name)
+			acc + '''«attribut.generateAttributEntityGetter(fromClass, entityName)»'''
+		]»
+		'''
+	}
 }

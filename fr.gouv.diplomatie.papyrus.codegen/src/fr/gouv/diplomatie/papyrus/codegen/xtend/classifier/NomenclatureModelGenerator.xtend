@@ -18,7 +18,7 @@ public class NomenclatureModelGenerator{
 				primaryKey: true
 			},
 			libelle: {
-				type: Sequelize.INTEGER,
+				type: Sequelize.TEXT,
 				field: "code",
 				allowNull: false
 			}

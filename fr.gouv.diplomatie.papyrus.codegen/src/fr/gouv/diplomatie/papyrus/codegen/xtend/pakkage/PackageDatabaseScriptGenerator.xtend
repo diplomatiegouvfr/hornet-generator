@@ -54,7 +54,7 @@ public class PackageDatabaseScriptGenerator{
 		CREATE TABLE «Utils.toSnakeCase(clazz.name)»(
 			«clazz.generateExtendsId»
 			«clazz.generateInterfaceAttributes(clazz)»
-			«clazz.generateAttributes("", clazz)»
+			«clazz.generateAttributes("", clazz, false)»
 		);
 		«clazz.generateIds»
 				
@@ -102,7 +102,7 @@ public class PackageDatabaseScriptGenerator{
 		if(interfaces !== null && !interfaces.empty){
 			'''
 			«interfaces.fold("")[acc, interface |
-				acc + '''«interface.generateAttributes("", fromClass)»'''
+				acc + '''«interface.generateAttributes("", fromClass, false)»'''
 			]»,
 			'''
 		}else{
@@ -114,14 +114,14 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * Génère les attributs de la classe
 	 */
-	static def generateAttributes(Classifier clazz, String additionnalName, Classifier fromClass){
+	static def generateAttributes(Classifier clazz, String additionnalName, Classifier fromClass, Boolean nullable){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
 		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
  				acc + ''',
- 				''' + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
+ 				''' + '''«attribut.generateAttributDefinition(additionnalName, fromClass, nullable)»'''
  			}else{
- 				acc + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
+ 				acc + '''«attribut.generateAttributDefinition(additionnalName, fromClass, nullable)»'''
  			}		
  		]»'''
 		
@@ -129,12 +129,12 @@ public class PackageDatabaseScriptGenerator{
 	
 	/**
 	 * génère un attribut
-	 */
-	static def generateAttributDefinition(Property property, String additionalName, Classifier fromClass){
+	 */ 
+	static def generateAttributDefinition(Property property, String additionalName, Classifier fromClass, Boolean nullable){
 		if(PropertyUtils.isID(property)){
 			'''«property.generateIdAttributeDefinition(additionalName)»'''
 		}else{
-			'''«property.generateNIdAttributeDefinition(additionalName, fromClass)»'''
+			'''«property.generateNIdAttributeDefinition(additionalName, fromClass, nullable)»'''
 		}
 	}
 	
@@ -160,37 +160,37 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut qui n'est pas un id
 	 */
-	static def generateNIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateNIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		if(PropertyUtils.isClassAttribute(property)){
-			'''«property.generateClassAttributeDefinition(additionnalName, fromClass)»'''
+			'''«property.generateClassAttributeDefinition(additionnalName, fromClass, nullable)»'''
 		}else{
-			'''«property.generateBasicAttributeDefinition(additionnalName, fromClass)»'''
+			'''«property.generateBasicAttributeDefinition(additionnalName, fromClass, nullable)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut lié a la classe
 	 */
-	static def generateClassAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateClassAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		if(Utils.isValueObject(property.type)){
-			'''«property.generateValueObjectAttributeDefinition(additionnalName, fromClass)»'''
+			'''«property.generateValueObjectAttributeDefinition(additionnalName, fromClass, nullable)»'''
 		}else if(Utils.isNomenclature(property.type)){
-			'''«property.generateEumAttributesDefinition(additionnalName, fromClass)»'''
+			'''«property.generateEumAttributesDefinition(additionnalName, fromClass, nullable)»'''
 		}else{
-			'''«property.generateEntityAttributesDefinition(additionnalName, fromClass)»'''
+			'''«property.generateEntityAttributesDefinition(additionnalName, fromClass, nullable)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut de type value Object
 	 */
-	static def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		val type = property.type
 		if(type instanceof Classifier){
 			//val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(type)
 			//val hasAttributes = (!attributes.empty && attributes !== null)
-			return '''«type.generateAttributes(name, fromClass)»'''
+			return '''«type.generateAttributes(name, fromClass, nullable || PropertyUtils.isNullable(property))»'''
 			//«««type.generateMultiValuedEntityAttributes(hasAttributes, name)»
 		}else{
 			''''''
@@ -200,35 +200,35 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut de type value enum
 	 */
-	static def generateEumAttributesDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateEumAttributesDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		var name = Utils.addAdditionnalName(additionnalName, property.name)
 		val type = property.type
 		if(type instanceof Classifier){
 			var sqlType = TypeUtils.getEnumType(type)
-			'''«Utils.toSnakeCase(name)» «sqlType» «property.generateNullable»'''
+			'''«Utils.toSnakeCase(name)» «sqlType» «property.generateNullable(nullable)»'''
 		}
 	}
 	
 	/**
 	 * génère la définition d'un attribut basique
 	 */
-	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass){
+	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		var name = Utils.addAdditionnalName(additionnalName, property.name)
-		'''«Utils.toSnakeCase(name)» «property.generateAttributType»«property.generateStringLength» «property.generateNullable»'''
+		'''«Utils.toSnakeCase(name)» «property.generateAttributType»«property.generateStringLength» «property.generateNullable(nullable)»'''
 	}
 	
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributesDefinition(Property property, String additonnalName, Classifier fromClass){
+	static def generateEntityAttributesDefinition(Property property, String additonnalName, Classifier fromClass, Boolean nullable){
 		val type = property.type
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
 			'''«ids.fold("")[acc , id |
 				if(acc != ""){
-					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName,fromClass)»'''
+					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName,fromClass, nullable)»'''
 				}else{
-					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, fromClass)»'''
+					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, fromClass, nullable)»'''
 				}
 			]»'''
 		}else{
@@ -240,10 +240,10 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass){
+	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass, Boolean nullable){
 		val propName = Utils.addAdditionnalName(additionnalName, id.name) + Utils.getFirstToUpperCase(property.name)
 		return 
-		'''«Utils.toSnakeCase(propName)» «id.generateAttributType»«id.generateStringLength» «property.generateNullable»'''
+		'''«Utils.toSnakeCase(propName)» «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»'''
 	}
 	
 	/**
@@ -553,7 +553,7 @@ public class PackageDatabaseScriptGenerator{
 			'''
 			
 			CREATE TABLE «Utils.toSnakeCase(tableName)»(
-				«type.generateAttributes(property.name, fromClass)»,
+				«type.generateAttributes(property.name, fromClass, false)»,
 				«idsOwner.fold("")[acc, id |
 					if(acc != ""){
 						acc + ''',
@@ -741,9 +741,9 @@ public class PackageDatabaseScriptGenerator{
 		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
  				acc + ''',
- 				''' + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
+ 				''' + '''«attribut.generateAttributDefinition(additionnalName, fromClass, false)»'''
  			}else{
- 				acc + '''«attribut.generateAttributDefinition(additionnalName, fromClass)»'''
+ 				acc + '''«attribut.generateAttributDefinition(additionnalName, fromClass, false)»'''
  			}		
  		]»'''
 		
@@ -826,9 +826,13 @@ public class PackageDatabaseScriptGenerator{
 		return type
 	}
 	
-	static def generateNullable(Property property){
-		val nullable = PropertyUtils.isNullable(property)
-		if(!nullable){
+	static def generateNullable(Property property, Boolean nullable){
+		var isNullable = PropertyUtils.isNullable(property)
+		if(nullable){
+			isNullable = true
+		}
+		
+		if(!isNullable){
 			return '''NOT NULL'''
 		}else{
 			''''''
@@ -845,7 +849,7 @@ public class PackageDatabaseScriptGenerator{
 		
 		CREATE TABLE «Utils.toSnakeCase(clazz.name)»(
 			code «sqlType» NOT NULL,
-			libelle integer
+			libelle text
 		);
 		
 		ALTER TABLE ONLY «Utils.toSnakeCase(clazz.name)»
