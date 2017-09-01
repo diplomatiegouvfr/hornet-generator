@@ -217,9 +217,9 @@ public class ClassifierModelGenerator {
 		}
 		var pk = '''primaryKey: true,'''
 		return '''
-			«propName»: {
+			code«Utils.getFirstToUpperCase(propName)»: {
 				type: Sequelize.«sqlType»,
-				field: "«Utils.toSnakeCase(propName)»",
+				field: "code_«Utils.toSnakeCase(propName)»",
 				allowNull: «isNullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
 				«pk»«ENDIF»
 				references: {
@@ -244,7 +244,7 @@ public class ClassifierModelGenerator {
 			«propName»: {
 				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateNIdAttributeTypeLength»,
 				field: "«Utils.toSnakeCase(propName)»",
-				allowNull: «nullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
+				allowNull: «isNullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
 				«pk»«ENDIF»
 				references: {
 					model: "«ClassifierUtils.getModelName(type as Classifier)»",

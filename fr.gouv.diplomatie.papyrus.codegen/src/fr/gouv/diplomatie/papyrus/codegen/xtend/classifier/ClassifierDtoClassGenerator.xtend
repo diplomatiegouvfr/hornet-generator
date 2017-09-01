@@ -361,10 +361,17 @@ public class ClassifierDtoClassGenerator{
 	 */
 	static def generateBasicAttribute(Property property, ArrayList<String> names){
 		var name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
+		var alias = ''''''
+		if(!names.empty){
+			alias = '''
+			
+			@Alias('«Utils.getListPoint(names)».«property.name»','«name»')
+			'''
+		}
 		if(!property.multivalued){
 			'''
 			
-			@Map()
+			@Map()«alias»
 			«name»: «TypeUtils.getMetierTypescriptType(property.type)»;
 			'''
 		}else{

@@ -19,7 +19,7 @@ public class NomenclatureModelGenerator{
 			},
 			libelle: {
 				type: Sequelize.TEXT,
-				field: "code",
+				field: "libelle",
 				allowNull: false
 			}
 		}

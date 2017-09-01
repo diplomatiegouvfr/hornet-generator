@@ -205,7 +205,7 @@ public class PackageDatabaseScriptGenerator{
 		val type = property.type
 		if(type instanceof Classifier){
 			var sqlType = TypeUtils.getEnumType(type)
-			'''«Utils.toSnakeCase(name)» «sqlType» «property.generateNullable(nullable)»'''
+			'''code_«Utils.toSnakeCase(name)» «sqlType» «property.generateNullable(nullable)»'''
 		}
 	}
 	
@@ -374,7 +374,7 @@ public class PackageDatabaseScriptGenerator{
 		
 		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(propName)»_code_fkey 
-		    FOREIGN KEY («Utils.toSnakeCase(propName)») REFERENCES «Utils.toSnakeCase(type.name)»(code);
+		    FOREIGN KEY (code_«Utils.toSnakeCase(propName)») REFERENCES «Utils.toSnakeCase(type.name)»(code);
 		'''
 	}
 	
