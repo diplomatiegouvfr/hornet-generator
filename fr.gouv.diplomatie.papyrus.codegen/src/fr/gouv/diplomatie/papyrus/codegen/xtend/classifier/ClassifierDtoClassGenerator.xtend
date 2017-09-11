@@ -264,7 +264,7 @@ public class ClassifierDtoClassGenerator{
 				var alias = ""
 				if(!names.empty){
 					alias = '''
-					@Alias('name', '«propName»')'''
+					@Alias('«name»', '«propName»')'''
 				}
 				return '''
 				«ids.fold("")[acc, id |
@@ -301,7 +301,7 @@ public class ClassifierDtoClassGenerator{
 				var codeAlias = ""
 				if(!names.empty){
 					alias = '''
-					@Alias('name', '«propName»')'''
+					@Alias('«name»', '«propName»')'''
 					codeAlias = '''
 					@Alias('«codeAliasName»')'''
 					
@@ -331,7 +331,7 @@ public class ClassifierDtoClassGenerator{
 	
 	static def generateEntityAttribute(Property property, Property id, ArrayList<String> names){
 		val fieldName = Utils.addAdditionnalName(Utils.getNameFromList(names), id.name) + Utils.getFirstToUpperCase(property.name)
-		val propName = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
+		//val propName = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		names.add(property.name)
 		if(!property.multivalued){
 			if(names.empty){
