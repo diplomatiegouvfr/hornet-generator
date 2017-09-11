@@ -20,7 +20,7 @@ public class GenerateCodeHandler extends HornetCodeHandler {
 	}
 	
 	public void generate(ProjectDatabaseScriptElementsCreator modelElementsCreator, PackageableElement packageableElement) {
-		System.out.println("generate code Handler : generate()");
+		out.println("generate code Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 	

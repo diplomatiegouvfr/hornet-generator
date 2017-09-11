@@ -1,5 +1,8 @@
 package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
@@ -8,6 +11,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
 import org.eclipse.papyrus.uml.diagram.common.handlers.CmdHandler;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleManager;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
@@ -16,18 +24,26 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	
 	protected ModelElementsCreator creator;
 	protected String message = "= executing Generate Code Handler";
+	MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");
+	MessageConsoleStream out = myConsole.newMessageStream();
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		System.out.println(this.message);
+		out.println(this.message);
 		
 		if(selectedEObject instanceof PackageableElement) {
-			System.out.println("= selected Object is a PackageableElement");
+			out.println("= selected Object is a PackageableElement");
 			PackageableElement packageableElement = (PackageableElement) selectedEObject;
 			
 			IProject project = getCurrentProject();
 			if(project != null) {
-				initiateAndGenerate(project, packageableElement);
+				try {
+					initiateAndGenerate(project, packageableElement);
+				}catch(Exception e) {
+					StringWriter errors = new StringWriter();
+					e.printStackTrace(new PrintWriter(errors));
+					out.println(errors.toString());
+				}
 			}
 		}
 		return null;
@@ -61,9 +77,21 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	}
 	
 	public void generate(PackageableElement packageableElement) {
-		System.out.println("generate code Handler : generate()");
+		out.println("generate code Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 		
 	}
-
+	
+	private MessageConsole findConsole(String name) {
+	      ConsolePlugin plugin = ConsolePlugin.getDefault();
+	      IConsoleManager conMan = plugin.getConsoleManager();
+	      IConsole[] existing = conMan.getConsoles();
+	      for (int i = 0; i < existing.length; i++)
+	         if (name.equals(existing[i].getName()))
+	            return (MessageConsole) existing[i];
+	      //no console found, so create a new one
+	      MessageConsole myConsole = new MessageConsole(name, null);
+	      conMan.addConsoles(new IConsole[]{myConsole});
+	      return myConsole;
+	}
 }

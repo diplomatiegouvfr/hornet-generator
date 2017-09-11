@@ -13,7 +13,7 @@ public class GenerateDatabaseScriptHandler extends HornetCodeHandler {
 	}
 	
 	public void generate(ProjectDatabaseScriptElementsCreator modelElementsCreator, PackageableElement packageableElement) {
-		System.out.println("generate database script Handler : generate()");
+		out.println("generate database script Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 
