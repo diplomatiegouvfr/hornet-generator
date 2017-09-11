@@ -12,13 +12,11 @@ import fr.gouv.diplomatie.papyrus.codegen.generators.PackageGenerator;
 import org.eclipse.uml2.uml.Package;
 
 public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
-
 	
 	public ProjectDatabaseScriptElementsCreator(IProject project) {
 		super(new ProjectBasedFileAccess(project), new HierarchyLocationStrategy(), "");
 	}
-	
-	
+		
 	@Override
 	protected void createPackageableElementFile(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
 		
@@ -27,5 +25,4 @@ public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
 		}
 	}
 
-	
 }
