@@ -12,8 +12,10 @@ import org.eclipse.uml2.uml.PackageableElement;
 
 import fr.gouv.diplomatie.papyrus.codegen.generators.AssociationClassGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.generators.ClassifierGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.generators.NomenclatureGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.generators.PackageGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils;
 
 import org.eclipse.uml2.uml.Package;
@@ -42,7 +44,6 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 		}else if(packageableElement instanceof Interface) {
 			generateInterface((Interface) packageableElement);
 		}
-		
 	}
 	
 	/**
@@ -53,27 +54,6 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	public void generateDatabaseScript(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
 		if(packageableElement instanceof Package) {
 			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
-		}
-	}
-	
-	/**
-	 * génère uniquement les classes métier
-	 * @param packageableElement
-	 * @param progressMonitor
-	 */
-	public void generateClassMetier(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
-		if(packageableElement instanceof Package) {
-			generatePackage((Package) packageableElement);
-		}else if(packageableElement instanceof AssociationClass) {
-			AssociationClassGenerator.generateMetierClass((AssociationClass)packageableElement, fileSystemAccess);
-		}else if(Utils.isNomenclature(packageableElement)) {
-			NomenclatureGenerator.generateEnumClass((Classifier)packageableElement, fileSystemAccess);
-		}else if(Utils.isEntity(packageableElement)) {
-			ClassifierGenerator.generateMetierClass((Classifier)packageableElement, fileSystemAccess);
-		}else if(Utils.isValueObject(packageableElement)) {
-			ClassifierGenerator.generateValueObjectMetierClass((Classifier)packageableElement, fileSystemAccess);
-		}else if(packageableElement instanceof Interface) {
-			ClassifierGenerator.generateMetierClass((Interface)packageableElement, fileSystemAccess);
 		}
 	}
 	
@@ -91,10 +71,14 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	 * @param clazz
 	 */
 	protected void generateClass(Classifier clazz) {
-		ClassifierGenerator.generateModel(clazz, fileSystemAccess);
-		ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
-		ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
-		ClassifierGenerator.generateDto(clazz, fileSystemAccess);
+		if(ClassifierUtils.canBeGenerated(clazz)) {
+			ClassifierGenerator.generateModel(clazz, fileSystemAccess);
+			ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
+			ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
+			ClassifierGenerator.generateDto(clazz, fileSystemAccess);
+		}else {
+			GeneratorUtils.out.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+		}
 	}
 	
 	/**
@@ -102,8 +86,12 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	 * @param clazz
 	 */
 	protected void generateValueObject(Classifier clazz) {
-		ClassifierGenerator.generateValueObjectMetierClass(clazz, fileSystemAccess);
-		ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
+		if(ClassifierUtils.canBeGenerated(clazz)) {
+			ClassifierGenerator.generateValueObjectMetierClass(clazz, fileSystemAccess);
+			ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
+		}else {
+			GeneratorUtils.out.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+		}
 	}
 	
 	/**
@@ -123,8 +111,12 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	 * @param clazz
 	 */
 	protected void generateInterface(Interface clazz) {
-		ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
-		ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
+		if(ClassifierUtils.canBeGenerated(clazz)) {
+			ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
+			ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
+		}else {
+			GeneratorUtils.out.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+		}
 	}
 	
 	/**
@@ -132,10 +124,14 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	 * @param clazz
 	 */
 	protected void generateNomenclature(Classifier clazz) {
-		NomenclatureGenerator.generateEnumClass(clazz, fileSystemAccess);
-		NomenclatureGenerator.generateEnumModel(clazz, fileSystemAccess);
-		NomenclatureGenerator.generateEnumDto(clazz, fileSystemAccess);
-		NomenclatureGenerator.generateEnumAttributesInterface(clazz, fileSystemAccess);
+		if(ClassifierUtils.canBeGenerated(clazz)) {
+			NomenclatureGenerator.generateEnumClass(clazz, fileSystemAccess);
+			NomenclatureGenerator.generateEnumModel(clazz, fileSystemAccess);
+			NomenclatureGenerator.generateEnumDto(clazz, fileSystemAccess);
+			NomenclatureGenerator.generateEnumAttributesInterface(clazz, fileSystemAccess);
+		}else {
+			GeneratorUtils.out.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+		}
 	}
 	
 }

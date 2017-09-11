@@ -7,6 +7,7 @@ import java.util.ArrayList
 class Utils{
 	
 	public static var MODEL_ENTITY = 'entity';
+	public static var MODEL_ENTITY_GENERATED = 'generated';
 	
 	public static var MODEL_NOMENCLATURE = 'nomenclature';
 	public static var MODEL_NOMENCLATURE_VALEURS = 'valeurs';
@@ -16,9 +17,12 @@ class Utils{
 	public static var MODEL_CODELIBELLENOMENCLATURE_LIBELLE = 'libelle';
 	
 	public static var MODEL_VALUEOBJECT = 'valueObject';
+	
 	public static var MODEL_ATTRIBUTE = 'attribute';
 	public static var MODEL_ATTRIBUTE_LENGTH = 'length';
+	
 	public static var MODEL_KEYATTRIBUTE = 'keyAttribute';
+	
 	public static var MODEL_SEQUENCE = 'sequence';
 	public static var MODEL_SEQUENCE_STARTWITH = 'startWith';
 	public static var MODEL_SEQUENCE_INCREMENTBY = 'incrementBy';
@@ -260,5 +264,4 @@ class Utils{
 		}
 		return result
 	}
-	
 }

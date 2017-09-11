@@ -227,4 +227,15 @@ class ClassifierUtils{
 		val code = Utils.getStereotypePropertyValue(value, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
 		return (code !== null && code != "")
 	}
+	
+	/**
+	 * teste si une classe doit etre générée ou non
+	 */
+	static def canBeGenerated(Classifier clazz){
+		val generated = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED)
+		if(generated == false){
+			return false
+		}
+		return true
+	}
 }

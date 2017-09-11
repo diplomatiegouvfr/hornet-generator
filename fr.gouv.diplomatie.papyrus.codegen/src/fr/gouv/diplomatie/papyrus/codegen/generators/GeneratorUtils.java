@@ -2,6 +2,11 @@ package fr.gouv.diplomatie.papyrus.codegen.generators;
 
 import java.io.File;
 
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleManager;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 
@@ -20,6 +25,9 @@ public class GeneratorUtils {
 	
 	public static final String DAO_REPOSITORY = SRC_REPOSITORY  + "dao" + File.separator ;
 	public static final String DAO_INCODE_REPOSITORY = SRC_INCODE_REPOSITORY  + "dao" + File.separator ;
+	
+	public static MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");
+	public static MessageConsoleStream out = myConsole.newMessageStream();
 	
 	public static String getModelPath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
@@ -69,5 +77,17 @@ public class GeneratorUtils {
 		}
 		return MODEL_REPOSITORY  +Utils.toTypescriptFileName(clazz.getName())+ "-enum";
 	}
-
+	
+	public static MessageConsole findConsole(String name) {
+	      ConsolePlugin plugin = ConsolePlugin.getDefault();
+	      IConsoleManager conMan = plugin.getConsoleManager();
+	      IConsole[] existing = conMan.getConsoles();
+	      for (int i = 0; i < existing.length; i++)
+	         if (name.equals(existing[i].getName()))
+	            return (MessageConsole) existing[i];
+	      //no console found, so create a new one
+	      MessageConsole myConsole = new MessageConsole(name, null);
+	      conMan.addConsoles(new IConsole[]{myConsole});
+	      return myConsole;
+	}
 }
