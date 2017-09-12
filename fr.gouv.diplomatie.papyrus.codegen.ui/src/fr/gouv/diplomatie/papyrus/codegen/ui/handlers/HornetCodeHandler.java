@@ -11,6 +11,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
 import org.eclipse.papyrus.uml.diagram.common.handlers.CmdHandler;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
@@ -26,6 +28,7 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	protected String message = "= executing Generate Code Handler";
 	MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");
 	MessageConsoleStream out = myConsole.newMessageStream();
+	MessageConsoleStream err = getErrorMessageStream();
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -42,7 +45,7 @@ public abstract class HornetCodeHandler extends CmdHandler {
 				}catch(Exception e) {
 					StringWriter errors = new StringWriter();
 					e.printStackTrace(new PrintWriter(errors));
-					out.println(errors.toString());
+					err.println(errors.toString());
 				}
 			}
 		}
@@ -93,5 +96,11 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	      MessageConsole myConsole = new MessageConsole(name, null);
 	      conMan.addConsoles(new IConsole[]{myConsole});
 	      return myConsole;
+	}
+	
+	private MessageConsoleStream getErrorMessageStream() {
+		MessageConsoleStream stream = myConsole.newMessageStream();
+		stream.setColor(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+		return stream;
 	}
 }
