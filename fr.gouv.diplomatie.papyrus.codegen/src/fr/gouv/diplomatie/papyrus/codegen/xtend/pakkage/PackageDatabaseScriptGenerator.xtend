@@ -51,7 +51,7 @@ public class PackageDatabaseScriptGenerator{
 		)
 		'''
 		
-		CREATE TABLE «Utils.toSnakeCase(clazz.name)»(
+		CREATE TABLE «ClassifierUtils.getTableName(clazz)»(
 			«clazz.generateExtendsId»
 			«clazz.generateInterfaceAttributes(clazz)»
 			«clazz.generateAttributes("", clazz, false)»
@@ -70,7 +70,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateAlters(Classifier clazz){
 		'''
 		«clazz.generateMultivaluedAttributesTable(clazz)»
-		«clazz.generateForeignKeys("", clazz.name)»
+		«clazz.generateForeignKeys("", ClassifierUtils.getTableName(clazz))»
 		«clazz.generateExtendsForeignKey()»
 		'''
 	}
@@ -260,8 +260,8 @@ public class PackageDatabaseScriptGenerator{
 		]
 		'''
 		
-		ALTER TABLE ONLY «Utils.toSnakeCase(clazz.name)»
-			ADD CONSTRAINT «Utils.toSnakeCase(clazz.name)»_pkey PRIMARY KEY («name»);
+		ALTER TABLE ONLY «ClassifierUtils.getTableName(clazz)»
+			ADD CONSTRAINT «ClassifierUtils.getTableName(clazz)»_pkey PRIMARY KEY («name»);
 		'''
 	}
 	
@@ -288,9 +288,9 @@ public class PackageDatabaseScriptGenerator{
 			]
 			'''
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(fromClass.name)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(clazz.name)»_ids_fkey
-			    FOREIGN KEY («idsName») REFERENCES «Utils.toSnakeCase(clazz.name)»(«idsName»);
+			ALTER TABLE ONLY «ClassifierUtils.getTableName(fromClass)»
+			    ADD CONSTRAINT «ClassifierUtils.getTableName(fromClass)»_«Utils.toSnakeCase(clazz.name)»_ids_fkey
+			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getTableName(clazz)»(«idsName»);
 			'''
 		}else{
 			''''''
@@ -357,7 +357,7 @@ public class PackageDatabaseScriptGenerator{
 				
 				ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 				    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(propName)»_ids_fkey 
-				    FOREIGN KEY («fieldToClass») REFERENCES «Utils.toSnakeCase(toClass.name)»(«fieldInClass»);
+				    FOREIGN KEY («fieldToClass») REFERENCES «ClassifierUtils.getTableName(toClass)»(«fieldInClass»);
 				'''
 			}
 		}
@@ -374,7 +374,7 @@ public class PackageDatabaseScriptGenerator{
 		
 		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(propName)»_code_fkey 
-		    FOREIGN KEY (code_«Utils.toSnakeCase(propName)») REFERENCES «Utils.toSnakeCase(type.name)»(code);
+		    FOREIGN KEY (code_«Utils.toSnakeCase(propName)») REFERENCES «ClassifierUtils.getTableName(type as Classifier)»(code);
 		'''
 	}
 	
@@ -418,7 +418,7 @@ public class PackageDatabaseScriptGenerator{
 	
 	static def generateMutilvaluedPTTable(Property property, Classifier fromClass){
 
-		val tableName = fromClass.name + Utils.getFirstToUpperCase(property.name)
+		val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
 		val ids = ClassifierUtils.getId(fromClass) 
 		val idsName = ids.fold("")[acc, id |
 			if(acc != ""){
@@ -443,7 +443,7 @@ public class PackageDatabaseScriptGenerator{
 		
 		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
-		    FOREIGN KEY («idsName») REFERENCES «Utils.toSnakeCase(fromClass.name)»(«idsName»);
+		    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsName»);
 		    
 		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«idsName», «Utils.toSnakeCase(property.name)»);
@@ -457,7 +457,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateMutilvaluedEntityTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
-			val tableName = fromClass.name + Utils.getFirstToUpperCase(property.name)
+			val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
 			val idsProps = ClassifierUtils.getId(type) 
 			val idsOwner = ClassifierUtils.getId(fromClass) 
 			val idsOwnerName = idsOwner.fold("")[acc, id |
@@ -513,11 +513,11 @@ public class PackageDatabaseScriptGenerator{
 			
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(fromClass.name)»_ids_fkey
-			    FOREIGN KEY («idsOwnerName») REFERENCES «Utils.toSnakeCase(fromClass.name)»(«idsOwnerBaseName»);
+			    FOREIGN KEY («idsOwnerName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsOwnerBaseName»);
 			    
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(type.name)»_ids_fkey
-			    FOREIGN KEY («idsPropsName») REFERENCES «Utils.toSnakeCase(type.name)»(«idsPropsBaseName»);
+			    FOREIGN KEY («idsPropsName») REFERENCES «ClassifierUtils.getTableName(type)»(«idsPropsBaseName»);
 			    
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«idsOwnerName», «idsPropsName»);
@@ -539,7 +539,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateValueObjectEntityTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
-			val tableName = fromClass.name + Utils.getFirstToUpperCase(property.name)
+			val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
 			
 			val idsOwner = ClassifierUtils.getId(fromClass) 
 			val idsName = idsOwner.fold("")[acc, id |
@@ -567,7 +567,7 @@ public class PackageDatabaseScriptGenerator{
 			
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
-			    FOREIGN KEY («idsName») REFERENCES «Utils.toSnakeCase(fromClass.name)»(«idsName»);
+			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsName»);
 			    
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«pkeys»);
@@ -607,7 +607,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateEnumAttributTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
-			val tableName = fromClass.name + Utils.getFirstToUpperCase(property.name)
+			val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
 			
 			val idsOwner = ClassifierUtils.getId(fromClass) 
 			val idsName = idsOwner.fold("")[acc, id |
@@ -635,11 +635,11 @@ public class PackageDatabaseScriptGenerator{
 			
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
-			    FOREIGN KEY («idsName») REFERENCES «Utils.toSnakeCase(fromClass.name)»(«idsName»);
+			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsName»);
 			
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_code_fkey
-			    FOREIGN KEY (code) REFERENCES «Utils.toSnakeCase(type.name)»(code);
+			    FOREIGN KEY (code) REFERENCES «ClassifierUtils.getTableName(type)»(code);
 			
 			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
 			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY («idsName», code);
@@ -656,7 +656,7 @@ public class PackageDatabaseScriptGenerator{
 		if(owner instanceof Classifier){
 			var maxVal = '''NO MAXVALUE'''
 			var minVal = '''NO MINVALUE'''
-			val name = owner.name + Utils.getFirstToUpperCase(property.name)
+			val name = ClassifierUtils.getTableName(owner) + Utils.getFirstToUpperCase(property.name)
 			val startWith = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH)
 			val inscrementBy = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY)
 			
@@ -687,9 +687,9 @@ public class PackageDatabaseScriptGenerator{
 			    «cycle»;
 			    
 			ALTER SEQUENCE «Utils.toSnakeCase(name)»_seq 
-				OWNED BY «Utils.toSnakeCase(owner.name)».«Utils.toSnakeCase(property.name)»;
+				OWNED BY «ClassifierUtils.getTableName(owner)».«Utils.toSnakeCase(property.name)»;
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(owner.name)» 
+			ALTER TABLE ONLY «ClassifierUtils.getTableName(owner)» 
 				ALTER COLUMN «Utils.toSnakeCase(property.name)» 
 				SET DEFAULT nextval('«Utils.toSnakeCase(name)»_seq'::regclass);
 			'''
@@ -762,7 +762,7 @@ public class PackageDatabaseScriptGenerator{
 			if(Utils.isEntity(type)){
 				return '''«property.generateAssociationForeignKeysEntity(fromClass)»'''
 			}else if (Utils.isValueObject(type)){
-				return '''«type.generateForeignKeys(property.name, fromClass.name)»'''
+				return '''«type.generateForeignKeys(property.name, ClassifierUtils.getTableName(fromClass))»'''
 			}else if(Utils.isNomenclature(type)){
 				return '''«property.generateAssociationForeignKeysEnum(fromClass)»'''
 			}
@@ -791,9 +791,9 @@ public class PackageDatabaseScriptGenerator{
 			]
 			return '''
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(fromClass.name)»
-				ADD CONSTRAINT «Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(property.name)»_ids_fkey 
-				FOREIGN KEY («idsNameInClass») REFERENCES «Utils.toSnakeCase(type.name)»(«idsName»);
+			ALTER TABLE ONLY «ClassifierUtils.getTableName(fromClass)»
+				ADD CONSTRAINT «ClassifierUtils.getTableName(fromClass)»_«Utils.toSnakeCase(property.name)»_ids_fkey 
+				FOREIGN KEY («idsNameInClass») REFERENCES «ClassifierUtils.getTableName(type)»(«idsName»);
 			'''
 		}
 		return ''''''
@@ -805,9 +805,9 @@ public class PackageDatabaseScriptGenerator{
 		if(type instanceof Classifier){
 			return '''
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(fromClass.name)»
-				ADD CONSTRAINT «Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(property.name)»_code_fkey 
-				FOREIGN KEY («property.name») REFERENCES «Utils.toSnakeCase(type.name)»(code);
+			ALTER TABLE ONLY «ClassifierUtils.getTableName(fromClass)»
+				ADD CONSTRAINT «ClassifierUtils.getTableName(fromClass)»_«Utils.toSnakeCase(property.name)»_code_fkey 
+				FOREIGN KEY («property.name») REFERENCES «ClassifierUtils.getTableName(type)»(code);
 			'''
 		}
 		return ''''''
@@ -847,16 +847,16 @@ public class PackageDatabaseScriptGenerator{
 		var sqlType = TypeUtils.getEnumType(clazz)
 		'''
 		
-		CREATE TABLE «Utils.toSnakeCase(clazz.name)»(
+		CREATE TABLE «ClassifierUtils.getTableName(clazz)»(
 			code «sqlType» NOT NULL,
 			libelle text
 		);
 		
-		ALTER TABLE ONLY «Utils.toSnakeCase(clazz.name)»
-			ADD CONSTRAINT «Utils.toSnakeCase(clazz.name)»_pkey PRIMARY KEY (code);
+		ALTER TABLE ONLY «ClassifierUtils.getTableName(clazz)»
+			ADD CONSTRAINT «ClassifierUtils.getTableName(clazz)»_pkey PRIMARY KEY (code);
 		«IF !hasCode»
 		
-		CREATE SEQUENCE «Utils.toSnakeCase(clazz.name)»_code_seq
+		CREATE SEQUENCE «ClassifierUtils.getTableName(clazz)»_code_seq
 		    START WITH 1
 		    INCREMENT BY 1
 		    NO MAXVALUE
@@ -864,8 +864,8 @@ public class PackageDatabaseScriptGenerator{
 		    CACHE 1
 		    NO CYCLE;
 		    
-		ALTER SEQUENCE «Utils.toSnakeCase(clazz.name)»_code_seq
-			OWNED BY «Utils.toSnakeCase(clazz.name)».code;
+		ALTER SEQUENCE «ClassifierUtils.getTableName(clazz)»_code_seq
+			OWNED BY «ClassifierUtils.getTableName(clazz)».code;
 		«ENDIF»
 		'''
 	}

@@ -232,10 +232,30 @@ class ClassifierUtils{
 	 * teste si une classe doit etre générée ou non
 	 */
 	static def canBeGenerated(Classifier clazz){
-		val generated = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED)
-		if(generated == false){
-			return false
+		if(Utils.isEntity(clazz)){
+			return (Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED) != false)
+		}else if(Utils.isNomenclature(clazz)){
+			return (Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_GENERATED) != false)
+		}else if (Utils.isValueObject(clazz)){
+			return(Utils.getStereotypePropertyValue(clazz, Utils.MODEL_VALUEOBJECT, Utils.MODEL_VALUEOBJECT_GENERATED) != false)
 		}
 		return true
+	}
+	
+	static def getTableNameValue(Classifier clazz){
+		if(Utils.isEntity(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_TABLENAME)
+		}else if(Utils.isNomenclature(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_TABLENAME)
+		}
+		return null
+	}
+	
+	static def String getTableName(Classifier clazz){
+		val name = getTableNameValue(clazz)
+		if(name === null){
+			return Utils.toSnakeCase(clazz.name)
+		}
+		return name.toString
 	}
 }

@@ -140,7 +140,7 @@ class PackageModelDaoClassGenerator{
 	static def generateEntityDeclaration(Classifier clazz){
 		'''
 		
-		@Entity("«Utils.toSnakeCase(clazz.name)»", «ClassifierUtils.getModelName(clazz)»)
+		@Entity("«ClassifierUtils.getTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
 		static «Utils.getFirstToLowerCase(clazz.name)»Entity: Sequelize.Model<any, any>;
 		«IF Utils.isEntity(clazz)»«clazz.generateMultivaluedAttributesEntityDeclaration»«ENDIF»
 		'''
@@ -170,7 +170,7 @@ class PackageModelDaoClassGenerator{
 	}
 	
 	static def generateMultivaluedAttributEntityDeclaration(Property property, Classifier fromClass){
-		val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
+		val tableName = Utils.addAdditionnalName(ClassifierUtils.getTableName(fromClass), property.name)
 		val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 		'''
 		
@@ -182,7 +182,7 @@ class PackageModelDaoClassGenerator{
 	static def generateAssociationClassDeclaration(Classifier clazz){
 		'''
 		
-		@Entity("«Utils.toSnakeCase(clazz.name)»", «ClassifierUtils.getModelName(clazz)»)
+		@Entity("«ClassifierUtils.getTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
 		static «Utils.getFirstToLowerCase(clazz.name)»Entity: Sequelize.Model<any, any>;
 		'''
 	}

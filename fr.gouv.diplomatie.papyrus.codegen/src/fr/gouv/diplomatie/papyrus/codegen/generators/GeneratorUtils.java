@@ -1,5 +1,10 @@
 package fr.gouv.diplomatie.papyrus.codegen.generators;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.widgets.Display;
+
 import java.io.File;
 
 import org.eclipse.ui.console.ConsolePlugin;
@@ -28,6 +33,9 @@ public class GeneratorUtils {
 	
 	public static MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");
 	public static MessageConsoleStream out = myConsole.newMessageStream();
+	public static MessageConsoleStream err = getErrorMessageStream();
+	public static MessageConsoleStream warning = getWarningMessageStream();
+	
 	
 	public static String getModelPath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
@@ -89,5 +97,19 @@ public class GeneratorUtils {
 	      MessageConsole myConsole = new MessageConsole(name, null);
 	      conMan.addConsoles(new IConsole[]{myConsole});
 	      return myConsole;
+	}
+	
+	public static MessageConsoleStream getErrorMessageStream() {
+		MessageConsoleStream stream = myConsole.newMessageStream();
+		stream.setColor(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+		return stream;
+	}
+	
+	public static MessageConsoleStream getWarningMessageStream() {
+		MessageConsoleStream stream = myConsole.newMessageStream();
+		Device device = Display.getCurrent ();
+		Color orange = new Color (device, 245, 121, 0);
+		stream.setColor(orange);
+		return stream;
 	}
 }

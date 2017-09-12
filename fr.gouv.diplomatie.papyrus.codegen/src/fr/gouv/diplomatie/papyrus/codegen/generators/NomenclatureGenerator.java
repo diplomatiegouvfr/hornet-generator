@@ -18,7 +18,7 @@ public class NomenclatureGenerator{
 			
 			fileSystemAccess.generateFile(fileName, NomenclatureEnumClassGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.out.println("La classe metier de l'énumération  "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			GeneratorUtils.warning.println("La classe metier de l'énumération  "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 	
@@ -29,7 +29,7 @@ public class NomenclatureGenerator{
 	
 			fileSystemAccess.generateFile(fileName, NomenclatureModelGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.out.println("Le modèle de l'énumération  "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
+			GeneratorUtils.warning.println("Le modèle de l'énumération  "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
 		}
 	}
 	
@@ -40,7 +40,7 @@ public class NomenclatureGenerator{
 	
 			fileSystemAccess.generateFile(fileName, NomenclatureDtoClassGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.out.println("Le dto de l'énumération  "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
+			GeneratorUtils.warning.println("Le dto de l'énumération  "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
 		}
 	}
 	
@@ -51,7 +51,7 @@ public class NomenclatureGenerator{
 	
 			fileSystemAccess.generateFile(fileName, NomenclatureAttributesClassGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.out.println("La'interface attributs de l'énumération  "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			GeneratorUtils.warning.println("La'interface attributs de l'énumération  "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 }

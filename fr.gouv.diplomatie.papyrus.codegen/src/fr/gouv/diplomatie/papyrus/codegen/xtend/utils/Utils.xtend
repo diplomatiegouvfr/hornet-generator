@@ -8,15 +8,19 @@ class Utils{
 	
 	public static var MODEL_ENTITY = 'entity';
 	public static var MODEL_ENTITY_GENERATED = 'generated';
+	public static var MODEL_ENTITY_TABLENAME = 'tableName';
 	
 	public static var MODEL_NOMENCLATURE = 'nomenclature';
 	public static var MODEL_NOMENCLATURE_VALEURS = 'valeurs';
+	public static var MODEL_NOMENCLATURE_GENERATED = 'generated';
+	public static var MODEL_NOMENCLATURE_TABLENAME = 'tableName';
 	
 	public static var MODEL_CODELIBELLENOMENCLATURE = 'CodeLibelleNomenclature';
 	public static var MODEL_CODELIBELLENOMENCLATURE_CODE = 'code';
 	public static var MODEL_CODELIBELLENOMENCLATURE_LIBELLE = 'libelle';
 	
 	public static var MODEL_VALUEOBJECT = 'valueObject';
+	public static var MODEL_VALUEOBJECT_GENERATED = 'generated';
 	
 	public static var MODEL_ATTRIBUTE = 'attribute';
 	public static var MODEL_ATTRIBUTE_LENGTH = 'length';
