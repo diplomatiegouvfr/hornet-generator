@@ -66,6 +66,26 @@ Les stéréotypes de classe proposés par le profil sont les suivants:
 - valueObject: représente une entité de second rang qui n'a d'existence dans le système que parce qu'elle est liée à une entité.
 - nomenclature: définit un ensemble de couple code / libellé servant à caractériser des entités.
 
+##### Les attributs du stéréotype entity
+
+| attibut   | description                                                        |
+| --------- | ------------------------------------------------------------------ |
+| generated |Indique si la classe doit être générée ou non                       |
+| tableName | Nom de la table dans la base de données                            |
+
+##### Les attributs du stéréotype valueObject
+
+| attibut   | description                                                        |
+| --------- | ------------------------------------------------------------------ |
+| generated |Indique si la classe doit être générée ou non                       |
+
+##### Les attributs du stéréotype nomenclature
+
+| attibut   | description                                                        |
+| --------- | ------------------------------------------------------------------ |
+| generated |Indique si la classe doit être générée ou non                       |
+| tableName | Nom de la table dans la base de données                            |
+
 #### Les stéréotypes d'attributs
 
 - attribute: attribut de la classe.
