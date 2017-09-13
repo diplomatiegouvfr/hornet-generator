@@ -10,7 +10,6 @@ import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.AssociationClassGenerator;
@@ -65,7 +64,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 			ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
 			ClassifierGenerator.generateDto(clazz, fileSystemAccess);
 		}else {
-			GeneratorUtils.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			Utils.console.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 	
@@ -78,7 +77,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 			ClassifierGenerator.generateValueObjectMetierClass(clazz, fileSystemAccess);
 			ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
 		}else {
-			GeneratorUtils.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			Utils.console.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 	
@@ -103,7 +102,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 			ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
 			ClassifierGenerator.generateMetierClass(clazz, fileSystemAccess);
 		}else {
-			GeneratorUtils.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			Utils.console.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 	
@@ -118,7 +117,7 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 			NomenclatureGenerator.generateEnumDto(clazz, fileSystemAccess);
 			NomenclatureGenerator.generateEnumAttributesInterface(clazz, fileSystemAccess);
 		}else {
-			GeneratorUtils.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			Utils.console.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 	

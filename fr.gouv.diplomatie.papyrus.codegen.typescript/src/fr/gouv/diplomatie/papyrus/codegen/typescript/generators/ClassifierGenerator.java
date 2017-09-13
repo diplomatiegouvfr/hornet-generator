@@ -9,6 +9,7 @@ import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierModelGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
 public class ClassifierGenerator{
 	
@@ -16,10 +17,10 @@ public class ClassifierGenerator{
 		String fileName = GeneratorUtils.getModelPath(clazz, false) + ".ts";
 		
 		if(ClassifierUtils.canBeGenerated(clazz)) {
-			GeneratorUtils.out.println("ClassifierGenerator.generateModel : "  + clazz.getName() + ", fichier : " + fileName);
+			Utils.console.out.println("ClassifierGenerator.generateModel : "  + clazz.getName() + ", fichier : " + fileName);
 			fileSystemAccess.generateFile(fileName, ClassifierModelGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.warning.println("Le modèle de la classe "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
+			Utils.console.warning.println("Le modèle de la classe "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
 		}
 		
 	}
@@ -27,22 +28,22 @@ public class ClassifierGenerator{
 	public static void generateAttributesInterface(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		String fileName = GeneratorUtils.getAttributesInterfacePath(clazz, false) + ".ts";
 		if(ClassifierUtils.canBeGenerated(clazz)) {
-			GeneratorUtils.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName() + ", fichier : " + fileName);
+			Utils.console.out.println("ClassifierGenerator.generateAttributesInterface : "  + clazz.getName() + ", fichier : " + fileName);
 			
 			fileSystemAccess.generateFile(fileName, ClassifierAttributesInterfaceGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.warning.println("L'interface attributs de la classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			Utils.console.warning.println("L'interface attributs de la classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 	
 	public static void generateMetierClass(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		String fileName = GeneratorUtils.getMetierClassPath(clazz, false) + ".ts";
 		if(ClassifierUtils.canBeGenerated(clazz)) {
-			GeneratorUtils.out.println("ClassifierGenerator.generateMetierClass : "  + clazz.getName() + ", fichier : " + fileName);
+			Utils.console.out.println("ClassifierGenerator.generateMetierClass : "  + clazz.getName() + ", fichier : " + fileName);
 			
 			fileSystemAccess.generateFile(fileName, ClassifierMetierClassGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.warning.println("La classe metier de la classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			Utils.console.warning.println("La classe metier de la classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 		
 	}
@@ -50,22 +51,22 @@ public class ClassifierGenerator{
 	public static void generateDto(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		String fileName = GeneratorUtils.getDtoClassPath(clazz, false) + ".ts";
 		if(ClassifierUtils.canBeGenerated(clazz)) {
-			GeneratorUtils.out.println("ClassifierGenerator.generateDto : "  + clazz.getName() + ", fichier : " + fileName);
+			Utils.console.out.println("ClassifierGenerator.generateDto : "  + clazz.getName() + ", fichier : " + fileName);
 			
 			fileSystemAccess.generateFile(fileName, ClassifierDtoClassGenerator.generateCode(clazz).toString());	
 		}else {
-			GeneratorUtils.warning.println("Le dto de la classe "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
+			Utils.console.warning.println("Le dto de la classe "+ clazz.getName() + " ne sera pas généré car elle possède une propriété generated à false");
 		}
 	}
 	
 	public static void generateValueObjectMetierClass(Classifier clazz,  IPFileSystemAccess fileSystemAccess) {
 		String fileName = GeneratorUtils.getMetierClassPath(clazz, false) + ".ts";
 		if(ClassifierUtils.canBeGenerated(clazz)) {
-			GeneratorUtils.out.println("ClassifierGenerator.generateValueObjectMetierClass : "  + clazz.getName() + ", fichier : " + fileName);
+			Utils.console.out.println("ClassifierGenerator.generateValueObjectMetierClass : "  + clazz.getName() + ", fichier : " + fileName);
 			
 			fileSystemAccess.generateFile(fileName, ClassifierMetierClassGenerator.generateCode(clazz).toString());
 		}else {
-			GeneratorUtils.warning.println("La classe metier de la classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
+			Utils.console.warning.println("La classe metier de la classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
 	}
 
