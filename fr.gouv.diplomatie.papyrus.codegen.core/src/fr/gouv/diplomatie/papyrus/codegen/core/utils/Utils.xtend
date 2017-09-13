@@ -290,7 +290,9 @@ public class Utils{
 	static def getPackagePath(NamedElement elem) {
 		var path ="";
 		if(Utils.getRootPackage(elem) !== null) {
-			val rootPackage = Utils.getRootPackage(elem).toString()
+			val rootPackage = Utils.getRootPackage(elem).toString();
+			rootPackage.replace("\\", File.separator)
+			rootPackage.replace("/", File.separator)
 			path = toPath(rootPackage)
 		}else {
 			path = "fr"+ File.separator + "gouv" + File.separator + "diplomatie"

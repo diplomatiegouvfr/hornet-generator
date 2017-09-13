@@ -374,6 +374,8 @@ public class Utils {
     boolean _tripleNotEquals = (_rootPackage != null);
     if (_tripleNotEquals) {
       final String rootPackage = Utils.getRootPackage(elem).toString();
+      rootPackage.replace("\\", File.separator);
+      rootPackage.replace("/", File.separator);
       path = Utils.toPath(rootPackage);
     } else {
       path = (((("fr" + File.separator) + "gouv") + File.separator) + "diplomatie");
