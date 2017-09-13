@@ -45,7 +45,7 @@ public class Utils{
 	public static var MODEL_SEQUENCE_CACHE = 'cache';
 	public static var MODEL_SEQUENCE_CYCLE = 'cycle';
 	
-	public static var MODEL_APPLICATION = 'Application';
+	public static var MODEL_APPLICATION = 'application';
 	public static var MODEL_APPLICATION_ROOTPACKAGE = 'rootPackage';
 	
 	/**

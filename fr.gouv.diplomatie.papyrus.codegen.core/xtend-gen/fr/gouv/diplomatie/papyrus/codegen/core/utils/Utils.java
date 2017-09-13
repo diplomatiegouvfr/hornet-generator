@@ -78,7 +78,7 @@ public class Utils {
   
   public static String MODEL_SEQUENCE_CYCLE = "cycle";
   
-  public static String MODEL_APPLICATION = "Application";
+  public static String MODEL_APPLICATION = "application";
   
   public static String MODEL_APPLICATION_ROOTPACKAGE = "rootPackage";
   
