@@ -83,13 +83,4 @@ public abstract class HornetCodeHandler extends CmdHandler {
 		IProject project = root.getProject(uri.segment(1));
 		return project;
 	}
-	
-	/**
-	 * lance la génération
-	 * @param packageableElement
-	 */
-	public void generate(PackageableElement packageableElement) {
-		console.out.println("generate code Handler : generate()");
-		creator.createPackageableElement(packageableElement, null, true);
-	}
 }
