@@ -1,4 +1,4 @@
-package fr.gouv.diplomatie.papyrus.codegen.transformations;
+package fr.gouv.diplomatie.papyrus.codegen.typescript.transformations;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -10,13 +10,13 @@ import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.generators.AssociationClassGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.generators.ClassifierGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.generators.GeneratorUtils;
-import fr.gouv.diplomatie.papyrus.codegen.generators.NomenclatureGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.generators.PackageGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ClassifierUtils;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils;
+import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.AssociationClassGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.ClassifierGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.NomenclatureGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.PackageGenerator;
 
 import org.eclipse.uml2.uml.Package;
 
@@ -47,22 +47,10 @@ public class ProjectModelElementsCreator extends ModelElementsCreator {
 	}
 	
 	/**
-	 * génère uniquement le script de database
-	 * @param packageableElement
-	 * @param progressMonitor
-	 */
-	public void generateDatabaseScript(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
-		if(packageableElement instanceof Package) {
-			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
-		}
-	}
-	
-	/**
 	 * Génère les fichiers liés au package
 	 * @param pakkage
 	 */
 	protected void generatePackage(Package pakkage) {
-		PackageGenerator.generateDatabaseScript(pakkage, fileSystemAccess);
 		PackageGenerator.generateModelDao(pakkage, fileSystemAccess);
 	}
 	

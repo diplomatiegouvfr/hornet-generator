@@ -1,12 +1,12 @@
-package fr.gouv.diplomatie.papyrus.codegen.xtend.pakkage;
+package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.pakkage;
 
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Property;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import org.eclipse.uml2.uml.AssociationClass
 import org.eclipse.uml2.uml.Classifier
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ClassifierUtils
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.PropertyUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import org.eclipse.uml2.uml.Interface
 
 class PackageModelDaoClassGenerator{

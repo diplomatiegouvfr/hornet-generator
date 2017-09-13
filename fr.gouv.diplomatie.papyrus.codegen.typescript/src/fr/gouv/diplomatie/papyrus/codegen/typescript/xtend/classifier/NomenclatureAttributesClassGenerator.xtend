@@ -1,7 +1,7 @@
-package fr.gouv.diplomatie.papyrus.codegen.xtend.classifier;
+package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
 
 import org.eclipse.uml2.uml.Classifier
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ClassifierUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 
 public class NomenclatureAttributesClassGenerator{
 	

@@ -1,13 +1,14 @@
-package fr.gouv.diplomatie.papyrus.codegen.generators;
+package fr.gouv.diplomatie.papyrus.codegen.typescript.generators;
 
 import org.eclipse.papyrus.infra.tools.file.IPFileSystemAccess;
 import org.eclipse.uml2.uml.Classifier;
 
-import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierAttributesInterfaceGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierDtoClassGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierMetierClassGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.classifier.ClassifierModelGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ClassifierUtils;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierAttributesInterfaceGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierDtoClassGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierMetierClassGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierModelGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
 
 public class ClassifierGenerator{
 	

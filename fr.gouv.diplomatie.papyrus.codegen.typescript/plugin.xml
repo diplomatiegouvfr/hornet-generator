@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.papyrus.designer.languages.common.extensionpoints.languageProjectSupport">
       <client
-            class="fr.gouv.diplomatie.papyrus.codegen.LangProjectSupport"
+            class="fr.gouv.diplomatie.papyrus.codegen.typescript.LangProjectSupport"
             language="TypescriptGenerator">
       </client>
    </extension>

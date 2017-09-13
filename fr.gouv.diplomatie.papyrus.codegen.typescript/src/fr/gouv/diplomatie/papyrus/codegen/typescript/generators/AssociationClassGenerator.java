@@ -1,12 +1,13 @@
-package fr.gouv.diplomatie.papyrus.codegen.generators;
+package fr.gouv.diplomatie.papyrus.codegen.typescript.generators;
 
 import org.eclipse.papyrus.infra.tools.file.IPFileSystemAccess;
 import org.eclipse.uml2.uml.AssociationClass;
 
-import fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass.AssociationClassAttributesInterfaceGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass.AssociationClassDtoClassGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass.AssociationClassMetierClassGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass.AssociationClassModelGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.associationClass.AssociationClassAttributesInterfaceGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.associationClass.AssociationClassDtoClassGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.associationClass.AssociationClassMetierClassGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.associationClass.AssociationClassModelGenerator;
 
 public class AssociationClassGenerator {
 

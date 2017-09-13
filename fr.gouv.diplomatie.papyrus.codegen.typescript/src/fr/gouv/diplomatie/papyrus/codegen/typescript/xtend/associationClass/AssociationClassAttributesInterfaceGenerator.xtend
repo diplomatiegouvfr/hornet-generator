@@ -1,12 +1,12 @@
-package fr.gouv.diplomatie.papyrus.codegen.xtend.associationClass
+package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.associationClass
 
 import org.eclipse.uml2.uml.AssociationClass
 import org.eclipse.uml2.uml.Property
 
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.ClassifierUtils
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import org.eclipse.uml2.uml.Classifier
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.TypeUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.TypeUtils
 import org.eclipse.uml2.uml.Type
 import java.util.ArrayList
 

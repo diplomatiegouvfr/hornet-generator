@@ -1,4 +1,4 @@
-package fr.gouv.diplomatie.papyrus.codegen.transformations;
+package fr.gouv.diplomatie.papyrus.codegen.typescript.transformations;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -10,10 +10,10 @@ import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.generators.AssociationClassGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.generators.ClassifierGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.generators.NomenclatureGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.xtend.utils.Utils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.AssociationClassGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.ClassifierGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.NomenclatureGenerator;
 
 
 public class ProjectMetierElementsCreator extends ModelElementsCreator {

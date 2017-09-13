@@ -1,4 +1,4 @@
-package fr.gouv.diplomatie.papyrus.codegen;
+package fr.gouv.diplomatie.papyrus.codegen.typescript;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.papyrus.designer.languages.common.extensionpoints.AbstractSettings;
