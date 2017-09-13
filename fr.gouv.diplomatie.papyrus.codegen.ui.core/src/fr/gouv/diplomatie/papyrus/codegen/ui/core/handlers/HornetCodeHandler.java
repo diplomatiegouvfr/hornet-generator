@@ -23,6 +23,9 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	protected String message = "= executing Generate Code Handler";
 	protected ConsoleUtils console= new ConsoleUtils();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		console.out.println(this.message);
@@ -45,6 +48,11 @@ public abstract class HornetCodeHandler extends CmdHandler {
 		return null;
 	}
 	
+	/**
+	 * initie le générateur et le lance
+	 * @param project
+	 * @param packageableElement
+	 */
 	public abstract void initiateAndGenerate(IProject project, PackageableElement packageableElement);
 
 	@Override
@@ -65,6 +73,10 @@ public abstract class HornetCodeHandler extends CmdHandler {
         return false;
 	}
 
+	/**
+	 * récupère le projet
+	 * @return
+	 */
 	private IProject getCurrentProject() {	
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		URI uri = selectedEObject.eResource().getURI();
@@ -72,6 +84,10 @@ public abstract class HornetCodeHandler extends CmdHandler {
 		return project;
 	}
 	
+	/**
+	 * lance la génération
+	 * @param packageableElement
+	 */
 	public void generate(PackageableElement packageableElement) {
 		console.out.println("generate code Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
