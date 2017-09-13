@@ -10,7 +10,7 @@ import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseScrip
 public class PackageGenerator{
 
 	public static void generateDatabaseScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
-		String fileName = GeneratorUtils.getDatabaseScriptPath(pakkage, false) + ".sql";
+		String fileName = GeneratorUtils.getDatabaseScriptPath(pakkage) + ".sql";
 		
 		Utils.console.out.println("PackageGenerator.generateDatabaseScript : "  + pakkage.getName() + ", fichier : " + fileName);
 		
