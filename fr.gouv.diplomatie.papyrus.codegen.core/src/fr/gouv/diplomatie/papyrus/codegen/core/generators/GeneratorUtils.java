@@ -1,23 +1,14 @@
 package fr.gouv.diplomatie.papyrus.codegen.core.generators;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.widgets.Display;
-
 import java.io.File;
 
-import org.eclipse.ui.console.ConsolePlugin;
-import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.MessageConsole;
-import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
 public class GeneratorUtils {
+
 	
 	public static final String SRC_REPOSITORY = "src-gen" + File.separator;
 	public static final String SRC_INCODE_REPOSITORY = "src" + File.separator;
@@ -30,12 +21,6 @@ public class GeneratorUtils {
 	
 	public static final String DAO_REPOSITORY = SRC_REPOSITORY  + "dao" + File.separator ;
 	public static final String DAO_INCODE_REPOSITORY = SRC_INCODE_REPOSITORY  + "dao" + File.separator ;
-	
-	public static MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");
-	public static MessageConsoleStream out = myConsole.newMessageStream();
-	public static MessageConsoleStream err = getErrorMessageStream();
-	public static MessageConsoleStream warning = getWarningMessageStream();
-	
 	
 	public static String getModelPath(Classifier clazz, Boolean inCode) {
 		if(inCode) {
@@ -86,30 +71,4 @@ public class GeneratorUtils {
 		return MODEL_REPOSITORY  +Utils.toTypescriptFileName(clazz.getName())+ "-enum";
 	}
 	
-	public static MessageConsole findConsole(String name) {
-	      ConsolePlugin plugin = ConsolePlugin.getDefault();
-	      IConsoleManager conMan = plugin.getConsoleManager();
-	      IConsole[] existing = conMan.getConsoles();
-	      for (int i = 0; i < existing.length; i++)
-	         if (name.equals(existing[i].getName()))
-	            return (MessageConsole) existing[i];
-	      //no console found, so create a new one
-	      MessageConsole myConsole = new MessageConsole(name, null);
-	      conMan.addConsoles(new IConsole[]{myConsole});
-	      return myConsole;
-	}
-	
-	public static MessageConsoleStream getErrorMessageStream() {
-		MessageConsoleStream stream = myConsole.newMessageStream();
-		stream.setColor(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-		return stream;
-	}
-	
-	public static MessageConsoleStream getWarningMessageStream() {
-		MessageConsoleStream stream = myConsole.newMessageStream();
-		Device device = Display.getCurrent ();
-		Color orange = new Color (device, 245, 121, 0);
-		stream.setColor(orange);
-		return stream;
-	}
 }

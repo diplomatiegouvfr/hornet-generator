@@ -3,9 +3,12 @@ package fr.gouv.diplomatie.papyrus.codegen.core.utils
 import org.eclipse.uml2.uml.NamedElement
 import java.io.File
 import java.util.ArrayList
+import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils
 
 public class Utils{
 	
+	public static var console = new ConsoleUtils();
+		
 	public static var MODEL_ENTITY = 'entity';
 	public static var MODEL_ENTITY_GENERATED = 'generated';
 	public static var MODEL_ENTITY_TABLENAME = 'tableName';

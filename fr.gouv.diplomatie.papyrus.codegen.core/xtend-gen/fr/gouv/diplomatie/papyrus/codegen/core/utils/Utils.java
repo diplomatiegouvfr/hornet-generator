@@ -1,6 +1,7 @@
 package fr.gouv.diplomatie.papyrus.codegen.core.utils;
 
 import com.google.common.base.Objects;
+import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
 import java.io.File;
 import java.util.ArrayList;
 import org.eclipse.emf.common.util.EList;
@@ -17,6 +18,8 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 @SuppressWarnings("all")
 public class Utils {
+  public static ConsoleUtils console = new ConsoleUtils();
+  
   public static String MODEL_ENTITY = "entity";
   
   public static String MODEL_ENTITY_GENERATED = "generated";
