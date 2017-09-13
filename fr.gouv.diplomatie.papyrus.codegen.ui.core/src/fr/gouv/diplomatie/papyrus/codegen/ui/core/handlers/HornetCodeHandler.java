@@ -15,19 +15,20 @@ import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
 
 public abstract class HornetCodeHandler extends CmdHandler {
 	
 	protected ModelElementsCreator creator;
 	protected String message = "= executing Generate Code Handler";
+	protected ConsoleUtils console= new ConsoleUtils();
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		GeneratorUtils.out.println(this.message);
+		console.out.println(this.message);
 		
 		if(selectedEObject instanceof PackageableElement) {
-			GeneratorUtils.out.println("= selected Object is a PackageableElement");
+			console.out.println("= selected Object is a PackageableElement");
 			PackageableElement packageableElement = (PackageableElement) selectedEObject;
 			
 			IProject project = getCurrentProject();
@@ -37,7 +38,7 @@ public abstract class HornetCodeHandler extends CmdHandler {
 				}catch(Exception e) {
 					StringWriter errors = new StringWriter();
 					e.printStackTrace(new PrintWriter(errors));
-					GeneratorUtils.err.println(errors.toString());
+					console.err.println(errors.toString());
 				}
 			}
 		}
@@ -72,7 +73,7 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	}
 	
 	public void generate(PackageableElement packageableElement) {
-		GeneratorUtils.out.println("generate code Handler : generate()");
+		console.out.println("generate code Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 }
