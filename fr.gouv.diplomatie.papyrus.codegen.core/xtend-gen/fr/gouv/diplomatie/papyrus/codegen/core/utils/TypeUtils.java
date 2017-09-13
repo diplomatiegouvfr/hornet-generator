@@ -6,6 +6,9 @@ import org.eclipse.uml2.uml.Type;
 
 @SuppressWarnings("all")
 public class TypeUtils {
+  /**
+   * retourne le type sequelize
+   */
   public static String getSequelizeType(final Type type) {
     if ((Objects.equal(type.getName(), "Boolean") || Objects.equal(type.getName(), "EBoolean"))) {
       return "BOOLEAN";
@@ -52,6 +55,9 @@ public class TypeUtils {
     }
   }
   
+  /**
+   * retourne le type  typescript
+   */
   public static String getTypescriptType(final Type type) {
     if ((Objects.equal(type.getName(), "Boolean") || Objects.equal(type.getName(), "EBoolean"))) {
       return "boolean";
@@ -98,6 +104,9 @@ public class TypeUtils {
     }
   }
   
+  /**
+   * retourne le type typescript utilisé dans les classes métier
+   */
   public static String getMetierTypescriptType(final Type type) {
     if ((Objects.equal(type.getName(), "Boolean") || Objects.equal(type.getName(), "EBoolean"))) {
       return "boolean";
@@ -144,6 +153,9 @@ public class TypeUtils {
     }
   }
   
+  /**
+   * retourne le type dans la base de donnée
+   */
   public static String getDatabaseType(final Type type) {
     if ((Objects.equal(type.getName(), "Boolean") || Objects.equal(type.getName(), "EBoolean"))) {
       return "boolean";
@@ -190,14 +202,23 @@ public class TypeUtils {
     }
   }
   
+  /**
+   * retourne le type du code de l'enum
+   */
   public static String getEnumType(final Classifier type) {
     return "integer";
   }
   
+  /**
+   * retourne le type du code de l'enum pour sequelize
+   */
   public static String getEnumSequelizeType(final Classifier type) {
     return "INTEGER";
   }
   
+  /**
+   * retourne le type du code de l'enum pour typescript
+   */
   public static String getEnumTypescriptType(final Classifier type) {
     return "number";
   }

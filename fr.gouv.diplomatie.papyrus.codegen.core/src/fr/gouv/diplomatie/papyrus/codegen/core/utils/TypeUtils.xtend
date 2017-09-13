@@ -5,6 +5,9 @@ import org.eclipse.uml2.uml.Classifier
 
 class TypeUtils{
 	
+	/**
+	 * retourne le type sequelize
+	 */
 	static def getSequelizeType(Type type){
 		if(type.name == "Boolean" || type.name == "EBoolean"){
 			return 'BOOLEAN'
@@ -27,6 +30,9 @@ class TypeUtils{
 		}
 	}
 	
+	/**
+	 * retourne le type  typescript
+	 */
 	static def getTypescriptType(Type type){
 		if(type.name == "Boolean" || type.name == "EBoolean"){
 			return 'boolean'
@@ -49,6 +55,9 @@ class TypeUtils{
 		}
 	}
 	
+	/**
+	 * retourne le type typescript utilisé dans les classes métier
+	 */
 	static def getMetierTypescriptType(Type type){
 		if(type.name == "Boolean" || type.name == "EBoolean"){
 			return 'boolean'
@@ -71,6 +80,9 @@ class TypeUtils{
 		}
 	}
 	
+	/**
+	 * retourne le type dans la base de donnée
+	 */
 	static def getDatabaseType(Type type){
 		if(type.name == "Boolean" || type.name == "EBoolean"){
 			return 'boolean'
@@ -93,14 +105,23 @@ class TypeUtils{
 		}
 	}
 	
+	/**
+	 * retourne le type du code de l'enum
+	 */
 	static def getEnumType(Classifier type){
 		return "integer"
 	}
 	
+	/**
+	 * retourne le type du code de l'enum pour sequelize
+	 */
 	static def getEnumSequelizeType(Classifier type){
 		return "INTEGER"
 	}
 	
+		/**
+	 * retourne le type du code de l'enum pour typescript
+	 */
 	static def getEnumTypescriptType(Classifier type){
 		return "number"
 	}

@@ -13,8 +13,14 @@ import org.eclipse.ui.console.MessageConsoleStream;
 public class ConsoleUtils {
 
 	public MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");
+	
+	//stream classique
 	public MessageConsoleStream out = myConsole.newMessageStream();
+	
+	//stream d'erreur
 	public MessageConsoleStream err = getErrorMessageStream();
+	
+	//stream de warning
 	public MessageConsoleStream warning = getWarningMessageStream();
 	
 	public ConsoleUtils(String consoleName){
@@ -28,6 +34,11 @@ public class ConsoleUtils {
 		
 	}
 	
+	/**
+	 * récupération de la console liée au projet
+	 * @param name
+	 * @return
+	 */
 	public static MessageConsole findConsole(String name) {
 	      ConsolePlugin plugin = ConsolePlugin.getDefault();
 	      IConsoleManager conMan = plugin.getConsoleManager();
@@ -41,12 +52,22 @@ public class ConsoleUtils {
 	      return myConsole;
 	}
 	
+	/**
+	 * récupération du stream des messages d'erreur
+	 * les messages s'afficheront en rouge 
+	 * @return
+	 */
 	public MessageConsoleStream getErrorMessageStream() {
 		MessageConsoleStream stream = myConsole.newMessageStream();
 		stream.setColor(Display.getDefault().getSystemColor(SWT.COLOR_RED));
 		return stream;
 	}
 	
+	/**
+	 * récupération du stream des warnings
+	 * ils seront affichés en orange/jaune
+	 * @return
+	 */
 	public MessageConsoleStream getWarningMessageStream() {
 		MessageConsoleStream stream = myConsole.newMessageStream();
 		Device device = Display.getCurrent ();

@@ -63,10 +63,16 @@ public class Utils{
 		return retour.substring(0,retour.length -2);
 	}
 	
+	/**
+	 * renvoie la chaine en lettres minuscules
+	 */
 	def static lowerCase(String str) {
 		str.toLowerCase
 	}
 	
+	/**
+	 * renvoie la chaine en lettres capitales
+	 */
 	def static capitalize(String s) {
 		if (s === null || s.length() == 0)
 			return s;
@@ -180,10 +186,16 @@ public class Utils{
 		
 	}
 	
+	/**
+	 * renvoie la chaine avec la première lettre en minuscule
+	 */
 	static def getFirstToLowerCase(String str){
 		return str.toFirstLower()
 	}
 	
+	/**
+	 * renvoie la chaine avec la premiere lettre en majuscule
+	 */
 	static def getFirstToUpperCase(String str){
 		return str.toFirstUpper()
 	}

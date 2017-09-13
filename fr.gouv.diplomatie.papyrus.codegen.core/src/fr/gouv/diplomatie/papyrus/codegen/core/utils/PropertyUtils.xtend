@@ -128,10 +128,16 @@ class PropertyUtils {
 		'''«id.name»«Utils.getFirstToUpperCase(property.name)»'''
 	}
 	
+	/**
+	 * teste si un attribut peut être mis a null ou non
+	 */
 	static def isNullable(Property property){
 		return (property.lower == 0)
 	}	
 	
+	/**
+	 * retourne la valeur par defaut
+	 */
 	static def getDefaultValue(Property property){
 		property.^default
 	}

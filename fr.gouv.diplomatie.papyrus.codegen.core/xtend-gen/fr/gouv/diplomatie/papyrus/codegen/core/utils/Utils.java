@@ -105,10 +105,16 @@ public class Utils {
     return retour.substring(0, _minus);
   }
   
+  /**
+   * renvoie la chaine en lettres minuscules
+   */
   public static String lowerCase(final String str) {
     return str.toLowerCase();
   }
   
+  /**
+   * renvoie la chaine en lettres capitales
+   */
   public static String capitalize(final String s) {
     if (((s == null) || (s.length() == 0))) {
       return s;
@@ -238,10 +244,16 @@ public class Utils {
     }
   }
   
+  /**
+   * renvoie la chaine avec la première lettre en minuscule
+   */
   public static String getFirstToLowerCase(final String str) {
     return StringExtensions.toFirstLower(str);
   }
   
+  /**
+   * renvoie la chaine avec la premiere lettre en majuscule
+   */
   public static String getFirstToUpperCase(final String str) {
     return StringExtensions.toFirstUpper(str);
   }

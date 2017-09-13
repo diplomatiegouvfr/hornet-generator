@@ -8,18 +8,30 @@ import java.io.File
 
 class ClassifierUtils{
 	
+	/**
+	 * retourne le nom de la classe modèle liée à la classe
+	 */
 	static def getModelName(Classifier clazz){
 		return clazz.name + "Model"
 	}
 	
+	/**
+	 * retourne le nom de l'ainterface attributes liée à la classe
+	 */
 	static def getAttributesInterfaceName(Classifier clazz){
 		return clazz.name + "Attributes"
 	}
 	
+	/**
+	 * retourne le nom de la classe métier liée à la classe
+	 */
 	static def getMetierClassName(Classifier clazz){
 		return clazz.name + "Metier"
 	}
 	
+	/**
+	 * retourne le nom du dto liée à la classe
+	*/
 	static def getDtoClassName(Classifier clazz){
 		return clazz.name + "DTO"
 	}
@@ -204,6 +216,9 @@ class ClassifierUtils{
 		return attributes
 	}
 	
+	/**
+	 * cherche tous les attributs multivalués dans le modele du type de la classe passée en paramètre
+	 */
 	static def getAllReferencesTo(Classifier ofClass){
 		val model = ofClass.model
 		val classes = ModelUtils.getAllClasses(model)
@@ -214,6 +229,9 @@ class ClassifierUtils{
 		return references
 	}
 	
+	/**
+	 * cherche les classe d'association liée a la classe  
+	 */
 	static def getLinkedAssociationClass(Classifier clazz){
 		val model = clazz.model
 		val associationsClasses = model.getOwnedTypes().filter[type|
@@ -257,6 +275,9 @@ class ClassifierUtils{
 		return true
 	}
 	
+	/**
+	 * retourne la valeur de l'attribut tableName
+	 */
 	static def getTableNameValue(Classifier clazz){
 		if(Utils.isEntity(clazz)){
 			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_TABLENAME)
@@ -266,6 +287,9 @@ class ClassifierUtils{
 		return null
 	}
 	
+	/**
+	 * retourne le nom de la table liée a la classe
+	 */
 	static def String getTableName(Classifier clazz){
 		val name = getTableNameValue(clazz)
 		if(name === null){
