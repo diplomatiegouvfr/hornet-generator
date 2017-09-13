@@ -3,7 +3,9 @@ package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.transformations.ProjectDatabaseScriptElementsCreator;
+import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;
+import fr.gouv.diplomatie.papyrus.codegen.sql.transformations.ProjectDatabaseScriptElementsCreator;
 
 public class GenerateDatabaseScriptHandler extends HornetCodeHandler {
 
@@ -12,8 +14,8 @@ public class GenerateDatabaseScriptHandler extends HornetCodeHandler {
 		this.message = "= executing Generate Database Script Handler";
 	}
 	
-	public void generate(ProjectDatabaseScriptElementsCreator modelElementsCreator, PackageableElement packageableElement) {
-		out.println("generate database script Handler : generate()");
+	public void generate(PackageableElement packageableElement) {
+		GeneratorUtils.out.println("generate database script Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 

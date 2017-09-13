@@ -3,8 +3,9 @@ package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.transformations.ProjectDatabaseScriptElementsCreator;
-import fr.gouv.diplomatie.papyrus.codegen.transformations.ProjectMetierElementsCreator;
+import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.transformations.ProjectMetierElementsCreator;
 
 public class GenerateMetierClassHandler extends HornetCodeHandler {
 
@@ -19,8 +20,8 @@ public class GenerateMetierClassHandler extends HornetCodeHandler {
 		generate(packageableElement);
 	}
 	
-	public void generate(ProjectDatabaseScriptElementsCreator modelElementsCreator, PackageableElement packageableElement) {
-		out.println("generate metier Class Handler : generate()");
+	public void generate(PackageableElement packageableElement) {
+		GeneratorUtils.out.println("generate metier Class Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 
