@@ -5,11 +5,15 @@ import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
 import java.io.File;
 import java.util.ArrayList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Comment;
+import org.eclipse.uml2.uml.Generalization;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.Type;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
@@ -396,5 +400,36 @@ public class Utils {
       path = (((("fr" + File.separator) + "gouv") + File.separator) + "diplomatie");
     }
     return path;
+  }
+  
+  /**
+   * teste si une liste contiens un élément dont le nom est name
+   */
+  public static boolean containsName(final ArrayList<NamedElement> list, final String name) {
+    for (final NamedElement elem : list) {
+      String _name = elem.getName();
+      boolean _equals = Objects.equal(_name, name);
+      if (_equals) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * teste si un type est ou étend le type name
+   */
+  public static boolean isType(final Type type, final String name) {
+    ArrayList<NamedElement> generalization = CollectionLiterals.<NamedElement>newArrayList();
+    if ((type instanceof Classifier)) {
+      EList<Generalization> _generalizations = ((Classifier)type).getGeneralizations();
+      for (final Generalization elem : _generalizations) {
+        generalization.add(elem.getGeneral());
+      }
+    }
+    if ((Objects.equal(type.getName(), name) || (((generalization != null) && (!generalization.isEmpty())) && Utils.containsName(generalization, name)))) {
+      return true;
+    }
+    return false;
   }
 }

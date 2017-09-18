@@ -4,6 +4,8 @@ import org.eclipse.uml2.uml.NamedElement
 import java.io.File
 import java.util.ArrayList
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils
+import org.eclipse.uml2.uml.Type
+import org.eclipse.uml2.uml.Classifier
 
 public class Utils{
 	
@@ -313,5 +315,33 @@ public class Utils{
 			path = "fr"+ File.separator + "gouv" + File.separator + "diplomatie"
 		}
 		return path;
+	}
+	
+	/**
+	 * teste si une liste contiens un élément dont le nom est name
+	 */
+	static def containsName(ArrayList<NamedElement> list, String name){
+		for(elem : list){
+			if(elem.name == name){
+				return true
+			}
+		}
+		return false
+	}
+	
+	/**
+	 * teste si un type est ou étend le type name
+	 */
+	static def isType(Type type, String name){
+		var generalization = newArrayList()
+		if(type instanceof Classifier){
+			for(elem : type.generalizations){
+				generalization.add(elem.general)
+			}
+		}		
+		if(type.name == name || (generalization!== null && !generalization.empty && (generalization.containsName(name)))){
+			return true
+		}
+		return false
 	}
 }
