@@ -6,7 +6,7 @@ import org.eclipse.uml2.uml.Classifier
 import org.eclipse.uml2.uml.AssociationClass
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.TypeUtils
+import fr.gouv.diplomatie.papyrus.codegen.sql.utils.TypeUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import org.eclipse.uml2.uml.PrimitiveType
 import org.eclipse.uml2.uml.Interface
