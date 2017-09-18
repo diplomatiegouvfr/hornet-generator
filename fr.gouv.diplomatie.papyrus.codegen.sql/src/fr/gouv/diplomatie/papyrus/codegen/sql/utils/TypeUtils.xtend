@@ -2,6 +2,7 @@ package fr.gouv.diplomatie.papyrus.codegen.sql.utils
 
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.Classifier
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 
 class TypeUtils{
 
@@ -9,21 +10,21 @@ class TypeUtils{
 	 * retourne le type dans la base de donnée
 	 */
 	static def getDatabaseType(Type type){
-		if(type.name == "Boolean"){
+		if(Utils.isType(type,"Boolean")){
 			return 'boolean'
-		}else if(type.name == "Integer"){
+		}else if(Utils.isType(type,"Integer")){
 			return 'integer'
-		}else if(type.name == "BigInteger"){
+		}else if(Utils.isType(type,"BigInteger")){
 			return 'bigint'
-		}else if(type.name == "Real"){
+		}else if(Utils.isType(type,"Real")){
 			return 'real'
-		}else if(type.name == "Double"){
+		}else if(Utils.isType(type,"Double")){
 			return 'double precision'
-		}else if(type.name == "Float"){
+		}else if(Utils.isType(type,"Float")){
 			return 'decimal'
-		}else if(type.name == "Date"){
+		}else if(Utils.isType(type,"Date")){
 			return 'timestamp'
-		}else if(type.name == "ByteArray"){
+		}else if(Utils.isType(type,"ByteArray")){
 			return 'bytea'
 		}else {
 			return 'character'
