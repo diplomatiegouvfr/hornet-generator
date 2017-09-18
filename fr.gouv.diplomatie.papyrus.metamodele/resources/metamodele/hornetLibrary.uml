@@ -11,15 +11,15 @@
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_NWBrMJxEEee8yqBcJknfXg" name="Double"/>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_OLWJoJxEEee8yqBcJknfXg" name="String"/>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_uhsQIJomEeeOu49VW2XdHQ">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_nXUfUJxDEee8yqBcJknfXg" source="PapyrusVersion">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfUZxDEee8yqBcJknfXg" key="Version" value="0.0.103"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfUpxDEee8yqBcJknfXg" key="Comment" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfU5xDEee8yqBcJknfXg" key="Copyright" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfVJxDEee8yqBcJknfXg" key="Date" value="2017-09-15"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfVZxDEee8yqBcJknfXg" key="Author" value=""/>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_zAW9AJxZEee8yqBcJknfXg" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9AZxZEee8yqBcJknfXg" key="Version" value="0.0.104"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9ApxZEee8yqBcJknfXg" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9A5xZEee8yqBcJknfXg" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9BJxZEee8yqBcJknfXg" key="Date" value="2017-09-18"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9BZxZEee8yqBcJknfXg" key="Author" value=""/>
       </eAnnotations>
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uhsQIZomEeeOu49VW2XdHQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
-        <references xmi:type="ecore:EPackage" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eaCd0JorEeeOu49VW2XdHQ"/>
+        <references xmi:type="ecore:EPackage" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_asRMMJxHEee8yqBcJknfXg"/>
       </eAnnotations>
       <appliedProfile xmi:type="uml:Profile" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eobYEHadEeegdZhmvUhwtQ"/>
     </profileApplication>
