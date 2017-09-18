@@ -2,7 +2,7 @@ package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
 
 import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.TypeUtils
+import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
 
 public class NomenclatureDtoClassGenerator{
 	

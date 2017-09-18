@@ -6,7 +6,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.AssociationClassUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import org.eclipse.uml2.uml.Classifier
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.TypeUtils
+import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierModelGenerator
 

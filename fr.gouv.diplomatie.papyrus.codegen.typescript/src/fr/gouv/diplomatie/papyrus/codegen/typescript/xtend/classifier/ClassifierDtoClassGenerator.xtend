@@ -5,7 +5,7 @@ import org.eclipse.uml2.uml.Property
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.TypeUtils
+import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
 import org.eclipse.uml2.uml.Type
 import java.util.ArrayList
 import org.eclipse.uml2.uml.PrimitiveType
