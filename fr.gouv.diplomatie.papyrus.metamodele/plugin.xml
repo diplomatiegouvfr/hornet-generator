@@ -26,5 +26,16 @@
             path="pathmap://resources/metamodele/metamodele.profile.uml"
             provider="MAEDI">
       </profile>
+      
    </extension>
+    <extension 
+    		point="org.eclipse.papyrus.uml.extensionpoints.UMLLibrary">
+    <library
+            description="Hornet Type Library"
+            iconpath="resources/metamodele/icon.png"
+            name="Hornet Type Library"
+            path="pathmap://resources/metamodele/hornetLibrary.uml"
+            provider="MAEDI">
+      </library>
+      </extension>
 </plugin>
