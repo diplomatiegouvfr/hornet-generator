@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_uV2MgJomEeeOu49VW2XdHQ" name="HornetPrimitiveTypes">
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_qo4WsJxDEee8yqBcJknfXg" name="Boolean"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_HfNo0JxEEee8yqBcJknfXg" name="Integer"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_IvPGQJxEEee8yqBcJknfXg" name="Real"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_Jj42UJxEEee8yqBcJknfXg" name="BigInteger"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_KoMzAJxEEee8yqBcJknfXg" name="ByteArray"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_LrifUJxEEee8yqBcJknfXg" name="Date"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_MeQ8wJxEEee8yqBcJknfXg" name="Float"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_NWBrMJxEEee8yqBcJknfXg" name="Double"/>
-  <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_OLWJoJxEEee8yqBcJknfXg" name="String"/>
-  <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_uhsQIJomEeeOu49VW2XdHQ">
-    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_nXUfUJxDEee8yqBcJknfXg" source="PapyrusVersion">
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfUZxDEee8yqBcJknfXg" key="Version" value="0.0.103"/>
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfUpxDEee8yqBcJknfXg" key="Comment" value=""/>
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfU5xDEee8yqBcJknfXg" key="Copyright" value=""/>
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfVJxDEee8yqBcJknfXg" key="Date" value="2017-09-15"/>
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfVZxDEee8yqBcJknfXg" key="Author" value=""/>
-    </eAnnotations>
-    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uhsQIZomEeeOu49VW2XdHQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
-      <references xmi:type="ecore:EPackage" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eaCd0JorEeeOu49VW2XdHQ"/>
-    </eAnnotations>
-    <appliedProfile xmi:type="uml:Profile" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eobYEHadEeegdZhmvUhwtQ"/>
-  </profileApplication>
-</uml:Model>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:standard="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+  <uml:Model xmi:id="_uV2MgJomEeeOu49VW2XdHQ" name="HornetPrimitiveTypes">
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_qo4WsJxDEee8yqBcJknfXg" name="Boolean"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_HfNo0JxEEee8yqBcJknfXg" name="Integer"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_IvPGQJxEEee8yqBcJknfXg" name="Real"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_Jj42UJxEEee8yqBcJknfXg" name="BigInteger"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_KoMzAJxEEee8yqBcJknfXg" name="ByteArray"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_LrifUJxEEee8yqBcJknfXg" name="Date"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_MeQ8wJxEEee8yqBcJknfXg" name="Float"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_NWBrMJxEEee8yqBcJknfXg" name="Double"/>
+    <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_OLWJoJxEEee8yqBcJknfXg" name="String"/>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_uhsQIJomEeeOu49VW2XdHQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_nXUfUJxDEee8yqBcJknfXg" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfUZxDEee8yqBcJknfXg" key="Version" value="0.0.103"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfUpxDEee8yqBcJknfXg" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfU5xDEee8yqBcJknfXg" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfVJxDEee8yqBcJknfXg" key="Date" value="2017-09-15"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nXUfVZxDEee8yqBcJknfXg" key="Author" value=""/>
+      </eAnnotations>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uhsQIZomEeeOu49VW2XdHQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eaCd0JorEeeOu49VW2XdHQ"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eobYEHadEeegdZhmvUhwtQ"/>
+    </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_EA5iUJxZEee8yqBcJknfXg">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_EA6JYJxZEee8yqBcJknfXg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#/"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+    </profileApplication>
+  </uml:Model>
+  <standard:ModelLibrary xmi:id="_EvaOIJxZEee8yqBcJknfXg" base_Package="_uV2MgJomEeeOu49VW2XdHQ"/>
+</xmi:XMI>
