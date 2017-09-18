@@ -376,8 +376,11 @@ public class Utils {
    * package du projet
    */
   public static Object getRootPackage(final NamedElement elem) {
-    final Model model = elem.getModel();
-    return Utils.getStereotypePropertyValue(model, Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_ROOTPACKAGE);
+    if ((elem != null)) {
+      final Model model = elem.getModel();
+      return Utils.getStereotypePropertyValue(model, Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_ROOTPACKAGE);
+    }
+    return null;
   }
   
   public static String getPackagePath(final NamedElement elem) {

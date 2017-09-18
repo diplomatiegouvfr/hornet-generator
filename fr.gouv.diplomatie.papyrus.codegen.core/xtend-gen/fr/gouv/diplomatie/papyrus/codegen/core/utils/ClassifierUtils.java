@@ -358,12 +358,15 @@ public class ClassifierUtils {
    * retourne le chemin vers la classe
    */
   public static String getClassPath(final Classifier clazz) {
-    final String path = Utils.getPackagePath(clazz);
-    final String appName = clazz.getModel().getName();
-    String _name = clazz.getPackage().getName();
-    final String fileName = (_name + 
-      File.separator);
-    final String classPath = ((((path + File.separator) + appName) + File.separator) + fileName);
-    return classPath;
+    if ((clazz != null)) {
+      final String path = Utils.getPackagePath(clazz);
+      final String appName = clazz.getModel().getName();
+      String _name = clazz.getPackage().getName();
+      final String fileName = (_name + 
+        File.separator);
+      final String classPath = ((((path + File.separator) + appName) + File.separator) + fileName);
+      return classPath;
+    }
+    return null;
   }
 }

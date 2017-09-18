@@ -295,8 +295,11 @@ public class Utils{
 	 * package du projet
 	 */
 	static def getRootPackage(NamedElement elem){
-		val model = elem.model;
-		return Utils.getStereotypePropertyValue(model,MODEL_APPLICATION, MODEL_APPLICATION_ROOTPACKAGE);
+		if(elem !== null){
+			val model = elem.model;
+			return Utils.getStereotypePropertyValue(model,MODEL_APPLICATION, MODEL_APPLICATION_ROOTPACKAGE);
+		}
+		return null
 	}
 	
 	static def getPackagePath(NamedElement elem) {

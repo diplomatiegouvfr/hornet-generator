@@ -302,12 +302,14 @@ class ClassifierUtils{
 	 * retourne le chemin vers la classe
 	 */
 	static def String getClassPath(Classifier clazz){
-		val path = Utils.getPackagePath(clazz);
-		val appName = clazz.getModel().name;
-		val fileName = clazz.getPackage().getName() + 
-				File.separator ;
-		val classPath = path + File.separator + appName + File.separator  +  fileName
-	
-		return classPath
+		if(clazz !== null){
+			val path = Utils.getPackagePath(clazz);
+			val appName = clazz.getModel().name;
+			val fileName = clazz.getPackage().getName() + 
+					File.separator ;
+			val classPath = path + File.separator + appName + File.separator  +  fileName
+		
+			return classPath
+		}
 	}
 }
