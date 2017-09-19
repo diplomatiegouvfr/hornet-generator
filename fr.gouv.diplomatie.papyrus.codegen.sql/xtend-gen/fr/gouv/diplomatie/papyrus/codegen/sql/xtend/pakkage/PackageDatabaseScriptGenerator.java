@@ -187,7 +187,7 @@ public class PackageDatabaseScriptGenerator {
       String _snakeCase = Utils.toSnakeCase(id.getName());
       _builder.append(_snakeCase);
       _builder.append(" ");
-      String _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
+      Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
       _builder.append(_generateAttributType);
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(id);
       _builder.append(_generateStringLength);
@@ -291,7 +291,7 @@ public class PackageDatabaseScriptGenerator {
       String _snakeCase = Utils.toSnakeCase(name);
       _builder.append(_snakeCase);
       _builder.append(" ");
-      String _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
+      Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
       _builder.append(_generateAttributType);
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
       _builder.append(_generateStringLength);
@@ -437,7 +437,7 @@ public class PackageDatabaseScriptGenerator {
       String _snakeCase = Utils.toSnakeCase(name);
       _builder.append(_snakeCase);
       _builder.append(" ");
-      String _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
+      Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
       _builder.append(_generateAttributType);
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
       _builder.append(_generateStringLength);
@@ -504,7 +504,7 @@ public class PackageDatabaseScriptGenerator {
     String _snakeCase = Utils.toSnakeCase(propName);
     _builder.append(_snakeCase);
     _builder.append(" ");
-    String _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
+    Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
     _builder.append(_generateAttributType);
     CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(id);
     _builder.append(_generateStringLength);
@@ -965,7 +965,7 @@ public class PackageDatabaseScriptGenerator {
       String _snakeCase_1 = Utils.toSnakeCase(property.getName());
       _builder.append(_snakeCase_1, "\t");
       _builder.append(" ");
-      String _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
+      Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
       _builder.append(_generateAttributType, "\t");
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
       _builder.append(_generateStringLength, "\t");
@@ -1289,7 +1289,7 @@ public class PackageDatabaseScriptGenerator {
         String _snakeCase_1 = Utils.toSnakeCase(((Classifier)owner).getName());
         _builder.append(_snakeCase_1);
         _builder.append(" ");
-        String _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
+        Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
         _builder.append(_generateAttributType);
         CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
         _builder.append(_generateStringLength);
@@ -1976,8 +1976,8 @@ public class PackageDatabaseScriptGenerator {
     return _builder_1.toString();
   }
   
-  public static String generateAttributType(final Property property) {
-    String type = TypeUtils.getDatabaseType(property.getType());
+  public static Object generateAttributType(final Property property) {
+    Object type = TypeUtils.getDatabaseType(property.getType());
     boolean _equals = Objects.equal(type, "character");
     if (_equals) {
       final Object length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH);

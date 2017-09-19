@@ -5,30 +5,18 @@ import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 
 class TypeUtils{
+	
+	public static var MODEL_HORNETTYPE_DATABASETYPE = 'databaseType';
 
 	/**
 	 * retourne le type dans la base de donnée
 	 */
 	static def getDatabaseType(Type type){
-		if(Utils.isType(type,"Boolean")){
-			return 'boolean'
-		}else if(Utils.isType(type,"Integer")){
-			return 'integer'
-		}else if(Utils.isType(type,"BigInteger")){
-			return 'bigint'
-		}else if(Utils.isType(type,"Real")){
-			return 'real'
-		}else if(Utils.isType(type,"Double")){
-			return 'double precision'
-		}else if(Utils.isType(type,"Float")){
-			return 'decimal'
-		}else if(Utils.isType(type,"Date")){
-			return 'timestamp'
-		}else if(Utils.isType(type,"ByteArray")){
-			return 'bytea'
-		}else {
-			return 'character'
+		val databaseType = Utils.getStereotypePropertyValue(type,Utils.MODEL_HORNETTYPE, MODEL_HORNETTYPE_DATABASETYPE);
+		if(databaseType === null || databaseType == ""){
+			return "character"
 		}
+		return databaseType
 	}
 	
 	/**
