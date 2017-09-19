@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:standard="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:hornetMetamodele="http:///schemas/hornetMetamodele/_fSRn8J1NEee84fpX1CSQXA/110" xmlns:standard="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/hornetMetamodele/_fSRn8J1NEee84fpX1CSQXA/110 /fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_fSVSUJ1NEee84fpX1CSQXA">
   <uml:Model xmi:id="_uV2MgJomEeeOu49VW2XdHQ" name="HornetPrimitiveTypes">
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_qo4WsJxDEee8yqBcJknfXg" name="Boolean"/>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_HfNo0JxEEee8yqBcJknfXg" name="Integer"/>
@@ -11,15 +11,15 @@
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_NWBrMJxEEee8yqBcJknfXg" name="Double"/>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_OLWJoJxEEee8yqBcJknfXg" name="String"/>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_uhsQIJomEeeOu49VW2XdHQ">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_zAW9AJxZEee8yqBcJknfXg" source="PapyrusVersion">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9AZxZEee8yqBcJknfXg" key="Version" value="0.0.104"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9ApxZEee8yqBcJknfXg" key="Comment" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9A5xZEee8yqBcJknfXg" key="Copyright" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9BJxZEee8yqBcJknfXg" key="Date" value="2017-09-18"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_zAW9BZxZEee8yqBcJknfXg" key="Author" value=""/>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_w_eCcJ1NEee84fpX1CSQXA" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w_eCcZ1NEee84fpX1CSQXA" key="Version" value="0.0.111"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w_eCcp1NEee84fpX1CSQXA" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w_eCc51NEee84fpX1CSQXA" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w_eCdJ1NEee84fpX1CSQXA" key="Date" value="2017-09-19"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_w_eCdZ1NEee84fpX1CSQXA" key="Author" value=""/>
       </eAnnotations>
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uhsQIZomEeeOu49VW2XdHQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
-        <references xmi:type="ecore:EPackage" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_asRMMJxHEee8yqBcJknfXg"/>
+        <references xmi:type="ecore:EPackage" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_fSVSUJ1NEee84fpX1CSQXA"/>
       </eAnnotations>
       <appliedProfile xmi:type="uml:Profile" href="/fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eobYEHadEeegdZhmvUhwtQ"/>
     </profileApplication>
@@ -31,4 +31,13 @@
     </profileApplication>
   </uml:Model>
   <standard:ModelLibrary xmi:id="_EvaOIJxZEee8yqBcJknfXg" base_Package="_uV2MgJomEeeOu49VW2XdHQ"/>
+  <hornetMetamodele:hornetType xmi:id="_ic2f0J1IEeehbYhnuWBVFA" base_PrimitiveType="_qo4WsJxDEee8yqBcJknfXg" sequelizeType="BOOLEAN" metierClassType="boolean" databaseType="boolean" typescriptType="boolean"/>
+  <hornetMetamodele:hornetType xmi:id="_lbgCQJ1IEeehbYhnuWBVFA" base_PrimitiveType="_KoMzAJxEEee8yqBcJknfXg" sequelizeType="BLOB" metierClassType="Buffer" databaseType="bytea" typescriptType="Buffer"/>
+  <hornetMetamodele:hornetType xmi:id="_l8YhwJ1IEeehbYhnuWBVFA" base_PrimitiveType="_LrifUJxEEee8yqBcJknfXg" sequelizeType="DATE" metierClassType="Date" databaseType="timestamp"/>
+  <hornetMetamodele:hornetType xmi:id="_mhCuAJ1IEeehbYhnuWBVFA" base_PrimitiveType="_IvPGQJxEEee8yqBcJknfXg" sequelizeType="FLOAT" metierClassType="number" databaseType="real" typescriptType="number"/>
+  <hornetMetamodele:hornetType xmi:id="_nHzMAJ1IEeehbYhnuWBVFA" base_PrimitiveType="_Jj42UJxEEee8yqBcJknfXg" sequelizeType="BIGINT" metierClassType="number" databaseType="bigint" typescriptType="number"/>
+  <hornetMetamodele:hornetType xmi:id="_nmZzkJ1IEeehbYhnuWBVFA" base_PrimitiveType="_NWBrMJxEEee8yqBcJknfXg" sequelizeType="DOUBLE" metierClassType="number" databaseType="double precision" typescriptType="number"/>
+  <hornetMetamodele:hornetType xmi:id="_oET3kJ1IEeehbYhnuWBVFA" base_PrimitiveType="_HfNo0JxEEee8yqBcJknfXg" sequelizeType="INTEGER" metierClassType="number" databaseType="integer" typescriptType="number"/>
+  <hornetMetamodele:hornetType xmi:id="_oe4TsJ1IEeehbYhnuWBVFA" base_PrimitiveType="_MeQ8wJxEEee8yqBcJknfXg" sequelizeType="FLOAT" metierClassType="number" databaseType="decimal" typescriptType="number"/>
+  <hornetMetamodele:hornetType xmi:id="_o6lYQJ1IEeehbYhnuWBVFA" base_PrimitiveType="_OLWJoJxEEee8yqBcJknfXg" databaseType="character"/>
 </xmi:XMI>
