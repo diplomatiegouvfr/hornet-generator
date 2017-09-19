@@ -6,82 +6,41 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 
 class TypeUtils{
 	
-
+	public static var MODEL_HORNETTYPE_SEQUELIZETYPE = 'sequelizeType';
+	public static var MODEL_HORNETTYPE_METIERCLASSTYPE = 'metierClassType';
+	public static var MODEL_HORNETTYPE_TYPESCRIPTTYPE = 'typescriptType';
 	
 	/**
 	 * retourne le type sequelize
 	 */
 	static def getSequelizeType(Type type){
-		
-		if(Utils.isType(type, "Boolean")){
-			return 'BOOLEAN'
-		}else if(Utils.isType(type,"Integer")){
-			return 'INTEGER'
-		}else if(Utils.isType(type,"BigInteger")){
-			return 'BIGINT'
-		}else if(Utils.isType(type,"Real")){
-			return 'FLOAT'
-		}else if(Utils.isType(type,"Double")){
-			return 'DOUBLE'
-		}else if(Utils.isType(type,"Float")){
-			return 'FLOAT'
-		}else if(Utils.isType(type,"Date")){
-			return 'DATE'
-		}else if(Utils.isType(type,"ByteArray")){
-			return 'BLOB'
-		}else{
-			return 'STRING'
+		val sequelizeType = Utils.getStereotypePropertyValue(type,Utils.MODEL_HORNETTYPE, MODEL_HORNETTYPE_SEQUELIZETYPE);
+		if(sequelizeType === null || sequelizeType == ""){
+			return "STRING"
 		}
+		return sequelizeType
 	}
 	
 	/**
 	 * retourne le type  typescript
 	 */
 	static def getTypescriptType(Type type){
-		if(Utils.isType(type,"Boolean")){
-			return 'boolean'
-		}else if(Utils.isType(type,"Integer")){
-			return 'number'
-		}else if(Utils.isType(type,"BigInteger")){
-			return 'number'
-		}else if(Utils.isType(type,"Real")){
-			return 'number'
-		}else if(Utils.isType(type,"Double")){
-			return 'number'
-		}else if(Utils.isType(type,"Float")){
-			return 'number'
-		}else if(Utils.isType(type,"Date")){
-			return 'string'
-		}else if(Utils.isType(type,"ByteArray")){
-			return 'Buffer'
-		}else{
-			return 'string'
+		val typescriptType = Utils.getStereotypePropertyValue(type,Utils.MODEL_HORNETTYPE, MODEL_HORNETTYPE_TYPESCRIPTTYPE);
+		if(typescriptType === null || typescriptType == ""){
+			return "string"
 		}
+		return typescriptType
 	}
 	
 	/**
 	 * retourne le type typescript utilisé dans les classes métier
 	 */
 	static def getMetierTypescriptType(Type type){
-		if(Utils.isType(type,"Boolean")){
-			return 'boolean'
-		}else if(Utils.isType(type,"Integer")){
-			return 'number'
-		}else if(Utils.isType(type,"BigInteger")){
-			return 'number'
-		}else if(Utils.isType(type,"Real")){
-			return 'number'
-		}else if(Utils.isType(type,"Double")){
-			return 'number'
-		}else if(Utils.isType(type,"Float")){
-			return 'number'
-		}else if(Utils.isType(type,"Date")){
-			return 'Date'
-		}else if(Utils.isType(type,"ByteArray")){
-			return 'Buffer'
-		}else{
-			return 'string'
+		val metierClassType = Utils.getStereotypePropertyValue(type,Utils.MODEL_HORNETTYPE, MODEL_HORNETTYPE_METIERCLASSTYPE);
+		if(metierClassType === null || metierClassType == ""){
+			return "string"
 		}
+		return metierClassType
 	}
 	
 	/**
