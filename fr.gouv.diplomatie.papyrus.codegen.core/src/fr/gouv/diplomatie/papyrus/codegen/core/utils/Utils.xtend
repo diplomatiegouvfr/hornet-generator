@@ -50,6 +50,8 @@ public class Utils{
 	public static var MODEL_APPLICATION = 'application';
 	public static var MODEL_APPLICATION_ROOTPACKAGE = 'rootPackage';
 	
+	public static var MODEL_HORNETTYPE = 'hornetType';
+	
 	/**
 	 * génère une chaine a partir d'une liste
 	 */

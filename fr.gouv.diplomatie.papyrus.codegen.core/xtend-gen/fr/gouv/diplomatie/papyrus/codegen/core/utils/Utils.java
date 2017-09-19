@@ -86,6 +86,8 @@ public class Utils {
   
   public static String MODEL_APPLICATION_ROOTPACKAGE = "rootPackage";
   
+  public static String MODEL_HORNETTYPE = "hornetType";
+  
   /**
    * génère une chaine a partir d'une liste
    */
