@@ -1,3 +1,82 @@
+/**
+ * Copyright ou © ou Copr. Ministère de l'Europe et des Affaires étrangères (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * Ce logiciel est un programme informatique servant à faciliter la création
+ * d'applications Web conformément aux référentiels généraux français : RGI, RGS et RGAA
+ * <p/>
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+ * sur le site "http://www.cecill.info".
+ * <p/>
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ * <p/>
+ * A cet égard  l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement,  à l'utilisation,  à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant  des  connaissances  informatiques approfondies.  Les
+ * utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
+ * <p/>
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+ * <p/>
+ * <p/>
+ * Copyright or © or Copr. Ministry for Europe and Foreign Affairs (2017)
+ * <p/>
+ * pole-architecture.dga-dsi-psi@diplomatie.gouv.fr
+ * <p/>
+ * This software is a computer program whose purpose is to facilitate creation of
+ * web application in accordance with french general repositories : RGI, RGS and RGAA.
+ * <p/>
+ * This software is governed by the CeCILL license under French law and
+ * abiding by the rules of distribution of free software.  You can  use,
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * <p/>
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability.
+ * <p/>
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or
+ * data to be ensured and,  more generally, to use and operate it in the
+ * same conditions as regards security.
+ * <p/>
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ *
+ */
+
+/**
+ * fr.gouv.diplomatie.papyrus.codegen.sql - Générateur de code sql pour 
+ * des applications Hornet JS
+ *
+ * @author MEAE - Ministère de l'Europe et des Affaires étrangères
+ * @version v1.0.0
+ * @license CECILL-2.1
+ */
 package fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage;
 
 import org.eclipse.uml2.uml.Package;
@@ -14,6 +93,10 @@ import java.util.ArrayList
 
 public class PackageDatabaseScriptGenerator{
 	
+	/**
+	 * TODO
+	 * changer le nom de ref : ex: id_nationalite etc...
+	 */
 	static def generateCode(Package pakkage){
 		
 		val model = pakkage.model
@@ -92,8 +175,10 @@ public class PackageDatabaseScriptGenerator{
 	static def generateExtendId(Classifier clazz){
 		val ids = ClassifierUtils.getId(clazz)
 		val id = ids.get(0)
+		val name = id.name
+		val propertyName = PropertyUtils.getDatabaseName(id, name, null)
 		'''
-		«Utils.toSnakeCase(id.name)» «id.generateAttributType»«id.generateStringLength» NOT NULL,
+		«propertyName» «id.generateAttributType»«id.generateStringLength» NOT NULL,
 		'''
 	}
 	
@@ -142,8 +227,9 @@ public class PackageDatabaseScriptGenerator{
 	 * génère la définition d'un attribut id
 	 */
 	static def generateIdAttributeDefinition(Property property, String additionnalName){
-		val name = Utils.addAdditionnalName(additionnalName, property.name)
-		'''«Utils.toSnakeCase(name)» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+		val name = property.name
+		var propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
+		'''«propertyName» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
 	}
 	
 	
@@ -185,13 +271,11 @@ public class PackageDatabaseScriptGenerator{
 	 * génère la définition d'un attribut de type value Object
 	 */
 	static def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
-		val name = Utils.addAdditionnalName(additionnalName, property.name)
+		val name = property.name
+		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val type = property.type
 		if(type instanceof Classifier){
-			//val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(type)
-			//val hasAttributes = (!attributes.empty && attributes !== null)
-			return '''«type.generateAttributes(name, fromClass, nullable || PropertyUtils.isNullable(property))»'''
-			//«««type.generateMultiValuedEntityAttributes(hasAttributes, name)»
+			return '''«type.generateAttributes(propertyName, fromClass, nullable || PropertyUtils.isNullable(property))»'''
 		}else{
 			''''''
 		}
@@ -201,11 +285,12 @@ public class PackageDatabaseScriptGenerator{
 	 * génère la définition d'un attribut de type value enum
 	 */
 	static def generateEumAttributesDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
-		var name = Utils.addAdditionnalName(additionnalName, property.name)
+		var name = property.name
+		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val type = property.type
 		if(type instanceof Classifier){
 			var sqlType = TypeUtils.getEnumType(type)
-			'''code_«Utils.toSnakeCase(name)» «sqlType» «property.generateNullable(nullable)»'''
+			'''code_«propertyName» «sqlType» «property.generateNullable(nullable)»'''
 		}
 	}
 	
@@ -213,8 +298,9 @@ public class PackageDatabaseScriptGenerator{
 	 * génère la définition d'un attribut basique
 	 */
 	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
-		var name = Utils.addAdditionnalName(additionnalName, property.name)
-		'''«Utils.toSnakeCase(name)» «property.generateAttributType»«property.generateStringLength» «property.generateNullable(nullable)»'''
+		val name = property.name
+		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
+		'''«propertyName» «property.generateAttributType»«property.generateStringLength» «property.generateNullable(nullable)»'''
 	}
 	
 	/**
@@ -226,7 +312,7 @@ public class PackageDatabaseScriptGenerator{
 			val ids = ClassifierUtils.getId(type)
 			'''«ids.fold("")[acc , id |
 				if(acc != ""){
-					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName,fromClass, nullable)»'''
+					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName, fromClass, nullable)»'''
 				}else{
 					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, fromClass, nullable)»'''
 				}
@@ -241,9 +327,11 @@ public class PackageDatabaseScriptGenerator{
 	 * génère la définition d'un attribut de type entity
 	 */
 	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass, Boolean nullable){
-		val propName = Utils.addAdditionnalName(additionnalName, id.name) + Utils.getFirstToUpperCase(property.name)
+		val name = property.name
+		val idName = PropertyUtils.getDatabaseName(id, id.name, additionnalName)
+		val propertyName = PropertyUtils.getDatabaseName(property, name, idName)
 		return 
-		'''«Utils.toSnakeCase(propName)» «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»'''
+		'''«propertyName» «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»'''
 	}
 	
 	/**
@@ -252,10 +340,11 @@ public class PackageDatabaseScriptGenerator{
 	static def generateIds(Classifier clazz){
 		val ids = ClassifierUtils.getId(clazz)
 		val name = ids.fold("")[acc, id |
+			val name =PropertyUtils.getDatabaseName(id, id.name, null)
 			if( acc != ""){
-				acc + ''', «Utils.toSnakeCase(id.name)»'''
+				acc + ''', «name»'''
 			}else{
-				acc + '''«Utils.toSnakeCase(id.name)»'''
+				acc + '''«name»'''
 			}
 		]
 		'''
@@ -280,10 +369,11 @@ public class PackageDatabaseScriptGenerator{
 		val ids = ClassifierUtils.getId(clazz)
 		if(ids !== null && !ids.empty){
 			val idsName = ids.fold("")[acc, id |
+				val name = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»'''
+					acc + ''', «name»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»'''
+					acc + '''«name»'''
 				}
 			]
 			'''
@@ -309,12 +399,12 @@ public class PackageDatabaseScriptGenerator{
 		]
 		
 		val interfaces = clazz.getAllUsedInterfaces
-		
 		'''«attributes.fold("")[acc, attribut|
+			val attributName = PropertyUtils.getDatabaseName(attribut, attribut.name, additionnalName)
 			if(Utils.isEntity(attribut.type)){
 				acc + '''«attribut.generateForeignKey(additionnalName, tableName)»'''
 			}else if(Utils.isValueObject(attribut.type)){
-				acc + '''«(attribut.type as Classifier).generateForeignKeys(attribut.name, tableName)»'''
+				acc + '''«(attribut.type as Classifier).generateForeignKeys(attributName, tableName)»'''
 			}else if (Utils.isNomenclature(attribut.type)){
 				acc + '''«attribut.generateEnumForeignKey(additionnalName, tableName)»'''
 			}
@@ -331,32 +421,34 @@ public class PackageDatabaseScriptGenerator{
 		val toClass = property.type
 		if(fromClass instanceof Classifier){
 			if(toClass instanceof Classifier){
-				val propName = Utils.addAdditionnalName(additionnalName, property.name)
+				val propName = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
 				val ids = ClassifierUtils.getId(toClass)
-				var fieldToClass = ids.fold("")[acc, field |
+				var fieldToClass = ids.fold("")[acc, id |
 					
-					val name =   Utils.addAdditionnalName(additionnalName, field.name ) + Utils.getFirstToUpperCase(property.name)
+					val name =   id.name
+					val propertyName = PropertyUtils.getDatabaseName(id, name, additionnalName) +"_"+ PropertyUtils.getDatabaseName(property , property.name, null)
 					if(acc !=""){
-						acc + ''', «Utils.toSnakeCase(name)»'''
+						acc + ''', «propertyName»'''
 					}else{
-						acc + '''«Utils.toSnakeCase(name)»'''
+						acc + '''«propertyName»'''
 					}
 				]
 				
 				var fieldInClass = ids.fold("")[acc, field |
 					
 					val name =  field.name
+					val propertyName = PropertyUtils.getDatabaseName(field, name, null)
 					if(acc !=""){
-						acc + ''', «Utils.toSnakeCase(name)»'''
+						acc + ''', «propertyName»'''
 					}else{
-						acc + '''«Utils.toSnakeCase(name)»'''
+						acc + '''«propertyName»'''
 					}
 				]
 				return
 				'''
 				
 				ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-				    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(propName)»_ids_fkey 
+				    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«propName»_ids_fkey 
 				    FOREIGN KEY («fieldToClass») REFERENCES «ClassifierUtils.getTableName(toClass)»(«fieldInClass»);
 				'''
 			}
@@ -369,12 +461,12 @@ public class PackageDatabaseScriptGenerator{
 	 */
 	static def generateEnumForeignKey(Property property, String additionnalName, String tableName){
 		val type = property.type
-		val propName = Utils.addAdditionnalName(additionnalName, property.name)
+		val propertyName = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
 		'''
 		
 		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(propName)»_code_fkey 
-		    FOREIGN KEY (code_«Utils.toSnakeCase(propName)») REFERENCES «ClassifierUtils.getTableName(type as Classifier)»(code);
+		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(propertyName)»_code_fkey 
+		    FOREIGN KEY (code_«propertyName») REFERENCES «ClassifierUtils.getTableName(type as Classifier)»(code);
 		'''
 	}
 	
@@ -417,20 +509,22 @@ public class PackageDatabaseScriptGenerator{
 	}
 	
 	static def generateMutilvaluedPTTable(Property property, Classifier fromClass){
-
-		val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
+		val propertyName = PropertyUtils.getDatabaseName(property, property.name, null)
+		val tableName =  Utils.toSnakeCase(ClassifierUtils.getTableName(fromClass)) + "_" + propertyName
 		val ids = ClassifierUtils.getId(fromClass) 
 		val idsName = ids.fold("")[acc, id |
+			val idName = PropertyUtils.getDatabaseName(id, id.name, null)
 			if(acc != ""){
-				acc + ''', «Utils.toSnakeCase(id.name)»'''
+				acc + ''', «idName»'''
 			}else{
-				acc + '''«Utils.toSnakeCase(id.name)»'''
+				acc + '''«idName»'''
 			}
 		]
+		
 		'''
 		
-		CREATE TABLE «Utils.toSnakeCase(tableName)»(
-			«Utils.toSnakeCase(property.name)» «property.generateAttributType»«property.generateStringLength» NOT NULL,
+		CREATE TABLE «tableName»(
+			«propertyName» «property.generateAttributType»«property.generateStringLength» NOT NULL,
 			«ids.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',
@@ -441,12 +535,12 @@ public class PackageDatabaseScriptGenerator{
 			]»
 		);
 		
-		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
+		ALTER TABLE ONLY «tableName»
+		    ADD CONSTRAINT «tableName»_ids_fkey
 		    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsName»);
 		    
 		ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«idsName», «Utils.toSnakeCase(property.name)»);
+		    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«idsName», «propertyName»);
 		'''
 		
 	}
@@ -457,42 +551,47 @@ public class PackageDatabaseScriptGenerator{
 	static def generateMutilvaluedEntityTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
-			val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
+			val fieldName = PropertyUtils.getDatabaseName(property, property.name, null)
+			val tableName = Utils.toSnakeCase(ClassifierUtils.getTableName(fromClass)) +"_" + fieldName
 			val idsProps = ClassifierUtils.getId(type) 
 			val idsOwner = ClassifierUtils.getId(fromClass) 
 			val idsOwnerName = idsOwner.fold("")[acc, id |
+				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(fromClass.name)»'''
+					acc + ''', «propertyName»_«Utils.toSnakeCase(fromClass.name)»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(fromClass.name)»'''
+					acc + '''«propertyName»_«Utils.toSnakeCase(fromClass.name)»'''
 				}
 			]
 			val idsOwnerBaseName = idsOwner.fold("")[acc, id |
+				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»'''
+					acc + ''', «propertyName»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»'''
+					acc + '''«propertyName»'''
 				}
 			]
 			
 			val idsPropsName = idsProps.fold("")[acc, id |
+				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(type.name)»'''
+					acc + ''', «propertyName»_«Utils.toSnakeCase(type.name)»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(type.name)»'''
+					acc + '''«propertyName»_«Utils.toSnakeCase(type.name)»'''
 				}
 			]
 			
 			val idsPropsBaseName = idsProps.fold("")[acc, id |
+				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»'''
+					acc + ''', «propertyName»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»'''
+					acc + '''«propertyName»'''
 				}
 			]
 			'''
 			
-			CREATE TABLE «Utils.toSnakeCase(tableName)»(
+			CREATE TABLE «tableName»(
 				«idsProps.fold("")[acc, id |
 					if(acc != ""){
 						acc + ''',
@@ -511,16 +610,16 @@ public class PackageDatabaseScriptGenerator{
 				]»
 			);
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(fromClass.name)»_ids_fkey
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_«Utils.toSnakeCase(fromClass.name)»_ids_fkey
 			    FOREIGN KEY («idsOwnerName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsOwnerBaseName»);
 			    
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_«Utils.toSnakeCase(type.name)»_ids_fkey
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_«Utils.toSnakeCase(type.name)»_ids_fkey
 			    FOREIGN KEY («idsPropsName») REFERENCES «ClassifierUtils.getTableName(type)»(«idsPropsBaseName»);
 			    
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«idsOwnerName», «idsPropsName»);
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_pkey PRIMARY KEY(«idsOwnerName», «idsPropsName»);
 			'''
 		}
 	}
@@ -529,31 +628,35 @@ public class PackageDatabaseScriptGenerator{
 	 * génère la définition d'un attribut id
 	 */
 	static def generateMultiIdAttributeDefinition(Property property, String additionnalName){
-		val name = Utils.addAdditionnalName(additionnalName, property.name)
+		val name = property.name
+		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val owner = property.owner
 		if(owner instanceof Classifier){
-			'''«Utils.toSnakeCase(name)»_«Utils.toSnakeCase(owner.name)» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+			'''«propertyName»_«Utils.toSnakeCase(owner.name)» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
 		}
 	}
 	
 	static def generateValueObjectEntityTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
-			val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
+			val name = PropertyUtils.getDatabaseName(property, property.name, null)
+			val prefix = Utils.toSnakeCase(ClassifierUtils.getTableName(fromClass))
+			val tableName = prefix + "_" + name 
 			
 			val idsOwner = ClassifierUtils.getId(fromClass) 
 			val idsName = idsOwner.fold("")[acc, id |
+				val idName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»'''
+					acc + ''', «idName»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»'''
+					acc + '''«idName»'''
 				}
 			]
-			val pkeys = idsName + ', ' + Utils.getListComma(type.getAttributList(newArrayList(), property.name))
+			val pkeys = idsName + ', ' + Utils.getListComma(type.getAttributList(newArrayList(), name))
 			'''
 			
-			CREATE TABLE «Utils.toSnakeCase(tableName)»(
-				«type.generateAttributes(property.name, fromClass, false)»,
+			CREATE TABLE «tableName»(
+				«type.generateAttributes(name, fromClass, false)»,
 				«idsOwner.fold("")[acc, id |
 					if(acc != ""){
 						acc + ''',
@@ -563,14 +666,14 @@ public class PackageDatabaseScriptGenerator{
 					}
 				]»
 			);
-			«type.generateForeignKeys(property.name, tableName)»
+			«type.generateForeignKeys(name, tableName)»
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_ids_fkey
 			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsName»);
 			    
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY(«pkeys»);
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_pkey PRIMARY KEY(«pkeys»);
 			    
 			'''	
 		}	
@@ -581,20 +684,23 @@ public class PackageDatabaseScriptGenerator{
 		attributes.forEach[attribut |
 			if(!PropertyUtils.isNullable(attribut)){
 				val attrType = attribut.type
-				val name = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, attribut.name))
+				//val name = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, attribut.name))
+				val propertyName = PropertyUtils.getDatabaseName(attribut, attribut.name, additionnalName)
 				if(Utils.isEntity(attrType)){
 					val ids = ClassifierUtils.getId(attrType as Classifier) 
 					ids.forEach[id |
-						var idName = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, id.name + Utils.getFirstToUpperCase(attribut.name)))
+						val idpropName = PropertyUtils.getDatabaseName(id, id.name, additionnalName)
+						val propName = PropertyUtils.getDatabaseName(attribut, attribut.name, null)
+						var idName = idpropName + "_" + propName
 						names.add(idName)
 					]
 				}else if(Utils.isNomenclature(attrType)){
-					names.add(name)
+					names.add("code_" + propertyName)
 				}else if(Utils.isValueObject(attrType)){
-					val voName = Utils.addAdditionnalName(additionnalName, attribut.name)
-					(attrType as Classifier).getAttributList(names, voName)
+					//val voName = Utils.addAdditionnalName(additionnalName, propertyName)
+					(attrType as Classifier).getAttributList(names, propertyName)
 				}else{
-					names.add(name)
+					names.add(propertyName)
 				}
 			}
 		]
@@ -607,21 +713,23 @@ public class PackageDatabaseScriptGenerator{
 	static def generateEnumAttributTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
-			val tableName = ClassifierUtils.getTableName(fromClass) + Utils.getFirstToUpperCase(property.name)
+			val propertyName = PropertyUtils.getDatabaseName(property, property.name, null)
+			val tableName = Utils.toSnakeCase(ClassifierUtils.getTableName(fromClass)) + "_" + propertyName
 			
 			val idsOwner = ClassifierUtils.getId(fromClass) 
 			val idsName = idsOwner.fold("")[acc, id |
+				val idName= PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»'''
+					acc + ''', «idName»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»'''
+					acc + '''«idName»'''
 				}
 			]
 			
 			val sqlType = TypeUtils.getEnumType(type)
 			'''
 			
-			CREATE TABLE «Utils.toSnakeCase(tableName)»(
+			CREATE TABLE «tableName»(
 				code «sqlType» NOT NULL,
 				«idsOwner.fold("")[acc, id |
 					if(acc != ""){
@@ -633,16 +741,16 @@ public class PackageDatabaseScriptGenerator{
 				]»
 			);«type.generateForeignKeys(property.name, tableName)»
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_ids_fkey
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_ids_fkey
 			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getTableName(fromClass)»(«idsName»);
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_code_fkey
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_code_fkey
 			    FOREIGN KEY (code) REFERENCES «ClassifierUtils.getTableName(type)»(code);
 			
-			ALTER TABLE ONLY «Utils.toSnakeCase(tableName)»
-			    ADD CONSTRAINT «Utils.toSnakeCase(tableName)»_pkey PRIMARY KEY («idsName», code);
+			ALTER TABLE ONLY «tableName»
+			    ADD CONSTRAINT «tableName»_pkey PRIMARY KEY («idsName», code);
 			'''	
 		}	
 		
@@ -656,7 +764,6 @@ public class PackageDatabaseScriptGenerator{
 		if(owner instanceof Classifier){
 			var maxVal = '''NO MAXVALUE'''
 			var minVal = '''NO MINVALUE'''
-			val name = ClassifierUtils.getTableName(owner) + Utils.getFirstToUpperCase(property.name)
 			val startWith = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH)
 			val inscrementBy = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY)
 			
@@ -677,8 +784,10 @@ public class PackageDatabaseScriptGenerator{
 			if(isCycle == true){
 				cycle = "CYCLE"
 			}
+			val propertyName = PropertyUtils.getDatabaseName(property, property.name, null)
+			val name = Utils.toSnakeCase(ClassifierUtils.getTableName(owner))  + "_" + propertyName
 			'''
-			CREATE SEQUENCE «Utils.toSnakeCase(name)»_seq
+			CREATE SEQUENCE «name»_seq
 			    START WITH «startWith»
 			    INCREMENT BY «inscrementBy»
 			    «maxVal»
@@ -686,12 +795,12 @@ public class PackageDatabaseScriptGenerator{
 			    CACHE «cache»
 			    «cycle»;
 			    
-			ALTER SEQUENCE «Utils.toSnakeCase(name)»_seq 
-				OWNED BY «ClassifierUtils.getTableName(owner)».«Utils.toSnakeCase(property.name)»;
+			ALTER SEQUENCE «name»_seq 
+				OWNED BY «ClassifierUtils.getTableName(owner)».«propertyName»;
 			
 			ALTER TABLE ONLY «ClassifierUtils.getTableName(owner)» 
-				ALTER COLUMN «Utils.toSnakeCase(property.name)» 
-				SET DEFAULT nextval('«Utils.toSnakeCase(name)»_seq'::regclass);
+				ALTER COLUMN «propertyName» 
+				SET DEFAULT nextval('«name»_seq'::regclass);
 			'''
 		}
 	}
@@ -713,21 +822,22 @@ public class PackageDatabaseScriptGenerator{
 		val attributes = type.memberEnds
 		attributes.forEach[attribut |
 			val attrType = attribut.type
-			val name = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, attribut.name))
-			
+			//val name = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, attribut.name))
+			val propertyName = PropertyUtils.getDatabaseName(attribut, attribut.name, additionnalName)
 			if(Utils.isEntity(attrType)){
 				val ids = ClassifierUtils.getId(attrType as Classifier) 
 				ids.forEach[id |
-					var idName = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, id.name + Utils.getFirstToUpperCase(attribut.name)))
+					val idpropName = PropertyUtils.getDatabaseName(id, id.name, additionnalName)
+					var idName = idpropName + "_" +Utils.toSnakeCase(attribut.name)
 					names.add(idName)
 				]
 			}else if(Utils.isNomenclature(attrType)){
-				names.add(name)
+				names.add("code_" + propertyName)
 			}else if(Utils.isValueObject(attrType)){
-				val voName = Utils.addAdditionnalName(additionnalName, attribut.name)
-				(attrType as Classifier).getAttributList(names, voName)
+				//val voName = Utils.addAdditionnalName(additionnalName, attribut.name)
+				(attrType as Classifier).getAttributList(names, propertyName)
 			}else{
-				names.add(name)
+				names.add(propertyName)
 			}
 		]
 		return names
@@ -775,24 +885,28 @@ public class PackageDatabaseScriptGenerator{
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
 			val idsName = ids.fold("")[acc, id |
+				val idName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»'''
+					acc + ''', «idName»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»'''
+					acc + '''«idName»'''
 				}
 			]
 			
 			val idsNameInClass = ids.fold("")[acc, id |
+				val idName = PropertyUtils.getDatabaseName(id, id.name, null)
+				val propName = PropertyUtils.getDatabaseName(property, property.name, idName)
 				if(acc != ""){
-					acc + ''', «Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(property.name)»'''
+					acc + ''', «propName»'''
 				}else{
-					acc + '''«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(property.name)»'''
+					acc + '''«propName»'''
 				}
 			]
+			val propName = PropertyUtils.getDatabaseName(property, property.name, null)
 			return '''
 			
 			ALTER TABLE ONLY «ClassifierUtils.getTableName(fromClass)»
-				ADD CONSTRAINT «ClassifierUtils.getTableName(fromClass)»_«Utils.toSnakeCase(property.name)»_ids_fkey 
+				ADD CONSTRAINT «ClassifierUtils.getTableName(fromClass)»_«propName»_ids_fkey 
 				FOREIGN KEY («idsNameInClass») REFERENCES «ClassifierUtils.getTableName(type)»(«idsName»);
 			'''
 		}
@@ -803,11 +917,12 @@ public class PackageDatabaseScriptGenerator{
 	static def generateAssociationForeignKeysEnum(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
+			val propName = "code_" + PropertyUtils.getDatabaseName(property, property.name, null)
 			return '''
 			
 			ALTER TABLE ONLY «ClassifierUtils.getTableName(fromClass)»
-				ADD CONSTRAINT «ClassifierUtils.getTableName(fromClass)»_«Utils.toSnakeCase(property.name)»_code_fkey 
-				FOREIGN KEY («property.name») REFERENCES «ClassifierUtils.getTableName(type)»(code);
+				ADD CONSTRAINT «ClassifierUtils.getTableName(fromClass)»_«propName»_code_fkey 
+				FOREIGN KEY («propName») REFERENCES «ClassifierUtils.getTableName(type)»(code);
 			'''
 		}
 		return ''''''
