@@ -384,7 +384,7 @@ public class ClassifierMetierClassGenerator {
 		var array =""
 		var endArray =""
 		if(property.isMultivalued){
-			array= "Array<"
+			array= "Set<"
 			endArray =">"
 		}
 		'''

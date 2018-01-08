@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Générateur papyrus java
+Bundle-SymbolicName: fr.gouv.diplomatie.papyrus.codegen.java;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: MEAE - Ministère de l'Europe et des Affaires étrangères
+Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
+ org.eclipse.core.runtime;bundle-version="3.13.0",
+ org.eclipse.uml2.uml;bundle-version="5.3.0",
+ org.eclipse.xtext.xbase;bundle-version="2.12.0",
+ org.eclipse.xtend;bundle-version="2.2.0",
+ org.eclipse.papyrus.designer.languages.common.base;bundle-version="1.0.4",
+ fr.gouv.diplomatie.papyrus.codegen.core;bundle-version="1.0.0",
+ org.eclipse.papyrus.infra.core;bundle-version="3.0.0"
+Import-Package: org.eclipse.ui.console
+Export-Package: fr.gouv.diplomatie.papyrus.codegen.java.transformations

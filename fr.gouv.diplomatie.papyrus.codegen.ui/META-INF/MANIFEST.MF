@@ -16,3 +16,5 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
  fr.gouv.diplomatie.papyrus.codegen.core;bundle-version="1.0.0",
  fr.gouv.diplomatie.papyrus.codegen.sql;bundle-version="1.0.0",
  fr.gouv.diplomatie.papyrus.codegen.ui.core;bundle-version="1.0.0"
+Import-Package: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators,
+ fr.gouv.diplomatie.papyrus.codegen.java.transformations

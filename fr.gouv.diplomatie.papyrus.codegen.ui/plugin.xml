@@ -31,6 +31,16 @@
                style="push"
                tooltip="Generate Class: Metier">
          </command>
+         <separator
+		       name="separator-services"
+		       visible="true">
+		</separator>
+         <command
+               commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.jpaentities"
+               label="Generate JPA Entities"
+               style="push"
+               tooltip="Generate JPA Entities">
+         </command>
          </menu>
       </menuContribution>
    </extension>
@@ -56,6 +66,13 @@
             description="Generate Class: Metier"
             id="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.models.metier"
             name="Generate Class: Metier">
+      </command>
+      <command
+            categoryId="org.eclipse.papyrus.editor.category"
+            defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.GenerateJPAEntityHandler"
+            description="Generate JPA Entities"
+            id="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.jpaentities"
+            name="Generate JPA Entities">
       </command>
    </extension>
    <extension

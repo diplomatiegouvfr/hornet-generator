@@ -85,6 +85,7 @@ import java.util.ArrayList
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils
 import org.eclipse.uml2.uml.Type
 import org.eclipse.uml2.uml.Classifier
+import org.eclipse.uml2.uml.Stereotype
 
 public class Utils{
 	
@@ -94,6 +95,12 @@ public class Utils{
 	public static var MODEL_ENTITY_GENERATED = 'generated';
 	public static var MODEL_ENTITY_TABLENAME = 'tableName';
 	public static var MODEL_ENTITY_PERSISTENT = 'isPersistent';
+	
+	public static var MODEL_FETCHTYPE = 'fetchType';
+	
+	public static var MODEL_ASSOCIATIONTABLE = 'associationTable';
+	
+	public static var MODEL_ASSOCIATIONLINK = 'associationLink';
 	
 	public static var MODEL_NOMENCLATURE = 'nomenclature';
 	public static var MODEL_NOMENCLATURE_VALEURS = 'valeurs';
@@ -109,10 +116,8 @@ public class Utils{
 	public static var MODEL_VALUEOBJECT_PERSISTENT = 'isPersistent';
 	
 	public static var MODEL_ATTRIBUTE = 'attribute';
-	public static var MODEL_ATTRIBUTE_SEARCHABLE = 'searchable';
 	public static var MODEL_ATTRIBUTE_LENGTH = 'length';
 	public static var MODEL_ATTRIBUTE_PERSISTENT = 'isPersistent';
-	public static var MODEL_ATTRIBUTE_SEARCHANALYZER = 'searchAnalyzer';
 	public static var MODEL_ATTRIBUTE_COLUMNNAME = 'columnName';
 	
 	public static var MODEL_KEYATTRIBUTE = 'keyAttribute';
@@ -167,48 +172,80 @@ public class Utils{
 		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
 	
+
+	static def Classifier[] getAllgene(Classifier elem){
+		val genes = elem.generalizations
+		var allTypes = newArrayList
+		for(gene : genes){
+			allTypes.add(gene.general)
+			allTypes.addAll(gene.general.getAllgene)
+		}
+		
+		return allTypes
+	}
+	
+	static def hasType(NamedElement elem, String typeName){
+		val stereos = elem.appliedStereotypes
+		var allTypes = newArrayList
+		for(stereo : stereos){
+			allTypes.addAll(stereo.getAllgene)	
+		}
+		for(type: allTypes){
+			if (type.name == typeName){
+				return true
+			}
+		}
+		return false
+	}
+	
+	static def hasStereotype(NamedElement elem, String stereotypeName){
+		if(elem !== null){
+			return (elem.getStereotype(stereotypeName) !==null && !(elem.getStereotype(stereotypeName).empty))|| elem.hasType(stereotypeName)
+		}else{
+			return false
+		}
+	}
+	
 	/**
 	 * teste si un element est de type entity
 	 */
 	static def isEntity(NamedElement elem){
-		if(elem !== null){
-			return (elem.getStereotype(MODEL_ENTITY) !==null && !(elem.getStereotype(MODEL_ENTITY).empty))
-		}else{
-			return false
-		}
+		elem.hasStereotype(MODEL_ENTITY)
 	}
 	
 	/**
 	 * teste si un element est de type valueObject
 	 */
 	static def isValueObject(NamedElement elem){
-		if(elem !== null){
-			return (elem.getStereotype(MODEL_VALUEOBJECT) !==null && !(elem.getStereotype(MODEL_VALUEOBJECT).empty))
-		}else{
-			return false
-		}
+		elem.hasStereotype(MODEL_VALUEOBJECT)
 	}
 	
 	/**
 	 * teste si un element est de type sequence
 	 */
 	static def isSequence(NamedElement elem){
-		if(elem !== null){
-			return (elem.getStereotype(MODEL_SEQUENCE) !==null && !(elem.getStereotype(MODEL_SEQUENCE).empty))	
-		}else{
-			return false
-		}
+		elem.hasStereotype(MODEL_SEQUENCE)
+	}
+	
+	/**
+	 * teste si un element est de type associationTable
+	 */
+	static def isAssociationTable(NamedElement elem){
+		elem.hasStereotype(MODEL_ASSOCIATIONTABLE)
+	}
+	
+	/**
+	 * teste si un element est de type associationLink
+	 */
+	static def isAssociationLink(NamedElement elem){
+		elem.hasStereotype(MODEL_ASSOCIATIONLINK)
 	}
 	
 	/**
 	 * teste si un element est un enum
 	 */
 	static def isNomenclature(NamedElement elem){
-		if(elem !== null){
-			return (elem.getStereotype(MODEL_NOMENCLATURE) !== null && !(elem.getStereotype(MODEL_NOMENCLATURE).empty))
-		}else{
-			return false
-		}
+		elem.hasStereotype(MODEL_NOMENCLATURE)
 	}
 	
 	/**

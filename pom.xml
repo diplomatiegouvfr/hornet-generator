@@ -22,6 +22,8 @@
 		<module>fr.gouv.diplomatie.papyrus.codegen.typescript</module>
 		<module>fr.gouv.diplomatie.papyrus.codegen.ui</module>
 		<module>fr.gouv.diplomatie.papyrus.codegen.ui.core</module>
+		<module>fr.gouv.diplomatie.papyrus.codegen.java</module>
+		<module>fr.gouv.diplomatie.papyrus.codegen.annotation.lombok</module>
 		<module>fr.gouv.diplomatie.papyrus.metamodele</module>
 	</modules>
 	
