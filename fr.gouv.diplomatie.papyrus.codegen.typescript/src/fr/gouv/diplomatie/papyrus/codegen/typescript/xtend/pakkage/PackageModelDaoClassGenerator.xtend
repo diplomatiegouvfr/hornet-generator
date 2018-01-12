@@ -137,13 +137,13 @@ class PackageModelDaoClassGenerator{
 		    	«classes.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEntityGetter»'''
 			    ]»
-			    «classes.fold("")[acc, clazz |
+			«classes.fold("")[acc, clazz |
 			        acc + '''«(clazz as Classifier).generateCallMultivaluedAttributesEntityGetter»'''
 			    ]»
-			    «associationsClasses.fold("")[acc, clazz |
+			«associationsClasses.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
 			    ]»
-				«enums.fold("")[acc, clazz |
+			«enums.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEnumEntityGetter»'''
 			    ]»
 		    }
@@ -158,7 +158,7 @@ class PackageModelDaoClassGenerator{
 		    «associationsClasses.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateACEntityGetter»'''
 		    ]»
-			«enums.fold("")[acc, clazz |
+		    «enums.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateEnumEntityGetter»'''
 		    ]»
 		}
@@ -268,7 +268,7 @@ class PackageModelDaoClassGenerator{
 	}
 	
 	static def generateMultivaluedAttributEntityDeclaration(Property property, Classifier fromClass){
-		val tableName = Utils.addAdditionnalName(ClassifierUtils.getTableName(fromClass), property.name)
+		val tableName = Utils.addAdditionnalName(ClassifierUtils.getTableName(fromClass), PropertyUtils.getDatabaseName(property, property.name, ""))
 		val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 		'''
 		
@@ -293,7 +293,7 @@ class PackageModelDaoClassGenerator{
 		
 		private init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void{
 			«clazz.generateExtendsIdRelation»
-			«clazz.generateRelations(clazz,"")»
+			«clazz.generateRelations(clazz,"", "")»
 			«clazz.generateForeignRelations(clazz,'')»
 			«clazz.generateAssociationRelations»
 		}
@@ -324,9 +324,10 @@ class PackageModelDaoClassGenerator{
 		val ids = ClassifierUtils.getId(clazz)
 		'''
 		«ids.fold("")[acc, id |
+			val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, ""))
 			acc +
 			'''
-			SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(clazz.name)»Entity, "«Utils.toSnakeCase(id.name)»", "«Utils.toSnakeCase(id.name)»");
+			SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(clazz.name)»Entity, "«idName»", "«idName»");
 			'''
 		]»
 		'''
@@ -335,7 +336,7 @@ class PackageModelDaoClassGenerator{
 	/**
 	 * génère les relations d'une classe
 	 */
-	static def generateRelations(Classifier clazz, Classifier fromClass, String additionnalName){
+	static def generateRelations(Classifier clazz, Classifier fromClass, String additionnalName, String databaseAddName){
 		var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
 			val type = attribut.type
 			return (Utils.isEntity(type) || Utils.isValueObject(type)) || Utils.isNomenclature(type) || attribut.multivalued
@@ -352,7 +353,7 @@ class PackageModelDaoClassGenerator{
 		
 		'''
 		«attributes.fold("")[acc, attribut |
-			acc + '''«attribut.generateRelation(fromClass, additionnalName)»'''
+			acc + '''«attribut.generateRelation(fromClass, additionnalName, databaseAddName)»'''
 		]»
 		«IF clazz instanceof AssociationClass»«interfaces.fold("")[acc, interface |
 			acc + '''«interface.generateInterfaceRelations(fromClass)»'''
@@ -367,7 +368,7 @@ class PackageModelDaoClassGenerator{
 		]
 		'''
 		«attributes.fold("")[acc, attribut |
-			acc + '''«attribut.generateRelation(fromClass, "")»'''
+			acc + '''«attribut.generateRelation(fromClass, "", "")»'''
 		]»
 		'''
 	}
@@ -375,25 +376,27 @@ class PackageModelDaoClassGenerator{
 	/**
 	 * génère la relation entre une property et la classe la contenant
 	 */
-	static def generateRelation(Property property, Classifier fromClass, String additionnalName){
+	static def generateRelation(Property property, Classifier fromClass, String additionnalName, String databaseAddName){
 		val type = property.type
 		if(type instanceof Classifier){
 			if(Utils.isEntity(type)){
-				'''«property.generateEntityRelation(fromClass, additionnalName)»'''
+				'''«property.generateEntityRelation(fromClass, additionnalName, databaseAddName)»'''
 			}else if(Utils.isNomenclature(type)){
-				'''«property.generateEnumRelation(fromClass, additionnalName)»'''
+				'''«property.generateEnumRelation(fromClass, additionnalName, databaseAddName)»'''
 			}else if(Utils.isValueObject(type)){
-				val name = Utils.addAdditionnalName(additionnalName, property.name)
-				val tableName = Utils.addAdditionnalName(fromClass.name, name)
+				val propName = Utils.addAdditionnalName(additionnalName, property.name)
+				val name = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
+				val tableName = Utils.addAdditionnalName(fromClass.name, propName)
 				
 				if(property.multivalued){
 					val ids = ClassifierUtils.getId(fromClass)
 					'''«ids.fold("")[acc, id |
-						val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
-						acc + '''SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(tableName)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");'''
+						//val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+						val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
+						acc + '''SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(tableName)»Entity, "«propName»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");'''
 					]»'''
 				}else{
-					'''«type.generateRelations(fromClass, name)»'''
+					'''«type.generateRelations(fromClass, propName, name)»'''
 				}
 				
 			}else{
@@ -402,17 +405,19 @@ class PackageModelDaoClassGenerator{
 		}
 	}
 	
-	static def generateEntityRelation(Property property, Classifier fromClass, String additionnalName){
+	static def generateEntityRelation(Property property, Classifier fromClass, String additionnalName, String databaseAddName){
 		val type = property.type
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
-		
+		val databasename = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(fromClass)
 			if(property.multivalued){
-				val tableName = fromClass.name + Utils.getFirstToUpperCase(name)
+				val tableName = fromClass.name + Utils.getFirstToUpperCase(databasename)
 				'''
 				«ids.fold("")[acc, id |
-					val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+//					val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+					val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
+					
 					acc + '''
 					SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");
 					'''
@@ -422,7 +427,7 @@ class PackageModelDaoClassGenerator{
 				val idsProp = ClassifierUtils.getId(type)
 				'''
 				«idsProp.fold("")[acc, id |
-					val idName = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName,id.name + Utils.getFirstToUpperCase(property.name)))
+					val idName = Utils.toSnakeCase(Utils.addAdditionnalName(databaseAddName,PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(PropertyUtils.getDatabaseName(property,property.name,""))))
 					acc + '''
 					SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»");
 					'''
@@ -435,15 +440,16 @@ class PackageModelDaoClassGenerator{
 	/**
 	 * génère les relation avec les enums
 	 */
-	static def generateEnumRelation(Property property, Classifier fromClass, String additionnalName){
+	static def generateEnumRelation(Property property, Classifier fromClass, String additionnalName, String databaseAddName){
 		val type = property.type
-		val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
+		val tableName = PropertyUtils.getDatabaseName(property, property.name, fromClass.name)
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
+		val propName = PropertyUtils.getDatabaseName(property, property.name, databaseAddName)
 		if(property.multivalued){
 			val ids = ClassifierUtils.getId(fromClass)
 			'''
 			«ids.fold("")[acc, id |
-				val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+				val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
 				acc + '''
 				SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");
 				'''
@@ -451,7 +457,7 @@ class PackageModelDaoClassGenerator{
 			'''
 		}else{
 			'''
-			SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "code_«Utils.toSnakeCase(name)»");
+			SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "code_«Utils.toSnakeCase(propName)»");
 			'''
 		}
 	}
@@ -464,7 +470,7 @@ class PackageModelDaoClassGenerator{
 		val ids = ClassifierUtils.getId(fromClass)
 		'''
 		«ids.fold("")[acc, id |
-			val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+			val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
 			acc + '''
 			SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(tableName)»Entity, "«property.name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");
 			'''
@@ -498,7 +504,7 @@ class PackageModelDaoClassGenerator{
 				if(property.multivalued){
 					val ids = ClassifierUtils.getId(fromClass)
 					'''«ids.fold("")[acc, id |
-						val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+						val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
 						acc + '''SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(tableName)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");'''
 					]»'''
 				}else{
@@ -523,7 +529,7 @@ class PackageModelDaoClassGenerator{
 				if(property.multivalued){
 					'''
 					«ids.fold("")[acc, id |
-						val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+						val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
 						var name = Utils.addAdditionnalName(additionnalName, property.name)
 						if(property.association !== null){
 							val member = property.association.memberEnds.filter[member |
@@ -541,7 +547,7 @@ class PackageModelDaoClassGenerator{
 				}else{
 					'''
 					«ids.fold("")[acc, id |
-						val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(type.name))
+						val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(type.name))
 						var name = Utils.addAdditionnalName(additionnalName, property.name)
 						if(property.association !== null){
 							val member = property.association.memberEnds.filter[member |
@@ -633,7 +639,7 @@ class PackageModelDaoClassGenerator{
 		)
 		'''
 		«members.fold("")[acc, member |
-			val name = Utils.addAdditionnalName(property.name, member.name)
+			val name = Utils.addAdditionnalName(PropertyUtils.getDatabaseName(property,property.name,""), member.name)
 			/*try {
 			       «Utils.getFirstToLowerCase(fromClass.name)»Entity.belongsToMany(ModelDAO.«Utils.getFirstToLowerCase(clazz.name)»Entity,
 			           {
@@ -669,7 +675,7 @@ class PackageModelDaoClassGenerator{
 		val members = clazz.ownedEnds.filter[member |
 			member.type != fromClass
 		]
-		val name = Utils.addAdditionnalName(property.name, fromClass.name)
+		val name = Utils.addAdditionnalName(PropertyUtils.getDatabaseName(property,property.name,""), fromClass.name)
 		'''
 		«members.fold("")[acc, member |
 			acc + '''SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(clazz.name)»Entity, "«member.name»", "«Utils.toSnakeCase(name)»", "«Utils.toSnakeCase(clazz.name)»");''' 
@@ -747,7 +753,7 @@ class PackageModelDaoClassGenerator{
 		'''
 		
 		public init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void{
-			«clazz.generateRelations(clazz,"")»
+			«clazz.generateRelations(clazz,"", "")»
 		}
 		'''
 	}
@@ -792,10 +798,11 @@ class PackageModelDaoClassGenerator{
 		
 		public init«tableName»Entity(): void{
 			«ids.fold("")[acc, id |
+				val idName = PropertyUtils.getDatabaseName(id, PropertyUtils.getDatabaseName(id, id.name, ""), "")
 				if(Utils.isEntity(type)){
-					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(id.name)»_«Utils.toSnakeCase(fromClass.name)»");'''
+					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(idName)»_«Utils.toSnakeCase(fromClass.name)»");'''
 				}else{
-					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(id.name)»");'''
+					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(idName)»");'''
 				}
 			]»
 			«property.generateMARelation(fromClass, "", entityName)»
@@ -818,10 +825,10 @@ class PackageModelDaoClassGenerator{
 				val ids = ClassifierUtils.getId(type)
 				'''
 				«ids.fold("")[acc, id |
-					var idName =  Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(id.name, property.name))
-					var fieldName = Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(id.name, type.name))
+					var idName =  Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(PropertyUtils.getDatabaseName(id, id.name, ""), property.name))
+					var fieldName = Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(PropertyUtils.getDatabaseName(id, id.name, ""), type.name))
 					if(additionnalName == ""){
-						idName = Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(id.name, type.name))
+						idName = Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(PropertyUtils.getDatabaseName(id, id.name, ""), type.name))
 						fieldName =  Utils.addAdditionnalName(additionnalName, type.name)
 					}
 					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«Utils.getFirstToLowerCase(fieldName)»", "«Utils.toSnakeCase(idName)»");'''

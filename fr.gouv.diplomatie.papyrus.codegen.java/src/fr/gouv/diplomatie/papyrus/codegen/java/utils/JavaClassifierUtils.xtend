@@ -82,11 +82,15 @@ package fr.gouv.diplomatie.papyrus.codegen.java.utils
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 
 class JavaClassifierUtils{
 	
 	static def getSchema(Classifier clazz){
-		//TODO
+		if(Utils.isEntity(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, JavaPluginUtils.MODEL_SCHEMA)
+		}
+		return null
 	}
 		
 	/**
@@ -133,6 +137,7 @@ class JavaClassifierUtils{
 		
 		return naturalOrderField
 	}
+	
 	
 	static def Property getNaturalOrderFieldWithExtend(Classifier clazz){
 		var naturalOrderField = null as Property

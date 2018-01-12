@@ -14,7 +14,7 @@ public class GeneratorUtils {
 	
 	public static final String MAIN_REPOSITORY = "main" + File.separator;
 	public static final String JAVA_REPOSITORY = "java" + File.separator;
-	public static final String INTEGRATION_REPOSITORY = "integration" + File.separator;
+	public static final String INTEGRATION_REPOSITORY = "integration";
 	
 	/**
 	 * répertoire contenant le fichier de l'entity
@@ -29,13 +29,21 @@ public class GeneratorUtils {
 		if(inCode) {
 			return SRC_INCODE_REPOSITORY + MAIN_REPOSITORY + JAVA_REPOSITORY + rootPackage;
 		}
-		return SRC_REPOSITORY + MAIN_REPOSITORY + JAVA_REPOSITORY + rootPackage ;
+		return SRC_REPOSITORY + MAIN_REPOSITORY + JAVA_REPOSITORY + rootPackage;
 	}
 	
 	public static String getEntityPackage(Classifier clazz) {
 		String rootPackage = Utils.getPackagePath(clazz);
 		
-		return rootPackage + File.separator + INTEGRATION_REPOSITORY + Utils.getFirstToLowerCase(clazz.getName());
+		String domainName =  Utils.getDomainName(clazz);
+				
+		if(domainName != "" && rootPackage != "") {
+			domainName = File.separator + Utils.toPath(domainName);
+		}
+		
+		rootPackage = rootPackage + domainName;
+		
+		return rootPackage ;
 	}
 	
 	

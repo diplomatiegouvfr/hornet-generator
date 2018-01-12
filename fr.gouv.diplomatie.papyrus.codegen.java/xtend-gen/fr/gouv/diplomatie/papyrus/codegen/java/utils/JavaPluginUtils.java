@@ -121,10 +121,6 @@ public class JavaPluginUtils {
    * teste si un element est de type naturalOrder
    */
   public static boolean isNaturalOrderField(final NamedElement elem) {
-    if ((elem != null)) {
-      return ((Utils.getStereotype(elem, JavaPluginUtils.MODEL_NATURALORDER) != null) && (!IterableExtensions.isEmpty(Utils.getStereotype(elem, JavaPluginUtils.MODEL_NATURALORDER))));
-    } else {
-      return false;
-    }
+    return Utils.hasStereotype(elem, JavaPluginUtils.MODEL_NATURALORDER);
   }
 }

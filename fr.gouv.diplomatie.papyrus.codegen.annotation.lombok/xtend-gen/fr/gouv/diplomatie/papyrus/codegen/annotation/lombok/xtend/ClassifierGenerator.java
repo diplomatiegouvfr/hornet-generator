@@ -103,6 +103,9 @@ public class ClassifierGenerator {
     return _builder;
   }
   
+  /**
+   * génère les annotations de la classe
+   */
   public static CharSequence generateAnnotations(final Classifier clazz) {
     CharSequence _xblockexpression = null;
     {
@@ -170,6 +173,9 @@ public class ClassifierGenerator {
     return _xblockexpression;
   }
   
+  /**
+   * génère le contenu de l'annotation toString
+   */
   public static String generateToStringContent(final Classifier clazz) {
     String names = "";
     final Function1<Property, Boolean> _function = (Property attribut) -> {
@@ -182,8 +188,10 @@ public class ClassifierGenerator {
       if (_equals) {
         String _names = names;
         StringConcatenation _builder = new StringConcatenation();
+        _builder.append("\"");
         String _name = attribut.getName();
         _builder.append(_name);
+        _builder.append("\"");
         names = (_names + _builder);
       } else {
         String _names_1 = names;
@@ -191,8 +199,10 @@ public class ClassifierGenerator {
         _builder_1.append(",");
         _builder_1.newLine();
         _builder_1.append("\t");
+        _builder_1.append("\"");
         String _name_1 = attribut.getName();
         _builder_1.append(_name_1, "\t");
+        _builder_1.append("\"");
         names = (_names_1 + _builder_1);
       }
     }
@@ -209,8 +219,10 @@ public class ClassifierGenerator {
           if (_equals_1) {
             String _names_2 = names;
             StringConcatenation _builder_2 = new StringConcatenation();
+            _builder_2.append("\"");
             String _name_2 = attribut_1.getName();
             _builder_2.append(_name_2);
+            _builder_2.append("\"");
             names = (_names_2 + _builder_2);
           } else {
             String _names_3 = names;
@@ -218,8 +230,10 @@ public class ClassifierGenerator {
             _builder_3.append(",");
             _builder_3.newLine();
             _builder_3.append("\t");
+            _builder_3.append("\"");
             String _name_3 = attribut_1.getName();
             _builder_3.append(_name_3, "\t");
+            _builder_3.append("\"");
             names = (_names_3 + _builder_3);
           }
         }
@@ -236,8 +250,10 @@ public class ClassifierGenerator {
           if (_equals_2) {
             String _names_2 = names;
             StringConcatenation _builder_2 = new StringConcatenation();
+            _builder_2.append("\"");
             String _firstToLowerCase = Utils.getFirstToLowerCase(asso.getName());
             _builder_2.append(_firstToLowerCase);
+            _builder_2.append("\"");
             names = (_names_2 + _builder_2);
           } else {
             String _names_3 = names;
@@ -245,8 +261,10 @@ public class ClassifierGenerator {
             _builder_3.append(",");
             _builder_3.newLine();
             _builder_3.append("\t");
+            _builder_3.append("\"");
             String _firstToLowerCase_1 = Utils.getFirstToLowerCase(asso.getName());
             _builder_3.append(_firstToLowerCase_1, "\t");
+            _builder_3.append("\"");
             names = (_names_3 + _builder_3);
           }
         }
@@ -255,6 +273,9 @@ public class ClassifierGenerator {
     return names;
   }
   
+  /**
+   * teste si la classe possède des attributs qui ne doivent pas etre présents dans le toString
+   */
   public static boolean hasAttributesNotInToString(final Classifier clazz) {
     boolean has = false;
     final Function1<Property, Boolean> _function = (Property attribut) -> {

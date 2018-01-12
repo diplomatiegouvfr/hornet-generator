@@ -91,6 +91,8 @@ public class Utils{
 	
 	public static var console = new ConsoleUtils();
 		
+	public static var MODEL_DOMAIN = 'domain';
+	
 	public static var MODEL_ENTITY = 'entity';
 	public static var MODEL_ENTITY_GENERATED = 'generated';
 	public static var MODEL_ENTITY_TABLENAME = 'tableName';
@@ -136,6 +138,15 @@ public class Utils{
 	public static var MODEL_APPLICATION_ROOTPACKAGE = 'rootPackage';
 	
 	public static var MODEL_HORNETTYPE = 'hornetType';
+	
+	static def getDomainName(Classifier clazz){
+		val classPckg =clazz.package
+		
+		if(Utils.isDomain(classPckg)){
+			return classPckg.name
+		}
+		return ""
+	}
 	
 	/**
 	 * génère une chaine a partir d'une liste
@@ -198,6 +209,9 @@ public class Utils{
 		return false
 	}
 	
+	/**
+	 * a appelé pour tester si un element possède le stereotype passer en paramètre
+	 */
 	static def hasStereotype(NamedElement elem, String stereotypeName){
 		if(elem !== null){
 			return (elem.getStereotype(stereotypeName) !==null && !(elem.getStereotype(stereotypeName).empty))|| elem.hasType(stereotypeName)
@@ -225,6 +239,13 @@ public class Utils{
 	 */
 	static def isSequence(NamedElement elem){
 		elem.hasStereotype(MODEL_SEQUENCE)
+	}
+	
+	/**
+	 * teste si un element est de type domain
+	 */
+	static def isDomain(NamedElement elem){
+		elem.hasStereotype(MODEL_DOMAIN)
 	}
 	
 	/**

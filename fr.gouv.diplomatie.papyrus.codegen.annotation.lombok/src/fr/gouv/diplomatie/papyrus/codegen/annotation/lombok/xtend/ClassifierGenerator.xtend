@@ -98,6 +98,9 @@ public class ClassifierGenerator {
 		'''
 	}
 	
+	/**
+	 * génère les annotations de la classe
+	 */
 	static def generateAnnotations(Classifier clazz){
 		var hasGetter = LombokClassifierUtils.hasGetterAnnotation(clazz) 
 		var hasSetter = LombokClassifierUtils.hasSetterAnnotation(clazz)
@@ -117,6 +120,9 @@ public class ClassifierGenerator {
 		'''
 	}
 	
+	/**
+	 * génère le contenu de l'annotation toString
+	 */
 	static def generateToStringContent(Classifier clazz){
 		var names = ""
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut|
@@ -125,11 +131,11 @@ public class ClassifierGenerator {
 		
 		for(attribut : attributes){
 			if(names == ""){
-				names += '''«attribut.name»'''
+				names += '''"«attribut.name»"'''
 			}else{
 				names += 
 				''',
-	«attribut.name»'''
+	"«attribut.name»"'''
 			}
 		}
 		
@@ -141,11 +147,11 @@ public class ClassifierGenerator {
 			]	
 			for(attribut : interfaceAtteributes){
 				if(names == ""){
-					names += '''«attribut.name»'''
+					names += '''"«attribut.name»"'''
 				}else{
 					names += 
 					''',
-	«attribut.name»'''
+	"«attribut.name»"'''
 				}
 			}
 		}
@@ -159,11 +165,11 @@ public class ClassifierGenerator {
 		 	for(asso: associationsClasses){
 		 		if(LombokClassifierUtils.getLombokDisplayWith(asso) == true){
 			 		if(names == ""){
-						names += '''«Utils.getFirstToLowerCase(asso.name)»'''
+						names += '''"«Utils.getFirstToLowerCase(asso.name)»"'''
 					}else{
 						names += 
 						''',
-	«Utils.getFirstToLowerCase(asso.name)»'''
+	"«Utils.getFirstToLowerCase(asso.name)»"'''
 					}
 				}
 		 	}
@@ -172,6 +178,9 @@ public class ClassifierGenerator {
 		 return names
 	}
 	
+	/**
+	 * teste si la classe possède des attributs qui ne doivent pas etre présents dans le toString
+	 */
 	static def hasAttributesNotInToString(Classifier clazz){
 		var has = false
 		var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut | 

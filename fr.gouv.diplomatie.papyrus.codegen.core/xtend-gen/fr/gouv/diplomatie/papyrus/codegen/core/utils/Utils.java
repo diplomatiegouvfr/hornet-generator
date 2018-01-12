@@ -82,6 +82,7 @@ import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.CollectionExtensions;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -93,6 +94,8 @@ import org.eclipse.xtext.xbase.lib.StringExtensions;
 public class Utils {
   public static ConsoleUtils console = new ConsoleUtils();
   
+  public static String MODEL_DOMAIN = "domain";
+  
   public static String MODEL_ENTITY = "entity";
   
   public static String MODEL_ENTITY_GENERATED = "generated";
@@ -100,6 +103,12 @@ public class Utils {
   public static String MODEL_ENTITY_TABLENAME = "tableName";
   
   public static String MODEL_ENTITY_PERSISTENT = "isPersistent";
+  
+  public static String MODEL_FETCHTYPE = "fetchType";
+  
+  public static String MODEL_ASSOCIATIONTABLE = "associationTable";
+  
+  public static String MODEL_ASSOCIATIONLINK = "associationLink";
   
   public static String MODEL_NOMENCLATURE = "nomenclature";
   
@@ -123,13 +132,9 @@ public class Utils {
   
   public static String MODEL_ATTRIBUTE = "attribute";
   
-  public static String MODEL_ATTRIBUTE_SEARCHABLE = "searchable";
-  
   public static String MODEL_ATTRIBUTE_LENGTH = "length";
   
   public static String MODEL_ATTRIBUTE_PERSISTENT = "isPersistent";
-  
-  public static String MODEL_ATTRIBUTE_SEARCHANALYZER = "searchAnalyzer";
   
   public static String MODEL_ATTRIBUTE_COLUMNNAME = "columnName";
   
@@ -158,6 +163,15 @@ public class Utils {
   public static String MODEL_APPLICATION_ROOTPACKAGE = "rootPackage";
   
   public static String MODEL_HORNETTYPE = "hornetType";
+  
+  public static String getDomainName(final Classifier clazz) {
+    final org.eclipse.uml2.uml.Package classPckg = clazz.getPackage();
+    boolean _isDomain = Utils.isDomain(classPckg);
+    if (_isDomain) {
+      return classPckg.getName();
+    }
+    return "";
+  }
   
   /**
    * génère une chaine a partir d'une liste
@@ -210,48 +224,92 @@ public class Utils {
     return (_upperCase + _substring);
   }
   
+  public static Classifier[] getAllgene(final Classifier elem) {
+    final EList<Generalization> genes = elem.getGeneralizations();
+    ArrayList<Classifier> allTypes = CollectionLiterals.<Classifier>newArrayList();
+    for (final Generalization gene : genes) {
+      {
+        allTypes.add(gene.getGeneral());
+        CollectionExtensions.<Classifier>addAll(allTypes, Utils.getAllgene(gene.getGeneral()));
+      }
+    }
+    return ((Classifier[])Conversions.unwrapArray(allTypes, Classifier.class));
+  }
+  
+  public static boolean hasType(final NamedElement elem, final String typeName) {
+    final EList<Stereotype> stereos = elem.getAppliedStereotypes();
+    ArrayList<Classifier> allTypes = CollectionLiterals.<Classifier>newArrayList();
+    for (final Stereotype stereo : stereos) {
+      CollectionExtensions.<Classifier>addAll(allTypes, Utils.getAllgene(stereo));
+    }
+    for (final Classifier type : allTypes) {
+      String _name = type.getName();
+      boolean _equals = Objects.equal(_name, typeName);
+      if (_equals) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * a appelé pour tester si un element possède le stereotype passer en paramètre
+   */
+  public static boolean hasStereotype(final NamedElement elem, final String stereotypeName) {
+    if ((elem != null)) {
+      return (((Utils.getStereotype(elem, stereotypeName) != null) && (!IterableExtensions.isEmpty(Utils.getStereotype(elem, stereotypeName)))) || Utils.hasType(elem, stereotypeName));
+    } else {
+      return false;
+    }
+  }
+  
   /**
    * teste si un element est de type entity
    */
   public static boolean isEntity(final NamedElement elem) {
-    if ((elem != null)) {
-      return ((Utils.getStereotype(elem, Utils.MODEL_ENTITY) != null) && (!IterableExtensions.isEmpty(Utils.getStereotype(elem, Utils.MODEL_ENTITY))));
-    } else {
-      return false;
-    }
+    return Utils.hasStereotype(elem, Utils.MODEL_ENTITY);
   }
   
   /**
    * teste si un element est de type valueObject
    */
   public static boolean isValueObject(final NamedElement elem) {
-    if ((elem != null)) {
-      return ((Utils.getStereotype(elem, Utils.MODEL_VALUEOBJECT) != null) && (!IterableExtensions.isEmpty(Utils.getStereotype(elem, Utils.MODEL_VALUEOBJECT))));
-    } else {
-      return false;
-    }
+    return Utils.hasStereotype(elem, Utils.MODEL_VALUEOBJECT);
   }
   
   /**
    * teste si un element est de type sequence
    */
   public static boolean isSequence(final NamedElement elem) {
-    if ((elem != null)) {
-      return ((Utils.getStereotype(elem, Utils.MODEL_SEQUENCE) != null) && (!IterableExtensions.isEmpty(Utils.getStereotype(elem, Utils.MODEL_SEQUENCE))));
-    } else {
-      return false;
-    }
+    return Utils.hasStereotype(elem, Utils.MODEL_SEQUENCE);
+  }
+  
+  /**
+   * teste si un element est de type domain
+   */
+  public static boolean isDomain(final NamedElement elem) {
+    return Utils.hasStereotype(elem, Utils.MODEL_DOMAIN);
+  }
+  
+  /**
+   * teste si un element est de type associationTable
+   */
+  public static boolean isAssociationTable(final NamedElement elem) {
+    return Utils.hasStereotype(elem, Utils.MODEL_ASSOCIATIONTABLE);
+  }
+  
+  /**
+   * teste si un element est de type associationLink
+   */
+  public static boolean isAssociationLink(final NamedElement elem) {
+    return Utils.hasStereotype(elem, Utils.MODEL_ASSOCIATIONLINK);
   }
   
   /**
    * teste si un element est un enum
    */
   public static boolean isNomenclature(final NamedElement elem) {
-    if ((elem != null)) {
-      return ((Utils.getStereotype(elem, Utils.MODEL_NOMENCLATURE) != null) && (!IterableExtensions.isEmpty(Utils.getStereotype(elem, Utils.MODEL_NOMENCLATURE))));
-    } else {
-      return false;
-    }
+    return Utils.hasStereotype(elem, Utils.MODEL_NOMENCLATURE);
   }
   
   /**

@@ -159,6 +159,9 @@ public class LombokClassifierUtils {
     return eqAndHashCode;
   }
   
+  /**
+   * retourne la valeur de l'attribut displayWith
+   */
   public static Boolean getLombokDisplayWith(final NamedElement elem) {
     boolean _isAssociationTable = Utils.isAssociationTable(elem);
     if (_isAssociationTable) {

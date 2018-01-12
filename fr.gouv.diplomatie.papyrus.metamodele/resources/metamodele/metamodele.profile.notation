@@ -191,10 +191,6 @@
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_sDfdQJeSEeeJhLjptnEb3g"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_sEIWcZeSEeeJhLjptnEb3g"/>
         </children>
-        <children xmi:type="notation:Shape" xmi:id="_uHJCIPR7EeeO0fw-o-XwRw" type="Property_ClassAttributeLabel">
-          <element xmi:type="uml:Property" href="metamodele.profile.uml#_uGb3gPR7EeeO0fw-o-XwRw"/>
-          <layoutConstraint xmi:type="notation:Location" xmi:id="_uHJCIfR7EeeO0fw-o-XwRw"/>
-        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_GjDeEnaeEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_GjDeE3aeEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_GjDeFHaeEeegdZhmvUhwtQ"/>
@@ -1395,6 +1391,10 @@
         <children xmi:type="notation:Shape" xmi:id="_wsQNwPR8EeeO0fw-o-XwRw" type="Property_ClassAttributeLabel">
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_wrpJwPR8EeeO0fw-o-XwRw"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_wsQNwfR8EeeO0fw-o-XwRw"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_SpHUkPUcEeeO0fw-o-XwRw" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_SoqBkPUcEeeO0fw-o-XwRw"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_SpHUkfUcEeeO0fw-o-XwRw"/>
         </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_ufy9RPR8EeeO0fw-o-XwRw"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_ufy9RfR8EeeO0fw-o-XwRw"/>

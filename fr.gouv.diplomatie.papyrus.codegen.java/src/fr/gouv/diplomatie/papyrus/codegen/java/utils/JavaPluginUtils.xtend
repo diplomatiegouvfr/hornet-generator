@@ -118,11 +118,7 @@ public class JavaPluginUtils{
 	 * teste si un element est de type naturalOrder
 	 */
 	static def isNaturalOrderField(NamedElement elem){
-		if(elem !== null){
-			return (Utils.getStereotype(elem, MODEL_NATURALORDER) !==null && !(Utils.getStereotype(elem, MODEL_NATURALORDER).empty))	
-		}else{
-			return false
-		}
+		Utils.hasStereotype(elem, MODEL_NATURALORDER)
 	}
 	
 }

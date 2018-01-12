@@ -89,6 +89,9 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
 public class LombokAnnotationGenerator extends HornetAnnotationGenerator {
 
+	/**
+	 * génère les annotations pour un élément donné
+	 */
 	public String generateAnnotations(NamedElement elem) {
 		if(Utils.isEntity(elem)) {
 			return generateEntityAnnotations((Classifier) elem);
@@ -96,6 +99,9 @@ public class LombokAnnotationGenerator extends HornetAnnotationGenerator {
 		return null;
 	}
 	
+	/**
+	 * génère les imports pour un élément donné
+	 */
 	public String generateImports(NamedElement elem) {
 		if(Utils.isEntity(elem)) {
 			return generateEntityImports((Classifier) elem);
@@ -103,10 +109,16 @@ public class LombokAnnotationGenerator extends HornetAnnotationGenerator {
 		return null;
 	}
 	
+	/**
+	 * génère les imports d'une classe
+	 */
 	public String generateEntityImports(Classifier clazz) {
 		return ClassifierGenerator.generateImports(clazz).toString();
 	}
 	
+	/**
+	 * génère les annotations d'une classe
+	 */
 	public String generateEntityAnnotations(Classifier clazz) {
 		return ClassifierGenerator.generateAnnotations(clazz).toString();
 	}

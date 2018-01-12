@@ -161,6 +161,9 @@ class LombokClassifierUtils{
 		return eqAndHashCode
 	}
 	
+	/**
+	 * retourne la valeur de l'attribut displayWith
+	 */
 	static def Boolean getLombokDisplayWith(NamedElement elem){
 		if(Utils.isAssociationTable(elem)){
 			 return Utils.getStereotypePropertyValue(elem, Utils.MODEL_ASSOCIATIONTABLE, LombokClassifierUtils.MODEL_LOMBOKDISPLAYWITH) as Boolean

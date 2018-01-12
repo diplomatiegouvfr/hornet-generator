@@ -572,7 +572,7 @@ public class PackageDatabaseScriptGenerator {
    * génère la définition d'un attribut de type entity
    */
   public static String generateEntityAttributeDefinition(final Property property, final Property id, final String additionnalName, final Classifier fromClass, final Boolean nullable) {
-    final String name = property.getName();
+    final String name = PropertyUtils.getDatabaseName(property, property.getName(), "");
     final String idName = PropertyUtils.getDatabaseName(id, id.getName(), additionnalName);
     final String propertyName = PropertyUtils.getDatabaseName(property, name, idName);
     StringConcatenation _builder = new StringConcatenation();

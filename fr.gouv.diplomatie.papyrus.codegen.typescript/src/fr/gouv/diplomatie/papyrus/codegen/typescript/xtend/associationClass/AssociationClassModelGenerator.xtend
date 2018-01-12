@@ -199,7 +199,7 @@ public class AssociationClassModelGenerator {
 	 * génère les attributs liés a un membre de type valued object
 	 */
 	static def generateValueObjectMemberAttributes(Property property, Classifier fromClass){
-		ClassifierModelGenerator.generateValueObjectAttributeDefinition(property,"",fromClass, true, false)
+		ClassifierModelGenerator.generateValueObjectAttributeDefinition(property,"", "",fromClass, true, false)
 	}
 	
 }

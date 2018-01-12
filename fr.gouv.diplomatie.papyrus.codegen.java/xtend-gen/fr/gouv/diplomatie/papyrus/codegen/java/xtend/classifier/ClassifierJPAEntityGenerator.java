@@ -135,6 +135,14 @@ public class ClassifierJPAEntityGenerator {
     _builder.append("import java.util.Set;");
     _builder.newLine();
     _builder.newLine();
+    _builder.append("import javax.persistence.AssociationOverride;");
+    _builder.newLine();
+    _builder.append("import javax.persistence.AssociationOverrides;");
+    _builder.newLine();
+    _builder.append("import javax.persistence.AttributeOverride;");
+    _builder.newLine();
+    _builder.append("import javax.persistence.AttributeOverrides;");
+    _builder.newLine();
     _builder.append("import javax.persistence.CascadeType;");
     _builder.newLine();
     _builder.append("import javax.persistence.CollectionTable;");
@@ -175,7 +183,13 @@ public class ClassifierJPAEntityGenerator {
     _builder.newLine();
     _builder.append("import javax.persistence.OneToOne;");
     _builder.newLine();
+    _builder.append("import javax.persistence.SequenceGenerator;");
+    _builder.newLine();
     _builder.append("import javax.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.NotNull;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Size;");
     _builder.newLine();
     CharSequence _generateImports = ClassifierJPAEntityGenerator.generateImports(clazz);
     _builder.append(_generateImports);
@@ -231,13 +245,22 @@ public class ClassifierJPAEntityGenerator {
       _builder.append("@Embeddable");
       return _builder.toString();
     }
+    Object schema = JavaClassifierUtils.getSchema(clazz);
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("@Entity");
     _builder_1.newLine();
     _builder_1.append("@Table(name = \"");
     String _tableName = ClassifierUtils.getTableName(clazz);
     _builder_1.append(_tableName);
-    _builder_1.append("\")");
+    _builder_1.append("\"");
+    {
+      if ((schema != null)) {
+        _builder_1.append(", schema = \"");
+        _builder_1.append(schema);
+        _builder_1.append("\"");
+      }
+    }
+    _builder_1.append(")");
     _builder_1.newLineIfNotEmpty();
     return _builder_1.toString();
   }
@@ -415,6 +438,7 @@ public class ClassifierJPAEntityGenerator {
       };
       final Property end = ((Property[])Conversions.unwrapArray(IterableExtensions.<Property>filter(clazz.getOwnedEnds(), _function), Property.class))[0];
       final Property idFrom = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(fromClass), Property.class))[0];
+      final String idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
       final EnumerationLiteralImpl fetchType = JavaPluginUtils.getFetchType(clazz);
       CharSequence _xifexpression = null;
       boolean _isEntity = Utils.isEntity(end.getType());
@@ -432,6 +456,7 @@ public class ClassifierJPAEntityGenerator {
           String _firstToUpperCase_1 = Utils.getFirstToUpperCase(end.getType().getName());
           String _plus_1 = (_name_1 + _firstToUpperCase_1);
           final String idToName = Utils.toSnakeCase(_plus_1);
+          final String idToDbName = PropertyUtils.getDatabaseName(idTo, idTo.getName(), "");
           StringConcatenation _builder = new StringConcatenation();
           _builder.newLine();
           _builder.append("@ManyToMany");
@@ -449,7 +474,7 @@ public class ClassifierJPAEntityGenerator {
           _builder.append("\", joinColumns=@JoinColumn(name=\"");
           _builder.append(idFromName);
           _builder.append("\", referencedColumnName=\"");
-          String _snakeCase = Utils.toSnakeCase(idFrom.getName());
+          String _snakeCase = Utils.toSnakeCase(idFromDbName);
           _builder.append(_snakeCase);
           _builder.append("\"),");
           _builder.newLineIfNotEmpty();
@@ -457,7 +482,7 @@ public class ClassifierJPAEntityGenerator {
           _builder.append("inverseJoinColumns=@JoinColumn(name=\"");
           _builder.append(idToName, "\t");
           _builder.append("\", referencedColumnName=\"");
-          String _snakeCase_1 = Utils.toSnakeCase(idTo.getName());
+          String _snakeCase_1 = Utils.toSnakeCase(idToDbName);
           _builder.append(_snakeCase_1, "\t");
           _builder.append("\"))");
           _builder.newLineIfNotEmpty();
@@ -488,10 +513,7 @@ public class ClassifierJPAEntityGenerator {
           _builder.append("_");
           String _snakeCase_1 = Utils.toSnakeCase(clazz.getName());
           _builder.append(_snakeCase_1);
-          _builder.append("\", joinColumns = @JoinColumn(name = \"");
-          String _snakeCase_2 = Utils.toSnakeCase(idFrom.getName());
-          _builder.append(_snakeCase_2);
-          _builder.append("\"))");
+          _builder.append("\")");
           _builder.newLineIfNotEmpty();
           String _name = clazz.getVisibility().getName();
           _builder.append(_name);
@@ -513,14 +535,14 @@ public class ClassifierJPAEntityGenerator {
             _builder_1.append("@ElementCollection");
             _builder_1.newLine();
             _builder_1.append("@CollectionTable(name = \"");
-            String _snakeCase_3 = Utils.toSnakeCase(fromClass.getName());
-            _builder_1.append(_snakeCase_3);
+            String _snakeCase_2 = Utils.toSnakeCase(fromClass.getName());
+            _builder_1.append(_snakeCase_2);
             _builder_1.append("_");
-            String _snakeCase_4 = Utils.toSnakeCase(clazz.getName());
-            _builder_1.append(_snakeCase_4);
+            String _snakeCase_3 = Utils.toSnakeCase(clazz.getName());
+            _builder_1.append(_snakeCase_3);
             _builder_1.append("\", joinColumns = @JoinColumn(name = \"");
-            String _snakeCase_5 = Utils.toSnakeCase(idFrom.getName());
-            _builder_1.append(_snakeCase_5);
+            String _snakeCase_4 = Utils.toSnakeCase(idFromDbName);
+            _builder_1.append(_snakeCase_4);
             _builder_1.append("\"))");
             _builder_1.newLineIfNotEmpty();
             String _name_2 = clazz.getVisibility().getName();
@@ -540,14 +562,14 @@ public class ClassifierJPAEntityGenerator {
             _builder_2.append("@ElementCollection");
             _builder_2.newLine();
             _builder_2.append("@CollectionTable(name = \"");
-            String _snakeCase_6 = Utils.toSnakeCase(fromClass.getName());
-            _builder_2.append(_snakeCase_6);
+            String _snakeCase_5 = Utils.toSnakeCase(fromClass.getName());
+            _builder_2.append(_snakeCase_5);
             _builder_2.append("_");
-            String _snakeCase_7 = Utils.toSnakeCase(clazz.getName());
-            _builder_2.append(_snakeCase_7);
+            String _snakeCase_6 = Utils.toSnakeCase(clazz.getName());
+            _builder_2.append(_snakeCase_6);
             _builder_2.append("\", joinColumns = @JoinColumn(name = \"");
-            String _snakeCase_8 = Utils.toSnakeCase(idFrom.getName());
-            _builder_2.append(_snakeCase_8);
+            String _snakeCase_7 = Utils.toSnakeCase(idFrom.getName());
+            _builder_2.append(_snakeCase_7);
             _builder_2.append("\"))");
             _builder_2.newLineIfNotEmpty();
             String _name_4 = clazz.getVisibility().getName();
@@ -644,12 +666,14 @@ public class ClassifierJPAEntityGenerator {
             String _firstToUpperCase_1 = Utils.getFirstToUpperCase(((Classifier) fromClass).getName());
             String _plus_1 = (_name_1 + _firstToUpperCase_1);
             final String idFromName = Utils.toSnakeCase(_plus_1);
+            final String idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
             Type _type_1 = property.getType();
             final Property idTo = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(((Classifier) _type_1)), Property.class))[0];
             String _name_2 = idTo.getName();
             String _firstToUpperCase_2 = Utils.getFirstToUpperCase(property.getName());
             String _plus_2 = (_name_2 + _firstToUpperCase_2);
             final String idToName = Utils.toSnakeCase(_plus_2);
+            final String idToDbName = PropertyUtils.getDatabaseName(idTo, idTo.getName(), "");
             StringConcatenation _builder = new StringConcatenation();
             _builder.append("@ManyToMany");
             {
@@ -666,7 +690,7 @@ public class ClassifierJPAEntityGenerator {
             _builder.append("\", joinColumns=@JoinColumn(name=\"");
             _builder.append(idFromName);
             _builder.append("\", referencedColumnName=\"");
-            String _snakeCase = Utils.toSnakeCase(idFrom.getName());
+            String _snakeCase = Utils.toSnakeCase(idFromDbName);
             _builder.append(_snakeCase);
             _builder.append("\"),");
             _builder.newLineIfNotEmpty();
@@ -674,7 +698,7 @@ public class ClassifierJPAEntityGenerator {
             _builder.append("inverseJoinColumns=@JoinColumn(name=\"");
             _builder.append(idToName, "\t");
             _builder.append("\", referencedColumnName=\"");
-            String _snakeCase_1 = Utils.toSnakeCase(idTo.getName());
+            String _snakeCase_1 = Utils.toSnakeCase(idToDbName);
             _builder.append(_snakeCase_1, "\t");
             _builder.append("\"))");
             _builder.newLineIfNotEmpty();
@@ -694,7 +718,7 @@ public class ClassifierJPAEntityGenerator {
             }
           }
           _builder_1.newLineIfNotEmpty();
-          _builder_1.append("@JoinColumn(name = \"");
+          _builder_1.append("//@JoinColumn(name = \"");
           String _databaseName = PropertyUtils.getDatabaseName(idTo_1, idTo_1.getName(), null);
           _builder_1.append(_databaseName);
           _builder_1.append("_");
@@ -750,10 +774,11 @@ public class ClassifierJPAEntityGenerator {
             boolean _isSequence = Utils.isSequence(property);
             if (_isSequence) {
               _builder_3.newLineIfNotEmpty();
-              _builder_3.append("@GeneratedValue(strategy=GenerationType.SEQUENCE)");
+              CharSequence _generateSequence = ClassifierJPAEntityGenerator.generateSequence(property, name, fromClass);
+              _builder_3.append(_generateSequence);
+              _builder_3.newLineIfNotEmpty();
             }
           }
-          _builder_3.newLineIfNotEmpty();
           {
             if (isEnum) {
               _builder_3.append("@Enumerated");
@@ -807,6 +832,45 @@ public class ClassifierJPAEntityGenerator {
     return _xblockexpression;
   }
   
+  public static CharSequence generateSequence(final Property property, final String name, final Classifier fromClass) {
+    CharSequence _xblockexpression = null;
+    {
+      final Object startWith = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH);
+      final Object incrementBy = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY);
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("//@SequenceGenerator(name=\"");
+      String _snakeCase = Utils.toSnakeCase(fromClass.getName());
+      _builder.append(_snakeCase);
+      _builder.append("_");
+      String _snakeCase_1 = Utils.toSnakeCase(name);
+      _builder.append(_snakeCase_1);
+      _builder.append("_generator\", initialValue=");
+      _builder.append(startWith);
+      _builder.append(", allocationSize=");
+      _builder.append(incrementBy);
+      _builder.append(", sequenceName=\"");
+      String _snakeCase_2 = Utils.toSnakeCase(fromClass.getName());
+      _builder.append(_snakeCase_2);
+      _builder.append("_");
+      String _snakeCase_3 = Utils.toSnakeCase(name);
+      _builder.append(_snakeCase_3);
+      _builder.append("_sequence\")");
+      _builder.newLineIfNotEmpty();
+      _builder.append("//@GeneratedValue(strategy=GenerationType.SEQUENCE, generator=\"");
+      String _snakeCase_4 = Utils.toSnakeCase(fromClass.getName());
+      _builder.append(_snakeCase_4);
+      _builder.append("_");
+      String _snakeCase_5 = Utils.toSnakeCase(name);
+      _builder.append(_snakeCase_5);
+      _builder.append("_generator\")");
+      _builder.newLineIfNotEmpty();
+      _builder.append("@GeneratedValue(strategy=GenerationType.IDENTITY)");
+      _builder.newLine();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
   public static CharSequence generateAssociationAnnotation(final Property property, final Classifier fromClass) {
     CharSequence _xblockexpression = null;
     {
@@ -827,10 +891,12 @@ public class ClassifierJPAEntityGenerator {
       String _firstToUpperCase_1 = Utils.getFirstToUpperCase(((Classifier) fromClass).getName());
       String _plus_1 = (_name_1 + _firstToUpperCase_1);
       final String idFromName = Utils.toSnakeCase(_plus_1);
+      final String idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
       String _name_2 = id.getName();
       String _firstToUpperCase_2 = Utils.getFirstToUpperCase(property.getName());
       String _plus_2 = (_name_2 + _firstToUpperCase_2);
       final String idToName = Utils.toSnakeCase(_plus_2);
+      final String idToDbName = PropertyUtils.getDatabaseName(id, id.getName(), "");
       CharSequence _xifexpression = null;
       if (fromMultiplicity) {
         CharSequence _xifexpression_1 = null;
@@ -851,7 +917,7 @@ public class ClassifierJPAEntityGenerator {
           _builder.append("\", joinColumns=@JoinColumn(name=\"");
           _builder.append(idFromName);
           _builder.append("\", referencedColumnName=\"");
-          String _snakeCase = Utils.toSnakeCase(idFrom.getName());
+          String _snakeCase = Utils.toSnakeCase(idFromDbName);
           _builder.append(_snakeCase);
           _builder.append("\"),");
           _builder.newLineIfNotEmpty();
@@ -859,7 +925,7 @@ public class ClassifierJPAEntityGenerator {
           _builder.append("inverseJoinColumns=@JoinColumn(name=\"");
           _builder.append(idToName, "\t");
           _builder.append("\", referencedColumnName=\"");
-          String _snakeCase_1 = Utils.toSnakeCase(id.getName());
+          String _snakeCase_1 = Utils.toSnakeCase(idToDbName);
           _builder.append(_snakeCase_1, "\t");
           _builder.append("\"))");
           _builder.newLineIfNotEmpty();
@@ -912,7 +978,7 @@ public class ClassifierJPAEntityGenerator {
           _builder_2.append("\", joinColumns=@JoinColumn(name=\"");
           _builder_2.append(idFromName);
           _builder_2.append("\", referencedColumnName=\"");
-          String _snakeCase_2 = Utils.toSnakeCase(idFrom.getName());
+          String _snakeCase_2 = Utils.toSnakeCase(idFromDbName);
           _builder_2.append(_snakeCase_2);
           _builder_2.append("\"),");
           _builder_2.newLineIfNotEmpty();
@@ -920,7 +986,7 @@ public class ClassifierJPAEntityGenerator {
           _builder_2.append("inverseJoinColumns=@JoinColumn(name=\"");
           _builder_2.append(idToName, "\t");
           _builder_2.append("\", referencedColumnName=\"");
-          String _snakeCase_3 = Utils.toSnakeCase(id.getName());
+          String _snakeCase_3 = Utils.toSnakeCase(idToDbName);
           _builder_2.append(_snakeCase_3, "\t");
           _builder_2.append("\", unique=true))");
           _builder_2.newLineIfNotEmpty();
@@ -966,6 +1032,7 @@ public class ClassifierJPAEntityGenerator {
       }
       String typeName = property.getType().getName();
       final Property id = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(fromClass), Property.class))[0];
+      final String idDbName = PropertyUtils.getDatabaseName(id, id.getName(), "");
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
       String _generateComments = Utils.generateComments(property);
@@ -985,7 +1052,7 @@ public class ClassifierJPAEntityGenerator {
           String _snakeCase_1 = Utils.toSnakeCase(name);
           _builder.append(_snakeCase_1);
           _builder.append("\", joinColumns = @JoinColumn(name = \"");
-          String _snakeCase_2 = Utils.toSnakeCase(id.getName());
+          String _snakeCase_2 = Utils.toSnakeCase(idDbName);
           _builder.append(_snakeCase_2);
           _builder.append("\"))");
           _builder.newLineIfNotEmpty();
@@ -998,6 +1065,15 @@ public class ClassifierJPAEntityGenerator {
           _builder.newLineIfNotEmpty();
           _builder.append("@Embedded");
           _builder.newLine();
+        }
+      }
+      {
+        boolean _isMultivalued_2 = property.isMultivalued();
+        boolean _not = (!_isMultivalued_2);
+        if (_not) {
+          CharSequence _generateVOOverrides = ClassifierJPAEntityGenerator.generateVOOverrides(property, name);
+          _builder.append(_generateVOOverrides);
+          _builder.newLineIfNotEmpty();
         }
       }
       String _name = property.getVisibility().getName();
@@ -1013,6 +1089,134 @@ public class ClassifierJPAEntityGenerator {
       _xblockexpression = _builder;
     }
     return _xblockexpression;
+  }
+  
+  /**
+   * génère les override pour les classe embeddable dans une autre classe
+   */
+  public static CharSequence generateVOOverrides(final Property property, final String name) {
+    CharSequence _xblockexpression = null;
+    {
+      Type _type = property.getType();
+      final Function1<Property, Boolean> _function = (Property attr) -> {
+        return Boolean.valueOf(((!Utils.isEntity(attr.getType())) && (!Utils.isValueObject(attr.getType()))));
+      };
+      final Iterable<Property> basicAttributes = IterableExtensions.<Property>filter(ClassifierUtils.getOwnedAttributes(((Classifier) _type)), _function);
+      Type _type_1 = property.getType();
+      final Function1<Property, Boolean> _function_1 = (Property attr) -> {
+        return Boolean.valueOf(Utils.isEntity(attr.getType()));
+      };
+      final Iterable<Property> entityAttributes = IterableExtensions.<Property>filter(ClassifierUtils.getOwnedAttributes(((Classifier) _type_1)), _function_1);
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("@AttributeOverrides({");
+      _builder.newLine();
+      _builder.append("\t");
+      final Function2<String, Property, String> _function_2 = (String acc, Property attribut) -> {
+        String _xifexpression = null;
+        boolean _equals = Objects.equal(acc, "");
+        if (_equals) {
+          StringConcatenation _builder_1 = new StringConcatenation();
+          CharSequence _generateAttributeOverride = ClassifierJPAEntityGenerator.generateAttributeOverride(attribut, name);
+          _builder_1.append(_generateAttributeOverride);
+          _xifexpression = (acc + _builder_1);
+        } else {
+          StringConcatenation _builder_2 = new StringConcatenation();
+          _builder_2.append(",");
+          _builder_2.newLine();
+          _builder_2.append("\t");
+          CharSequence _generateAttributeOverride_1 = ClassifierJPAEntityGenerator.generateAttributeOverride(attribut, name);
+          _builder_2.append(_generateAttributeOverride_1, "\t");
+          _xifexpression = (acc + _builder_2);
+        }
+        return _xifexpression;
+      };
+      String _fold = IterableExtensions.<Property, String>fold(basicAttributes, "", _function_2);
+      _builder.append(_fold, "\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append("})");
+      _builder.newLine();
+      _builder.append("@AssociationOverrides({");
+      _builder.newLine();
+      _builder.append("\t");
+      final Function2<String, Property, String> _function_3 = (String acc, Property attribut) -> {
+        String _xifexpression = null;
+        boolean _equals = Objects.equal(acc, "");
+        if (_equals) {
+          StringConcatenation _builder_1 = new StringConcatenation();
+          CharSequence _generateAssociationOverride = ClassifierJPAEntityGenerator.generateAssociationOverride(attribut, name);
+          _builder_1.append(_generateAssociationOverride);
+          _xifexpression = (acc + _builder_1);
+        } else {
+          StringConcatenation _builder_2 = new StringConcatenation();
+          _builder_2.append(",");
+          _builder_2.newLine();
+          _builder_2.append("\t");
+          CharSequence _generateAssociationOverride_1 = ClassifierJPAEntityGenerator.generateAssociationOverride(attribut, name);
+          _builder_2.append(_generateAssociationOverride_1, "\t");
+          _xifexpression = (acc + _builder_2);
+        }
+        return _xifexpression;
+      };
+      String _fold_1 = IterableExtensions.<Property, String>fold(entityAttributes, "", _function_3);
+      _builder.append(_fold_1, "\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append("})");
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateAttributeOverride(final Property property, final String attributName) {
+    CharSequence _xifexpression = null;
+    if (((!Utils.isEntity(property.getType())) && (!Utils.isValueObject(property.getType())))) {
+      CharSequence _xblockexpression = null;
+      {
+        final String propName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(property, property.getName(), ""));
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("@AttributeOverride(name=\"");
+        String _name = property.getName();
+        _builder.append(_name);
+        _builder.append("\",column = @Column(name = \"");
+        String _snakeCase = Utils.toSnakeCase(attributName);
+        _builder.append(_snakeCase);
+        _builder.append("_");
+        _builder.append(propName);
+        _builder.append("\"))");
+        _xblockexpression = _builder;
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      StringConcatenation _builder = new StringConcatenation();
+      return _builder.toString();
+    }
+    return _xifexpression;
+  }
+  
+  public static CharSequence generateAssociationOverride(final Property property, final String attributName) {
+    CharSequence _xifexpression = null;
+    boolean _isEntity = Utils.isEntity(property.getType());
+    if (_isEntity) {
+      CharSequence _xblockexpression = null;
+      {
+        final String propName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(property, property.getName(), ""));
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("@AssociationOverride(name=\"");
+        String _name = property.getName();
+        _builder.append(_name);
+        _builder.append("\",joinColumns = @JoinColumn(name = \"");
+        String _snakeCase = Utils.toSnakeCase(attributName);
+        _builder.append(_snakeCase);
+        _builder.append("_");
+        _builder.append(propName);
+        _builder.append("\"))");
+        _xblockexpression = _builder;
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      StringConcatenation _builder = new StringConcatenation();
+      return _builder.toString();
+    }
+    return _xifexpression;
   }
   
   public static String generateCompareTo(final Classifier clazz) {

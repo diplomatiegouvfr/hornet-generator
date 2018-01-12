@@ -327,7 +327,7 @@ public class PackageDatabaseScriptGenerator{
 	 * génère la définition d'un attribut de type entity
 	 */
 	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass, Boolean nullable){
-		val name = property.name
+		val name = PropertyUtils.getDatabaseName(property, property.name, "")
 		val idName = PropertyUtils.getDatabaseName(id, id.name, additionnalName)
 		val propertyName = PropertyUtils.getDatabaseName(property, name, idName)
 		return 
