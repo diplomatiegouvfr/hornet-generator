@@ -235,7 +235,7 @@ public class PackageDatabaseScriptGenerator{
 	
 	
 	static def generateStringLength(Property property){
-		val length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH )
+		val length = Utils.getAttributeLength(property)
 		if(length !== null && length != 0){
 			''' varying(«length»)'''
 		}else{
@@ -764,22 +764,22 @@ public class PackageDatabaseScriptGenerator{
 		if(owner instanceof Classifier){
 			var maxVal = '''NO MAXVALUE'''
 			var minVal = '''NO MINVALUE'''
-			val startWith = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH)
-			val inscrementBy = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY)
+			val startWith = Utils.getSequenceStartWith(property)
+			val inscrementBy = Utils.getSequenceIncrementBy(property)
 			
-			val hasMaxValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMAXVALUE)
-			val maxValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MAXVALUE)
+			val hasMaxValue = Utils.getSequenceHasMaxValue(property)
+			val maxValue = Utils.getSequenceMaxValue(property)
 			if(hasMaxValue == true || maxValue!= 0 ){
 				maxVal = '''MAXVALUE «maxValue»'''
 			}
-			val hasMinValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMINVALUE)
-			val minValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MINVALUE)
+			val hasMinValue = Utils.getSequenceHasMinValue(property)
+			val minValue = Utils.getSequenceMinValue(property)
 			if(hasMinValue == true || minValue != 0){
 				minVal = '''MINVALUE «minValue»'''
 			}
 			
-			val cache = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CACHE)
-			val isCycle = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CYCLE)
+			val cache = Utils.getSequenceCache(property)
+			val isCycle = Utils.getSequenceCycle(property)
 			var cycle = "NO CYCLE"
 			if(isCycle == true){
 				cycle = "CYCLE"
@@ -932,7 +932,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateAttributType(Property property){
 		var type = TypeUtils.getDatabaseType(property.type)
 		if(type == 'character'){
-			val length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH )
+			val length = Utils.getAttributeLength(property)
 			if(length === null || length == 0){
 				type = 'text'
 			}

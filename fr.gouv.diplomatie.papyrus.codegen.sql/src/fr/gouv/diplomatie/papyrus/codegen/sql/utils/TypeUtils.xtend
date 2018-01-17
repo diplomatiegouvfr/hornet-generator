@@ -88,6 +88,17 @@ class TypeUtils{
 	public static var MODEL_HORNETTYPE_DATABASETYPE = 'databaseType';
 
 	/**
+	 * retourne le type du code de l'enum
+	 */
+	static def getEnumType(Classifier type){
+		return "integer"
+	}
+	
+	/**                                                        *
+	 * ----------------- stereotype attributes ----------------*
+	 */
+	 
+	 /**
 	 * retourne le type dans la base de donnée
 	 */
 	static def getDatabaseType(Type type){
@@ -96,13 +107,6 @@ class TypeUtils{
 			return "character"
 		}
 		return databaseType
-	}
-	
-	/**
-	 * retourne le type du code de l'enum
-	 */
-	static def getEnumType(Classifier type){
-		return "integer"
 	}
 	
 }

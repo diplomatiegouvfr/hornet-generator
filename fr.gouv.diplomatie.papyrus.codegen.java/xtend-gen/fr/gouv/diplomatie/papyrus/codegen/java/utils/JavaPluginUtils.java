@@ -69,6 +69,7 @@
  */
 package fr.gouv.diplomatie.papyrus.codegen.java.utils;
 
+import com.google.common.base.Objects;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.NamedElement;
@@ -81,6 +82,69 @@ public class JavaPluginUtils {
   public static String MODEL_NATURALORDER = "naturalOrder";
   
   public static String MODEL_SCHEMA = "schema";
+  
+  public static String MODEL_ATTRIBUTE_SHOULDBENULL = "shouldBeNull";
+  
+  public static String MODEL_NUMERICTYPED = "numericTyped";
+  
+  public static String MODEL_NUMERICTYPED_MIN = "min";
+  
+  public static String MODEL_NUMERICTYPED_MAX = "max";
+  
+  public static String MODEL_NUMERICTYPED_NEGATIVE = "negative";
+  
+  public static String MODEL_NUMERICTYPED_NEGATIVEORZERO = "negativeOrZero";
+  
+  public static String MODEL_NUMERICTYPED_POSITIVE = "positive";
+  
+  public static String MODEL_NUMERICTYPED_POSITIVEORZERO = "positiveOrZero";
+  
+  public static String MODEL_NUMERICTYPED_DIGITS = "digits";
+  
+  public static String MODEL_NUMERICTYPED_DIGITSINTEGER = "digitsInteger";
+  
+  public static String MODEL_NUMERICTYPED_DIGITSFRACTION = "digitsFraction";
+  
+  public static String MODEL_NUMERICTYPED_DECIMALMIN = "decimalMin";
+  
+  public static String MODEL_NUMERICTYPED_DECIMALMAX = "decimalMax";
+  
+  public static String MODEL_BOOLEANTYPED = "booleanTyped";
+  
+  public static String MODEL_BOOLEANTYPED_ALWAYSTRUE = "alwaysTrue";
+  
+  public static String MODEL_BOOLEANTYPED_ALWAYSFALSE = "alwaysFalse";
+  
+  public static String MODEL_DATETYPED = "dateTyped";
+  
+  public static String MODEL_DATETYPED_FUTURE = "future";
+  
+  public static String MODEL_DATETYPED_PAST = "past";
+  
+  public static String MODEL_DATETYPED_FUTUREORPRESENT = "futureOrPresent";
+  
+  public static String MODEL_DATETYPED_PASTORPRESENT = "pastOrPresent";
+  
+  public static String MODEL_STRINGTYPED = "stringTyped";
+  
+  public static String MODEL_STRINGTYPED_CANBEEMPTY = "canBeEmpty";
+  
+  public static String MODEL_STRINGTYPED_PATTERN = "pattern";
+  
+  public static String MODEL_STRINGTYPED_SIZEMIN = "sizeMin";
+  
+  public static String MODEL_COLLECTION = "collection";
+  
+  public static String MODEL_COLLECTION_SIZEMIN = "sizeMin";
+  
+  public static String MODEL_COLLECTION_SIZEMAX = "sizeMax";
+  
+  /**
+   * teste si un element est de type naturalOrder
+   */
+  public static boolean isNaturalOrderField(final NamedElement elem) {
+    return Utils.hasStereotype(elem, JavaPluginUtils.MODEL_NATURALORDER);
+  }
   
   /**
    * retourne le fetchType de l'element ou null si celui ci n'en possède pas
@@ -117,10 +181,130 @@ public class JavaPluginUtils {
     }
   }
   
-  /**
-   * teste si un element est de type naturalOrder
-   */
-  public static boolean isNaturalOrderField(final NamedElement elem) {
-    return Utils.hasStereotype(elem, JavaPluginUtils.MODEL_NATURALORDER);
+  public static Object getShouldBeNull(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_ATTRIBUTE, JavaPluginUtils.MODEL_ATTRIBUTE_SHOULDBENULL);
+  }
+  
+  public static Object getAlwaysTrue(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_BOOLEANTYPED, JavaPluginUtils.MODEL_BOOLEANTYPED_ALWAYSTRUE);
+  }
+  
+  public static Object getAlwaysFalse(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_BOOLEANTYPED, JavaPluginUtils.MODEL_BOOLEANTYPED_ALWAYSFALSE);
+  }
+  
+  public static Object getFuture(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_DATETYPED, JavaPluginUtils.MODEL_DATETYPED_FUTURE);
+  }
+  
+  public static Object getFutureOrPresent(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_DATETYPED, JavaPluginUtils.MODEL_DATETYPED_FUTUREORPRESENT);
+  }
+  
+  public static Object getPast(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_DATETYPED, JavaPluginUtils.MODEL_DATETYPED_PAST);
+  }
+  
+  public static Object getPastOrPresent(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_DATETYPED, JavaPluginUtils.MODEL_DATETYPED_PASTORPRESENT);
+  }
+  
+  public static Object getCollectionSizeMin(final NamedElement elem) {
+    final Object hasSizeMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasSizeMin");
+    boolean _equals = Objects.equal(hasSizeMin, Boolean.valueOf(true));
+    if (_equals) {
+      return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, JavaPluginUtils.MODEL_COLLECTION_SIZEMIN);
+    }
+    return null;
+  }
+  
+  public static Object getCollectionSizeMax(final NamedElement elem) {
+    final Object hasSizeMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasSizeMax");
+    boolean _equals = Objects.equal(hasSizeMax, Boolean.valueOf(true));
+    if (_equals) {
+      return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, JavaPluginUtils.MODEL_COLLECTION_SIZEMAX);
+    }
+    return null;
+  }
+  
+  public static Object getCanBeEmpty(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_STRINGTYPED, JavaPluginUtils.MODEL_STRINGTYPED_CANBEEMPTY);
+  }
+  
+  public static Object getPattern(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_STRINGTYPED, JavaPluginUtils.MODEL_STRINGTYPED_PATTERN);
+  }
+  
+  public static Object getSizeMin(final NamedElement elem) {
+    final Object hasSizeMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasSizeMin");
+    boolean _equals = Objects.equal(hasSizeMin, Boolean.valueOf(true));
+    if (_equals) {
+      return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_STRINGTYPED, JavaPluginUtils.MODEL_STRINGTYPED_SIZEMIN);
+    }
+    return null;
+  }
+  
+  public static Object getMin(final NamedElement elem) {
+    final Object hasMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasMin");
+    boolean _equals = Objects.equal(hasMin, Boolean.valueOf(true));
+    if (_equals) {
+      return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_MIN);
+    }
+    return null;
+  }
+  
+  public static Object getMax(final NamedElement elem) {
+    final Object hasMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasMax");
+    boolean _equals = Objects.equal(hasMax, Boolean.valueOf(true));
+    if (_equals) {
+      return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_MAX);
+    }
+    return null;
+  }
+  
+  public static Object getNegative(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_NEGATIVE);
+  }
+  
+  public static Object getNegativeOrZero(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_NEGATIVEORZERO);
+  }
+  
+  public static Object getPositive(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_POSITIVE);
+  }
+  
+  public static Object getPositiveOrZero(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_POSITIVEORZERO);
+  }
+  
+  public static Object getDigits(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_DIGITS);
+  }
+  
+  public static Object getDigitsFraction(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_DIGITSFRACTION);
+  }
+  
+  public static Object getDigitsInteger(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_DIGITSINTEGER);
+  }
+  
+  public static Object getDecimalMin(final NamedElement elem) {
+    final Object hasDecimalMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasDecimalMin");
+    boolean _equals = Objects.equal(hasDecimalMin, Boolean.valueOf(true));
+    if (_equals) {
+      return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_DECIMALMIN);
+    }
+    return null;
+  }
+  
+  public static Object getDecimalMax(final NamedElement elem) {
+    final Object hasDecimalMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasDecimalMax");
+    boolean _equals = Objects.equal(hasDecimalMax, Boolean.valueOf(true));
+    if (_equals) {
+      return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_DECIMALMAX);
+    }
+    return null;
   }
 }

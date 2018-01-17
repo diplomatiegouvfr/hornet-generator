@@ -378,7 +378,7 @@ public class PackageDatabaseScriptGenerator {
   public static CharSequence generateStringLength(final Property property) {
     CharSequence _xblockexpression = null;
     {
-      final Object length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH);
+      final Object length = Utils.getAttributeLength(property);
       CharSequence _xifexpression = null;
       if (((length != null) && (!Objects.equal(length, Integer.valueOf(0))))) {
         StringConcatenation _builder = new StringConcatenation();
@@ -1690,26 +1690,26 @@ public class PackageDatabaseScriptGenerator {
           StringConcatenation _builder_1 = new StringConcatenation();
           _builder_1.append("NO MINVALUE");
           String minVal = _builder_1.toString();
-          final Object startWith = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH);
-          final Object inscrementBy = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY);
-          final Object hasMaxValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMAXVALUE);
-          final Object maxValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MAXVALUE);
+          final Object startWith = Utils.getSequenceStartWith(property);
+          final Object inscrementBy = Utils.getSequenceIncrementBy(property);
+          final Object hasMaxValue = Utils.getSequenceHasMaxValue(property);
+          final Object maxValue = Utils.getSequenceMaxValue(property);
           if ((Objects.equal(hasMaxValue, Boolean.valueOf(true)) || (!Objects.equal(maxValue, Integer.valueOf(0))))) {
             StringConcatenation _builder_2 = new StringConcatenation();
             _builder_2.append("MAXVALUE ");
             _builder_2.append(maxValue);
             maxVal = _builder_2.toString();
           }
-          final Object hasMinValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMINVALUE);
-          final Object minValue = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MINVALUE);
+          final Object hasMinValue = Utils.getSequenceHasMinValue(property);
+          final Object minValue = Utils.getSequenceMinValue(property);
           if ((Objects.equal(hasMinValue, Boolean.valueOf(true)) || (!Objects.equal(minValue, Integer.valueOf(0))))) {
             StringConcatenation _builder_3 = new StringConcatenation();
             _builder_3.append("MINVALUE ");
             _builder_3.append(minValue);
             minVal = _builder_3.toString();
           }
-          final Object cache = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CACHE);
-          final Object isCycle = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CYCLE);
+          final Object cache = Utils.getSequenceCache(property);
+          final Object isCycle = Utils.getSequenceCycle(property);
           String cycle = "NO CYCLE";
           boolean _equals = Objects.equal(isCycle, Boolean.valueOf(true));
           if (_equals) {
@@ -2055,7 +2055,7 @@ public class PackageDatabaseScriptGenerator {
     Object type = TypeUtils.getDatabaseType(property.getType());
     boolean _equals = Objects.equal(type, "character");
     if (_equals) {
-      final Object length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH);
+      final Object length = Utils.getAttributeLength(property);
       if (((length == null) || Objects.equal(length, Integer.valueOf(0)))) {
         type = "text";
       }

@@ -298,16 +298,6 @@ public class ClassifierMetierClassGenerator {
 	 * génère un attribut de type value Object
 	 */
 	static def generateValueObjectAttribute(Property property, String additionnalName){
-		/*val name = Utils.addAdditionnalName(additionnalName, property.name)
-		val type = property.type
-		if(type instanceof Classifier){
-			if(!property.multivalued){
-				return '''«type.generateAttributes(name)»
-				'''
-			}
-		}else{
-			''''''
-		}*/
 		val type = property.type
 		if(type instanceof Classifier){
 			val propName = Utils.addAdditionnalName(additionnalName, property.name)

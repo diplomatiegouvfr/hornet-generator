@@ -162,37 +162,6 @@ public class AssociationClassMetierClassGenerator{
 	 }
 	 
 	 /**
-	 * génère les imports liés aux types des attributs
-	 */
-	/*  static def generateAttributesImports(Classifier clazz){
-	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
-			(Utils.isEntity(attribut.type))
-		]
-		val attributesValueObject =ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
-			(Utils.isValueObject(attribut.type))
-		]
-		var types = newArrayList()
-		for(attribut : attributes){
-			if(!types.contains(attribut.type)){
-				types.add(attribut.type)
-			}
-		}
-		'''
-		«types.fold("")[acc, type |
-			acc +  '''
-			import { «ClassifierUtils.getMetierClassName(type as Classifier)» } from "«ClassifierUtils.getMetierClassPath(type as Classifier)»";
-			'''
-		]»
-		«attributesValueObject.fold("")[acc, attribut |
-			var type = attribut.type
-			if(type instanceof Classifier){
-				acc+ '''«type.generateAttributesImports»'''
-			}
-		]»
-		'''
-	 }*/
-	 
-	 /**
 	  * génère les attributs
 	  */
 	 static def generateAttributes(AssociationClass clazz, String additionnalName){
@@ -203,21 +172,6 @@ public class AssociationClassMetierClassGenerator{
 	 	]»
 	 	'''
 	 }
-	 
-	 /*static def generatePropertyAttributes(Property property, String additionnalName){
-	 	val type = property.type
-	 	if(type instanceof Classifier){
-		 	if(Utils.isEntity(type)){
-		 		'''
-		 		«property.generateRefAttributes(additionnalName)»
-		 		'''
-		 	}else if (Utils.isValueObject(type)){
-		 		'''
-		 		«type.generateAttributes(Utils.addAdditionnalName(additionnalName, property.name))»
-		 		'''
-		 	}
-	 	}
-	 }*/
 	 
 	 static def generateAttributes(Classifier clazz, String additionnalName){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
@@ -254,14 +208,6 @@ public class AssociationClassMetierClassGenerator{
 	 * génère un attribut de type value Object
 	 */
 	static def generateValueObjectAttribute(Property property, String additionnalName){
-		/*val name = Utils.addAdditionnalName(additionnalName, property.name)
-		val type = property.type
-		if(type instanceof Classifier){
-			return '''«type.generateAttributes(name)»
-			'''
-		}else{
-			''''''
-		}*/
 		val type = property.type
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		if(type instanceof Classifier){
@@ -346,17 +292,6 @@ public class AssociationClassMetierClassGenerator{
 		«Utils.getFirstToLowerCase(name)»: «TypeUtils.getTypescriptType(property.type)»;
 		'''
 	}
-	 
-	/* static def generateRefAttributes(Property property, String additionnalName){
-	 	val type = property.type
-		if(type instanceof Classifier){
-			'''
-			«property.generateRefAttribute(additionnalName)»
-			'''
-		}else{
-			''''''
-		}
-	 }*/
 	 
 	 static def generateRefAttribute(Property property, String additionnalName){
 		val name = Utils.addAdditionnalName(additionnalName, property.name)

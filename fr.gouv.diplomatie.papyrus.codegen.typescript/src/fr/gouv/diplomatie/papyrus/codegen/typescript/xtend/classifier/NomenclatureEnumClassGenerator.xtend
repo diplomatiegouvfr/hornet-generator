@@ -114,8 +114,8 @@ public class  NomenclatureEnumClassGenerator{
 	}
 	
 	static def generateValue(Property value){
-		val code = Utils.getStereotypePropertyValue(value as NamedElement, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
-		val libelle = Utils.getStereotypePropertyValue(value as NamedElement, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE)
+		val code = Utils.getNomenclatureCode(value)
+		val libelle = Utils.getNomenclatureLibelle(value)
 		if(code !== null){
 			'''«libelle» = «code»'''
 		}else{

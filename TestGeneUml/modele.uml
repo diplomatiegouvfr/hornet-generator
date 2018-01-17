@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:hornetMetamodele="http:///schemas/hornetMetamodele/_V-et4PUcEeeO0fw-o-XwRw/135" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/hornetMetamodele/_V-et4PUcEeeO0fw-o-XwRw/135 ../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_V-fU8PUcEeeO0fw-o-XwRw">
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:hornetMetamodele="http:///schemas/hornetMetamodele/_vYlsgPrJEeeKLLjLjITMPg/170" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/hornetMetamodele/_vYlsgPrJEeeKLLjLjITMPg/170 ../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_vYm6oPrJEeeKLLjLjITMPg">
   <uml:Model xmi:id="_FXdDAHdhEeeM2-35BsQdHA" name="modele">
     <packagedElement xmi:type="uml:Association" xmi:id="_whkHUHdiEeeM2-35BsQdHA" name="laVille" memberEnd="_who_0HdiEeeM2-35BsQdHA _whpm4XdiEeeM2-35BsQdHA">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_whmjkHdiEeeM2-35BsQdHA" source="org.eclipse.papyrus">
@@ -136,7 +136,7 @@
           <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_OLWJoJxEEee8yqBcJknfXg"/>
         </ownedAttribute>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_7ZLiYHdoEeeM2-35BsQdHA" name="fonction">
-          <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_OLWJoJxEEee8yqBcJknfXg"/>
+          <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_HfNo0JxEEee8yqBcJknfXg"/>
         </ownedAttribute>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_pUVAYHdpEeeM2-35BsQdHA" name="proTelFixe">
           <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_OLWJoJxEEee8yqBcJknfXg"/>
@@ -292,7 +292,7 @@
           <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_OLWJoJxEEee8yqBcJknfXg"/>
         </ownedAttribute>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_jA7h8HdkEeeM2-35BsQdHA" name="descr">
-          <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_OLWJoJxEEee8yqBcJknfXg"/>
+          <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_HfNo0JxEEee8yqBcJknfXg"/>
         </ownedAttribute>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_u5MJYHdkEeeM2-35BsQdHA" name="dateCreat">
           <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_LrifUJxEEee8yqBcJknfXg"/>
@@ -311,6 +311,9 @@
         </ownedAttribute>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_QmBQYHdlEeeM2-35BsQdHA" name="auteurSupp">
           <type xmi:type="uml:PrimitiveType" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/hornetLibrary.uml#_OLWJoJxEEee8yqBcJknfXg"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_0dNcAPoQEeeKLLjLjITMPg" name="test">
+          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EBoolean"/>
         </ownedAttribute>
       </packagedElement>
       <packagedElement xmi:type="uml:Class" xmi:id="_rTWm8HdrEeeM2-35BsQdHA" name="Role">
@@ -419,15 +422,15 @@
       <appliedProfile xmi:type="uml:Profile" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#ActionLanguage"/>
     </profileApplication>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0gz1kODVEeeIm77rkA_Dbw">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Bxbo8PUgEeeEX526RQAvJQ" source="PapyrusVersion">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Bxbo8fUgEeeEX526RQAvJQ" key="Version" value="0.0.136"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Bxbo8vUgEeeEX526RQAvJQ" key="Comment" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Bxbo8_UgEeeEX526RQAvJQ" key="Copyright" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Bxbo9PUgEeeEX526RQAvJQ" key="Date" value="2018-01-09"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Bxbo9fUgEeeEX526RQAvJQ" key="Author" value=""/>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_1YlgEPrJEeeKLLjLjITMPg" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_1YlgEfrJEeeKLLjLjITMPg" key="Version" value="0.0.171"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_1YlgEvrJEeeKLLjLjITMPg" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_1YlgE_rJEeeKLLjLjITMPg" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_1YlgFPrJEeeKLLjLjITMPg" key="Date" value="2018-01-16"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_1YlgFfrJEeeKLLjLjITMPg" key="Author" value=""/>
       </eAnnotations>
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0g0coODVEeeIm77rkA_Dbw" source="http://www.eclipse.org/uml2/2.0.0/UML">
-        <references xmi:type="ecore:EPackage" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_V-fU8PUcEeeO0fw-o-XwRw"/>
+        <references xmi:type="ecore:EPackage" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_vYm6oPrJEeeKLLjLjITMPg"/>
       </eAnnotations>
       <appliedProfile xmi:type="uml:Profile" href="../fr.gouv.diplomatie.papyrus.metamodele/resources/metamodele/metamodele.profile.uml#_eobYEHadEeegdZhmvUhwtQ"/>
     </profileApplication>
@@ -506,7 +509,7 @@
   <hornetMetamodele:attribute xmi:id="_uekJ0ODWEeeIm77rkA_Dbw" base_Property="_RHlh0HdkEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>
   <hornetMetamodele:keyAttribute xmi:id="_wCW30ODWEeeIm77rkA_Dbw" base_Property="_bM0FYHdkEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY" columnName="test_id"/>
   <hornetMetamodele:sequence xmi:id="_wEY4IODWEeeIm77rkA_Dbw" base_Property="_bM0FYHdkEeeM2-35BsQdHA"/>
-  <hornetMetamodele:attribute xmi:id="_wx4QQODWEeeIm77rkA_Dbw" base_Property="_fqi08HdkEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>
+  <hornetMetamodele:attribute xmi:id="_wx4QQODWEeeIm77rkA_Dbw" base_Property="_fqi08HdkEeeM2-35BsQdHA" length="10" lombokDisplayWith="true" fetchType="LAZY" hasLength="true"/>
   <hornetMetamodele:attribute xmi:id="_xNZuoODWEeeIm77rkA_Dbw" base_Property="_jA7h8HdkEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>
   <hornetMetamodele:attribute xmi:id="_x4NmMODWEeeIm77rkA_Dbw" base_Property="_u5MJYHdkEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>
   <hornetMetamodele:attribute xmi:id="_yTlTkODWEeeIm77rkA_Dbw" base_Property="_yM7LAHdkEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>
@@ -532,4 +535,14 @@
   <hornetMetamodele:naturalOrder xmi:id="_PfExUOcBEeerk-CjmVwOmQ" base_Property="_QAfo0HdiEeeM2-35BsQdHA"/>
   <hornetMetamodele:application xmi:id="_Hzt1YPbqEeenzqnJmaxMgw" base_Package="_FXdDAHdhEeeM2-35BsQdHA" rootPackage="fr.gouv.diplomatie.applitutoriel"/>
   <hornetMetamodele:domain xmi:id="_ujZyQPbqEeenzqnJmaxMgw" base_Package="_BMtFIPbqEeenzqnJmaxMgw"/>
+  <hornetMetamodele:stringTyped xmi:id="_tyMP8PnYEeeaQPhabSAdtQ" canBeEmpty="false" pattern="test" sizeMin="1" base_Property="_VEMMMHdiEeeM2-35BsQdHA" hasSizeMin="true"/>
+  <hornetMetamodele:booleanTyped xmi:id="_urAHQPnYEeeaQPhabSAdtQ" alwaysFalse="true" base_Property="_cf_IAHdlEeeM2-35BsQdHA"/>
+  <hornetMetamodele:dateTyped xmi:id="_v4oYAPnYEeeaQPhabSAdtQ" past="true" base_Property="_zfDkcHdoEeeM2-35BsQdHA"/>
+  <hornetMetamodele:numericTyped xmi:id="_0huDAPnYEeeaQPhabSAdtQ" min="1" positive="true" base_Property="_7ZLiYHdoEeeM2-35BsQdHA" hasMin="true"/>
+  <hornetMetamodele:collection xmi:id="_5A5kEPnYEeeaQPhabSAdtQ" base_Property="_HF3AgHhcEeeOuq4-sYhnIw"/>
+  <hornetMetamodele:dateTyped xmi:id="_3jiigPoKEee3IMi3t_2yxg" future="true" base_Property="_EeVs4HdlEeeM2-35BsQdHA"/>
+  <hornetMetamodele:stringTyped xmi:id="_4vcU8PoKEee3IMi3t_2yxg" canBeEmpty="false" pattern="a.*" sizeMin="2" base_Property="_fqi08HdkEeeM2-35BsQdHA"/>
+  <hornetMetamodele:numericTyped xmi:id="_9uOjIPoKEee3IMi3t_2yxg" digits="true" digitsInteger="1" digitsFraction="10" decimalMin="1.11" decimalMax="3.15" base_Property="_jA7h8HdkEeeM2-35BsQdHA"/>
+  <hornetMetamodele:booleanTyped xmi:id="_2QGV8PoQEeeKLLjLjITMPg" alwaysTrue="true" base_Property="_0dNcAPoQEeeKLLjLjITMPg"/>
+  <hornetMetamodele:attribute xmi:id="_2-qsIPoQEeeKLLjLjITMPg" base_Property="_0dNcAPoQEeeKLLjLjITMPg"/>
 </xmi:XMI>

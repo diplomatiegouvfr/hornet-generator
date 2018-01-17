@@ -86,6 +86,10 @@ class TypeUtils{
 	
 	public static var MODEL_HORNETTYPE_JAVATYPE = 'javaType';
 	
+	/**                                                        *
+	 * ----------------- stereotype attributes ----------------*
+	*/
+	
 	/**
 	 * retourne le type sequelize
 	 */

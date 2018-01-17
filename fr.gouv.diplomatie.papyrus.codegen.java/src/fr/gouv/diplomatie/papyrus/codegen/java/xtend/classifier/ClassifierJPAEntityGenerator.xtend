@@ -153,7 +153,25 @@ public class ClassifierJPAEntityGenerator {
 		import javax.persistence.OneToOne;
 		import javax.persistence.SequenceGenerator;
 		import javax.persistence.Table;
+		import javax.validation.constraints.AssertTrue;
+		import javax.validation.constraints.AssertFalse;
+		import javax.validation.constraints.DecimalMax;
+		import javax.validation.constraints.DecimalMin;
+		import javax.validation.constraints.Digits;
+		import javax.validation.constraints.Future;
+		import javax.validation.constraints.FutureOrPresent;
+		import javax.validation.constraints.Min;
+		import javax.validation.constraints.Max;
+		import javax.validation.constraints.Negative;
+		import javax.validation.constraints.NegativeOrZero;
+		import javax.validation.constraints.NotEmpty;
 		import javax.validation.constraints.NotNull;
+		import javax.validation.constraints.Null;
+		import javax.validation.constraints.Past;
+		import javax.validation.constraints.PastOrPresent;
+		import javax.validation.constraints.Pattern;
+		import javax.validation.constraints.Positive;
+		import javax.validation.constraints.PositiveOrZero;
 		import javax.validation.constraints.Size;
 		«clazz.generateImports»
 		
@@ -423,18 +441,13 @@ public class ClassifierJPAEntityGenerator {
 		val isId = PropertyUtils.isID(property)
 		val columnName = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
 		
-		var lengthValue = ""
-		val length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH )
-		if(length !== null && length != 0){
-			lengthValue = '''@Size(max=«length»)'''
-		}
-		
 		var isAsso = property.association !== null && Utils.isEntity(property.type)
 		
 		'''
 		
 		«property.generateAGAnnotations»
 		«Utils.generateComments(property)»«property.generateAGAnnotations»
+		«property.generateTypeAnnotation»
 		«IF property.isMultivalued && !Utils.isEntity(property.type)»
 		@ElementCollection
 «««		@CollectionTable(name = "«Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(name)»"«IF ! Utils.isValueObject(fromClass)», joinColumns = @JoinColumn(name = "«Utils.toSnakeCase(id.name)»")«ENDIF»)
@@ -449,7 +462,6 @@ public class ClassifierJPAEntityGenerator {
 		«property.generateAssociationAnnotation(fromClass)»
 		«ELSE»
 		«IF nullable == false»@NotNull«ENDIF»
-		«IF lengthValue != ""»«lengthValue»«ENDIF»
 		@Column(name = "«columnName»")
 		«ENDIF»«ENDIF»
 		«property.visibility.getName» «array»«typeName»«endArray» «name»;
@@ -457,8 +469,8 @@ public class ClassifierJPAEntityGenerator {
 	}
 	
 	static def generateSequence(Property property, String name, Classifier fromClass){
-		val startWith = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH)
-		val incrementBy = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY)
+		val startWith = Utils.getSequenceStartWith(property)
+		val incrementBy = Utils.getSequenceIncrementBy(property)
 		
 		'''
 		//@SequenceGenerator(name="«Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(name)»_generator", initialValue=«startWith», allocationSize=«incrementBy», sequenceName="«Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(name)»_sequence")
@@ -546,6 +558,163 @@ public class ClassifierJPAEntityGenerator {
 		«property.visibility.getName» «array»«typeName»«endArray» «name»;
 		'''
 	}
+	
+	static def generateTypeAnnotation(Property property){
+		val shouldbeNull = JavaPluginUtils.getShouldBeNull(property)
+		var retour =
+		'''
+		«IF shouldbeNull == true»@Null«ENDIF»
+		'''
+		
+		if (Utils.hasStereotype(property, JavaPluginUtils.MODEL_BOOLEANTYPED)){
+			retour += 
+			'''
+			«property.generateBooleanTypedAnnotation»
+			'''
+		}
+		if(Utils.hasStereotype(property, JavaPluginUtils.MODEL_DATETYPED)){
+			retour += 
+			'''
+			«property.generateDateTypedAnnotation»
+			'''
+		}
+		if(Utils.hasStereotype(property, JavaPluginUtils.MODEL_STRINGTYPED)){
+			retour += 
+			'''
+			«property.generatStringTypedAnnotation»
+			'''
+		}
+		if(Utils.hasStereotype(property, JavaPluginUtils.MODEL_NUMERICTYPED)){
+			retour += 
+			'''
+			«property.generateNumericTypedAnnotation»
+			'''
+		}
+		if(Utils.hasStereotype(property, JavaPluginUtils.MODEL_COLLECTION)){
+			retour += 
+			'''
+			«property.generateCollectionAnnotation»
+			'''
+		}
+		
+		return retour
+	}
+	
+	static def generateBooleanTypedAnnotation(Property property){
+		val alwaysTrue = JavaPluginUtils.getAlwaysTrue(property)
+		val alwaysFalse = JavaPluginUtils.getAlwaysFalse(property)
+		'''
+		«IF alwaysTrue == true»
+		@AssertTrue
+		«ELSEIF alwaysFalse == true»
+		@AssertFalse
+		«ENDIF»
+		'''
+	}
+	
+	static def generateDateTypedAnnotation(Property property){
+		val future = JavaPluginUtils.getFuture(property)
+		val futureorPresent = JavaPluginUtils.getFutureOrPresent(property)
+		val past = JavaPluginUtils.getPast(property)
+		val pastOrPresent = JavaPluginUtils.getPastOrPresent(property)
+		
+		'''
+		«IF future == true»
+		@Future
+		«ELSEIF futureorPresent == true»
+		@FutureOrPresent
+		«ELSEIF past == true»
+		@Past
+		«ELSEIF pastOrPresent == true»
+		@PastOrPresent
+		«ENDIF»
+		'''
+	}
+	
+	static def generatStringTypedAnnotation(Property property){
+		val canBeEmpty = JavaPluginUtils.getCanBeEmpty(property)
+		val pattern = JavaPluginUtils.getPattern(property)
+		val sizeMin = JavaPluginUtils.getSizeMin(property)
+		val length = Utils.getAttributeLength(property)
+		'''
+		«IF canBeEmpty == false»
+		@NotEmpty
+		«ENDIF»
+		«IF pattern !== null»
+		@Pattern(regexp = "«pattern»")
+		«ENDIF»
+		«IF sizeMin !== null && length !== null»
+		@Size( min = «sizeMin», max = «length»)
+		«ELSEIF sizeMin !== null»
+		@Size( min = «sizeMin»)
+		«ELSEIF length !== null»
+		@Size( max = «length»)
+		«ENDIF»
+		'''
+	}
+	
+	static def generateNumericTypedAnnotation(Property property){
+		val min = JavaPluginUtils.getMin(property)
+		val max = JavaPluginUtils.getMax(property)
+		val negative = JavaPluginUtils.getNegative(property)
+		val negativeOrZero = JavaPluginUtils.getNegativeOrZero(property)
+		val positive = JavaPluginUtils.getPositive(property)
+		val positiveOrZero = JavaPluginUtils.getPositiveOrZero(property)
+		val digits = JavaPluginUtils.getDigits(property)
+		val digitsInteger = JavaPluginUtils.getDigitsInteger(property)
+		val digitsFraction = JavaPluginUtils.getDigitsFraction(property)
+		val decimalMin = JavaPluginUtils.getDecimalMin(property)
+		val decimalMax = JavaPluginUtils.getDecimalMax(property)
+		
+		'''
+		«IF min !== null»
+		@Min(«min»)
+		«ENDIF»
+		«IF max !== null»
+		@Max(«max»)
+		«ENDIF»
+		«IF negative == true»
+		@Negative
+		«ELSEIF negativeOrZero == true»
+		@NegativeOrZero
+		«ELSEIF positive == true»
+		@Positive
+		«ELSEIF positiveOrZero == true»
+		@PositiveOrZero
+		«ENDIF»
+		«IF digits == true»
+		«IF digitsInteger !== null && digitsFraction !== null»
+		@Digits(integer = «digitsInteger», fraction = «digitsFraction»)
+		«ELSEIF digitsInteger !== null»
+		@Digits(integer = «digitsInteger»)
+		«ELSEIF digitsFraction !== null»
+		@Digits(fraction = «digitsFraction»)
+		«ENDIF»
+		«ENDIF»
+		«IF decimalMin !== null»
+		@DecimalMin("«decimalMin»")
+		«ENDIF»
+		«IF decimalMax !== null»
+		@DecimalMax("«decimalMax»")
+		«ENDIF»
+		'''
+	}
+	
+	static def generateCollectionAnnotation(Property property){
+		val sizeMin = JavaPluginUtils.getCollectionSizeMin(property)
+		val sizeMax = JavaPluginUtils.getCollectionSizeMax(property)
+		
+		'''
+		«IF sizeMin !== null && sizeMax !== null»
+		@Size( min = «sizeMin», max = «sizeMax»)
+		«ELSEIF sizeMin !== null»
+		@Size( min = «sizeMin»)
+		«ELSEIF sizeMax !== null»
+		@Size( max = «sizeMax»)
+		«ENDIF»
+		'''
+	}
+	
 	
 	/**
 	 * génère les override pour les classe embeddable dans une autre classe

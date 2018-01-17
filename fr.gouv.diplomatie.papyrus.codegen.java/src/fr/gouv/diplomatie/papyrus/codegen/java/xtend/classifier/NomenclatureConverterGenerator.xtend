@@ -85,6 +85,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.java.generators.GeneratorUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import org.eclipse.uml2.uml.NamedElement
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 
 public class NomenclatureConverterGenerator {
 	
@@ -109,9 +110,6 @@ public class NomenclatureConverterGenerator {
 	}
 	
 	static def generateConvertToDatabaseColumnMethod(Classifier clazz){
-//		val value = ClassifierUtils.getOwnedAttributes(clazz).get(0)
-//		val code = Utils.getStereotypePropertyValue(value as NamedElement, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
-//		var hasCode = code !== null
 		'''
 		@Override
 		public Integer convertToDatabaseColumn(«clazz.name» attribute) {
@@ -138,8 +136,8 @@ public class NomenclatureConverterGenerator {
 	}
 	
 	static def generateCTDCCase(Property property, int defaultCode){
-		var code = Utils.getStereotypePropertyValue(property as NamedElement, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
-		var libelle = Utils.getStereotypePropertyValue(property as NamedElement, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE)
+		var code = Utils.getNomenclatureCode(property)
+		var libelle = Utils.getNomenclatureLibelle(property)
 		if(libelle === null){
 			libelle = property.name
 		}
@@ -180,8 +178,8 @@ public class NomenclatureConverterGenerator {
 	}
 	
 	static def generateCTEACase(Property property, int defaultCode){
-		var code = Utils.getStereotypePropertyValue(property as NamedElement, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
-		var libelle = Utils.getStereotypePropertyValue(property as NamedElement, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE)
+		var code = Utils.getNomenclatureCode(property)
+		var libelle = Utils.getNomenclatureLibelle(property)
 		if(libelle === null){
 			libelle = property.name
 		}

@@ -563,4 +563,87 @@ public class Utils {
     }
     return false;
   }
+  
+  /**
+   * retourne le code de la propriété de la nomenclature
+   */
+  public static Object getNomenclatureCode(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE);
+  }
+  
+  /**
+   * retourne le code de la propriété de la nomenclature
+   */
+  public static Object getNomenclatureLibelle(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE);
+  }
+  
+  public static Object getAttributeLength(final NamedElement elem) {
+    boolean _hasStereotype = Utils.hasStereotype(elem, Utils.MODEL_KEYATTRIBUTE);
+    if (_hasStereotype) {
+      final Object hasLength = Utils.getStereotypePropertyValue(elem, Utils.MODEL_KEYATTRIBUTE, "hasLength");
+      boolean _equals = Objects.equal(hasLength, Boolean.valueOf(true));
+      if (_equals) {
+        return Utils.getStereotypePropertyValue(elem, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH);
+      }
+      return null;
+    } else {
+      final Object hasLength_1 = Utils.getStereotypePropertyValue(elem, Utils.MODEL_ATTRIBUTE, "hasLength");
+      boolean _equals_1 = Objects.equal(hasLength_1, Boolean.valueOf(true));
+      if (_equals_1) {
+        return Utils.getStereotypePropertyValue(elem, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH);
+      }
+      return null;
+    }
+  }
+  
+  public static Object getSequenceStartWith(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH);
+  }
+  
+  public static Object getSequenceIncrementBy(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY);
+  }
+  
+  public static Object getSequenceHasMaxValue(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMAXVALUE);
+  }
+  
+  public static Object getSequenceMaxValue(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MAXVALUE);
+  }
+  
+  public static Object getSequenceHasMinValue(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMINVALUE);
+  }
+  
+  public static Object getSequenceMinValue(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MINVALUE);
+  }
+  
+  public static Object getSequenceCache(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CACHE);
+  }
+  
+  public static Object getSequenceCycle(final NamedElement elem) {
+    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CYCLE);
+  }
+  
+  public static Object getGenerated(final NamedElement elem) {
+    boolean _isEntity = Utils.isEntity(elem);
+    if (_isEntity) {
+      return Utils.getStereotypePropertyValue(elem, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED);
+    } else {
+      boolean _isNomenclature = Utils.isNomenclature(elem);
+      if (_isNomenclature) {
+        return Utils.getStereotypePropertyValue(elem, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_GENERATED);
+      } else {
+        boolean _isValueObject = Utils.isValueObject(elem);
+        if (_isValueObject) {
+          return Utils.getStereotypePropertyValue(elem, Utils.MODEL_VALUEOBJECT, Utils.MODEL_VALUEOBJECT_GENERATED);
+        }
+      }
+    }
+    return null;
+  }
 }

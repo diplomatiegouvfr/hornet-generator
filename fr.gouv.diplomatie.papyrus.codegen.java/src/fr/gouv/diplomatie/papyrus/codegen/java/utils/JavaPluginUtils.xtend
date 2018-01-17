@@ -89,6 +89,52 @@ public class JavaPluginUtils{
 	public static var MODEL_NATURALORDER = 'naturalOrder';
 	public static var MODEL_SCHEMA = 'schema';
 	
+	public static var MODEL_ATTRIBUTE_SHOULDBENULL = 'shouldBeNull'
+	
+	public static var MODEL_NUMERICTYPED = 'numericTyped'
+	public static var MODEL_NUMERICTYPED_MIN = 'min';
+	public static var MODEL_NUMERICTYPED_MAX = 'max';
+	public static var MODEL_NUMERICTYPED_NEGATIVE = 'negative';
+	public static var MODEL_NUMERICTYPED_NEGATIVEORZERO = 'negativeOrZero';
+	public static var MODEL_NUMERICTYPED_POSITIVE = 'positive';
+	public static var MODEL_NUMERICTYPED_POSITIVEORZERO = 'positiveOrZero';
+	public static var MODEL_NUMERICTYPED_DIGITS = 'digits';
+	public static var MODEL_NUMERICTYPED_DIGITSINTEGER = 'digitsInteger';
+	public static var MODEL_NUMERICTYPED_DIGITSFRACTION = 'digitsFraction';
+	public static var MODEL_NUMERICTYPED_DECIMALMIN = 'decimalMin';
+	public static var MODEL_NUMERICTYPED_DECIMALMAX = 'decimalMax';
+	
+	public static var MODEL_BOOLEANTYPED = 'booleanTyped';
+	public static var MODEL_BOOLEANTYPED_ALWAYSTRUE = 'alwaysTrue';
+	public static var MODEL_BOOLEANTYPED_ALWAYSFALSE = 'alwaysFalse';
+	
+	public static var MODEL_DATETYPED = 'dateTyped';
+	public static var MODEL_DATETYPED_FUTURE = 'future';
+	public static var MODEL_DATETYPED_PAST = 'past';
+	public static var MODEL_DATETYPED_FUTUREORPRESENT = 'futureOrPresent';
+	public static var MODEL_DATETYPED_PASTORPRESENT = 'pastOrPresent';
+	
+	public static var MODEL_STRINGTYPED = 'stringTyped';
+	public static var MODEL_STRINGTYPED_CANBEEMPTY= 'canBeEmpty';
+	public static var MODEL_STRINGTYPED_PATTERN = 'pattern';
+	public static var MODEL_STRINGTYPED_SIZEMIN = 'sizeMin';
+	
+	public static var MODEL_COLLECTION = 'collection';
+	public static var MODEL_COLLECTION_SIZEMIN = 'sizeMin';
+	public static var MODEL_COLLECTION_SIZEMAX = 'sizeMax';
+	
+	/**
+	 * teste si un element est de type naturalOrder
+	 */
+	static def isNaturalOrderField(NamedElement elem){
+		Utils.hasStereotype(elem, MODEL_NATURALORDER)
+	}
+	
+		
+	/**                                                        *
+	 * ----------------- stereotype attributes ----------------*
+	*/
+	 
 	/**
 	 * retourne le fetchType de l'element ou null si celui ci n'en possède pas
 	 */
@@ -114,11 +160,123 @@ public class JavaPluginUtils{
 		}		
 	}
 	
-	/**
-	 * teste si un element est de type naturalOrder
-	 */
-	static def isNaturalOrderField(NamedElement elem){
-		Utils.hasStereotype(elem, MODEL_NATURALORDER)
+	static def getShouldBeNull(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_ATTRIBUTE, MODEL_ATTRIBUTE_SHOULDBENULL)
 	}
 	
+	static def getAlwaysTrue(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_BOOLEANTYPED, MODEL_BOOLEANTYPED_ALWAYSTRUE)
+	}
+	
+	static def getAlwaysFalse(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_BOOLEANTYPED, MODEL_BOOLEANTYPED_ALWAYSFALSE)
+	}
+	
+	static def getFuture(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_DATETYPED, MODEL_DATETYPED_FUTURE)
+	}
+	
+	static def getFutureOrPresent(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_DATETYPED, MODEL_DATETYPED_FUTUREORPRESENT)
+	}
+	
+	static def getPast(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_DATETYPED, MODEL_DATETYPED_PAST)
+	}
+	
+	static def getPastOrPresent(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_DATETYPED, MODEL_DATETYPED_PASTORPRESENT)
+	}
+	
+	static def getCollectionSizeMin(NamedElement elem){
+		val hasSizeMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasSizeMin')
+		if(hasSizeMin == true){
+			return Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, MODEL_COLLECTION_SIZEMIN)
+		}
+		return null
+	}
+	
+	static def getCollectionSizeMax(NamedElement elem){
+		val hasSizeMax = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasSizeMax')
+		if(hasSizeMax == true){
+			return Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, MODEL_COLLECTION_SIZEMAX)
+		}
+		return null
+	}
+	
+	static def getCanBeEmpty(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_STRINGTYPED, MODEL_STRINGTYPED_CANBEEMPTY)
+	}
+	
+	static def getPattern(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_STRINGTYPED, MODEL_STRINGTYPED_PATTERN)
+	}
+	
+	static def getSizeMin(NamedElement elem){
+		val hasSizeMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasSizeMin')
+		if(hasSizeMin == true){
+			return Utils.getStereotypePropertyValue(elem, MODEL_STRINGTYPED, MODEL_STRINGTYPED_SIZEMIN)
+		}
+		return null
+	}
+	
+	static def getMin(NamedElement elem){
+		val hasMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasMin')
+		if(hasMin == true){	
+			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_MIN)
+		}
+		return null
+	}
+	
+	static def getMax(NamedElement elem){
+		val hasMax = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasMax')
+		if(hasMax == true){	
+			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_MAX)
+		}
+		return null
+	}
+	
+	static def getNegative(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_NEGATIVE)
+	}
+	
+	static def getNegativeOrZero(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_NEGATIVEORZERO)
+	}
+	
+	static def getPositive(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_POSITIVE)
+	}
+	
+	static def getPositiveOrZero(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_POSITIVEORZERO)
+	}
+	
+	static def getDigits(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_DIGITS)
+	}
+	
+	static def getDigitsFraction(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_DIGITSFRACTION)
+	}
+	
+	static def getDigitsInteger(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_DIGITSINTEGER)
+	}
+	
+	static def getDecimalMin(NamedElement elem){
+		val hasDecimalMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasDecimalMin')
+		if(hasDecimalMin == true){	
+			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_DECIMALMIN)
+		}
+		return null
+	}
+	
+	static def getDecimalMax(NamedElement elem){
+		val hasDecimalMax = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasDecimalMax')
+		if(hasDecimalMax == true){	
+			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_DECIMALMAX)
+		}
+		return null
+	}
 }

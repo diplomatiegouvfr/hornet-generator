@@ -85,13 +85,6 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 
 class JavaClassifierUtils{
-	
-	static def getSchema(Classifier clazz){
-		if(Utils.isEntity(clazz)){
-			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, JavaPluginUtils.MODEL_SCHEMA)
-		}
-		return null
-	}
 		
 	/**
 	 * retourne le champs naturalOrder de la classe si celle-ci en possède un, null sinon
@@ -178,6 +171,17 @@ class JavaClassifierUtils{
 		}
 		
 		return naturalOrderField
+	}
+	
+	/**                                                        *
+	 * ----------------- stereotype attributes ----------------*
+	*/
+	
+	static def getSchema(Classifier clazz){
+		if(Utils.isEntity(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, JavaPluginUtils.MODEL_SCHEMA)
+		}
+		return null
 	}
 	
 }

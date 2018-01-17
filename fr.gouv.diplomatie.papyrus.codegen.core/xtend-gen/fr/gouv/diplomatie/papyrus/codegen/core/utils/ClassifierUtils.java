@@ -368,7 +368,7 @@ public class ClassifierUtils {
   public static boolean isEnumWithCode(final Classifier clazz) {
     final Collection<Property> valeurs = ClassifierUtils.getOwnedAttributes(clazz);
     final Property value = ((Property[])Conversions.unwrapArray(valeurs, Property.class))[0];
-    final Object code = Utils.getStereotypePropertyValue(value, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE);
+    final Object code = Utils.getNomenclatureCode(value);
     return ((code != null) && (!Objects.equal(code, "")));
   }
   
@@ -376,40 +376,11 @@ public class ClassifierUtils {
    * teste si une classe doit etre générée ou non
    */
   public static boolean canBeGenerated(final Classifier clazz) {
-    boolean _isEntity = Utils.isEntity(clazz);
-    if (_isEntity) {
-      Object _stereotypePropertyValue = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED);
-      return (!Objects.equal(_stereotypePropertyValue, Boolean.valueOf(false)));
-    } else {
-      boolean _isNomenclature = Utils.isNomenclature(clazz);
-      if (_isNomenclature) {
-        Object _stereotypePropertyValue_1 = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_GENERATED);
-        return (!Objects.equal(_stereotypePropertyValue_1, Boolean.valueOf(false)));
-      } else {
-        boolean _isValueObject = Utils.isValueObject(clazz);
-        if (_isValueObject) {
-          Object _stereotypePropertyValue_2 = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_VALUEOBJECT, Utils.MODEL_VALUEOBJECT_GENERATED);
-          return (!Objects.equal(_stereotypePropertyValue_2, Boolean.valueOf(false)));
-        }
-      }
+    final Object generated = Utils.getGenerated(clazz);
+    if ((Objects.equal(generated, Boolean.valueOf(false)) || (generated == null))) {
+      return false;
     }
     return true;
-  }
-  
-  /**
-   * retourne la valeur de l'attribut tableName
-   */
-  public static Object getTableNameValue(final Classifier clazz) {
-    boolean _isEntity = Utils.isEntity(clazz);
-    if (_isEntity) {
-      return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_TABLENAME);
-    } else {
-      boolean _isNomenclature = Utils.isNomenclature(clazz);
-      if (_isNomenclature) {
-        return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_TABLENAME);
-      }
-    }
-    return null;
   }
   
   /**
@@ -435,6 +406,22 @@ public class ClassifierUtils {
         File.separator);
       final String classPath = ((((path + File.separator) + appName) + File.separator) + fileName);
       return classPath;
+    }
+    return null;
+  }
+  
+  /**
+   * retourne la valeur de l'attribut tableName
+   */
+  public static Object getTableNameValue(final Classifier clazz) {
+    boolean _isEntity = Utils.isEntity(clazz);
+    if (_isEntity) {
+      return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_TABLENAME);
+    } else {
+      boolean _isNomenclature = Utils.isNomenclature(clazz);
+      if (_isNomenclature) {
+        return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_TABLENAME);
+      }
     }
     return null;
   }

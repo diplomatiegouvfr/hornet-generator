@@ -91,8 +91,6 @@ import org.eclipse.uml2.uml.Interface
 public class ClassifierModelGenerator {
 	
 	static def generateCode(Classifier clazz){
-		//val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
-		//val hasAttributes = (!attributes.empty && attributes !== null)
 		'''
 		import * as _ from "lodash";
 		import Sequelize = require("sequelize");
@@ -105,7 +103,6 @@ public class ClassifierModelGenerator {
 		}
 		
 		«clazz.generateMultivaluedAttributeModels»
-		«««clazz.generateMultiValuedEntityAttributes(hasAttributes, "")»
 		'''
 	}
 	
@@ -360,7 +357,7 @@ public class ClassifierModelGenerator {
 	 * génère la déclaration de la taille du champs id
 	*/
 	static def generateIdAttributeTypeLength(Property property){
-		val length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH )
+		val length = Utils.getAttributeLength(property)
 		if(length !== null && length != 0){
 			'''(«length»)'''
 		}else{
@@ -372,7 +369,7 @@ public class ClassifierModelGenerator {
 	 * génère la déclaration de la taille du champs non id
 	 */
 	static def generateNIdAttributeTypeLength(Property property){
-		val length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH )
+		val length = Utils.getAttributeLength(property)
 		if(length !== null && length != 0){
 			'''(«length»)'''
 		}else{

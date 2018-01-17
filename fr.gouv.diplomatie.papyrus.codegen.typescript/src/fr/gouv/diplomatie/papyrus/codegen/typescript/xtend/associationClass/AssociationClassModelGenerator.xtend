@@ -187,7 +187,7 @@ public class AssociationClassModelGenerator {
 	 * génère la déclaration de la taille du champs id
 	*/
 	static def generateIdAttributeTypeLength(Property property){
-		val length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH )
+		val length = Utils.getAttributeLength(property)
 		if(length !== null && length != 0){
 			'''(«length»)'''
 		}else{

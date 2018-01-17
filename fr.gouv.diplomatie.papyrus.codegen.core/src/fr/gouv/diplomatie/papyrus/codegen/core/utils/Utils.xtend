@@ -484,4 +484,83 @@ public class Utils{
 		}
 		return false
 	}
+	
+	/**                                                        *
+	 * ----------------- stereotype attributes ----------------*
+	 */
+	 
+	 /**
+	 * retourne le code de la propriété de la nomenclature
+	 */
+	static def getNomenclatureCode(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
+	}
+	
+	/**
+	 * retourne le code de la propriété de la nomenclature
+	 */
+	static def getNomenclatureLibelle(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE)
+	}
+	
+	static def getAttributeLength(NamedElement elem){
+		
+		if(Utils.hasStereotype(elem, Utils.MODEL_KEYATTRIBUTE)){
+			val hasLength = Utils.getStereotypePropertyValue(elem, Utils.MODEL_KEYATTRIBUTE, 'hasLength')
+			if(hasLength == true){
+				return Utils.getStereotypePropertyValue(elem, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH)
+			}
+			return null
+		}else{
+			val hasLength = Utils.getStereotypePropertyValue(elem, Utils.MODEL_ATTRIBUTE, 'hasLength')
+			if(hasLength == true){
+				return Utils.getStereotypePropertyValue(elem, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH)	
+			}
+			return null
+		}
+	}
+	
+	static def getSequenceStartWith(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH)
+	}
+	
+	static def getSequenceIncrementBy(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY)
+	}
+	
+	static def getSequenceHasMaxValue(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMAXVALUE)
+	}
+	
+	static def getSequenceMaxValue(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MAXVALUE)
+	}
+	
+	static def getSequenceHasMinValue(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_HASMINVALUE)
+	}
+	
+	static def getSequenceMinValue(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_MINVALUE)
+	}
+	
+	static def getSequenceCache(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CACHE)
+	}
+	
+	static def getSequenceCycle(NamedElement elem){
+		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_CYCLE)
+	}
+	
+	static def getGenerated(NamedElement elem){
+		if(Utils.isEntity(elem)){
+			return Utils.getStereotypePropertyValue(elem, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED)
+		}else if(Utils.isNomenclature(elem)){
+			return Utils.getStereotypePropertyValue(elem, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_GENERATED)
+		}else if (Utils.isValueObject(elem)){
+			return Utils.getStereotypePropertyValue(elem, Utils.MODEL_VALUEOBJECT, Utils.MODEL_VALUEOBJECT_GENERATED)
+		}
+		return null
+	}
+	
 }

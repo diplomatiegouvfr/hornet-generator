@@ -81,14 +81,6 @@ import org.eclipse.uml2.uml.Property;
 
 @SuppressWarnings("all")
 public class JavaClassifierUtils {
-  public static Object getSchema(final Classifier clazz) {
-    boolean _isEntity = Utils.isEntity(clazz);
-    if (_isEntity) {
-      return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, JavaPluginUtils.MODEL_SCHEMA);
-    }
-    return null;
-  }
-  
   /**
    * retourne le champs naturalOrder de la classe si celle-ci en possède un, null sinon
    */
@@ -158,5 +150,16 @@ public class JavaClassifierUtils {
       }
     }
     return naturalOrderField;
+  }
+  
+  /**
+   * ----------------- stereotype attributes ----------------
+   */
+  public static Object getSchema(final Classifier clazz) {
+    boolean _isEntity = Utils.isEntity(clazz);
+    if (_isEntity) {
+      return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, JavaPluginUtils.MODEL_SCHEMA);
+    }
+    return null;
   }
 }

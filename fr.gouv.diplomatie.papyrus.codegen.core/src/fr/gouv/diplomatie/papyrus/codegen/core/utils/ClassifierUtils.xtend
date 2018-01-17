@@ -336,7 +336,7 @@ class ClassifierUtils{
 	static def isEnumWithCode(Classifier clazz){
 		val valeurs = clazz.getOwnedAttributes
 		val value = valeurs.get(0)
-		val code = Utils.getStereotypePropertyValue(value, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
+		val code = Utils.getNomenclatureCode(value)
 		return (code !== null && code != "")
 	}
 	
@@ -344,28 +344,13 @@ class ClassifierUtils{
 	 * teste si une classe doit etre générée ou non
 	 */
 	static def canBeGenerated(Classifier clazz){
-		if(Utils.isEntity(clazz)){
-			return (Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED) != false)
-		}else if(Utils.isNomenclature(clazz)){
-			return (Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_GENERATED) != false)
-		}else if (Utils.isValueObject(clazz)){
-			return(Utils.getStereotypePropertyValue(clazz, Utils.MODEL_VALUEOBJECT, Utils.MODEL_VALUEOBJECT_GENERATED) != false)
+		val generated = Utils.getGenerated(clazz)
+		if(generated == false || generated === null){
+			return false
 		}
 		return true
 	}
-	
-	/**
-	 * retourne la valeur de l'attribut tableName
-	 */
-	static def getTableNameValue(Classifier clazz){
-		if(Utils.isEntity(clazz)){
-			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_TABLENAME)
-		}else if(Utils.isNomenclature(clazz)){
-			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_TABLENAME)
-		}
-		return null
-	}
-	
+			
 	/**
 	 * retourne le nom de la table liée a la classe
 	 */
@@ -390,5 +375,21 @@ class ClassifierUtils{
 		
 			return classPath
 		}
+	}
+	
+	/**                                                        *
+	 * ----------------- stereotype attributes ----------------*
+	*/
+	
+	/**
+	 * retourne la valeur de l'attribut tableName
+	 */
+	static def getTableNameValue(Classifier clazz){
+		if(Utils.isEntity(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_TABLENAME)
+		}else if(Utils.isNomenclature(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_TABLENAME)
+		}
+		return null
 	}
 }

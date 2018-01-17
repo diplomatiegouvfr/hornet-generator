@@ -187,7 +187,43 @@ public class ClassifierJPAEntityGenerator {
     _builder.newLine();
     _builder.append("import javax.persistence.Table;");
     _builder.newLine();
+    _builder.append("import javax.validation.constraints.AssertTrue;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.AssertFalse;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.DecimalMax;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.DecimalMin;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Digits;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Future;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.FutureOrPresent;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Min;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Max;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Negative;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.NegativeOrZero;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.NotEmpty;");
+    _builder.newLine();
     _builder.append("import javax.validation.constraints.NotNull;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Null;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Past;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.PastOrPresent;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Pattern;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.Positive;");
+    _builder.newLine();
+    _builder.append("import javax.validation.constraints.PositiveOrZero;");
     _builder.newLine();
     _builder.append("import javax.validation.constraints.Size;");
     _builder.newLine();
@@ -740,94 +776,81 @@ public class ClassifierJPAEntityGenerator {
       final boolean isEnum = Utils.isNomenclature(property.getType());
       final boolean isId = PropertyUtils.isID(property);
       final String columnName = PropertyUtils.getDatabaseName(property, property.getName(), additionnalName);
-      String lengthValue = "";
-      final Object length = PropertyUtils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_LENGTH);
-      if (((length != null) && (!Objects.equal(length, Integer.valueOf(0))))) {
-        StringConcatenation _builder_2 = new StringConcatenation();
-        _builder_2.append("@Size(max=");
-        _builder_2.append(length);
-        _builder_2.append(")");
-        lengthValue = _builder_2.toString();
-      }
       boolean isAsso = ((property.getAssociation() != null) && Utils.isEntity(property.getType()));
-      StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.newLine();
+      StringConcatenation _builder_2 = new StringConcatenation();
+      _builder_2.newLine();
       String _generateAGAnnotations = ClassifierJPAEntityGenerator.generateAGAnnotations(property);
-      _builder_3.append(_generateAGAnnotations);
-      _builder_3.newLineIfNotEmpty();
+      _builder_2.append(_generateAGAnnotations);
+      _builder_2.newLineIfNotEmpty();
       String _generateComments = Utils.generateComments(property);
-      _builder_3.append(_generateComments);
+      _builder_2.append(_generateComments);
       String _generateAGAnnotations_1 = ClassifierJPAEntityGenerator.generateAGAnnotations(property);
-      _builder_3.append(_generateAGAnnotations_1);
-      _builder_3.newLineIfNotEmpty();
+      _builder_2.append(_generateAGAnnotations_1);
+      _builder_2.newLineIfNotEmpty();
+      String _generateTypeAnnotation = ClassifierJPAEntityGenerator.generateTypeAnnotation(property);
+      _builder_2.append(_generateTypeAnnotation);
+      _builder_2.newLineIfNotEmpty();
       {
         if ((property.isMultivalued() && (!Utils.isEntity(property.getType())))) {
-          _builder_3.append("@ElementCollection");
-          _builder_3.newLine();
+          _builder_2.append("@ElementCollection");
+          _builder_2.newLine();
         } else {
           {
             if (isId) {
-              _builder_3.append("@Id");
+              _builder_2.append("@Id");
             }
           }
           {
             boolean _isSequence = Utils.isSequence(property);
             if (_isSequence) {
-              _builder_3.newLineIfNotEmpty();
+              _builder_2.newLineIfNotEmpty();
               CharSequence _generateSequence = ClassifierJPAEntityGenerator.generateSequence(property, name, fromClass);
-              _builder_3.append(_generateSequence);
-              _builder_3.newLineIfNotEmpty();
+              _builder_2.append(_generateSequence);
+              _builder_2.newLineIfNotEmpty();
             }
           }
           {
             if (isEnum) {
-              _builder_3.append("@Enumerated");
-              _builder_3.newLine();
+              _builder_2.append("@Enumerated");
+              _builder_2.newLine();
             }
           }
           {
             if ((Utils.isEntity(property.getType()) && (!isAsso))) {
-              _builder_3.append(link);
+              _builder_2.append(link);
             } else {
               if (isAsso) {
-                _builder_3.newLineIfNotEmpty();
+                _builder_2.newLineIfNotEmpty();
                 CharSequence _generateAssociationAnnotation = ClassifierJPAEntityGenerator.generateAssociationAnnotation(property, fromClass);
-                _builder_3.append(_generateAssociationAnnotation);
-                _builder_3.newLineIfNotEmpty();
+                _builder_2.append(_generateAssociationAnnotation);
+                _builder_2.newLineIfNotEmpty();
               } else {
                 {
                   if ((nullable == false)) {
-                    _builder_3.append("@NotNull");
+                    _builder_2.append("@NotNull");
                   }
                 }
-                _builder_3.newLineIfNotEmpty();
-                {
-                  boolean _notEquals = (!Objects.equal(lengthValue, ""));
-                  if (_notEquals) {
-                    _builder_3.append(lengthValue);
-                  }
-                }
-                _builder_3.newLineIfNotEmpty();
-                _builder_3.append("@Column(name = \"");
-                _builder_3.append(columnName);
-                _builder_3.append("\")");
-                _builder_3.newLineIfNotEmpty();
+                _builder_2.newLineIfNotEmpty();
+                _builder_2.append("@Column(name = \"");
+                _builder_2.append(columnName);
+                _builder_2.append("\")");
+                _builder_2.newLineIfNotEmpty();
               }
             }
           }
         }
       }
       String _name_5 = property.getVisibility().getName();
-      _builder_3.append(_name_5);
-      _builder_3.append(" ");
-      _builder_3.append(array);
-      _builder_3.append(typeName);
-      _builder_3.append(endArray);
-      _builder_3.append(" ");
-      _builder_3.append(name);
-      _builder_3.append(";");
-      _builder_3.newLineIfNotEmpty();
-      _xblockexpression = _builder_3;
+      _builder_2.append(_name_5);
+      _builder_2.append(" ");
+      _builder_2.append(array);
+      _builder_2.append(typeName);
+      _builder_2.append(endArray);
+      _builder_2.append(" ");
+      _builder_2.append(name);
+      _builder_2.append(";");
+      _builder_2.newLineIfNotEmpty();
+      _xblockexpression = _builder_2;
     }
     return _xblockexpression;
   }
@@ -835,8 +858,8 @@ public class ClassifierJPAEntityGenerator {
   public static CharSequence generateSequence(final Property property, final String name, final Classifier fromClass) {
     CharSequence _xblockexpression = null;
     {
-      final Object startWith = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_STARTWITH);
-      final Object incrementBy = Utils.getStereotypePropertyValue(property, Utils.MODEL_SEQUENCE, Utils.MODEL_SEQUENCE_INCREMENTBY);
+      final Object startWith = Utils.getSequenceStartWith(property);
+      final Object incrementBy = Utils.getSequenceIncrementBy(property);
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("//@SequenceGenerator(name=\"");
       String _snakeCase = Utils.toSnakeCase(fromClass.getName());
@@ -1086,6 +1109,320 @@ public class ClassifierJPAEntityGenerator {
       _builder.append(name);
       _builder.append(";");
       _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static String generateTypeAnnotation(final Property property) {
+    final Object shouldbeNull = JavaPluginUtils.getShouldBeNull(property);
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      boolean _equals = Objects.equal(shouldbeNull, Boolean.valueOf(true));
+      if (_equals) {
+        _builder.append("@Null");
+      }
+    }
+    _builder.newLineIfNotEmpty();
+    String retour = _builder.toString();
+    boolean _hasStereotype = Utils.hasStereotype(property, JavaPluginUtils.MODEL_BOOLEANTYPED);
+    if (_hasStereotype) {
+      String _retour = retour;
+      StringConcatenation _builder_1 = new StringConcatenation();
+      CharSequence _generateBooleanTypedAnnotation = ClassifierJPAEntityGenerator.generateBooleanTypedAnnotation(property);
+      _builder_1.append(_generateBooleanTypedAnnotation);
+      _builder_1.newLineIfNotEmpty();
+      retour = (_retour + _builder_1);
+    }
+    boolean _hasStereotype_1 = Utils.hasStereotype(property, JavaPluginUtils.MODEL_DATETYPED);
+    if (_hasStereotype_1) {
+      String _retour_1 = retour;
+      StringConcatenation _builder_2 = new StringConcatenation();
+      CharSequence _generateDateTypedAnnotation = ClassifierJPAEntityGenerator.generateDateTypedAnnotation(property);
+      _builder_2.append(_generateDateTypedAnnotation);
+      _builder_2.newLineIfNotEmpty();
+      retour = (_retour_1 + _builder_2);
+    }
+    boolean _hasStereotype_2 = Utils.hasStereotype(property, JavaPluginUtils.MODEL_STRINGTYPED);
+    if (_hasStereotype_2) {
+      String _retour_2 = retour;
+      StringConcatenation _builder_3 = new StringConcatenation();
+      CharSequence _generatStringTypedAnnotation = ClassifierJPAEntityGenerator.generatStringTypedAnnotation(property);
+      _builder_3.append(_generatStringTypedAnnotation);
+      _builder_3.newLineIfNotEmpty();
+      retour = (_retour_2 + _builder_3);
+    }
+    boolean _hasStereotype_3 = Utils.hasStereotype(property, JavaPluginUtils.MODEL_NUMERICTYPED);
+    if (_hasStereotype_3) {
+      String _retour_3 = retour;
+      StringConcatenation _builder_4 = new StringConcatenation();
+      CharSequence _generateNumericTypedAnnotation = ClassifierJPAEntityGenerator.generateNumericTypedAnnotation(property);
+      _builder_4.append(_generateNumericTypedAnnotation);
+      _builder_4.newLineIfNotEmpty();
+      retour = (_retour_3 + _builder_4);
+    }
+    boolean _hasStereotype_4 = Utils.hasStereotype(property, JavaPluginUtils.MODEL_COLLECTION);
+    if (_hasStereotype_4) {
+      String _retour_4 = retour;
+      StringConcatenation _builder_5 = new StringConcatenation();
+      CharSequence _generateCollectionAnnotation = ClassifierJPAEntityGenerator.generateCollectionAnnotation(property);
+      _builder_5.append(_generateCollectionAnnotation);
+      _builder_5.newLineIfNotEmpty();
+      retour = (_retour_4 + _builder_5);
+    }
+    return retour;
+  }
+  
+  public static CharSequence generateBooleanTypedAnnotation(final Property property) {
+    CharSequence _xblockexpression = null;
+    {
+      final Object alwaysTrue = JavaPluginUtils.getAlwaysTrue(property);
+      final Object alwaysFalse = JavaPluginUtils.getAlwaysFalse(property);
+      StringConcatenation _builder = new StringConcatenation();
+      {
+        boolean _equals = Objects.equal(alwaysTrue, Boolean.valueOf(true));
+        if (_equals) {
+          _builder.append("@AssertTrue");
+          _builder.newLine();
+        } else {
+          boolean _equals_1 = Objects.equal(alwaysFalse, Boolean.valueOf(true));
+          if (_equals_1) {
+            _builder.append("@AssertFalse");
+            _builder.newLine();
+          }
+        }
+      }
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateDateTypedAnnotation(final Property property) {
+    CharSequence _xblockexpression = null;
+    {
+      final Object future = JavaPluginUtils.getFuture(property);
+      final Object futureorPresent = JavaPluginUtils.getFutureOrPresent(property);
+      final Object past = JavaPluginUtils.getPast(property);
+      final Object pastOrPresent = JavaPluginUtils.getPastOrPresent(property);
+      StringConcatenation _builder = new StringConcatenation();
+      {
+        boolean _equals = Objects.equal(future, Boolean.valueOf(true));
+        if (_equals) {
+          _builder.append("@Future");
+          _builder.newLine();
+        } else {
+          boolean _equals_1 = Objects.equal(futureorPresent, Boolean.valueOf(true));
+          if (_equals_1) {
+            _builder.append("@FutureOrPresent");
+            _builder.newLine();
+          } else {
+            boolean _equals_2 = Objects.equal(past, Boolean.valueOf(true));
+            if (_equals_2) {
+              _builder.append("@Past");
+              _builder.newLine();
+            } else {
+              boolean _equals_3 = Objects.equal(pastOrPresent, Boolean.valueOf(true));
+              if (_equals_3) {
+                _builder.append("@PastOrPresent");
+                _builder.newLine();
+              }
+            }
+          }
+        }
+      }
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generatStringTypedAnnotation(final Property property) {
+    CharSequence _xblockexpression = null;
+    {
+      final Object canBeEmpty = JavaPluginUtils.getCanBeEmpty(property);
+      final Object pattern = JavaPluginUtils.getPattern(property);
+      final Object sizeMin = JavaPluginUtils.getSizeMin(property);
+      final Object length = Utils.getAttributeLength(property);
+      StringConcatenation _builder = new StringConcatenation();
+      {
+        boolean _equals = Objects.equal(canBeEmpty, Boolean.valueOf(false));
+        if (_equals) {
+          _builder.append("@NotEmpty");
+          _builder.newLine();
+        }
+      }
+      {
+        if ((pattern != null)) {
+          _builder.append("@Pattern(regexp = \"");
+          _builder.append(pattern);
+          _builder.append("\")");
+          _builder.newLineIfNotEmpty();
+        }
+      }
+      {
+        if (((sizeMin != null) && (length != null))) {
+          _builder.append("@Size( min = ");
+          _builder.append(sizeMin);
+          _builder.append(", max = ");
+          _builder.append(length);
+          _builder.append(")");
+          _builder.newLineIfNotEmpty();
+        } else {
+          if ((sizeMin != null)) {
+            _builder.append("@Size( min = ");
+            _builder.append(sizeMin);
+            _builder.append(")");
+            _builder.newLineIfNotEmpty();
+          } else {
+            if ((length != null)) {
+              _builder.append("@Size( max = ");
+              _builder.append(length);
+              _builder.append(")");
+              _builder.newLineIfNotEmpty();
+            }
+          }
+        }
+      }
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateNumericTypedAnnotation(final Property property) {
+    CharSequence _xblockexpression = null;
+    {
+      final Object min = JavaPluginUtils.getMin(property);
+      final Object max = JavaPluginUtils.getMax(property);
+      final Object negative = JavaPluginUtils.getNegative(property);
+      final Object negativeOrZero = JavaPluginUtils.getNegativeOrZero(property);
+      final Object positive = JavaPluginUtils.getPositive(property);
+      final Object positiveOrZero = JavaPluginUtils.getPositiveOrZero(property);
+      final Object digits = JavaPluginUtils.getDigits(property);
+      final Object digitsInteger = JavaPluginUtils.getDigitsInteger(property);
+      final Object digitsFraction = JavaPluginUtils.getDigitsFraction(property);
+      final Object decimalMin = JavaPluginUtils.getDecimalMin(property);
+      final Object decimalMax = JavaPluginUtils.getDecimalMax(property);
+      StringConcatenation _builder = new StringConcatenation();
+      {
+        if ((min != null)) {
+          _builder.append("@Min(");
+          _builder.append(min);
+          _builder.append(")");
+          _builder.newLineIfNotEmpty();
+        }
+      }
+      {
+        if ((max != null)) {
+          _builder.append("@Max(");
+          _builder.append(max);
+          _builder.append(")");
+          _builder.newLineIfNotEmpty();
+        }
+      }
+      {
+        boolean _equals = Objects.equal(negative, Boolean.valueOf(true));
+        if (_equals) {
+          _builder.append("@Negative");
+          _builder.newLine();
+        } else {
+          boolean _equals_1 = Objects.equal(negativeOrZero, Boolean.valueOf(true));
+          if (_equals_1) {
+            _builder.append("@NegativeOrZero");
+            _builder.newLine();
+          } else {
+            boolean _equals_2 = Objects.equal(positive, Boolean.valueOf(true));
+            if (_equals_2) {
+              _builder.append("@Positive");
+              _builder.newLine();
+            } else {
+              boolean _equals_3 = Objects.equal(positiveOrZero, Boolean.valueOf(true));
+              if (_equals_3) {
+                _builder.append("@PositiveOrZero");
+                _builder.newLine();
+              }
+            }
+          }
+        }
+      }
+      {
+        boolean _equals_4 = Objects.equal(digits, Boolean.valueOf(true));
+        if (_equals_4) {
+          {
+            if (((digitsInteger != null) && (digitsFraction != null))) {
+              _builder.append("@Digits(integer = ");
+              _builder.append(digitsInteger);
+              _builder.append(", fraction = ");
+              _builder.append(digitsFraction);
+              _builder.append(")");
+              _builder.newLineIfNotEmpty();
+            } else {
+              if ((digitsInteger != null)) {
+                _builder.append("@Digits(integer = ");
+                _builder.append(digitsInteger);
+                _builder.append(")");
+                _builder.newLineIfNotEmpty();
+              } else {
+                if ((digitsFraction != null)) {
+                  _builder.append("@Digits(fraction = ");
+                  _builder.append(digitsFraction);
+                  _builder.append(")");
+                  _builder.newLineIfNotEmpty();
+                }
+              }
+            }
+          }
+        }
+      }
+      {
+        if ((decimalMin != null)) {
+          _builder.append("@DecimalMin(\"");
+          _builder.append(decimalMin);
+          _builder.append("\")");
+          _builder.newLineIfNotEmpty();
+        }
+      }
+      {
+        if ((decimalMax != null)) {
+          _builder.append("@DecimalMax(\"");
+          _builder.append(decimalMax);
+          _builder.append("\")");
+          _builder.newLineIfNotEmpty();
+        }
+      }
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateCollectionAnnotation(final Property property) {
+    CharSequence _xblockexpression = null;
+    {
+      final Object sizeMin = JavaPluginUtils.getCollectionSizeMin(property);
+      final Object sizeMax = JavaPluginUtils.getCollectionSizeMax(property);
+      StringConcatenation _builder = new StringConcatenation();
+      {
+        if (((sizeMin != null) && (sizeMax != null))) {
+          _builder.append("@Size( min = ");
+          _builder.append(sizeMin);
+          _builder.append(", max = ");
+          _builder.append(sizeMax);
+          _builder.append(")");
+          _builder.newLineIfNotEmpty();
+        } else {
+          if ((sizeMin != null)) {
+            _builder.append("@Size( min = ");
+            _builder.append(sizeMin);
+            _builder.append(")");
+            _builder.newLineIfNotEmpty();
+          } else {
+            if ((sizeMax != null)) {
+              _builder.append("@Size( max = ");
+              _builder.append(sizeMax);
+              _builder.append(")");
+              _builder.newLineIfNotEmpty();
+            }
+          }
+        }
+      }
       _xblockexpression = _builder;
     }
     return _xblockexpression;

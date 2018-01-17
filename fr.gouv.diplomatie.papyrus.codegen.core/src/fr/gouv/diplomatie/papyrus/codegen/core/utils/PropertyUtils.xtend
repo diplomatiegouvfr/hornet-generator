@@ -220,20 +220,7 @@ class PropertyUtils {
 	static def getDefaultValue(Property property){
 		property.^default
 	}
-	
-	/**
-	 * retourne la valeur de l'attribut columnName du stéréotype attribut
-	 */
-	static def getColumnName(Property property){
-		var name  = ""
-		if(property.getStereotype(Utils.MODEL_KEYATTRIBUTE) ===null || property.getStereotype(Utils.MODEL_KEYATTRIBUTE).empty){
-			name = Utils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_COLUMNNAME) as String
-		}else{
-			name = Utils.getStereotypePropertyValue(property, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_COLUMNNAME)as String
-		}
-		return name
-	}
-	
+		
 	/**
 	 * retourne la valeur de columnName ou name si l'attribut n'en possède pas (en y ajoutant l'additionalName)
 	 */
@@ -248,4 +235,22 @@ class PropertyUtils {
 		}
 		return retour
 	}
+	
+	/**                                                        *
+	 * ----------------- stereotype attributes ----------------*
+	*/
+	
+	/**
+	 * retourne la valeur de l'attribut columnName du stéréotype attribut
+	 */
+	static def getColumnName(Property property){
+		var name  = ""
+		if(property.getStereotype(Utils.MODEL_KEYATTRIBUTE) ===null || property.getStereotype(Utils.MODEL_KEYATTRIBUTE).empty){
+			name = Utils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_COLUMNNAME) as String
+		}else{
+			name = Utils.getStereotypePropertyValue(property, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_COLUMNNAME)as String
+		}
+		return name
+	}
+	
 }

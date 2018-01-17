@@ -74,7 +74,6 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import fr.gouv.diplomatie.papyrus.codegen.java.generators.GeneratorUtils;
 import java.util.Collection;
 import org.eclipse.uml2.uml.Classifier;
-import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.xtend2.lib.StringConcatenation;
 
@@ -179,8 +178,8 @@ public class NomenclatureConverterGenerator {
   public static CharSequence generateCTDCCase(final Property property, final int defaultCode) {
     CharSequence _xblockexpression = null;
     {
-      Object code = Utils.getStereotypePropertyValue(((NamedElement) property), Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE);
-      Object libelle = Utils.getStereotypePropertyValue(((NamedElement) property), Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE);
+      Object code = Utils.getNomenclatureCode(property);
+      Object libelle = Utils.getNomenclatureLibelle(property);
       if ((libelle == null)) {
         libelle = property.getName();
       }
@@ -258,8 +257,8 @@ public class NomenclatureConverterGenerator {
   public static CharSequence generateCTEACase(final Property property, final int defaultCode) {
     CharSequence _xblockexpression = null;
     {
-      Object code = Utils.getStereotypePropertyValue(((NamedElement) property), Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE);
-      Object libelle = Utils.getStereotypePropertyValue(((NamedElement) property), Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE);
+      Object code = Utils.getNomenclatureCode(property);
+      Object libelle = Utils.getNomenclatureLibelle(property);
       if ((libelle == null)) {
         libelle = property.getName();
       }
