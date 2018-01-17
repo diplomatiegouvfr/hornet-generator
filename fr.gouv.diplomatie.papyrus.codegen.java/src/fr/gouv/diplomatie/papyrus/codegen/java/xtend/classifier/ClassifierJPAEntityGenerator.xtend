@@ -188,6 +188,19 @@ public class ClassifierJPAEntityGenerator {
 		'''
 	}
 	
+	/**
+	 * génère les attributs issus des associations
+	 */
+	static def generateAssociationsAttributes(Classifier clazz){
+		val associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+		
+		'''
+		«associationsClasses.fold("")[acc, asso |
+			acc + '''«(asso as AssociationClass).generateAssociationAttributes(clazz)»'''
+		]»
+		'''
+	}
+	
 	static def generateTypeAnnotation(Classifier clazz){
 		if(Utils.isValueObject(clazz)){
 			return '''@Embeddable'''

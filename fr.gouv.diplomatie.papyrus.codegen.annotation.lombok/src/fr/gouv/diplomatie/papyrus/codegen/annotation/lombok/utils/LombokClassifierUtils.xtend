@@ -99,66 +99,90 @@ class LombokClassifierUtils{
 	 * teste si la classe doit avoir une annotation getter
 	 */
 	static def hasGetterAnnotation(Classifier clazz){
-		val getter = Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKGETTER);
+		val getter = clazz.getGetterAnnotation
 		if(getter === null || getter == ""){
 			return false
 		}
 		return getter
 	}
 	
+	static def getGetterAnnotation(Classifier clazz){
+		 return Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKGETTER)
+	}
+	
 	/**
 	 * teste si la classe doit avoir une annotation setter
 	 */
 	static def hasSetterAnnotation(Classifier clazz){
-		val setter = Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKSETTER);
+		val setter = clazz.getSetterAnnotation
 		if(setter === null || setter == ""){
 			return false
 		}
 		return setter
 	}
 	
+	static def getSetterAnnotation(Classifier clazz){
+		return Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKSETTER)
+	}
+	
 	/**
 	 * teste si la classe doit avoir une annotation NoArgsConstructor
 	 */
 	static def hasNoArgsConstructor(Classifier clazz){
-		val noArgsCons = Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKNOARGSCONS);
+		val noArgsCons = clazz.getNoArgsConstructorAnnotation
 		if(noArgsCons === null || noArgsCons == ""){
 			return false
 		}
 		return noArgsCons
 	}
 	
+	static def getNoArgsConstructorAnnotation(Classifier clazz){
+		return Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKNOARGSCONS)
+	}
+	
 	/**
 	 * teste si la classe doit avoir une annotation AllArgsConstructor
 	 */
 	static def hasAllArgsConstructor(Classifier clazz){
-		val allArgsCons = Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKALLARGSCONS);
+		val allArgsCons = clazz.getAllArgsConstructorAnnotation
 		if(allArgsCons === null || allArgsCons == ""){
 			return false
 		}
 		return allArgsCons
 	}
 	
+	static def getAllArgsConstructorAnnotation(Classifier clazz){
+		return Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKALLARGSCONS)
+	}
+	
 	/**
 	 * teste si la classe doit avoir une annotation ToString
 	 */
 	static def hasToString(Classifier clazz){
-		val toString = Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKTOSTRING);
+		val toString = clazz.getToStringAnnotation
 		if(toString === null || toString == ""){
 			return false
 		}
 		return toString
 	}
 	
-		/**
+	static def getToStringAnnotation(Classifier clazz){
+		return Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKTOSTRING)
+	}
+	
+	/**
 	 * teste si la classe doit avoir une annotation EqualsAndHashCode
 	 */
 	static def hasEqualsAndHashCode(Classifier clazz){
-		val eqAndHashCode = Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKEQANDHASHC);
+		val eqAndHashCode = clazz.getEqualsAndHashCode
 		if(eqAndHashCode === null || eqAndHashCode == ""){
 			return false
 		}
 		return eqAndHashCode
+	}
+	
+	static def getEqualsAndHashCode(Classifier clazz){
+		return Utils.getStereotypePropertyValue(clazz,Utils.MODEL_ENTITY, MODEL_ENTITY_LOMBOKEQANDHASHC)
 	}
 	
 	/**

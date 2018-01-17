@@ -274,6 +274,28 @@ public class ClassifierJPAEntityGenerator {
     return _builder;
   }
   
+  /**
+   * génère les attributs issus des associations
+   */
+  public static CharSequence generateAssociationsAttributes(final Classifier clazz) {
+    CharSequence _xblockexpression = null;
+    {
+      final Iterable<Type> associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz);
+      StringConcatenation _builder = new StringConcatenation();
+      final Function2<String, Type, String> _function = (String acc, Type asso) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateAssociationAttributes = ClassifierJPAEntityGenerator.generateAssociationAttributes(((AssociationClass) asso), clazz);
+        _builder_1.append(_generateAssociationAttributes);
+        return (acc + _builder_1);
+      };
+      String _fold = IterableExtensions.<Type, String>fold(associationsClasses, "", _function);
+      _builder.append(_fold);
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
   public static String generateTypeAnnotation(final Classifier clazz) {
     boolean _isValueObject = Utils.isValueObject(clazz);
     if (_isValueObject) {

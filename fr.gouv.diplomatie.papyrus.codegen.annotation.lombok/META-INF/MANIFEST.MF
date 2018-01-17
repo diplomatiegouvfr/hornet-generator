@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Lombok
-Bundle-SymbolicName: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok
+Bundle-SymbolicName: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
@@ -13,4 +13,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
  fr.gouv.diplomatie.papyrus.codegen.core;bundle-version="1.0.0",
  org.eclipse.papyrus.infra.core;bundle-version="3.0.0"
 Import-Package: org.eclipse.ui.console
-Export-Package: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators
+Export-Package: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators,
+ fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.utils,
+ fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.xtend

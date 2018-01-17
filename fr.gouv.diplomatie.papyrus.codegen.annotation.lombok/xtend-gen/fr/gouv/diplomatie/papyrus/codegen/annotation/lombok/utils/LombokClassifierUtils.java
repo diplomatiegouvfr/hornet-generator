@@ -97,66 +97,90 @@ public class LombokClassifierUtils {
    * teste si la classe doit avoir une annotation getter
    */
   public static Object hasGetterAnnotation(final Classifier clazz) {
-    final Object getter = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKGETTER);
+    final Object getter = LombokClassifierUtils.getGetterAnnotation(clazz);
     if (((getter == null) || Objects.equal(getter, ""))) {
       return Boolean.valueOf(false);
     }
     return getter;
   }
   
+  public static Object getGetterAnnotation(final Classifier clazz) {
+    return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKGETTER);
+  }
+  
   /**
    * teste si la classe doit avoir une annotation setter
    */
   public static Object hasSetterAnnotation(final Classifier clazz) {
-    final Object setter = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKSETTER);
+    final Object setter = LombokClassifierUtils.getSetterAnnotation(clazz);
     if (((setter == null) || Objects.equal(setter, ""))) {
       return Boolean.valueOf(false);
     }
     return setter;
   }
   
+  public static Object getSetterAnnotation(final Classifier clazz) {
+    return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKSETTER);
+  }
+  
   /**
    * teste si la classe doit avoir une annotation NoArgsConstructor
    */
   public static Object hasNoArgsConstructor(final Classifier clazz) {
-    final Object noArgsCons = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKNOARGSCONS);
+    final Object noArgsCons = LombokClassifierUtils.getNoArgsConstructorAnnotation(clazz);
     if (((noArgsCons == null) || Objects.equal(noArgsCons, ""))) {
       return Boolean.valueOf(false);
     }
     return noArgsCons;
   }
   
+  public static Object getNoArgsConstructorAnnotation(final Classifier clazz) {
+    return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKNOARGSCONS);
+  }
+  
   /**
    * teste si la classe doit avoir une annotation AllArgsConstructor
    */
   public static Object hasAllArgsConstructor(final Classifier clazz) {
-    final Object allArgsCons = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKALLARGSCONS);
+    final Object allArgsCons = LombokClassifierUtils.getAllArgsConstructorAnnotation(clazz);
     if (((allArgsCons == null) || Objects.equal(allArgsCons, ""))) {
       return Boolean.valueOf(false);
     }
     return allArgsCons;
   }
   
+  public static Object getAllArgsConstructorAnnotation(final Classifier clazz) {
+    return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKALLARGSCONS);
+  }
+  
   /**
    * teste si la classe doit avoir une annotation ToString
    */
   public static Object hasToString(final Classifier clazz) {
-    final Object toString = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKTOSTRING);
+    final Object toString = LombokClassifierUtils.getToStringAnnotation(clazz);
     if (((toString == null) || Objects.equal(toString, ""))) {
       return Boolean.valueOf(false);
     }
     return toString;
   }
   
+  public static Object getToStringAnnotation(final Classifier clazz) {
+    return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKTOSTRING);
+  }
+  
   /**
    * teste si la classe doit avoir une annotation EqualsAndHashCode
    */
   public static Object hasEqualsAndHashCode(final Classifier clazz) {
-    final Object eqAndHashCode = Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKEQANDHASHC);
+    final Object eqAndHashCode = LombokClassifierUtils.getEqualsAndHashCode(clazz);
     if (((eqAndHashCode == null) || Objects.equal(eqAndHashCode, ""))) {
       return Boolean.valueOf(false);
     }
     return eqAndHashCode;
+  }
+  
+  public static Object getEqualsAndHashCode(final Classifier clazz) {
+    return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, LombokClassifierUtils.MODEL_ENTITY_LOMBOKEQANDHASHC);
   }
   
   /**
