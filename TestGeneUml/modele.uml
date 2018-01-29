@@ -26,8 +26,8 @@
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_HHVwoHd_EeeM2-35BsQdHA" source="org.eclipse.papyrus">
         <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_HHVwoXd_EeeM2-35BsQdHA" key="nature" value="UML_Nature"/>
       </eAnnotations>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_HHVwond_EeeM2-35BsQdHA" name="produit" type="_DtDPUHdkEeeM2-35BsQdHA" association="_HHVJkHd_EeeM2-35BsQdHA"/>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_HHWXsHd_EeeM2-35BsQdHA" name="partenaire" type="_7g7NUHdhEeeM2-35BsQdHA" association="_HHVJkHd_EeeM2-35BsQdHA"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_HHVwond_EeeM2-35BsQdHA" name="produits" type="_DtDPUHdkEeeM2-35BsQdHA" association="_HHVJkHd_EeeM2-35BsQdHA"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_HHWXsHd_EeeM2-35BsQdHA" name="partenaires" type="_7g7NUHdhEeeM2-35BsQdHA" association="_HHVJkHd_EeeM2-35BsQdHA"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Package" xmi:id="_BMtFIPbqEeenzqnJmaxMgw" name="integration.entity">
       <packagedElement xmi:type="uml:Class" xmi:id="_7g7NUHdhEeeM2-35BsQdHA" name="Partenaire">
@@ -480,11 +480,11 @@
   <hornetMetamodele:attribute xmi:id="_YWVHYODWEeeIm77rkA_Dbw" base_Property="_HvWDYHhREee5VaLC8KFpCQ" lombokDisplayWith="true" fetchType="LAZY"/>
   <hornetMetamodele:attribute xmi:id="_YyGdYODWEeeIm77rkA_Dbw" base_Property="_8ULmoHhbEeeOuq4-sYhnIw" lombokDisplayWith="true" fetchType="LAZY" columnName="test_secteur_travail"/>
   <hornetMetamodele:attribute xmi:id="_ZolZcODWEeeIm77rkA_Dbw" base_Property="_HF3AgHhcEeeOuq4-sYhnIw" lombokDisplayWith="true" fetchType="LAZY" columnName="test_attributions"/>
-  <hornetMetamodele:attribute xmi:id="_acPD8ODWEeeIm77rkA_Dbw" base_Property="_j_h6gHhcEeeOuq4-sYhnIw" lombokDisplayWith="true" fetchType="LAZY" columnName="test_assistant_secondaire"/>
+  <hornetMetamodele:attribute xmi:id="_acPD8ODWEeeIm77rkA_Dbw" base_Property="_j_h6gHhcEeeOuq4-sYhnIw" lombokDisplayWith="true" fetchType="LAZY" columnName="test_eee_assistant_secondaire"/>
   <hornetMetamodele:attribute xmi:id="_a60dYODWEeeIm77rkA_Dbw" base_Property="_BAkU8IZMEeeKqroFtKzwQQ" lombokDisplayWith="true" fetchType="LAZY" columnName="test_type"/>
   <hornetMetamodele:attribute xmi:id="_bX-6gODWEeeIm77rkA_Dbw" base_Property="_2p5JIIZYEeer98zvvVbA3w" lombokDisplayWith="true" fetchType="LAZY" columnName="test_autres_types"/>
   <hornetMetamodele:attribute xmi:id="_cQJ4oODWEeeIm77rkA_Dbw" base_Property="_zAm0wIdJEeeoQPoJS9a2oQ" lombokDisplayWith="true" fetchType="LAZY" columnName="test_assistants"/>
-  <hornetMetamodele:attribute xmi:id="_dlR4gODWEeeIm77rkA_Dbw" base_Property="_MyF5gHdqEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY" columnName="test_nom"/>
+  <hornetMetamodele:attribute xmi:id="_dlR4gODWEeeIm77rkA_Dbw" base_Property="_MyF5gHdqEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY" columnName=""/>
   <hornetMetamodele:attribute xmi:id="_d_qHYODWEeeIm77rkA_Dbw" base_Property="_OlNc8HdqEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>
   <hornetMetamodele:attribute xmi:id="_esTK8ODWEeeIm77rkA_Dbw" base_Property="_Qbdz8HdqEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>
   <hornetMetamodele:attribute xmi:id="_fKzE0ODWEeeIm77rkA_Dbw" base_Property="_Ues_4HdqEeeM2-35BsQdHA" lombokDisplayWith="true" fetchType="LAZY"/>

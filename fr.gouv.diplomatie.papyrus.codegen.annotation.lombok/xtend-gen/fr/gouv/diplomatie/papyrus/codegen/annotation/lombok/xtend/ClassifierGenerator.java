@@ -73,6 +73,7 @@ import com.google.common.base.Objects;
 import fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.utils.LombokClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
+import java.util.ArrayList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
@@ -241,7 +242,7 @@ public class ClassifierGenerator {
     }
     boolean _isEntity = Utils.isEntity(clazz);
     if (_isEntity) {
-      final Iterable<Type> associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz);
+      final ArrayList<Type> associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz);
       for (final Type asso : associationsClasses) {
         Boolean _lombokDisplayWith = LombokClassifierUtils.getLombokDisplayWith(asso);
         boolean _equals_1 = ((_lombokDisplayWith).booleanValue() == true);
@@ -307,7 +308,7 @@ public class ClassifierGenerator {
     }
     boolean _isEntity = Utils.isEntity(clazz);
     if (_isEntity) {
-      final Iterable<Type> associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz);
+      final ArrayList<Type> associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz);
       for (final Type asso : associationsClasses) {
         {
           final Function1<Property, Boolean> _function_1 = (Property property) -> {

@@ -340,8 +340,9 @@ public class ClassifierUtils {
   /**
    * cherche les classe d'association liée a la classe
    */
-  public static Iterable<Type> getLinkedAssociationClass(final Classifier clazz) {
+  public static ArrayList<Type> getLinkedAssociationClass(final Classifier clazz) {
     final Model model = clazz.getModel();
+    final org.eclipse.uml2.uml.Package pakkage = clazz.getPackage();
     final Function1<Type, Boolean> _function = (Type type) -> {
       if ((type instanceof AssociationClass)) {
         final EList<Property> members = ((AssociationClass)type).getOwnedEnds();
@@ -359,7 +360,37 @@ public class ClassifierUtils {
       }
     };
     final Iterable<Type> associationsClasses = IterableExtensions.<Type>filter(model.getOwnedTypes(), _function);
-    return associationsClasses;
+    ArrayList<Type> assoClassesInPakkage = CollectionLiterals.<Type>newArrayList();
+    if ((pakkage != null)) {
+      final Function1<Type, Boolean> _function_1 = (Type type) -> {
+        if ((type instanceof AssociationClass)) {
+          final EList<Property> members = ((AssociationClass)type).getOwnedEnds();
+          boolean isIn = false;
+          for (final Property member : members) {
+            Type _type = member.getType();
+            boolean _equals = Objects.equal(_type, clazz);
+            if (_equals) {
+              isIn = true;
+            }
+          }
+          return Boolean.valueOf(isIn);
+        } else {
+          return Boolean.valueOf(false);
+        }
+      };
+      final Iterable<Type> associationsClassesInPakkage = IterableExtensions.<Type>filter(pakkage.getOwnedTypes(), _function_1);
+      for (final Type asso : associationsClassesInPakkage) {
+        assoClassesInPakkage.add(asso);
+      }
+    }
+    ArrayList<Type> classes = CollectionLiterals.<Type>newArrayList();
+    for (final Type asso_1 : associationsClasses) {
+      classes.add(asso_1);
+    }
+    for (final Type asso_2 : assoClassesInPakkage) {
+      classes.add(asso_2);
+    }
+    return classes;
   }
   
   /**

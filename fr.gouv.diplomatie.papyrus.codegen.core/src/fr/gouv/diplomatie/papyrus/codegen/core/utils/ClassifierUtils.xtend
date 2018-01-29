@@ -313,6 +313,7 @@ class ClassifierUtils{
 	 */
 	static def getLinkedAssociationClass(Classifier clazz){
 		val model = clazz.model
+		val pakkage = clazz.package
 		val associationsClasses = model.getOwnedTypes().filter[type|
 			if(type instanceof AssociationClass){
 				val members = type.ownedEnds
@@ -327,7 +328,39 @@ class ClassifierUtils{
 				return false
 			}
 		]
-		return associationsClasses
+		
+		var assoClassesInPakkage = newArrayList
+		if(pakkage !== null){
+			val associationsClassesInPakkage = pakkage.getOwnedTypes().filter[type|
+			if(type instanceof AssociationClass){
+				val members = type.ownedEnds
+				var isIn = false
+				for(member: members){
+					if(member.type == clazz){
+						isIn = true
+					}
+				}
+				return isIn
+			}else{
+				return false
+			}
+			]
+			for(asso : associationsClassesInPakkage){
+				assoClassesInPakkage.add(asso)
+			}
+		}
+		
+		var classes = newArrayList
+		
+		for(asso : associationsClasses){
+			classes.add(asso)
+		}
+	
+		for(asso : assoClassesInPakkage){
+			classes.add(asso)
+		}
+		
+		return classes
 	}
 	
 	/**

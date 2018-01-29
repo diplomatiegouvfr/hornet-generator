@@ -92,12 +92,16 @@ class PackageModelDaoClassGenerator{
 	
 	static def generateCode(Package pakkage){
 		val model = pakkage.model
-		val classes = model.getOwnedTypes().filter[type|
+		val classes = pakkage.getOwnedTypes().filter[type|
 			Utils.isEntity(type) && ClassifierUtils.canBeGenerated(type as Classifier)
 		]
 		
-		val enums = model.getOwnedTypes().filter[type|
+		val enums = pakkage.getOwnedTypes().filter[type|
 			Utils.isNomenclature(type) && ClassifierUtils.canBeGenerated(type as Classifier)
+		]
+		
+		val associationsClassesInPakkage = pakkage.getOwnedTypes().filter[type|
+			type instanceof AssociationClass
 		]
 		
 		val associationsClasses = model.getOwnedTypes().filter[type|
@@ -143,6 +147,9 @@ class PackageModelDaoClassGenerator{
 			«associationsClasses.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
 			    ]»
+			«associationsClassesInPakkage.fold("")[acc, clazz |
+			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
+			    ]»
 			«enums.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEnumEntityGetter»'''
 			    ]»
@@ -156,6 +163,9 @@ class PackageModelDaoClassGenerator{
 		        acc + '''«(clazz as Classifier).generateMultivaluedAttributesEntityGetter»'''
 		    ]»
 		    «associationsClasses.fold("")[acc, clazz |
+		    	acc + '''«(clazz as Classifier).generateACEntityGetter»'''
+		    ]»
+		    «associationsClassesInPakkage.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateACEntityGetter»'''
 		    ]»
 		    «enums.fold("")[acc, clazz |
