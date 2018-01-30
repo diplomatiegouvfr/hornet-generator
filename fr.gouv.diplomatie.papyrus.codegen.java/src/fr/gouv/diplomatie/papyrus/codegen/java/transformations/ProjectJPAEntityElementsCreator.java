@@ -70,7 +70,7 @@
  */
 
 /**
- * fr.gouv.diplomatie.papyrus.codegen.typescript - Générateur de code typescript pour 
+ * fr.gouv.diplomatie.papyrus.codegen.java - Générateur de code Java pour 
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères

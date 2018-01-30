@@ -70,8 +70,8 @@
  */
 
 /**
- * fr.gouv.diplomatie.papyrus.codegen.typescript - Générateur de code typescript pour 
- * des applications Hornet JS
+ * fr.gouv.diplomatie.papyrus.codegen.annotation.lombok - Générateur d'annotations lombok
+ * pour des entités JPA
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
  * @version v1.0.0

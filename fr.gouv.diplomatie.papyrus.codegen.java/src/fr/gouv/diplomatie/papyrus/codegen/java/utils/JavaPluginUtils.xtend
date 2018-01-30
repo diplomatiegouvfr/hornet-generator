@@ -70,8 +70,8 @@
  */
 
 /**
- * fr.gouv.diplomatie.papyrus.codegen.core - Ensembles des outils mis à dispositions
- * pour l'écriture d'un générateur de code Hornet
+ * fr.gouv.diplomatie.papyrus.codegen.java - Générateur de code java pour 
+ * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
  * @version v1.0.0
