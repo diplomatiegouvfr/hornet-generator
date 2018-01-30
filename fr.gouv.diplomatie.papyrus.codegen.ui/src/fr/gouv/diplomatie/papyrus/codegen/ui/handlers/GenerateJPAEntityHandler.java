@@ -100,7 +100,7 @@ public class GenerateJPAEntityHandler extends HornetCodeHandler {
 	}
 	
 	public void generate(PackageableElement packageableElement) {
-		console.out.println("generate code Handler : generate()");
+		console.out.println("JPA Entity Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 	

@@ -99,7 +99,7 @@ public class GenerateMetierClassHandler extends HornetCodeHandler {
 	}
 	
 	public void generate(PackageableElement packageableElement) {
-		console.out.println("generate metier Class Handler : generate()");
+		console.out.println("Metier Class Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 

@@ -102,7 +102,7 @@ public class GenerateCodeHandler extends HornetCodeHandler {
 	}
 	
 	public void generate(PackageableElement packageableElement) {
-		console.out.println("generate code Handler : generate()");
+		console.out.println("Code Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 	

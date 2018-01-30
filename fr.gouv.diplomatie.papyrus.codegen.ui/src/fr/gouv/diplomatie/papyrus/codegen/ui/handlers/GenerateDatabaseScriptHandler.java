@@ -93,7 +93,7 @@ public class GenerateDatabaseScriptHandler extends HornetCodeHandler {
 	}
 	
 	public void generate(PackageableElement packageableElement) {
-		console.out.println("generate database script Handler : generate()");
+		console.out.println("Database Script Handler : generate()");
 		creator.createPackageableElement(packageableElement, null, true);
 	}
 
