@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.0.0
+ * @version v1.1.0
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
@@ -115,7 +115,10 @@ public class  NomenclatureEnumClassGenerator{
 	
 	static def generateValue(Property value){
 		val code = Utils.getNomenclatureCode(value)
-		val libelle = Utils.getNomenclatureLibelle(value)
+		var libelle = Utils.getNomenclatureLibelle(value)
+		if(libelle === null || libelle == ""){
+			libelle = value.name
+		}
 		if(code !== null){
 			'''«libelle» = «code»'''
 		}else{

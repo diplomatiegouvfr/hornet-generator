@@ -644,6 +644,6 @@ public class Utils {
         }
       }
     }
-    return null;
+    return Boolean.valueOf(true);
   }
 }

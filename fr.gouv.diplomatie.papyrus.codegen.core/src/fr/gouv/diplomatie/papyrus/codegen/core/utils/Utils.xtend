@@ -74,7 +74,7 @@
  * pour l'écriture d'un générateur de code Hornet
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.0.0
+ * @version v1.1.0
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.core.utils
@@ -560,7 +560,7 @@ public class Utils{
 		}else if (Utils.isValueObject(elem)){
 			return Utils.getStereotypePropertyValue(elem, Utils.MODEL_VALUEOBJECT, Utils.MODEL_VALUEOBJECT_GENERATED)
 		}
-		return null
+		return true
 	}
 	
 }

@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.0.0
+ * @version v1.1.0
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.pakkage;
@@ -114,6 +114,8 @@ class PackageModelDaoClassGenerator{
 		import { SequelizeUtils } from "hornet-js-database/src/sequelize/sequelize-utils";
 		import { injectable, Scope, Side } from "hornet-js-core/src/inject/injectable";
 		import { HornetSequelizeModel } from "hornet-js-database/src/sequelize/hornet-sequelize-model";
+		import { HornetSequelizeInstanceModel } from "hornet-js-database/src/sequelize/hornet-sequelize-attributes";
+		
 		import { inject } from "hornet-js-core/src/inject/inject";
 		
 		«pakkage.generateImports»
@@ -141,19 +143,19 @@ class PackageModelDaoClassGenerator{
 		    	«classes.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEntityGetter»'''
 			    ]»
-			«classes.fold("")[acc, clazz |
+			    «classes.fold("")[acc, clazz |
 			        acc + '''«(clazz as Classifier).generateCallMultivaluedAttributesEntityGetter»'''
 			    ]»
-			«associationsClasses.fold("")[acc, clazz |
+			    «associationsClasses.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
 			    ]»
-			«associationsClassesInPakkage.fold("")[acc, clazz |
+			    «associationsClassesInPakkage.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
 			    ]»
-			«enums.fold("")[acc, clazz |
+				«enums.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEnumEntityGetter»'''
 			    ]»
-		    }
+		   }
 		    
 		    /** METHODS */
 		    «classes.fold("")[acc, clazz |
@@ -177,8 +179,8 @@ class PackageModelDaoClassGenerator{
 	
 	static def generateImports(Package pakkage){
 		val model = pakkage.model
-		val classes = model.getOwnedTypes().filter[type|
-			Utils.isEntity(type)  && ClassifierUtils.canBeGenerated(type as Classifier)
+		val classes = pakkage.getOwnedTypes().filter[type|
+			(Utils.isEntity(type) || Utils.isNomenclature(type))  && ClassifierUtils.canBeGenerated(type as Classifier)
 		]
 		
 		val enums = model.getOwnedTypes().filter[type|
@@ -249,7 +251,7 @@ class PackageModelDaoClassGenerator{
 		'''
 		
 		@Entity("«ClassifierUtils.getTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
-		public «Utils.getFirstToLowerCase(clazz.name)»Entity: Sequelize.Model<any, any>;
+		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<any>;
 		«IF Utils.isEntity(clazz)»«clazz.generateMultivaluedAttributesEntityDeclaration»«ENDIF»
 		'''
 	}
@@ -283,7 +285,7 @@ class PackageModelDaoClassGenerator{
 		'''
 		
 		@Entity("«Utils.toSnakeCase(tableName)»", «PropertyUtils.getMultivaluedPropertyModelName(property,fromClass)»)
-		public «Utils.getFirstToLowerCase(entityName)»Entity: Sequelize.Model<any, any>;
+		public «Utils.getFirstToLowerCase(entityName)»Entity: HornetSequelizeInstanceModel<any>;
 		'''
 	}
 	
@@ -291,7 +293,7 @@ class PackageModelDaoClassGenerator{
 		'''
 		
 		@Entity("«ClassifierUtils.getTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
-		public «Utils.getFirstToLowerCase(clazz.name)»Entity: Sequelize.Model<any, any>;
+		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<any>;
 		'''
 	}
 	
@@ -335,10 +337,12 @@ class PackageModelDaoClassGenerator{
 		'''
 		«ids.fold("")[acc, id |
 			val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, ""))
-			acc +
-			'''
-			SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(clazz.name)»Entity, "«idName»", "«idName»");
-			'''
+			acc + generateInitRelationBelongsTo(
+				'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+				'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
+				'''"«idName»"''',
+				'''"«idName»"'''
+			)
 		]»
 		'''
 	}
@@ -403,7 +407,13 @@ class PackageModelDaoClassGenerator{
 					'''«ids.fold("")[acc, id |
 						//val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
 						val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
-						acc + '''SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(tableName)»Entity, "«propName»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");'''
+						acc + generateInitRelationBelongsToMany(
+							'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+							'''this.«Utils.getFirstToLowerCase(tableName)»Entity''',
+							'''"«propName»"''',
+							'''"«Utils.toSnakeCase(idName)»"''',
+							'''"«Utils.toSnakeCase(tableName)»"'''
+						)
 					]»'''
 				}else{
 					'''«type.generateRelations(fromClass, propName, name)»'''
@@ -428,9 +438,13 @@ class PackageModelDaoClassGenerator{
 //					val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
 					val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
 					
-					acc + '''
-					SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");
-					'''
+					acc + generateInitRelationBelongsToMany(
+						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+						'''"«name»"''',
+						'''"«Utils.toSnakeCase(idName)»"''',
+						'''"«Utils.toSnakeCase(tableName)»"'''
+					)
 				]»
 				'''
 			}else{
@@ -438,9 +452,12 @@ class PackageModelDaoClassGenerator{
 				'''
 				«idsProp.fold("")[acc, id |
 					val idName = Utils.toSnakeCase(Utils.addAdditionnalName(databaseAddName,PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(PropertyUtils.getDatabaseName(property,property.name,""))))
-					acc + '''
-					SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»");
-					'''
+					acc + generateInitRelationBelongsTo(
+						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+						'''"«name»"''',
+						'''"«Utils.toSnakeCase(idName)»"'''
+					)
 				]»
 				'''
 			}
@@ -460,15 +477,22 @@ class PackageModelDaoClassGenerator{
 			'''
 			«ids.fold("")[acc, id |
 				val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
-				acc + '''
-				SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");
-				'''
+				acc + generateInitRelationBelongsToMany(
+					'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+					'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+					'''"«name»"''',
+					'''"«Utils.toSnakeCase(idName)»"''',
+					'''"«Utils.toSnakeCase(tableName)»"'''
+				)
 			]»
 			'''
 		}else{
-			'''
-			SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«name»", "code_«Utils.toSnakeCase(propName)»");
-			'''
+			generateInitRelationBelongsTo(
+				'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+				'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+				'''"«name»"''',
+				'''"code_«Utils.toSnakeCase(propName)»"'''
+			)
 		}
 	}
 	
@@ -481,9 +505,13 @@ class PackageModelDaoClassGenerator{
 		'''
 		«ids.fold("")[acc, id |
 			val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
-			acc + '''
-			SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(tableName)»Entity, "«property.name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");
-			'''
+			acc + generateInitRelationBelongsToMany(
+				'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+				'''this.«Utils.getFirstToLowerCase(tableName)»Entity''',
+				'''"«property.name»"''',
+				'''"«Utils.toSnakeCase(idName)»"''',
+				'''"«Utils.toSnakeCase(tableName)»"'''
+			)
 		]»
 		'''
 	
@@ -515,7 +543,13 @@ class PackageModelDaoClassGenerator{
 					val ids = ClassifierUtils.getId(fromClass)
 					'''«ids.fold("")[acc, id |
 						val idName = Utils.toSnakeCase(PropertyUtils.getDatabaseName(id, id.name, "") + Utils.getFirstToUpperCase(fromClass.name))
-						acc + '''SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(tableName)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");'''
+						acc + generateInitRelationBelongsToMany(
+							'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+							'''this.«Utils.getFirstToLowerCase(tableName)»Entity''',
+							'''"«name»"''',
+							'''"«Utils.toSnakeCase(idName)»"''',
+							'''"«Utils.toSnakeCase(tableName)»"'''
+						)
 					]»'''
 				}else{
 					'''«type.generateForeignRelations(fromClass, name)»'''
@@ -549,9 +583,13 @@ class PackageModelDaoClassGenerator{
 							name = member.get(0).name
 						}
 						val tableName = owner.name + Utils.getFirstToUpperCase(Utils.addAdditionnalName(additionnalName, property.name))
-						acc + '''
-						SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(owner.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»", "«Utils.toSnakeCase(tableName)»");
-						'''
+						acc + generateInitRelationBelongsToMany(
+							'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+							'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
+							'''"«name»"''',
+							'''"«Utils.toSnakeCase(idName)»"''',
+							'''"«Utils.toSnakeCase(tableName)»"'''
+						)
 					]»
 					'''
 				}else{
@@ -566,9 +604,12 @@ class PackageModelDaoClassGenerator{
 							
 							name = member.get(0).name
 						}
-						acc + '''
-						SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(owner.name)»Entity, "«name»", "«Utils.toSnakeCase(idName)»");
-						'''
+						acc + generateInitRelationBelongsTo(
+							'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+							'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
+							'''"«name»"''',
+							'''"«Utils.toSnakeCase(idName)»"'''
+						)
 					]»
 					'''
 				}
@@ -650,24 +691,14 @@ class PackageModelDaoClassGenerator{
 		'''
 		«members.fold("")[acc, member |
 			val name = Utils.addAdditionnalName(PropertyUtils.getDatabaseName(property,property.name,""), member.name)
-			/*try {
-			       «Utils.getFirstToLowerCase(fromClass.name)»Entity.belongsToMany(ModelDAO.«Utils.getFirstToLowerCase(clazz.name)»Entity,
-			           {
-			               as: "«Utils.getFirstToLowerCase(clazz.name)»",
-			               through: "«Utils.toSnakeCase(clazz.name)»",
-			               foreignKey: "«Utils.toSnakeCase(name)»",
-			               otherKey: "«Utils.toSnakeCase(name)»"
-			           }
-			       );
-			   } catch (e) {
-			       if (e.name == "SequelizeAssociationError") {
-			
-			       }
-			} */
-			acc +
-			'''
-			SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(clazz.name)»Entity, "«Utils.getFirstToLowerCase(clazz.name)»", "«Utils.toSnakeCase(name)»", "«Utils.toSnakeCase(clazz.name)»", "«Utils.toSnakeCase(name)»");
-			'''
+			acc + generateInitRelationBelongsToMany(
+				'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+				'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
+				'''"«Utils.getFirstToLowerCase(clazz.name)»"''',
+				'''"«Utils.toSnakeCase(name)»"''',
+				'''"«Utils.toSnakeCase(clazz.name)»"''',
+				'''"«Utils.toSnakeCase(name)»"'''
+			)
 		]»
 		'''	
 	}
@@ -688,13 +719,20 @@ class PackageModelDaoClassGenerator{
 		val name = Utils.addAdditionnalName(PropertyUtils.getDatabaseName(property,property.name,""), fromClass.name)
 		'''
 		«members.fold("")[acc, member |
-			acc + '''SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(clazz.name)»Entity, "«member.name»", "«Utils.toSnakeCase(name)»", "«Utils.toSnakeCase(clazz.name)»");''' 
+			acc + generateInitRelationBelongsToMany(
+				'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+				'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
+				'''"«member.name»"''',
+				'''"«Utils.toSnakeCase(name)»"''',
+				'''"«Utils.toSnakeCase(clazz.name)»"'''
+			)
 		]»
 		'''
 	}
 	
 	static def generateEnumEntityGetter(Classifier clazz){
 		'''
+		
 		public init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void{
 			«clazz.generateEnumForeignRelations(clazz,'')»
 		}
@@ -744,13 +782,20 @@ class PackageModelDaoClassGenerator{
 				}
 				val tableName = owner.name + Utils.getFirstToUpperCase(Utils.addAdditionnalName(additionnalName, property.name))
 				if(property.multivalued){
-					'''
-					SequelizeUtils.initRelationBelongsToMany(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(owner.name)»Entity, "«name»", "code", "«Utils.toSnakeCase(tableName)»");
-					'''
+					generateInitRelationBelongsToMany(
+						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
+						'''"«name»"''',
+						'''"code"''',
+						'''"«Utils.toSnakeCase(tableName)»"'''
+					)
 				}else{
-					'''
-					SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, this.«Utils.getFirstToLowerCase(owner.name)»Entity, "«name»", "code");
-					'''
+					 generateInitRelationBelongsTo(
+						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
+						'''"«name»"''',
+						'''"code"'''
+					)
 				}
 			}
 		}
@@ -810,9 +855,19 @@ class PackageModelDaoClassGenerator{
 			«ids.fold("")[acc, id |
 				val idName = PropertyUtils.getDatabaseName(id, PropertyUtils.getDatabaseName(id, id.name, ""), "")
 				if(Utils.isEntity(type)){
-					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(idName)»_«Utils.toSnakeCase(fromClass.name)»");'''
+					acc + generateInitRelationBelongsTo(
+						'''this.«Utils.getFirstToLowerCase(entityName)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+						'''"«Utils.getFirstToLowerCase(fromClass.name)»"''',
+						'''"«Utils.toSnakeCase(idName)»_«Utils.toSnakeCase(fromClass.name)»"'''
+					)
 				}else{
-					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, "«Utils.getFirstToLowerCase(fromClass.name)»", "«Utils.toSnakeCase(idName)»");'''
+					acc + generateInitRelationBelongsTo(
+						'''this.«Utils.getFirstToLowerCase(entityName)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+						'''"«Utils.getFirstToLowerCase(fromClass.name)»"''',
+						'''"«Utils.toSnakeCase(idName)»"'''
+					)
 				}
 			]»
 			«property.generateMARelation(fromClass, "", entityName)»
@@ -841,17 +896,31 @@ class PackageModelDaoClassGenerator{
 						idName = Utils.addAdditionnalName(additionnalName, Utils.addAdditionnalName(PropertyUtils.getDatabaseName(id, id.name, ""), type.name))
 						fieldName =  Utils.addAdditionnalName(additionnalName, type.name)
 					}
-					acc + '''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«Utils.getFirstToLowerCase(fieldName)»", "«Utils.toSnakeCase(idName)»");'''
+					acc + generateInitRelationBelongsTo(
+						'''this.«Utils.getFirstToLowerCase(entityName)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+						'''"«Utils.getFirstToLowerCase(fieldName)»"''',
+						'''"«Utils.toSnakeCase(idName)»"'''
+					)
 				]»
 				'''
 			}else if(Utils.isValueObject(type)){
 				'''«property.generateVOMARelation(fromClass,name, entityName)»'''
 			}else if(Utils.isNomenclature(type)){
 				if(additionnalName == ""){
-					'''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«Utils.getFirstToLowerCase(name)»", "code");'''
+					generateInitRelationBelongsTo(
+						'''this.«Utils.getFirstToLowerCase(entityName)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+						'''"«Utils.getFirstToLowerCase(name)»"''',
+						'''"code"'''
+					)
 				}else{
-					'''SequelizeUtils.initRelationBelongsTo(this.«Utils.getFirstToLowerCase(entityName)»Entity, this.«Utils.getFirstToLowerCase(type.name)»Entity, "«Utils.getFirstToLowerCase(name)»", "«Utils.toSnakeCase(name)»");'''
-					
+					generateInitRelationBelongsTo(
+						'''this.«Utils.getFirstToLowerCase(entityName)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+						'''"«Utils.getFirstToLowerCase(name)»"''',
+						'''"«Utils.toSnakeCase(name)»"'''
+					)					
 				}
 			}
 		}
@@ -887,6 +956,36 @@ class PackageModelDaoClassGenerator{
 			val entityName = fromClass.name + Utils.getFirstToUpperCase(attribut.name)
 			acc + '''«attribut.generateCallAttributEntityGetter(fromClass, entityName)»'''
 		]»
+		'''
+	}
+	
+	/**
+	 * génère une ligne initRelationBelongsTo
+	 */
+	static def generateInitRelationBelongsTo(String fromEntity, String toEntity, String alias, String foreignKey){
+		return 
+		'''
+		SequelizeUtils.initRelationBelongsTo({fromEntity: «fromEntity», toEntity: «toEntity», alias: «alias», foreignKey: «foreignKey»});
+		'''
+	}
+	
+	/**
+	 * génère une ligne initRelationBelongsToMany avec option otherKey
+	 */
+	static def generateInitRelationBelongsToMany(String fromEntity, String toEntity, String alias, String foreignKey, String throughTable, String otherKey){
+		return 
+		'''
+		SequelizeUtils.initRelationBelongsToMany({fromEntity: «fromEntity», toEntity: «toEntity», alias: «alias», foreignKey: «foreignKey», throughTable: «throughTable», otherKey: «otherKey»});
+		'''
+	}
+	
+		/**
+	 * génère une ligne initRelationBelongsToMany
+	 */
+	static def generateInitRelationBelongsToMany(String fromEntity, String toEntity, String alias, String foreignKey, String throughTable){
+		return 
+		'''
+		SequelizeUtils.initRelationBelongsToMany({fromEntity: «fromEntity», toEntity: «toEntity», alias: «alias», foreignKey: «foreignKey», throughTable: «throughTable»});
 		'''
 	}
 }
