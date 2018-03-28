@@ -199,13 +199,32 @@ class PackageModelDaoClassGenerator{
 	    ]»«associationsClasses.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAssociationModelImport»'''
 	    ]»
+		«classes.fold("")[acc, clazz |
+	    	acc + '''«(clazz as Classifier).generateAttributesImport»'''
+	    ]»«enums.fold("")[acc, clazz |
+	    	acc + '''«(clazz as Classifier).generateAttributesImport»'''
+	    ]»«associationsClasses.fold("")[acc, clazz |
+	    	acc + '''«(clazz as Classifier).generateAssociationAttributesImport»'''
+	    ]»
 		'''
 	}
 	
+	/**
+	 * génère l'import de la classe de model
+	 */
 	static def generateModelImport(Classifier clazz){
 		'''
 		import { «ClassifierUtils.getModelName(clazz)» } from "«ClassifierUtils.getModelPath(clazz)»";
 		«clazz.generateMultivaluedAttributesModelImport(clazz)»
+		'''
+	}
+	
+	/**
+	 * génère l'import de l'interface attributes
+	 */
+	static def generateAttributesImport(Classifier clazz){
+		'''
+		import { «ClassifierUtils.getAttributesInterfaceName(clazz)» } from "«ClassifierUtils.getAttributesInterfacePath(clazz)»";
 		'''
 	}
 	
@@ -244,6 +263,12 @@ class PackageModelDaoClassGenerator{
 		'''
 	}
 	
+	static def generateAssociationAttributesImport(Classifier clazz){
+		'''
+		import { «ClassifierUtils.getAttributesInterfaceName(clazz)» } from "«ClassifierUtils.getAttributesInterfacePath(clazz)»";
+		'''
+	}
+	
 	/**
 	 * génère les déclaration d'entité pour les entités
 	 */
@@ -251,7 +276,7 @@ class PackageModelDaoClassGenerator{
 		'''
 		
 		@Entity("«ClassifierUtils.getTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
-		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<any>;
+		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 		«IF Utils.isEntity(clazz)»«clazz.generateMultivaluedAttributesEntityDeclaration»«ENDIF»
 		'''
 	}
@@ -293,7 +318,7 @@ class PackageModelDaoClassGenerator{
 		'''
 		
 		@Entity("«ClassifierUtils.getTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
-		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<any>;
+		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 		'''
 	}
 	
