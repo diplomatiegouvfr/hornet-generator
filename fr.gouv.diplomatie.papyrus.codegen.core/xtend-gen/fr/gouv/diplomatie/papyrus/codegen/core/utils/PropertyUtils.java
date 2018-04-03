@@ -262,18 +262,28 @@ public class PropertyUtils {
   
   /**
    * retourne la valeur de columnName ou name si l'attribut n'en possède pas (en y ajoutant l'additionalName)
+   * le paramètre additionalName ne sera pas mis en forme
    */
   public static String getDatabaseName(final Property property, final String name, final String additionnalName) {
-    String retour = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, name));
+    String retour = Utils.toSnakeCase(name).toUpperCase();
+    final String columnName = PropertyUtils.getColumnName(property);
+    if (((columnName != null) && (columnName != ""))) {
+      retour = ((String) columnName).toUpperCase();
+    }
+    if (((additionnalName != null) && (additionnalName != ""))) {
+      retour = ((additionnalName + "_") + retour);
+    }
+    return retour;
+  }
+  
+  public static String getName(final Property property, final String name, final String additionnalName) {
+    String retour = name;
     final String columnName = PropertyUtils.getColumnName(property);
     if (((columnName != null) && (columnName != ""))) {
       retour = ((String) columnName);
-      if (((additionnalName != null) && (additionnalName != ""))) {
-        String _snakeCase = Utils.toSnakeCase(additionnalName);
-        String _plus = (_snakeCase + "_");
-        String _plus_1 = (_plus + retour);
-        retour = _plus_1;
-      }
+    }
+    if (((additionnalName != null) && (additionnalName != ""))) {
+      retour = Utils.addAdditionnalName(additionnalName, retour);
     }
     return retour;
   }

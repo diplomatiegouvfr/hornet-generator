@@ -153,11 +153,14 @@ public class AssociationClassModelGenerator {
 	 * génère l'attribut lié à un membre de type entity
 	 */
 	static def generateEntityMemberAttribute(Property property, Property id, Classifier fromClass){
+		val idName = PropertyUtils.getDatabaseName(id, id.name, null )
+		val propertyName = PropertyUtils.getDatabaseName(property, property.name, null )
+		val fieldName = idName + "_"+  propertyName
 		val name = id.name + Utils.getFirstToUpperCase(property.name)
 		'''
 		«name»: {
 			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
-			field: "«Utils.toSnakeCase(name)»",
+			field: "«fieldName»",
 			allowNull: «PropertyUtils.isNullable(property)»,
 			primaryKey: true,
 			references: {
@@ -168,12 +171,13 @@ public class AssociationClassModelGenerator {
 	}
 	
 	static def generateEnumMemberAttributes(Property property, Classifier fromClass){
-		val name = property.name
+	    val name = property.name
+		val fieldName = PropertyUtils.getDatabaseName(property, property.name, null )
 		val type = property.type
 		'''
 		«name»: {
 			type: Sequelize.«TypeUtils.getEnumSequelizeType(type as Classifier)»,
-			field: "«Utils.toSnakeCase(name)»",
+			field: "«fieldName»",
 			allowNull: «PropertyUtils.isNullable(property)»,
 			primaryKey: true,
 			references: {

@@ -396,6 +396,17 @@ class ClassifierUtils{
 	}
 	
 	/**
+	 * retourne le nom de la table liée a la classe
+	 */
+	static def String getDBTableName(Classifier clazz){
+		val name = getTableNameValue(clazz)
+		if(name === null){
+			return Utils.toDbName(clazz.name)
+		}
+		return Utils.toDbName(name.toString)
+	}
+	
+	/**
 	 * retourne le chemin vers la classe
 	 */
 	static def String getClassPath(Classifier clazz){

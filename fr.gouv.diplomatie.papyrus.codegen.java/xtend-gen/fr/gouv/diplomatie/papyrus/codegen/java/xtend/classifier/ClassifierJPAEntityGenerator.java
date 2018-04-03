@@ -308,8 +308,8 @@ public class ClassifierJPAEntityGenerator {
     _builder_1.append("@Entity");
     _builder_1.newLine();
     _builder_1.append("@Table(name = \"");
-    String _tableName = ClassifierUtils.getTableName(clazz);
-    _builder_1.append(_tableName);
+    String _dbName = Utils.toDbName(ClassifierUtils.getTableName(clazz));
+    _builder_1.append(_dbName);
     _builder_1.append("\"");
     {
       if ((schema != null)) {
@@ -495,6 +495,11 @@ public class ClassifierJPAEntityGenerator {
         return Boolean.valueOf((_type != fromClass));
       };
       final Property end = ((Property[])Conversions.unwrapArray(IterableExtensions.<Property>filter(clazz.getOwnedEnds(), _function), Property.class))[0];
+      final Function1<Property, Boolean> _function_1 = (Property property) -> {
+        Type _type = property.getType();
+        return Boolean.valueOf(Objects.equal(_type, fromClass));
+      };
+      final Property fromEnd = ((Property[])Conversions.unwrapArray(IterableExtensions.<Property>filter(clazz.getOwnedEnds(), _function_1), Property.class))[0];
       final Property idFrom = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(fromClass), Property.class))[0];
       final String idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
       final EnumerationLiteralImpl fetchType = JavaPluginUtils.getFetchType(clazz);
@@ -503,17 +508,17 @@ public class ClassifierJPAEntityGenerator {
       if (_isEntity) {
         CharSequence _xblockexpression_1 = null;
         {
-          final String tableName = Utils.toSnakeCase(clazz.getName());
-          String _name = idFrom.getName();
-          String _firstToUpperCase = Utils.getFirstToUpperCase(((Classifier) fromClass).getName());
-          String _plus = (_name + _firstToUpperCase);
-          final String idFromName = Utils.toSnakeCase(_plus);
+          final String tableName = Utils.toDbName(clazz.getName());
+          String _databaseName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
+          String _plus = (_databaseName + "_");
+          String _dbName = Utils.toDbName(fromEnd.getName());
+          final String idFromName = (_plus + _dbName);
           Type _type = end.getType();
           final Property idTo = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(((Classifier) _type)), Property.class))[0];
-          String _name_1 = idTo.getName();
-          String _firstToUpperCase_1 = Utils.getFirstToUpperCase(end.getType().getName());
-          String _plus_1 = (_name_1 + _firstToUpperCase_1);
-          final String idToName = Utils.toSnakeCase(_plus_1);
+          String _databaseName_1 = PropertyUtils.getDatabaseName(idTo, idTo.getName(), "");
+          String _plus_1 = (_databaseName_1 + "_");
+          String _dbName_1 = Utils.toDbName(end.getName());
+          final String idToName = (_plus_1 + _dbName_1);
           final String idToDbName = PropertyUtils.getDatabaseName(idTo, idTo.getName(), "");
           StringConcatenation _builder = new StringConcatenation();
           _builder.newLine();
@@ -521,8 +526,8 @@ public class ClassifierJPAEntityGenerator {
           {
             if ((fetchType != null)) {
               _builder.append("(fetch=FetchType.");
-              String _name_2 = fetchType.getName();
-              _builder.append(_name_2);
+              String _name = fetchType.getName();
+              _builder.append(_name);
               _builder.append(")");
             }
           }
@@ -542,11 +547,11 @@ public class ClassifierJPAEntityGenerator {
           _builder.append(idToDbName, "\t");
           _builder.append("\"))");
           _builder.newLineIfNotEmpty();
-          String _name_3 = clazz.getVisibility().getName();
-          _builder.append(_name_3);
+          String _name_1 = clazz.getVisibility().getName();
+          _builder.append(_name_1);
           _builder.append(" Set<");
-          String _name_4 = end.getType().getName();
-          _builder.append(_name_4);
+          String _name_2 = end.getType().getName();
+          _builder.append(_name_2);
           _builder.append("> ");
           String _firstToLowerCase = Utils.getFirstToLowerCase(end.getName());
           _builder.append(_firstToLowerCase);
@@ -564,11 +569,11 @@ public class ClassifierJPAEntityGenerator {
           _builder.append("@ElementCollection");
           _builder.newLine();
           _builder.append("@CollectionTable(name = \"");
-          String _snakeCase = Utils.toSnakeCase(fromClass.getName());
-          _builder.append(_snakeCase);
+          String _dbName = Utils.toDbName(fromClass.getName());
+          _builder.append(_dbName);
           _builder.append("_");
-          String _snakeCase_1 = Utils.toSnakeCase(clazz.getName());
-          _builder.append(_snakeCase_1);
+          String _dbName_1 = Utils.toDbName(clazz.getName());
+          _builder.append(_dbName_1);
           _builder.append("\")");
           _builder.newLineIfNotEmpty();
           String _name = clazz.getVisibility().getName();
@@ -588,11 +593,11 @@ public class ClassifierJPAEntityGenerator {
           _builder_1.append("@ElementCollection");
           _builder_1.newLine();
           _builder_1.append("@CollectionTable(name = \"");
-          String _snakeCase_2 = Utils.toSnakeCase(fromClass.getName());
-          _builder_1.append(_snakeCase_2);
+          String _dbName_2 = Utils.toDbName(fromClass.getName());
+          _builder_1.append(_dbName_2);
           _builder_1.append("_");
-          String _snakeCase_3 = Utils.toSnakeCase(clazz.getName());
-          _builder_1.append(_snakeCase_3);
+          String _dbName_3 = Utils.toDbName(clazz.getName());
+          _builder_1.append(_dbName_3);
           _builder_1.append("\", joinColumns = @JoinColumn(name = \"");
           _builder_1.append(idFromDbName);
           _builder_1.append("\"))");
@@ -683,27 +688,27 @@ public class ClassifierJPAEntityGenerator {
             String _name = fromClass.getName();
             String _firstToUpperCase = Utils.getFirstToUpperCase(property.getName());
             String _plus = (_name + _firstToUpperCase);
-            final String tableName = Utils.toSnakeCase(_plus);
+            final String tableName = Utils.toDbName(_plus);
             final Property idFrom = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(fromClass), Property.class))[0];
-            String _name_1 = idFrom.getName();
-            String _firstToUpperCase_1 = Utils.getFirstToUpperCase(((Classifier) fromClass).getName());
-            String _plus_1 = (_name_1 + _firstToUpperCase_1);
-            final String idFromName = Utils.toSnakeCase(_plus_1);
+            String _databaseName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
+            String _plus_1 = (_databaseName + "_");
+            String _dbName = Utils.toDbName(fromClass.getName());
+            final String idFromName = (_plus_1 + _dbName);
             final String idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
             Type _type_1 = property.getType();
             final Property idTo = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(((Classifier) _type_1)), Property.class))[0];
-            String _name_2 = idTo.getName();
-            String _firstToUpperCase_2 = Utils.getFirstToUpperCase(property.getName());
-            String _plus_2 = (_name_2 + _firstToUpperCase_2);
-            final String idToName = Utils.toSnakeCase(_plus_2);
+            String _databaseName_1 = PropertyUtils.getDatabaseName(idTo, idTo.getName(), "");
+            String _plus_2 = (_databaseName_1 + "_");
+            String _databaseName_2 = PropertyUtils.getDatabaseName(property, property.getName(), "");
+            final String idToName = (_plus_2 + _databaseName_2);
             final String idToDbName = PropertyUtils.getDatabaseName(idTo, idTo.getName(), "");
             StringConcatenation _builder = new StringConcatenation();
             _builder.append("@ManyToMany");
             {
               if ((fetchType != null)) {
                 _builder.append("(fetch=FetchType.");
-                String _name_3 = fetchType.getName();
-                _builder.append(_name_3);
+                String _name_1 = fetchType.getName();
+                _builder.append(_name_1);
                 _builder.append(")");
               }
             }
@@ -733,18 +738,18 @@ public class ClassifierJPAEntityGenerator {
           {
             if ((fetchType != null)) {
               _builder_1.append("(fetch=FetchType.");
-              String _name_4 = fetchType.getName();
-              _builder_1.append(_name_4);
+              String _name_2 = fetchType.getName();
+              _builder_1.append(_name_2);
               _builder_1.append(")");
             }
           }
           _builder_1.newLineIfNotEmpty();
           _builder_1.append("//@JoinColumn(name = \"");
-          String _databaseName = PropertyUtils.getDatabaseName(idTo_1, idTo_1.getName(), null);
-          _builder_1.append(_databaseName);
+          String _databaseName_3 = PropertyUtils.getDatabaseName(idTo_1, idTo_1.getName(), null);
+          _builder_1.append(_databaseName_3);
           _builder_1.append("_");
-          String _databaseName_1 = PropertyUtils.getDatabaseName(property, property.getName(), null);
-          _builder_1.append(_databaseName_1);
+          String _databaseName_4 = PropertyUtils.getDatabaseName(property, property.getName(), null);
+          _builder_1.append(_databaseName_4);
           _builder_1.append("\", nullable = ");
           _builder_1.append(nullable);
           _builder_1.append(")");
@@ -825,8 +830,8 @@ public class ClassifierJPAEntityGenerator {
           }
         }
       }
-      String _name_5 = property.getVisibility().getName();
-      _builder_2.append(_name_5);
+      String _name_3 = property.getVisibility().getName();
+      _builder_2.append(_name_3);
       _builder_2.append(" ");
       _builder_2.append(array);
       _builder_2.append(typeName);
@@ -893,17 +898,17 @@ public class ClassifierJPAEntityGenerator {
       String _name = fromClass.getName();
       String _firstToUpperCase = Utils.getFirstToUpperCase(property.getName());
       String _plus = (_name + _firstToUpperCase);
-      final String tableName = Utils.toSnakeCase(_plus);
+      final String tableName = Utils.toDbName(_plus);
       final Property idFrom = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(fromClass), Property.class))[0];
-      String _name_1 = idFrom.getName();
-      String _firstToUpperCase_1 = Utils.getFirstToUpperCase(((Classifier) fromClass).getName());
-      String _plus_1 = (_name_1 + _firstToUpperCase_1);
-      final String idFromName = Utils.toSnakeCase(_plus_1);
+      String _databaseName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
+      String _plus_1 = (_databaseName + "_");
+      String _dbName = Utils.toDbName(fromClass.getName());
+      final String idFromName = (_plus_1 + _dbName);
       final String idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.getName(), "");
-      String _name_2 = id.getName();
-      String _firstToUpperCase_2 = Utils.getFirstToUpperCase(property.getName());
-      String _plus_2 = (_name_2 + _firstToUpperCase_2);
-      final String idToName = Utils.toSnakeCase(_plus_2);
+      String _databaseName_1 = PropertyUtils.getDatabaseName(id, id.getName(), "");
+      String _plus_2 = (_databaseName_1 + "_");
+      String _databaseName_2 = PropertyUtils.getDatabaseName(property, property.getName(), "");
+      final String idToName = (_plus_2 + _databaseName_2);
       final String idToDbName = PropertyUtils.getDatabaseName(id, id.getName(), "");
       CharSequence _xifexpression = null;
       if (fromMultiplicity) {
@@ -914,8 +919,8 @@ public class ClassifierJPAEntityGenerator {
           {
             if ((fetchType != null)) {
               _builder.append("(fetch=FetchType.");
-              String _name_3 = fetchType.getName();
-              _builder.append(_name_3);
+              String _name_1 = fetchType.getName();
+              _builder.append(_name_1);
               _builder.append(")");
             }
           }
@@ -948,18 +953,18 @@ public class ClassifierJPAEntityGenerator {
           {
             if ((fetchType != null)) {
               _builder_1.append("(fetch=FetchType.");
-              String _name_4 = fetchType.getName();
-              _builder_1.append(_name_4);
+              String _name_2 = fetchType.getName();
+              _builder_1.append(_name_2);
               _builder_1.append(")");
             }
           }
           _builder_1.newLineIfNotEmpty();
           _builder_1.append("@JoinColumn(name = \"");
-          String _databaseName = PropertyUtils.getDatabaseName(id, id.getName(), null);
-          _builder_1.append(_databaseName);
+          String _databaseName_3 = PropertyUtils.getDatabaseName(id, id.getName(), null);
+          _builder_1.append(_databaseName_3);
           _builder_1.append("_");
-          String _databaseName_1 = PropertyUtils.getDatabaseName(property, property.getName(), null);
-          _builder_1.append(_databaseName_1);
+          String _databaseName_4 = PropertyUtils.getDatabaseName(property, property.getName(), null);
+          _builder_1.append(_databaseName_4);
           _builder_1.append("\")");
           _builder_1.newLineIfNotEmpty();
           _xifexpression_1 = _builder_1;
@@ -973,8 +978,8 @@ public class ClassifierJPAEntityGenerator {
           {
             if ((fetchType != null)) {
               _builder_2.append("(fetch=FetchType.");
-              String _name_5 = fetchType.getName();
-              _builder_2.append(_name_5);
+              String _name_3 = fetchType.getName();
+              _builder_2.append(_name_3);
               _builder_2.append(")");
             }
           }
@@ -1006,11 +1011,11 @@ public class ClassifierJPAEntityGenerator {
           _builder_3.append("@OneToOne(cascade = {CascadeType.REMOVE})");
           _builder_3.newLine();
           _builder_3.append("@JoinColumn(name = \"");
-          String _databaseName_2 = PropertyUtils.getDatabaseName(id, id.getName(), null);
-          _builder_3.append(_databaseName_2);
+          String _databaseName_5 = PropertyUtils.getDatabaseName(id, id.getName(), null);
+          _builder_3.append(_databaseName_5);
           _builder_3.append("_");
-          String _databaseName_3 = PropertyUtils.getDatabaseName(property, property.getName(), null);
-          _builder_3.append(_databaseName_3);
+          String _databaseName_6 = PropertyUtils.getDatabaseName(property, property.getName(), null);
+          _builder_3.append(_databaseName_6);
           _builder_3.append("\")");
           _builder_3.newLineIfNotEmpty();
           _xifexpression_2 = _builder_3;
@@ -1051,11 +1056,11 @@ public class ClassifierJPAEntityGenerator {
           _builder.append("@ElementCollection");
           _builder.newLine();
           _builder.append("@CollectionTable(name = \"");
-          String _snakeCase = Utils.toSnakeCase(fromClass.getName());
-          _builder.append(_snakeCase);
+          String _dbName = Utils.toDbName(fromClass.getName());
+          _builder.append(_dbName);
           _builder.append("_");
-          String _snakeCase_1 = Utils.toSnakeCase(name);
-          _builder.append(_snakeCase_1);
+          String _dbName_1 = Utils.toDbName(name);
+          _builder.append(_dbName_1);
           _builder.append("\", joinColumns = @JoinColumn(name = \"");
           _builder.append(idDbName);
           _builder.append("\"))");
@@ -1510,29 +1515,38 @@ public class ClassifierJPAEntityGenerator {
   }
   
   public static CharSequence generateAssociationOverride(final Property property, final String attributName) {
-    CharSequence _xifexpression = null;
-    boolean _isEntity = Utils.isEntity(property.getType());
-    if (_isEntity) {
-      CharSequence _xblockexpression = null;
-      {
-        final String propName = PropertyUtils.getDatabaseName(property, property.getName(), "");
+    CharSequence _xblockexpression = null;
+    {
+      final Type type = property.getType();
+      CharSequence _xifexpression = null;
+      boolean _isEntity = Utils.isEntity(type);
+      if (_isEntity) {
+        CharSequence _xblockexpression_1 = null;
+        {
+          final Property id = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(((Classifier) type)), Property.class))[0];
+          final String propName = PropertyUtils.getDatabaseName(property, property.getName(), "");
+          final String idName = PropertyUtils.getDatabaseName(id, id.getName(), "");
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("@AssociationOverride(name=\"");
+          String _name = property.getName();
+          _builder.append(_name);
+          _builder.append("\",joinColumns = @JoinColumn(name = \"");
+          _builder.append(attributName);
+          _builder.append("_");
+          _builder.append(idName);
+          _builder.append("_");
+          _builder.append(propName);
+          _builder.append("\"))");
+          _xblockexpression_1 = _builder;
+        }
+        _xifexpression = _xblockexpression_1;
+      } else {
         StringConcatenation _builder = new StringConcatenation();
-        _builder.append("@AssociationOverride(name=\"");
-        String _name = property.getName();
-        _builder.append(_name);
-        _builder.append("\",joinColumns = @JoinColumn(name = \"");
-        _builder.append(attributName);
-        _builder.append("_");
-        _builder.append(propName);
-        _builder.append("\"))");
-        _xblockexpression = _builder;
+        return _builder.toString();
       }
-      _xifexpression = _xblockexpression;
-    } else {
-      StringConcatenation _builder = new StringConcatenation();
-      return _builder.toString();
+      _xblockexpression = _xifexpression;
     }
-    return _xifexpression;
+    return _xblockexpression;
   }
   
   public static String generateCompareTo(final Classifier clazz) {

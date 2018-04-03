@@ -563,8 +563,13 @@ public class ClassifierAttributesInterfaceGenerator {
 	 * génère les attributs liés a une table d'association
 	 */
 	static def generateAssociationClassAtributes(AssociationClass clazz, Classifier fromClass){
+		val member = clazz.memberEnds.filter[member |
+			member.type !== fromClass
+		]
+		
+		val name = member.get(0).name
 		'''
-		«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
+		«Utils.getFirstToLowerCase(name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 		get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
 		
 		'''

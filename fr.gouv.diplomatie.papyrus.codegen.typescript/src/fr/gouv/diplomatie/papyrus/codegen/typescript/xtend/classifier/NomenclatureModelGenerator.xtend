@@ -92,13 +92,13 @@ public class NomenclatureModelGenerator{
 		export var «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes={
 			code: {
 				type: Sequelize.«TypeUtils.getEnumSequelizeType(clazz)»,
-				field: "code",
+				field: "CODE",
 				allowNull: false,
 				primaryKey: true
 			},
 			libelle: {
 				type: Sequelize.TEXT,
-				field: "libelle",
+				field: "LIBELLE",
 				allowNull: false
 			}
 		}

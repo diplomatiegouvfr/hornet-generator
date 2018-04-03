@@ -223,18 +223,39 @@ class PropertyUtils {
 		
 	/**
 	 * retourne la valeur de columnName ou name si l'attribut n'en possède pas (en y ajoutant l'additionalName)
+	 * le paramètre additionalName ne sera pas mis en forme
 	 */
 	static def getDatabaseName(Property property, String name, String additionnalName){
-		var retour = Utils.toSnakeCase(Utils.addAdditionnalName(additionnalName, name))
+		var retour = Utils.toSnakeCase(name).toUpperCase
+		
+		//récupération du columname si l'attribut en possède un
 		val columnName = property.columnName
 		if(columnName!== null && columnName !== ""){
-			retour = columnName as String
-			if(additionnalName !== null && additionnalName !== ""){
-				retour = Utils.toSnakeCase(additionnalName) +"_" + retour
-			}
+			retour = (columnName as String).toUpperCase
+			
+		}
+		//ajout de l'additionnalName (doit déja etre mis en forme)
+		if(additionnalName !== null && additionnalName !== ""){
+			retour = additionnalName +"_" + retour
 		}
 		return retour
 	}
+	
+	static def getName(Property property, String name, String additionnalName){
+		var retour = name
+		
+		//récupération du columname si l'attribut en possède un
+		val columnName = property.columnName
+		if(columnName!== null && columnName !== ""){
+			retour = columnName as String
+		}
+		//ajout de l'additionnalName (doit déja etre mis en forme)
+		if(additionnalName !== null && additionnalName !== ""){
+			retour = Utils.addAdditionnalName(additionnalName, retour)
+		}
+		return retour
+	}
+	
 	
 	/**                                                        *
 	 * ----------------- stereotype attributes ----------------*

@@ -209,7 +209,7 @@ public class ClassifierJPAEntityGenerator {
 		return 
 		'''
 		@Entity
-		@Table(name = "«ClassifierUtils.getTableName(clazz)»"«IF schema !== null», schema = "«schema»"«ENDIF»)
+		@Table(name = "«Utils.toDbName(ClassifierUtils.getTableName(clazz))»"«IF schema !== null», schema = "«schema»"«ENDIF»)
 		'''
 	}
 	
@@ -331,18 +331,20 @@ public class ClassifierJPAEntityGenerator {
 	
 	static def generateAssociationAttributes(AssociationClass clazz, Classifier fromClass){
 		val end = clazz.ownedEnds.filter[property | property.type !== fromClass].get(0)
+		val fromEnd = clazz.ownedEnds.filter[property | property.type == fromClass].get(0)
 		val idFrom = ClassifierUtils.getId(fromClass).get(0)
 		val idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.name, "")
 		
 		val fetchType = JavaPluginUtils.getFetchType(clazz)
 		if(Utils.isEntity(end.type)){
-			val tableName = Utils.toSnakeCase( clazz.name)
+			val tableName = Utils.toDbName( clazz.name)
 			
-			val idFromName = Utils.toSnakeCase(idFrom.name + Utils.getFirstToUpperCase((fromClass as Classifier).name))
+			val idFromName = PropertyUtils.getDatabaseName(idFrom, idFrom.name, "")+ "_" + Utils.toDbName(fromEnd.name)
 			
 			
 			val idTo = ClassifierUtils.getId(end.type as Classifier).get(0)
-			val idToName = Utils.toSnakeCase(idTo.name + Utils.getFirstToUpperCase(end.type.name))
+			//val idToName = Utils.toDbName(idTo.name + Utils.getFirstToUpperCase(end.type.name))
+			val idToName = PropertyUtils.getDatabaseName(idTo, idTo.name, "")+ "_" + Utils.toDbName(end.name)
 			val idToDbName = PropertyUtils.getDatabaseName(idTo, idTo.name, "")
 			'''
 			
@@ -355,14 +357,14 @@ public class ClassifierJPAEntityGenerator {
 			'''
 			
 			@ElementCollection
-			@CollectionTable(name = "«Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(clazz.name)»")
+			@CollectionTable(name = "«Utils.toDbName(fromClass.name)»_«Utils.toDbName(clazz.name)»")
 			«clazz.visibility.getName» Set<«end.type.name»> «Utils.getFirstToLowerCase(clazz.name)»;
 			'''
 		}else /*if(Utils.isNomenclature(end.type))*/{
 			'''
 			
 			@ElementCollection
-			@CollectionTable(name = "«Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(clazz.name)»", joinColumns = @JoinColumn(name = "«idFromDbName»"))
+			@CollectionTable(name = "«Utils.toDbName(fromClass.name)»_«Utils.toDbName(clazz.name)»", joinColumns = @JoinColumn(name = "«idFromDbName»"))
 			«clazz.visibility.getName» Set<«end.type.name»> «Utils.getFirstToLowerCase(clazz.name)»;
 			'''
 		}/*else{
@@ -415,14 +417,15 @@ public class ClassifierJPAEntityGenerator {
 		if(Utils.isEntity(property.type)){
 			if(property.isMultivalued){
 				if(ClassifierUtils.getId(property.type as Classifier) !== null){
-					val tableName = Utils.toSnakeCase( fromClass.name+ Utils.getFirstToUpperCase(property.name))
+					val tableName = Utils.toDbName( fromClass.name+ Utils.getFirstToUpperCase(property.name))
 					
 					val idFrom = ClassifierUtils.getId(fromClass).get(0)
-					val idFromName = Utils.toSnakeCase(idFrom.name + Utils.getFirstToUpperCase((fromClass as Classifier).name))
+					val idFromName = PropertyUtils.getDatabaseName(idFrom, idFrom.name, "") + "_" + Utils.toDbName(fromClass.name)
 					val idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.name, "")
 					
 					val idTo = ClassifierUtils.getId(property.type as Classifier).get(0)
-					val idToName = Utils.toSnakeCase(idTo.name + Utils.getFirstToUpperCase(property.name))
+					//val idToName = idTo.name + Utils.getFirstToUpperCase(property.name)
+					val idToName = PropertyUtils.getDatabaseName(idTo, idTo.name, "") + "_" + PropertyUtils.getDatabaseName(property, property.name, "")
 					val idToDbName = PropertyUtils.getDatabaseName(idTo, idTo.name, "")
 					
 					link = 
@@ -500,13 +503,15 @@ public class ClassifierJPAEntityGenerator {
 		val fromMultiplicity = member.isMultivalued
 		val toMultiplicity = property.isMultivalued
 		val id = ClassifierUtils.getId(property.type as Classifier).get(0)
-		val tableName = Utils.toSnakeCase( fromClass.name+ Utils.getFirstToUpperCase(property.name))
+		val tableName = Utils.toDbName( fromClass.name+ Utils.getFirstToUpperCase(property.name))
 		
 		val idFrom = ClassifierUtils.getId(fromClass).get(0)
-		val idFromName = Utils.toSnakeCase(idFrom.name + Utils.getFirstToUpperCase((fromClass as Classifier).name))
+		//val idFromName = Utils.toDbName(idFrom.name + Utils.getFirstToUpperCase((fromClass as Classifier).name))
+		val idFromName = PropertyUtils.getDatabaseName(idFrom, idFrom.name, "") + "_" + Utils.toDbName(fromClass.name)
 		val idFromDbName = PropertyUtils.getDatabaseName(idFrom, idFrom.name, "")
 		
-		val idToName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(property.name))
+		//val idToName = Utils.toDbName(id.name + Utils.getFirstToUpperCase(property.name))
+		val idToName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + PropertyUtils.getDatabaseName(property, property.name, "")
 		val idToDbName = PropertyUtils.getDatabaseName(id, id.name, "")
 		
 		if(fromMultiplicity){
@@ -561,7 +566,7 @@ public class ClassifierJPAEntityGenerator {
 		«Utils.generateComments(property)»«property.generateAGAnnotations»
 		«IF property.isMultivalued »
 		@ElementCollection
-		@CollectionTable(name = "«Utils.toSnakeCase(fromClass.name)»_«Utils.toSnakeCase(name)»", joinColumns = @JoinColumn(name = "«idDbName»"))
+		@CollectionTable(name = "«Utils.toDbName(fromClass.name)»_«Utils.toDbName(name)»", joinColumns = @JoinColumn(name = "«idDbName»"))
 		«ELSE»
 		«IF nullable == false»@NotNull«ENDIF»
 		@Embedded
@@ -775,9 +780,12 @@ public class ClassifierJPAEntityGenerator {
 	}
 	
 	static def generateAssociationOverride(Property property, String attributName){
-		if(Utils.isEntity(property.type )){
+		val type = property.type 
+		if(Utils.isEntity(type)){
+			val id = ClassifierUtils.getId(type as Classifier).get(0)
 			val propName = PropertyUtils.getDatabaseName(property, property.name, "")
-			'''@AssociationOverride(name="«property.name»",joinColumns = @JoinColumn(name = "«attributName»_«propName»"))'''
+			val idName = PropertyUtils.getDatabaseName(id, id.name, "")
+			'''@AssociationOverride(name="«property.name»",joinColumns = @JoinColumn(name = "«attributName»_«idName»_«propName»"))'''
 		}else{
 			return ''''''
 		}

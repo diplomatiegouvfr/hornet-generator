@@ -183,6 +183,14 @@ public class Utils{
 		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
 	
+	/**
+	 * renvoie la chaine sous le format de base de données 
+	 * ex: idTest -> ID_TEST
+	 */
+	static def toDbName(String name){
+		return (toSnakeCase(name)).toUpperCase
+	}
+	
 
 	static def Classifier[] getAllgene(Classifier elem){
 		val genes = elem.generalizations

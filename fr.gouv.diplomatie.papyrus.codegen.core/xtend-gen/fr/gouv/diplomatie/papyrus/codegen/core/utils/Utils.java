@@ -224,6 +224,14 @@ public class Utils {
     return (_upperCase + _substring);
   }
   
+  /**
+   * renvoie la chaine sous le format de base de données
+   * ex: idTest -> ID_TEST
+   */
+  public static String toDbName(final String name) {
+    return Utils.toSnakeCase(name).toUpperCase();
+  }
+  
   public static Classifier[] getAllgene(final Classifier elem) {
     final EList<Generalization> genes = elem.getGeneralizations();
     ArrayList<Classifier> allTypes = CollectionLiterals.<Classifier>newArrayList();

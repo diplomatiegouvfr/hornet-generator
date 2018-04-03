@@ -12,8 +12,8 @@
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Ak8kUIcaEeeeJd8zt8CO1Q" source="org.eclipse.papyrus">
         <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Ak8kUYcaEeeeJd8zt8CO1Q" key="nature" value="UML_Nature"/>
       </eAnnotations>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_Ak9LYIcaEeeeJd8zt8CO1Q" name="partenaire" type="_7g7NUHdhEeeM2-35BsQdHA" association="_AkzaYIcaEeeeJd8zt8CO1Q"/>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_Ak-ZgIcaEeeeJd8zt8CO1Q" name="typepartenaire" type="_A9f6MIZJEeeKqroFtKzwQQ" association="_AkzaYIcaEeeeJd8zt8CO1Q"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_Ak9LYIcaEeeeJd8zt8CO1Q" name="partenaireTypePossibles" type="_7g7NUHdhEeeM2-35BsQdHA" association="_AkzaYIcaEeeeJd8zt8CO1Q"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_Ak-ZgIcaEeeeJd8zt8CO1Q" name="typepartenaireTest" type="_A9f6MIZJEeeKqroFtKzwQQ" association="_AkzaYIcaEeeeJd8zt8CO1Q"/>
     </packagedElement>
     <packagedElement xmi:type="uml:AssociationClass" xmi:id="_v3Mn8Ii2Eeen7oIz5Q4Skw" name="RoleUtilisateur" memberEnd="_v3SHgIi2Eeen7oIz5Q4Skw _v3SukIi2Eeen7oIz5Q4Skw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_v3Q5YIi2Eeen7oIz5Q4Skw" source="org.eclipse.papyrus">

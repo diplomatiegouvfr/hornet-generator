@@ -426,6 +426,17 @@ public class ClassifierUtils {
   }
   
   /**
+   * retourne le nom de la table liée a la classe
+   */
+  public static String getDBTableName(final Classifier clazz) {
+    final Object name = ClassifierUtils.getTableNameValue(clazz);
+    if ((name == null)) {
+      return Utils.toDbName(clazz.getName());
+    }
+    return Utils.toDbName(name.toString());
+  }
+  
+  /**
    * retourne le chemin vers la classe
    */
   public static String getClassPath(final Classifier clazz) {
