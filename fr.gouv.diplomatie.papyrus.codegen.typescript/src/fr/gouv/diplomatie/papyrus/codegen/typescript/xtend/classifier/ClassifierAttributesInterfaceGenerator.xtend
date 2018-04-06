@@ -104,8 +104,27 @@ public class ClassifierAttributesInterfaceGenerator {
 			««««clazz.generateMultiValuedEntityAttributes("")»
 			
 			«clazz.generateNotPrimitiveTypeAttributes("")»
-			«IF Utils.isEntity(clazz)»«clazz.generateAllAssociationClassAtributes()»«ENDIF»
+			«IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
+			«clazz.generateAllAssociationClassAtributes()»«ENDIF»
 		}
+		'''
+	}
+	
+	static def generateOneToManyAttributes(Classifier clazz){
+		val attributes = ClassifierUtils.getOneToManyAttributes(clazz)
+		'''
+		«attributes.fold("")[acc, attr |
+			acc + '''«attr.generateOneToManyAttribute(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateOneToManyAttribute(Property property, Classifier fromClass){
+		val owner = property.owner as Classifier
+		val fieldName = Utils.getFirstToLowerCase(owner.name)+ Utils.getFirstToUpperCase(property.name)
+		'''
+		«fieldName»: «ClassifierUtils.getAttributesInterfaceName(owner)»;
+		get«Utils.getFirstToUpperCase(fieldName)»(): Promise<«ClassifierUtils.getAttributesInterfaceName(owner)»>;
 		'''
 	}
 	
@@ -154,6 +173,14 @@ public class ClassifierAttributesInterfaceGenerator {
 		val attributesValueObject = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isValueObject(attribut.type))
 		]
+		if(Utils.isEntity(clazz)){
+			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
+			for(attribut : oneToManyAttributes){
+				if(!types.contains(attribut.owner)){
+					types.add(attribut.owner as Classifier)
+				}
+			}
+		}
 		
 		val interfaces = clazz.allRealizedInterfaces
 		

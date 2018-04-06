@@ -288,6 +288,32 @@ public class PropertyUtils {
     return retour;
   }
   
+  public static boolean isOneToManyAttributes(final Property property) {
+    if (((property.isMultivalued() && Utils.isEntity(property.getType())) && Utils.isEntity(((Classifier) property.getOwner())))) {
+      final Association association = property.getAssociation();
+      if ((association != null)) {
+        final Function1<Property, Boolean> _function = (Property mem) -> {
+          Type _type = mem.getType();
+          Element _owner = property.getOwner();
+          return Boolean.valueOf(Objects.equal(_type, _owner));
+        };
+        final Iterable<Property> member = IterableExtensions.<Property>filter(association.getMemberEnds(), _function);
+        if ((member != null)) {
+          final Property end = ((Property[])Conversions.unwrapArray(member, Property.class))[0];
+          boolean _isMultivalued = end.isMultivalued();
+          if (_isMultivalued) {
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
   /**
    * retourne la valeur de l'attribut columnName du stéréotype attribut
    */

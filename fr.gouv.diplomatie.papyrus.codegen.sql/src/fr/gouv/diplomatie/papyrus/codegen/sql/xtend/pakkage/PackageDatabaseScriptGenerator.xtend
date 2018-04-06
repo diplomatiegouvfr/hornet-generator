@@ -145,13 +145,41 @@ public class PackageDatabaseScriptGenerator{
 		CREATE TABLE «ClassifierUtils.getDBTableName(clazz)»(
 			«clazz.generateExtendsId»
 			«clazz.generateInterfaceAttributes(clazz)»
-			«clazz.generateAttributes("", clazz, false)»
+			«clazz.generateAttributes("", clazz, false)»«clazz.generateManyToOneRef»
 		);
 		«clazz.generateIds»
 				
 		«attributes.fold("")[acc, id |
 			acc + '''«id.generateSequence»'''
 		]»
+		'''
+	}
+	
+	/**
+	 * génère les clés étrangères liées aux one to many
+	 */
+	static def generateManyToOneRef(Classifier clazz){
+		val attributesRef = ClassifierUtils.getOneToManyAttributes(clazz)
+		
+		'''
+		«attributesRef.fold("")[acc, attr |
+			acc + ''',
+«attr.generateAttrForeignKey(clazz, "")»'''
+		]»
+		'''	
+	}
+	
+	static def generateAttrForeignKey(Property property, Classifier fromClass, String additionnalName){
+		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
+		val owner = property.owner as Classifier
+		val id = ClassifierUtils.getId(owner).get(0)
+		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
+		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		
+		val nullable = PropertyUtils.isNullable(property)
+		
+		'''
+		«fieldName» «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»
 		'''
 	}
 	
@@ -163,6 +191,35 @@ public class PackageDatabaseScriptGenerator{
 		«clazz.generateMultivaluedAttributesTable(clazz)»
 		«clazz.generateForeignKeys("", ClassifierUtils.getDBTableName(clazz))»
 		«clazz.generateExtendsForeignKey()»
+		«clazz.generateOneToManyForeignKey»
+		'''
+	}
+	
+	/**
+	 * génère les alters liés aux champs one to many
+	 */
+	static def generateOneToManyForeignKey(Classifier clazz){
+		val attributes = ClassifierUtils.getOneToManyAttributes(clazz)
+		
+		'''
+		«attributes.fold("")[acc, attr |
+			acc + '''«attr.generateAttributesAlterForeignKey(clazz, "")»'''
+		]»
+		'''	
+	}
+	
+	static def generateAttributesAlterForeignKey(Property property, Classifier clazz, String additionnalName){
+		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
+		val owner = property.owner as Classifier
+		val id = ClassifierUtils.getId(owner).get(0)
+		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
+		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		
+		'''
+		
+		ALTER TABLE ONLY «ClassifierUtils.getDBTableName(clazz)»
+		    ADD CONSTRAINT «Utils.toDbName(clazz.name)»_«ClassifierUtils.getDBTableName(owner)»_«dbPropertyName»_IDS_FKEY
+		    FOREIGN KEY («fieldName») REFERENCES «ClassifierUtils.getDBTableName(owner)»(«idDbName»);
 		'''
 	}
 	
@@ -558,6 +615,8 @@ public class PackageDatabaseScriptGenerator{
 	 */
 	static def generateMutilvaluedEntityTable(Property property, Classifier fromClass){
 		val type = property.type
+		val association = property.association
+		
 		if(type instanceof Classifier){
 			val fieldName = PropertyUtils.getDatabaseName(property, property.name, null)
 			val tableName = ClassifierUtils.getDBTableName(fromClass) +"_" + fieldName
@@ -597,6 +656,8 @@ public class PackageDatabaseScriptGenerator{
 					acc + '''«propertyName»'''
 				}
 			]
+			
+			val data =
 			'''
 			
 			CREATE TABLE «tableName»(
@@ -629,6 +690,27 @@ public class PackageDatabaseScriptGenerator{
 			ALTER TABLE ONLY «tableName»
 			    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY(«idsOwnerName», «idsPropsName»);
 			'''
+			if(!(property.owner instanceof Interface)){
+				if(association !== null){
+					 val member = association.memberEnds.filter[mem |
+							mem.type == fromClass
+					]
+					if(member !== null){
+						val end = member.get(0);
+						
+						if(end.isMultivalued){
+							return data
+						}
+					}
+					return ''''''
+				}else if(!Utils.isEntity(type)){
+						return data
+				}
+			}else{
+				return data
+			}
+			
+			return ''''''
 		}
 	}
 	

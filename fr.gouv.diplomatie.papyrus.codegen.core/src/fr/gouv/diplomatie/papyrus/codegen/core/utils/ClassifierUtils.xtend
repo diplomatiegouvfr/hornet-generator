@@ -84,6 +84,7 @@ import org.eclipse.uml2.uml.AttributeOwner
 import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils
 import org.eclipse.uml2.uml.AssociationClass
 import java.io.File
+import java.util.ArrayList
 
 class ClassifierUtils{
 	
@@ -306,6 +307,40 @@ class ClassifierUtils{
 			references.addAll(ClassifierUtils.getMultivaluedReferencesToType(classe as Classifier, ofClass))
 		}
 		return references
+	}
+	
+	/**
+	 * retourne les attributs de type one to many de type ofType présents dans le package
+	 */
+	static def getOneToManyAttributes(Classifier ofType){
+		val pakkage = ofType.package
+		val classes = pakkage.getOwnedTypes().filter[type|
+			Utils.isEntity(type) 
+		]
+		
+		var attributesRef = new ArrayList
+		
+		for(classe : classes){
+			val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(classe as Classifier).filter[attr|
+				if(attr.association !== null){
+					val member = attr.association.memberEnds.filter[mem |mem.type == ofType]
+					val memberEnd = attr.association.memberEnds.filter[mem |mem.type == classe]
+					if(member.length > 0 && memberEnd.length > 0){
+						val end = member.get(0);
+						val otherEnd =memberEnd.get(0) 
+						return end.isMultivalued && !otherEnd.isMultivalued
+					}
+					return false
+				}else if(attr.type == ofType){
+					return true
+				}
+				return false
+			]
+			for(attribut : attributes){
+				attributesRef.add(attribut)
+			}
+		}
+		return attributesRef
 	}
 	
 	/**

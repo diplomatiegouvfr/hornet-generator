@@ -107,9 +107,29 @@ public class ClassifierDtoClassGenerator{
 			«clazz.generateInterfaceAttributes»
 			«clazz.generateAttributes(clazz)»
 			«clazz.generateAssociationAttributes»
+			«clazz.generateOneToManyAttributes»
 		}
 		
 		«clazz.generateMultivaluedAttributeDto»
+		'''
+	}
+	
+	static def generateOneToManyAttributes(Classifier clazz){
+		val attributes = ClassifierUtils.getOneToManyAttributes(clazz)
+		'''
+		«attributes.fold("")[ acc, attr |
+			acc + '''«attr.generateOneToManyAttribute(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateOneToManyAttribute(Property property, Classifier clazz){
+		val owner = property.owner as Classifier
+		val fieldName = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		'''
+		
+		@Map()
+		«fieldName»: «ClassifierUtils.getDtoClassName(owner)»;
 		'''
 	}
 	
@@ -159,6 +179,15 @@ public class ClassifierDtoClassGenerator{
 		]
 		
 		val interfaces = clazz.directlyRealizedInterfaces
+		
+		if(Utils.isEntity(clazz)){
+			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
+			for(attribut : oneToManyAttributes){
+				if(!types.contains(attribut.owner)){
+					types.add(attribut.owner as Classifier)
+				}
+			}
+		}
 		
 		for(attribut : attributes){
 			if(!types.contains(attribut.type)){

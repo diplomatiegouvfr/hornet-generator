@@ -230,7 +230,7 @@ class PackageModelDaoClassGenerator{
 	
 	static def generateMultivaluedAttributesModelImport(Classifier clazz, Classifier fromClass){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
-			(attribut.multivalued)
+			(attribut.multivalued) && (!PropertyUtils.isOneToManyAttributes(attribut))
 		]
 		
 		val interfaces = clazz.directlyRealizedInterfaces
@@ -244,7 +244,7 @@ class PackageModelDaoClassGenerator{
 	
 	static def generateInterfaceAttributImport(Classifier clazz, Classifier fromClass ){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
-			(attribut.multivalued)
+			(attribut.multivalued) && (!PropertyUtils.isOneToManyAttributes(attribut))
 		]
 		'''«attributes.fold("")[acc, attribut |
 			acc + '''«attribut.generateAttributImport(fromClass)»'''
@@ -307,11 +307,15 @@ class PackageModelDaoClassGenerator{
 	static def generateMultivaluedAttributEntityDeclaration(Property property, Classifier fromClass){
 		val tableName = ClassifierUtils.getDBTableName(fromClass)+ "_" + PropertyUtils.getDatabaseName(property, property.name, "")
 		val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
-		'''
-		
-		@Entity("«tableName»", «PropertyUtils.getMultivaluedPropertyModelName(property,fromClass)»)
-		public «Utils.getFirstToLowerCase(entityName)»Entity: HornetSequelizeInstanceModel<any>;
-		'''
+		if (!PropertyUtils.isOneToManyAttributes(property)){
+			'''
+			
+			@Entity("«tableName»", «PropertyUtils.getMultivaluedPropertyModelName(property,fromClass)»)
+			public «Utils.getFirstToLowerCase(entityName)»Entity: HornetSequelizeInstanceModel<any>;
+			'''
+		}else{
+			return ''''''
+		}
 	}
 	
 	static def generateAssociationClassDeclaration(Classifier clazz){
@@ -333,7 +337,30 @@ class PackageModelDaoClassGenerator{
 			«clazz.generateRelations(clazz,"", "")»
 			«clazz.generateForeignRelations(clazz,'')»
 			«clazz.generateAssociationRelations»
+			«clazz.generateOneToManyRelations»
 		}
+		'''
+	}
+	
+	static def generateOneToManyRelations(Classifier clazz){
+		val attributes = ClassifierUtils.getOneToManyAttributes(clazz)
+		'''
+		«attributes.fold("")[acc, attribut|
+			acc + '''«attribut.generateOneToManyRelation(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateOneToManyRelation(Property property, Classifier clazz){
+		val owner = property.owner as Classifier
+		val alias = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		
+		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
+		val id = ClassifierUtils.getId(owner).get(0)
+		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
+		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		'''
+		SequelizeUtils.initRelationBelongsTo({ fromEntity: this.«Utils.getFirstToLowerCase(clazz.name)»Entity, toEntity: this.«Utils.getFirstToLowerCase(owner.name)»Entity, alias: "«alias»", foreignKey: "«fieldName»" });
 		'''
 	}
 	
@@ -457,20 +484,44 @@ class PackageModelDaoClassGenerator{
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(fromClass)
 			if(property.multivalued){
-				val tableName = fromClass.name + Utils.getFirstToUpperCase(databasename)
+				val association = property.association
+				if(association !== null){
+					 val member = association.memberEnds.filter[mem |
+							mem.type == fromClass
+					]
+					if(member !== null){
+						val end = member.get(0);					
+						if(end.isMultivalued){
+							val tableName = fromClass.name + Utils.getFirstToUpperCase(databasename)
+							return '''
+							«ids.fold("")[acc, id |
+								val idName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + Utils.toDbName(fromClass.name)
+								
+								acc + generateInitRelationBelongsToMany(
+									'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+									'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+									'''"«name»"''',
+									'''"«idName»"''',
+									'''"«Utils.toDbName(tableName)»"'''
+								)
+							]»
+							'''
+							
+						}
+					}
+				}
+				
+				val owner = property.owner as Classifier
+							val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
+							val id = ClassifierUtils.getId(owner).get(0)
+							val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
+							val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+							
 				'''
-				«ids.fold("")[acc, id |
-					val idName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + Utils.toDbName(fromClass.name)
+				SequelizeUtils.initRelationHasMany({ fromEntity: this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, toEntity: this.«Utils.getFirstToLowerCase(type.name)»Entity, alias: "«name»", foreignKey: "«fieldName»" });
+				'''
 					
-					acc + generateInitRelationBelongsToMany(
-						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
-						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
-						'''"«name»"''',
-						'''"«idName»"''',
-						'''"«Utils.toDbName(tableName)»"'''
-					)
-				]»
-				'''
+				
 			}else{
 				val idsProp = ClassifierUtils.getId(type)
 				'''
@@ -866,7 +917,7 @@ class PackageModelDaoClassGenerator{
 	}
 	
 	static def generateCallMultivaluedAttributesEntityGetter(Classifier clazz){
-		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(clazz)
+		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(clazz).filter[attr | !(PropertyUtils.isOneToManyAttributes(attr))]
 		val interfaces = clazz.directlyRealizedInterfaces
 		'''
 		«attributes.fold("")[acc, attribut |
@@ -882,6 +933,7 @@ class PackageModelDaoClassGenerator{
 		val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
 		val ids = ClassifierUtils.getId(fromClass)
 		val type = property.type
+		if(!PropertyUtils.isOneToManyAttributes(property)){
 		'''
 		
 		public init«tableName»Entity(): void{
@@ -905,7 +957,7 @@ class PackageModelDaoClassGenerator{
 			]»
 			«property.generateMARelation(fromClass, "", entityName)»
 		}
-		'''
+		'''}else{''''''}
 	}
 	
 	static def generateCallAttributEntityGetter(Property property, Classifier fromClass, String entityName){

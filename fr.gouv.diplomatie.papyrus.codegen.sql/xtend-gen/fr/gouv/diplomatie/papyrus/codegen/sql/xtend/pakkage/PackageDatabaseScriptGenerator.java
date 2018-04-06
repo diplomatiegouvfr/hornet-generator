@@ -77,6 +77,7 @@ import fr.gouv.diplomatie.papyrus.codegen.sql.utils.TypeUtils;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Element;
@@ -195,6 +196,8 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("\t");
       CharSequence _generateAttributes = PackageDatabaseScriptGenerator.generateAttributes(clazz, "", clazz, Boolean.valueOf(false));
       _builder.append(_generateAttributes, "\t");
+      CharSequence _generateManyToOneRef = PackageDatabaseScriptGenerator.generateManyToOneRef(clazz);
+      _builder.append(_generateManyToOneRef, "\t");
       _builder.newLineIfNotEmpty();
       _builder.append(");");
       _builder.newLine();
@@ -218,6 +221,59 @@ public class PackageDatabaseScriptGenerator {
   }
   
   /**
+   * génère les clés étrangères liées aux one to many
+   */
+  public static CharSequence generateManyToOneRef(final Classifier clazz) {
+    CharSequence _xblockexpression = null;
+    {
+      final ArrayList<Property> attributesRef = ClassifierUtils.getOneToManyAttributes(clazz);
+      StringConcatenation _builder = new StringConcatenation();
+      final Function2<String, Property, String> _function = (String acc, Property attr) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        _builder_1.append(",");
+        _builder_1.newLine();
+        CharSequence _generateAttrForeignKey = PackageDatabaseScriptGenerator.generateAttrForeignKey(attr, clazz, "");
+        _builder_1.append(_generateAttrForeignKey);
+        return (acc + _builder_1);
+      };
+      String _fold = IterableExtensions.<Property, String>fold(attributesRef, "", _function);
+      _builder.append(_fold);
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateAttrForeignKey(final Property property, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      final String dbPropertyName = PropertyUtils.getDatabaseName(property, property.getName(), "");
+      Element _owner = property.getOwner();
+      final Classifier owner = ((Classifier) _owner);
+      final Property id = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(owner), Property.class))[0];
+      final String idDbName = PropertyUtils.getDatabaseName(id, id.getName(), "");
+      String _dbName = Utils.toDbName(owner.getName());
+      String _plus = ((idDbName + "_") + _dbName);
+      String _plus_1 = (_plus + "_");
+      final String fieldName = (_plus_1 + dbPropertyName);
+      final boolean nullable = PropertyUtils.isNullable(property);
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append(fieldName);
+      _builder.append(" ");
+      Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
+      _builder.append(_generateAttributType);
+      CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(id);
+      _builder.append(_generateStringLength);
+      _builder.append(" ");
+      CharSequence _generateNullable = PackageDatabaseScriptGenerator.generateNullable(property, Boolean.valueOf(nullable));
+      _builder.append(_generateNullable);
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  /**
    * génère les tables d'attributs multiple et les foreign keys
    */
   public static CharSequence generateAlters(final Classifier clazz) {
@@ -231,7 +287,76 @@ public class PackageDatabaseScriptGenerator {
     CharSequence _generateExtendsForeignKey = PackageDatabaseScriptGenerator.generateExtendsForeignKey(clazz);
     _builder.append(_generateExtendsForeignKey);
     _builder.newLineIfNotEmpty();
+    CharSequence _generateOneToManyForeignKey = PackageDatabaseScriptGenerator.generateOneToManyForeignKey(clazz);
+    _builder.append(_generateOneToManyForeignKey);
+    _builder.newLineIfNotEmpty();
     return _builder;
+  }
+  
+  /**
+   * génère les alters liés aux champs one to many
+   */
+  public static CharSequence generateOneToManyForeignKey(final Classifier clazz) {
+    CharSequence _xblockexpression = null;
+    {
+      final ArrayList<Property> attributes = ClassifierUtils.getOneToManyAttributes(clazz);
+      StringConcatenation _builder = new StringConcatenation();
+      final Function2<String, Property, String> _function = (String acc, Property attr) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateAttributesAlterForeignKey = PackageDatabaseScriptGenerator.generateAttributesAlterForeignKey(attr, clazz, "");
+        _builder_1.append(_generateAttributesAlterForeignKey);
+        return (acc + _builder_1);
+      };
+      String _fold = IterableExtensions.<Property, String>fold(attributes, "", _function);
+      _builder.append(_fold);
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateAttributesAlterForeignKey(final Property property, final Classifier clazz, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      final String dbPropertyName = PropertyUtils.getDatabaseName(property, property.getName(), "");
+      Element _owner = property.getOwner();
+      final Classifier owner = ((Classifier) _owner);
+      final Property id = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(owner), Property.class))[0];
+      final String idDbName = PropertyUtils.getDatabaseName(id, id.getName(), "");
+      String _dbName = Utils.toDbName(owner.getName());
+      String _plus = ((idDbName + "_") + _dbName);
+      String _plus_1 = (_plus + "_");
+      final String fieldName = (_plus_1 + dbPropertyName);
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.newLine();
+      _builder.append("ALTER TABLE ONLY ");
+      String _dBTableName = ClassifierUtils.getDBTableName(clazz);
+      _builder.append(_dBTableName);
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.append("ADD CONSTRAINT ");
+      String _dbName_1 = Utils.toDbName(clazz.getName());
+      _builder.append(_dbName_1, "    ");
+      _builder.append("_");
+      String _dBTableName_1 = ClassifierUtils.getDBTableName(owner);
+      _builder.append(_dBTableName_1, "    ");
+      _builder.append("_");
+      _builder.append(dbPropertyName, "    ");
+      _builder.append("_IDS_FKEY");
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.append("FOREIGN KEY (");
+      _builder.append(fieldName, "    ");
+      _builder.append(") REFERENCES ");
+      String _dBTableName_2 = ClassifierUtils.getDBTableName(owner);
+      _builder.append(_dBTableName_2, "    ");
+      _builder.append("(");
+      _builder.append(idDbName, "    ");
+      _builder.append(");");
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
   }
   
   /**
@@ -985,7 +1110,7 @@ public class PackageDatabaseScriptGenerator {
         boolean _isEntity = Utils.isEntity(type);
         if (_isEntity) {
           StringConcatenation _builder_1 = new StringConcatenation();
-          CharSequence _generateMutilvaluedEntityTable = PackageDatabaseScriptGenerator.generateMutilvaluedEntityTable(property, fromClass);
+          String _generateMutilvaluedEntityTable = PackageDatabaseScriptGenerator.generateMutilvaluedEntityTable(property, fromClass);
           _builder_1.append(_generateMutilvaluedEntityTable);
           _xifexpression_1 = _builder_1;
         } else {
@@ -1130,237 +1255,259 @@ public class PackageDatabaseScriptGenerator {
   /**
    * génère une table d'association pour un attribut de type entity multivalué
    */
-  public static CharSequence generateMutilvaluedEntityTable(final Property property, final Classifier fromClass) {
-    CharSequence _xblockexpression = null;
-    {
-      final Type type = property.getType();
-      CharSequence _xifexpression = null;
-      if ((type instanceof Classifier)) {
-        CharSequence _xblockexpression_1 = null;
+  public static String generateMutilvaluedEntityTable(final Property property, final Classifier fromClass) {
+    final Type type = property.getType();
+    final Association association = property.getAssociation();
+    if ((type instanceof Classifier)) {
+      final String fieldName = PropertyUtils.getDatabaseName(property, property.getName(), null);
+      String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
+      String _plus = (_dBTableName + "_");
+      final String tableName = (_plus + fieldName);
+      final Iterable<Property> idsProps = ClassifierUtils.getId(((Classifier)type));
+      final Iterable<Property> idsOwner = ClassifierUtils.getId(fromClass);
+      final Function2<String, Property, String> _function = (String acc, Property id) -> {
+        String _xblockexpression = null;
         {
-          final String fieldName = PropertyUtils.getDatabaseName(property, property.getName(), null);
-          String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
-          String _plus = (_dBTableName + "_");
-          final String tableName = (_plus + fieldName);
-          final Iterable<Property> idsProps = ClassifierUtils.getId(((Classifier)type));
-          final Iterable<Property> idsOwner = ClassifierUtils.getId(fromClass);
-          final Function2<String, Property, String> _function = (String acc, Property id) -> {
-            String _xblockexpression_2 = null;
-            {
-              final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
-              String _xifexpression_1 = null;
-              boolean _notEquals = (!Objects.equal(acc, ""));
-              if (_notEquals) {
-                StringConcatenation _builder = new StringConcatenation();
-                _builder.append(", ");
-                _builder.append(propertyName);
-                _builder.append("_");
-                String _dbName = Utils.toDbName(fromClass.getName());
-                _builder.append(_dbName);
-                _xifexpression_1 = (acc + _builder);
-              } else {
-                StringConcatenation _builder_1 = new StringConcatenation();
-                _builder_1.append(propertyName);
-                _builder_1.append("_");
-                String _dbName_1 = Utils.toDbName(fromClass.getName());
-                _builder_1.append(_dbName_1);
-                _xifexpression_1 = (acc + _builder_1);
-              }
-              _xblockexpression_2 = _xifexpression_1;
-            }
-            return _xblockexpression_2;
-          };
-          final String idsOwnerName = IterableExtensions.<Property, String>fold(idsOwner, "", _function);
-          final Function2<String, Property, String> _function_1 = (String acc, Property id) -> {
-            String _xblockexpression_2 = null;
-            {
-              final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
-              String _xifexpression_1 = null;
-              boolean _notEquals = (!Objects.equal(acc, ""));
-              if (_notEquals) {
-                StringConcatenation _builder = new StringConcatenation();
-                _builder.append(", ");
-                _builder.append(propertyName);
-                _xifexpression_1 = (acc + _builder);
-              } else {
-                StringConcatenation _builder_1 = new StringConcatenation();
-                _builder_1.append(propertyName);
-                _xifexpression_1 = (acc + _builder_1);
-              }
-              _xblockexpression_2 = _xifexpression_1;
-            }
-            return _xblockexpression_2;
-          };
-          final String idsOwnerBaseName = IterableExtensions.<Property, String>fold(idsOwner, "", _function_1);
-          final Function2<String, Property, String> _function_2 = (String acc, Property id) -> {
-            String _xblockexpression_2 = null;
-            {
-              final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
-              String _xifexpression_1 = null;
-              boolean _notEquals = (!Objects.equal(acc, ""));
-              if (_notEquals) {
-                StringConcatenation _builder = new StringConcatenation();
-                _builder.append(", ");
-                _builder.append(propertyName);
-                _builder.append("_");
-                _builder.append(fieldName);
-                _xifexpression_1 = (acc + _builder);
-              } else {
-                StringConcatenation _builder_1 = new StringConcatenation();
-                _builder_1.append(propertyName);
-                _builder_1.append("_");
-                _builder_1.append(fieldName);
-                _xifexpression_1 = (acc + _builder_1);
-              }
-              _xblockexpression_2 = _xifexpression_1;
-            }
-            return _xblockexpression_2;
-          };
-          final String idsPropsName = IterableExtensions.<Property, String>fold(idsProps, "", _function_2);
-          final Function2<String, Property, String> _function_3 = (String acc, Property id) -> {
-            String _xblockexpression_2 = null;
-            {
-              final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
-              String _xifexpression_1 = null;
-              boolean _notEquals = (!Objects.equal(acc, ""));
-              if (_notEquals) {
-                StringConcatenation _builder = new StringConcatenation();
-                _builder.append(", ");
-                _builder.append(propertyName);
-                _xifexpression_1 = (acc + _builder);
-              } else {
-                StringConcatenation _builder_1 = new StringConcatenation();
-                _builder_1.append(propertyName);
-                _xifexpression_1 = (acc + _builder_1);
-              }
-              _xblockexpression_2 = _xifexpression_1;
-            }
-            return _xblockexpression_2;
-          };
-          final String idsPropsBaseName = IterableExtensions.<Property, String>fold(idsProps, "", _function_3);
-          StringConcatenation _builder = new StringConcatenation();
-          _builder.newLine();
-          _builder.append("CREATE TABLE ");
-          _builder.append(tableName);
-          _builder.append("(");
-          _builder.newLineIfNotEmpty();
-          _builder.append("\t");
-          final Function2<String, Property, String> _function_4 = (String acc, Property id) -> {
-            String _xifexpression_1 = null;
-            boolean _notEquals = (!Objects.equal(acc, ""));
-            if (_notEquals) {
-              StringConcatenation _builder_1 = new StringConcatenation();
-              _builder_1.append(",");
-              _builder_1.newLine();
-              String _plus_1 = (acc + _builder_1);
-              StringConcatenation _builder_2 = new StringConcatenation();
-              CharSequence _generateMultiIdAttributeDef = PackageDatabaseScriptGenerator.generateMultiIdAttributeDef(id, fieldName);
-              _builder_2.append(_generateMultiIdAttributeDef);
-              _xifexpression_1 = (_plus_1 + _builder_2);
-            } else {
-              StringConcatenation _builder_3 = new StringConcatenation();
-              CharSequence _generateMultiIdAttributeDef_1 = PackageDatabaseScriptGenerator.generateMultiIdAttributeDef(id, fieldName);
-              _builder_3.append(_generateMultiIdAttributeDef_1);
-              _xifexpression_1 = (acc + _builder_3);
-            }
-            return _xifexpression_1;
-          };
-          String _fold = IterableExtensions.<Property, String>fold(idsProps, "", _function_4);
-          _builder.append(_fold, "\t");
-          _builder.append(",");
-          _builder.newLineIfNotEmpty();
-          _builder.append("\t");
-          final Function2<String, Property, String> _function_5 = (String acc, Property id) -> {
-            String _xifexpression_1 = null;
-            boolean _notEquals = (!Objects.equal(acc, ""));
-            if (_notEquals) {
-              StringConcatenation _builder_1 = new StringConcatenation();
-              _builder_1.append(",");
-              _builder_1.newLine();
-              String _plus_1 = (acc + _builder_1);
-              StringConcatenation _builder_2 = new StringConcatenation();
-              CharSequence _generateMultiIdAttributeDefinition = PackageDatabaseScriptGenerator.generateMultiIdAttributeDefinition(id, "");
-              _builder_2.append(_generateMultiIdAttributeDefinition);
-              _xifexpression_1 = (_plus_1 + _builder_2);
-            } else {
-              StringConcatenation _builder_3 = new StringConcatenation();
-              CharSequence _generateMultiIdAttributeDefinition_1 = PackageDatabaseScriptGenerator.generateMultiIdAttributeDefinition(id, "");
-              _builder_3.append(_generateMultiIdAttributeDefinition_1);
-              _xifexpression_1 = (acc + _builder_3);
-            }
-            return _xifexpression_1;
-          };
-          String _fold_1 = IterableExtensions.<Property, String>fold(idsOwner, "", _function_5);
-          _builder.append(_fold_1, "\t");
-          _builder.newLineIfNotEmpty();
-          _builder.append(");");
-          _builder.newLine();
-          _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
-          _builder.append(tableName);
-          _builder.newLineIfNotEmpty();
-          _builder.append("    ");
-          _builder.append("ADD CONSTRAINT ");
-          _builder.append(tableName, "    ");
-          _builder.append("_");
-          String _dbName = Utils.toDbName(fromClass.getName());
-          _builder.append(_dbName, "    ");
-          _builder.append("_IDS_FKEY");
-          _builder.newLineIfNotEmpty();
-          _builder.append("    ");
-          _builder.append("FOREIGN KEY (");
-          _builder.append(idsOwnerName, "    ");
-          _builder.append(") REFERENCES ");
-          String _dBTableName_1 = ClassifierUtils.getDBTableName(fromClass);
-          _builder.append(_dBTableName_1, "    ");
-          _builder.append("(");
-          _builder.append(idsOwnerBaseName, "    ");
-          _builder.append(");");
-          _builder.newLineIfNotEmpty();
-          _builder.append("    ");
-          _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
-          _builder.append(tableName);
-          _builder.newLineIfNotEmpty();
-          _builder.append("    ");
-          _builder.append("ADD CONSTRAINT ");
-          _builder.append(tableName, "    ");
-          _builder.append("_");
-          String _dbName_1 = Utils.toDbName(((Classifier)type).getName());
-          _builder.append(_dbName_1, "    ");
-          _builder.append("_IDS_FKEY");
-          _builder.newLineIfNotEmpty();
-          _builder.append("    ");
-          _builder.append("FOREIGN KEY (");
-          _builder.append(idsPropsName, "    ");
-          _builder.append(") REFERENCES ");
-          String _dBTableName_2 = ClassifierUtils.getDBTableName(((Classifier)type));
-          _builder.append(_dBTableName_2, "    ");
-          _builder.append("(");
-          _builder.append(idsPropsBaseName, "    ");
-          _builder.append(");");
-          _builder.newLineIfNotEmpty();
-          _builder.append("    ");
-          _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
-          _builder.append(tableName);
-          _builder.newLineIfNotEmpty();
-          _builder.append("    ");
-          _builder.append("ADD CONSTRAINT ");
-          _builder.append(tableName, "    ");
-          _builder.append("_PKEY PRIMARY KEY(");
-          _builder.append(idsOwnerName, "    ");
-          _builder.append(", ");
-          _builder.append(idsPropsName, "    ");
-          _builder.append(");");
-          _builder.newLineIfNotEmpty();
-          _xblockexpression_1 = _builder;
+          final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
+          String _xifexpression = null;
+          boolean _notEquals = (!Objects.equal(acc, ""));
+          if (_notEquals) {
+            StringConcatenation _builder = new StringConcatenation();
+            _builder.append(", ");
+            _builder.append(propertyName);
+            _builder.append("_");
+            String _dbName = Utils.toDbName(fromClass.getName());
+            _builder.append(_dbName);
+            _xifexpression = (acc + _builder);
+          } else {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append(propertyName);
+            _builder_1.append("_");
+            String _dbName_1 = Utils.toDbName(fromClass.getName());
+            _builder_1.append(_dbName_1);
+            _xifexpression = (acc + _builder_1);
+          }
+          _xblockexpression = _xifexpression;
         }
-        _xifexpression = _xblockexpression_1;
+        return _xblockexpression;
+      };
+      final String idsOwnerName = IterableExtensions.<Property, String>fold(idsOwner, "", _function);
+      final Function2<String, Property, String> _function_1 = (String acc, Property id) -> {
+        String _xblockexpression = null;
+        {
+          final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
+          String _xifexpression = null;
+          boolean _notEquals = (!Objects.equal(acc, ""));
+          if (_notEquals) {
+            StringConcatenation _builder = new StringConcatenation();
+            _builder.append(", ");
+            _builder.append(propertyName);
+            _xifexpression = (acc + _builder);
+          } else {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append(propertyName);
+            _xifexpression = (acc + _builder_1);
+          }
+          _xblockexpression = _xifexpression;
+        }
+        return _xblockexpression;
+      };
+      final String idsOwnerBaseName = IterableExtensions.<Property, String>fold(idsOwner, "", _function_1);
+      final Function2<String, Property, String> _function_2 = (String acc, Property id) -> {
+        String _xblockexpression = null;
+        {
+          final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
+          String _xifexpression = null;
+          boolean _notEquals = (!Objects.equal(acc, ""));
+          if (_notEquals) {
+            StringConcatenation _builder = new StringConcatenation();
+            _builder.append(", ");
+            _builder.append(propertyName);
+            _builder.append("_");
+            _builder.append(fieldName);
+            _xifexpression = (acc + _builder);
+          } else {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append(propertyName);
+            _builder_1.append("_");
+            _builder_1.append(fieldName);
+            _xifexpression = (acc + _builder_1);
+          }
+          _xblockexpression = _xifexpression;
+        }
+        return _xblockexpression;
+      };
+      final String idsPropsName = IterableExtensions.<Property, String>fold(idsProps, "", _function_2);
+      final Function2<String, Property, String> _function_3 = (String acc, Property id) -> {
+        String _xblockexpression = null;
+        {
+          final String propertyName = PropertyUtils.getDatabaseName(id, id.getName(), null);
+          String _xifexpression = null;
+          boolean _notEquals = (!Objects.equal(acc, ""));
+          if (_notEquals) {
+            StringConcatenation _builder = new StringConcatenation();
+            _builder.append(", ");
+            _builder.append(propertyName);
+            _xifexpression = (acc + _builder);
+          } else {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append(propertyName);
+            _xifexpression = (acc + _builder_1);
+          }
+          _xblockexpression = _xifexpression;
+        }
+        return _xblockexpression;
+      };
+      final String idsPropsBaseName = IterableExtensions.<Property, String>fold(idsProps, "", _function_3);
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.newLine();
+      _builder.append("CREATE TABLE ");
+      _builder.append(tableName);
+      _builder.append("(");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      final Function2<String, Property, String> _function_4 = (String acc, Property id) -> {
+        String _xifexpression = null;
+        boolean _notEquals = (!Objects.equal(acc, ""));
+        if (_notEquals) {
+          StringConcatenation _builder_1 = new StringConcatenation();
+          _builder_1.append(",");
+          _builder_1.newLine();
+          String _plus_1 = (acc + _builder_1);
+          StringConcatenation _builder_2 = new StringConcatenation();
+          CharSequence _generateMultiIdAttributeDef = PackageDatabaseScriptGenerator.generateMultiIdAttributeDef(id, fieldName);
+          _builder_2.append(_generateMultiIdAttributeDef);
+          _xifexpression = (_plus_1 + _builder_2);
+        } else {
+          StringConcatenation _builder_3 = new StringConcatenation();
+          CharSequence _generateMultiIdAttributeDef_1 = PackageDatabaseScriptGenerator.generateMultiIdAttributeDef(id, fieldName);
+          _builder_3.append(_generateMultiIdAttributeDef_1);
+          _xifexpression = (acc + _builder_3);
+        }
+        return _xifexpression;
+      };
+      String _fold = IterableExtensions.<Property, String>fold(idsProps, "", _function_4);
+      _builder.append(_fold, "\t");
+      _builder.append(",");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      final Function2<String, Property, String> _function_5 = (String acc, Property id) -> {
+        String _xifexpression = null;
+        boolean _notEquals = (!Objects.equal(acc, ""));
+        if (_notEquals) {
+          StringConcatenation _builder_1 = new StringConcatenation();
+          _builder_1.append(",");
+          _builder_1.newLine();
+          String _plus_1 = (acc + _builder_1);
+          StringConcatenation _builder_2 = new StringConcatenation();
+          CharSequence _generateMultiIdAttributeDefinition = PackageDatabaseScriptGenerator.generateMultiIdAttributeDefinition(id, "");
+          _builder_2.append(_generateMultiIdAttributeDefinition);
+          _xifexpression = (_plus_1 + _builder_2);
+        } else {
+          StringConcatenation _builder_3 = new StringConcatenation();
+          CharSequence _generateMultiIdAttributeDefinition_1 = PackageDatabaseScriptGenerator.generateMultiIdAttributeDefinition(id, "");
+          _builder_3.append(_generateMultiIdAttributeDefinition_1);
+          _xifexpression = (acc + _builder_3);
+        }
+        return _xifexpression;
+      };
+      String _fold_1 = IterableExtensions.<Property, String>fold(idsOwner, "", _function_5);
+      _builder.append(_fold_1, "\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append(");");
+      _builder.newLine();
+      _builder.newLine();
+      _builder.append("ALTER TABLE ONLY ");
+      _builder.append(tableName);
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.append("ADD CONSTRAINT ");
+      _builder.append(tableName, "    ");
+      _builder.append("_");
+      String _dbName = Utils.toDbName(fromClass.getName());
+      _builder.append(_dbName, "    ");
+      _builder.append("_IDS_FKEY");
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.append("FOREIGN KEY (");
+      _builder.append(idsOwnerName, "    ");
+      _builder.append(") REFERENCES ");
+      String _dBTableName_1 = ClassifierUtils.getDBTableName(fromClass);
+      _builder.append(_dBTableName_1, "    ");
+      _builder.append("(");
+      _builder.append(idsOwnerBaseName, "    ");
+      _builder.append(");");
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.newLine();
+      _builder.append("ALTER TABLE ONLY ");
+      _builder.append(tableName);
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.append("ADD CONSTRAINT ");
+      _builder.append(tableName, "    ");
+      _builder.append("_");
+      String _dbName_1 = Utils.toDbName(((Classifier)type).getName());
+      _builder.append(_dbName_1, "    ");
+      _builder.append("_IDS_FKEY");
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.append("FOREIGN KEY (");
+      _builder.append(idsPropsName, "    ");
+      _builder.append(") REFERENCES ");
+      String _dBTableName_2 = ClassifierUtils.getDBTableName(((Classifier)type));
+      _builder.append(_dBTableName_2, "    ");
+      _builder.append("(");
+      _builder.append(idsPropsBaseName, "    ");
+      _builder.append(");");
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.newLine();
+      _builder.append("ALTER TABLE ONLY ");
+      _builder.append(tableName);
+      _builder.newLineIfNotEmpty();
+      _builder.append("    ");
+      _builder.append("ADD CONSTRAINT ");
+      _builder.append(tableName, "    ");
+      _builder.append("_PKEY PRIMARY KEY(");
+      _builder.append(idsOwnerName, "    ");
+      _builder.append(", ");
+      _builder.append(idsPropsName, "    ");
+      _builder.append(");");
+      _builder.newLineIfNotEmpty();
+      final String data = _builder.toString();
+      Element _owner = property.getOwner();
+      boolean _not = (!(_owner instanceof Interface));
+      if (_not) {
+        if ((association != null)) {
+          final Function1<Property, Boolean> _function_6 = (Property mem) -> {
+            Type _type = mem.getType();
+            return Boolean.valueOf(Objects.equal(_type, fromClass));
+          };
+          final Iterable<Property> member = IterableExtensions.<Property>filter(association.getMemberEnds(), _function_6);
+          if ((member != null)) {
+            final Property end = ((Property[])Conversions.unwrapArray(member, Property.class))[0];
+            boolean _isMultivalued = end.isMultivalued();
+            if (_isMultivalued) {
+              return data;
+            }
+          }
+          StringConcatenation _builder_1 = new StringConcatenation();
+          return _builder_1.toString();
+        } else {
+          boolean _isEntity = Utils.isEntity(type);
+          boolean _not_1 = (!_isEntity);
+          if (_not_1) {
+            return data;
+          }
+        }
+      } else {
+        return data;
       }
-      _xblockexpression = _xifexpression;
+      StringConcatenation _builder_2 = new StringConcatenation();
+      return _builder_2.toString();
     }
-    return _xblockexpression;
+    return null;
   }
   
   /**

@@ -79,6 +79,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.AttributeOwner;
 import org.eclipse.uml2.uml.Classifier;
@@ -335,6 +336,56 @@ public class ClassifierUtils {
       Iterables.<Property>addAll(references, ClassifierUtils.getMultivaluedReferencesToType(((Classifier) classe), ofClass));
     }
     return references;
+  }
+  
+  /**
+   * retourne les attributs de type one to many de type ofType présents dans le package
+   */
+  public static ArrayList<Property> getOneToManyAttributes(final Classifier ofType) {
+    final org.eclipse.uml2.uml.Package pakkage = ofType.getPackage();
+    final Function1<Type, Boolean> _function = (Type type) -> {
+      return Boolean.valueOf(Utils.isEntity(type));
+    };
+    final Iterable<Type> classes = IterableExtensions.<Type>filter(pakkage.getOwnedTypes(), _function);
+    ArrayList<Property> attributesRef = new ArrayList<Property>();
+    for (final Type classe : classes) {
+      {
+        final Function1<Property, Boolean> _function_1 = (Property attr) -> {
+          Association _association = attr.getAssociation();
+          boolean _tripleNotEquals = (_association != null);
+          if (_tripleNotEquals) {
+            final Function1<Property, Boolean> _function_2 = (Property mem) -> {
+              Type _type = mem.getType();
+              return Boolean.valueOf(Objects.equal(_type, ofType));
+            };
+            final Iterable<Property> member = IterableExtensions.<Property>filter(attr.getAssociation().getMemberEnds(), _function_2);
+            final Function1<Property, Boolean> _function_3 = (Property mem) -> {
+              Type _type = mem.getType();
+              return Boolean.valueOf(Objects.equal(_type, classe));
+            };
+            final Iterable<Property> memberEnd = IterableExtensions.<Property>filter(attr.getAssociation().getMemberEnds(), _function_3);
+            if (((((Object[])Conversions.unwrapArray(member, Object.class)).length > 0) && (((Object[])Conversions.unwrapArray(memberEnd, Object.class)).length > 0))) {
+              final Property end = ((Property[])Conversions.unwrapArray(member, Property.class))[0];
+              final Property otherEnd = ((Property[])Conversions.unwrapArray(memberEnd, Property.class))[0];
+              return Boolean.valueOf((end.isMultivalued() && (!otherEnd.isMultivalued())));
+            }
+            return Boolean.valueOf(false);
+          } else {
+            Type _type = attr.getType();
+            boolean _equals = Objects.equal(_type, ofType);
+            if (_equals) {
+              return Boolean.valueOf(true);
+            }
+          }
+          return Boolean.valueOf(false);
+        };
+        final Iterable<Property> attributes = IterableExtensions.<Property>filter(ClassifierUtils.getMultivaluedOwnedAttributes(((Classifier) classe)), _function_1);
+        for (final Property attribut : attributes) {
+          attributesRef.add(attribut);
+        }
+      }
+    }
+    return attributesRef;
   }
   
   /**

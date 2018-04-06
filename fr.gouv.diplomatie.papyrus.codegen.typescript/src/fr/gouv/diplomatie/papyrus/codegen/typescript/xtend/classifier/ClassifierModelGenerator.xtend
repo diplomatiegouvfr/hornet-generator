@@ -100,9 +100,39 @@ public class ClassifierModelGenerator {
 			«clazz.generateExtendsId»
 			«clazz.generateInterfacesAttributes»
 			«clazz.generateAttributes("", "", clazz, false, false)»
+			«clazz.generateOneToManyAttribute»
 		}
 		
 		«clazz.generateMultivaluedAttributeModels»
+		'''
+	}
+	
+	static def generateOneToManyAttribute(Classifier clazz){
+		val attributes = ClassifierUtils.getOneToManyAttributes(clazz)
+		
+		'''
+		«attributes.fold("")[acc, attr |
+			acc + '''«attr.generateOneToManyAttribute(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateOneToManyAttribute(Property property, Classifier clazz){
+		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
+		val owner = property.owner as Classifier
+		val id = ClassifierUtils.getId(owner).get(0)
+		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
+		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		val name = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		'''
+	    ,«name»: {
+	        type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+	        field: "«fieldName»",
+	        references: {
+	            model: "«ClassifierUtils.getModelName(owner)»",
+	            key: "«id.name»"
+	        }
+	    }
 		'''
 	}
 	
@@ -494,7 +524,15 @@ public class ClassifierModelGenerator {
 
 		val multiAttributes = ownedAttributes.filter[attribut |
 			val type = attribut.type
-			return (Utils.isEntity(type) && (attribut.multivalued))
+			val association = attribut.association
+			if(association !== null){
+				val members = association.memberEnds
+				val firstEnd = members.filter[member | member.type == clazz].get(0)
+				val secondEnd = members.filter[member | member.type !== clazz].get(0)
+				return (Utils.isEntity(type) && (attribut.multivalued) && (firstEnd.isMultivalued) && (secondEnd.isMultivalued))
+			}else{
+				return false
+			} 
 		]
 		
 		val multivaluedEnums = ownedAttributes.filter[attribut |

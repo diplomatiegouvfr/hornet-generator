@@ -256,6 +256,29 @@ class PropertyUtils {
 		return retour
 	}
 	
+	static def isOneToManyAttributes(Property property){
+		if(property.isMultivalued && Utils.isEntity(property.type) && Utils.isEntity(property.owner as Classifier)){
+			val association = property.association
+			if(association !== null){
+				 val member = association.memberEnds.filter[mem |
+						mem.type == property.owner
+				]
+				if(member !== null){
+					val end = member.get(0);					
+					if(end.isMultivalued){
+						return false
+					}else{
+						return true
+					}
+				}
+			}
+			return true
+			
+		}else{
+			return false
+		}
+	}
+	
 	
 	/**                                                        *
 	 * ----------------- stereotype attributes ----------------*
