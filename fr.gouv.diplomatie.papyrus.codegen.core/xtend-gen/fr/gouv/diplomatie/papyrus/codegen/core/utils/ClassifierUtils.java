@@ -389,6 +389,56 @@ public class ClassifierUtils {
   }
   
   /**
+   * retourne les attributs de type many to many de type ofType présents dans le package
+   */
+  public static ArrayList<Property> getManyToManyAttributes(final Classifier ofType) {
+    final org.eclipse.uml2.uml.Package pakkage = ofType.getPackage();
+    final Function1<Type, Boolean> _function = (Type type) -> {
+      return Boolean.valueOf(Utils.isEntity(type));
+    };
+    final Iterable<Type> classes = IterableExtensions.<Type>filter(pakkage.getOwnedTypes(), _function);
+    ArrayList<Property> attributesRef = new ArrayList<Property>();
+    for (final Type classe : classes) {
+      {
+        final Function1<Property, Boolean> _function_1 = (Property attr) -> {
+          Association _association = attr.getAssociation();
+          boolean _tripleNotEquals = (_association != null);
+          if (_tripleNotEquals) {
+            final EList<Property> ends = attr.getAssociation().getOwnedEnds();
+            if (((ends != null) && (!ends.isEmpty()))) {
+              final Type owner = ends.get(0).getType();
+              if ((owner != ofType)) {
+                final Function1<Property, Boolean> _function_2 = (Property mem) -> {
+                  Type _type = mem.getType();
+                  return Boolean.valueOf(Objects.equal(_type, ofType));
+                };
+                final Iterable<Property> member = IterableExtensions.<Property>filter(attr.getAssociation().getMemberEnds(), _function_2);
+                final Function1<Property, Boolean> _function_3 = (Property mem) -> {
+                  Type _type = mem.getType();
+                  return Boolean.valueOf(Objects.equal(_type, classe));
+                };
+                final Iterable<Property> memberEnd = IterableExtensions.<Property>filter(attr.getAssociation().getMemberEnds(), _function_3);
+                if (((((Object[])Conversions.unwrapArray(member, Object.class)).length > 0) && (((Object[])Conversions.unwrapArray(memberEnd, Object.class)).length > 0))) {
+                  final Property end = ((Property[])Conversions.unwrapArray(member, Property.class))[0];
+                  final Property otherEnd = ((Property[])Conversions.unwrapArray(memberEnd, Property.class))[0];
+                  return Boolean.valueOf((end.isMultivalued() && otherEnd.isMultivalued()));
+                }
+              }
+            }
+            return Boolean.valueOf(false);
+          }
+          return Boolean.valueOf(false);
+        };
+        final Iterable<Property> attributes = IterableExtensions.<Property>filter(ClassifierUtils.getMultivaluedOwnedAttributes(((Classifier) classe)), _function_1);
+        for (final Property attribut : attributes) {
+          attributesRef.add(attribut);
+        }
+      }
+    }
+    return attributesRef;
+  }
+  
+  /**
    * cherche les classe d'association liée a la classe
    */
   public static ArrayList<Type> getLinkedAssociationClass(final Classifier clazz) {

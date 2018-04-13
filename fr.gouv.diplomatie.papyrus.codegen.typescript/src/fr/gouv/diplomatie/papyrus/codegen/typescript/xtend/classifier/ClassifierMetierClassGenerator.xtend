@@ -104,9 +104,41 @@ public class ClassifierMetierClassGenerator {
 			«clazz.generateInterfaceAttributes»
 			«clazz.generateAttributes("")»
 			«IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
-			«clazz.generateAssociationsAttributes»«ENDIF»
+			«clazz.generateAssociationsAttributes»
+			«clazz.generateManyToManyAttributes»«ENDIF»
 			
 		}
+		'''
+	}
+	
+	static def generateManyToManyAttributes(Classifier clazz){
+		val attributes = ClassifierUtils.getManyToManyAttributes(clazz)
+		'''
+		«attributes.fold("")[ acc, attr |
+			acc + '''«attr.generateManyToManyAttributes(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateManyToManyAttributes(Property property, Classifier clazz){
+		val association = property.association
+		if(association !== null){
+			val ends = association.memberEnds.filter[mem | mem.type !== clazz]
+			
+			'''
+			«ends.fold("")[acc, end |
+				acc + '''«end.generateManyToManyAttribute(clazz)»'''
+			]»
+			'''
+		}
+	}
+	
+	static def generateManyToManyAttribute(Property prop, Classifier clazz){
+		val type = prop.type as Classifier 
+		'''
+		
+		@Map(«ClassifierUtils.getMetierClassName(type)»)
+		«prop.name»: Array<«ClassifierUtils.getMetierClassName(type)»>;
 		'''
 	}
 	
@@ -197,8 +229,14 @@ public class ClassifierMetierClassGenerator {
 			(Utils.isNomenclature(attribut.type))
 		]
 		if(Utils.isEntity(clazz)){
-		val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
+			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
 			for(attribut : oneToManyAttributes){
+				if(!types.contains(attribut.owner)){
+					types.add(attribut.owner as Classifier)
+				}
+			}
+			val manyToManyAttributes = ClassifierUtils.getManyToManyAttributes(clazz)
+			for(attribut : manyToManyAttributes){
 				if(!types.contains(attribut.owner)){
 					types.add(attribut.owner as Classifier)
 				}

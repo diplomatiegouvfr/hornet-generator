@@ -344,6 +344,45 @@ class ClassifierUtils{
 	}
 	
 	/**
+	 * retourne les attributs de type many to many de type ofType présents dans le package
+	 */
+	static def getManyToManyAttributes(Classifier ofType){
+		val pakkage = ofType.package
+		val classes = pakkage.getOwnedTypes().filter[type|
+			Utils.isEntity(type) 
+		]
+		
+		var attributesRef = new ArrayList
+		
+		for(classe : classes){
+			val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(classe as Classifier).filter[attr|
+				if(attr.association !== null ){
+					val ends = attr.association.ownedEnds
+					if(ends!== null && !ends.isEmpty){
+						val owner = ends.get(0).type;
+						if(owner !== ofType){
+							val member = attr.association.memberEnds.filter[mem |mem.type == ofType]
+							val memberEnd = attr.association.memberEnds.filter[mem |mem.type == classe]
+							
+							if(member.length > 0 && memberEnd.length > 0){
+								val end = member.get(0);
+								val otherEnd =memberEnd.get(0) 
+								return end.isMultivalued && otherEnd.isMultivalued
+							}
+						}
+					}
+					return false
+				}
+				return false
+			]
+			for(attribut : attributes){
+				attributesRef.add(attribut)
+			}
+		}
+		return attributesRef
+	}
+	
+	/**
 	 * cherche les classe d'association liée a la classe  
 	 */
 	static def getLinkedAssociationClass(Classifier clazz){

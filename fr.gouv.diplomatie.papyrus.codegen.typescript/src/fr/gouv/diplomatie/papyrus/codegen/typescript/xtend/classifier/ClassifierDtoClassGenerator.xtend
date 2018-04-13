@@ -108,9 +108,41 @@ public class ClassifierDtoClassGenerator{
 			«clazz.generateAttributes(clazz)»
 			«clazz.generateAssociationAttributes»
 			«clazz.generateOneToManyAttributes»
+			«clazz.generateManyToManyAttributes»
 		}
 		
 		«clazz.generateMultivaluedAttributeDto»
+		'''
+	}
+	
+	static def generateManyToManyAttributes(Classifier clazz){
+		val attributes = ClassifierUtils.getManyToManyAttributes(clazz)
+		'''
+		«attributes.fold("")[ acc, attr |
+			acc + '''«attr.generateManyToManyAttributes(clazz)»'''
+		]»
+		'''
+	}
+	
+	static def generateManyToManyAttributes(Property property, Classifier clazz){
+		val association = property.association
+		if(association !== null){
+			val ends = association.memberEnds.filter[mem | mem.type !== clazz]
+			
+			'''
+			«ends.fold("")[acc, end |
+				acc + '''«end.generateManyToManyAttribute(clazz)»'''
+			]»
+			'''
+		}
+	}
+	
+	static def generateManyToManyAttribute(Property prop, Classifier clazz){
+		val type = prop.type as Classifier 
+		'''
+		
+		@Map(«ClassifierUtils.getDtoClassName(type)»)
+		«prop.name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 		'''
 	}
 	
@@ -178,11 +210,20 @@ public class ClassifierDtoClassGenerator{
 			(Utils.isNomenclature(attribut.type))
 		]
 		
+		
+		
 		val interfaces = clazz.directlyRealizedInterfaces
 		
 		if(Utils.isEntity(clazz)){
 			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
 			for(attribut : oneToManyAttributes){
+				if(!types.contains(attribut.owner)){
+					types.add(attribut.owner as Classifier)
+				}
+			}
+			
+			val manyToManyAttributes = ClassifierUtils.getManyToManyAttributes(clazz)
+			for(attribut : manyToManyAttributes){
 				if(!types.contains(attribut.owner)){
 					types.add(attribut.owner as Classifier)
 				}
