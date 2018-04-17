@@ -142,7 +142,7 @@ public class PackageDatabaseScriptGenerator{
 		)
 		'''
 		
-		CREATE TABLE «ClassifierUtils.getDBTableName(clazz)»(
+		CREATE TABLE "«ClassifierUtils.getDBTableName(clazz)»"(
 			«clazz.generateExtendsId»
 			«clazz.generateInterfaceAttributes(clazz)»
 			«clazz.generateAttributes("", clazz, false)»«clazz.generateManyToOneRef»
@@ -179,7 +179,7 @@ public class PackageDatabaseScriptGenerator{
 		val nullable = PropertyUtils.isNullable(property)
 		
 		'''
-		«fieldName» «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»
+		"«fieldName»" «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»
 		'''
 	}
 	
@@ -217,9 +217,9 @@ public class PackageDatabaseScriptGenerator{
 		
 		'''
 		
-		ALTER TABLE ONLY «ClassifierUtils.getDBTableName(clazz)»
+		ALTER TABLE ONLY "«ClassifierUtils.getDBTableName(clazz)»"
 		    ADD CONSTRAINT «Utils.toDbName(clazz.name)»_«ClassifierUtils.getDBTableName(owner)»_«dbPropertyName»_IDS_FKEY
-		    FOREIGN KEY («fieldName») REFERENCES «ClassifierUtils.getDBTableName(owner)»(«idDbName»);
+		    FOREIGN KEY ("«fieldName»") REFERENCES "«ClassifierUtils.getDBTableName(owner)»"("«idDbName»");
 		'''
 	}
 	
@@ -243,7 +243,7 @@ public class PackageDatabaseScriptGenerator{
 		val name = id.name
 		val propertyName = PropertyUtils.getDatabaseName(id, name, null)
 		'''
-		«propertyName» «id.generateAttributType»«id.generateStringLength» NOT NULL,
+		"«propertyName»" «id.generateAttributType»«id.generateStringLength» NOT NULL,
 		'''
 	}
 	
@@ -294,7 +294,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateIdAttributeDefinition(Property property, String additionnalName){
 		val name = property.name
 		var propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
-		'''«propertyName» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+		'''"«propertyName»" «property.generateAttributType»«property.generateStringLength» NOT NULL'''
 	}
 	
 	
@@ -355,7 +355,7 @@ public class PackageDatabaseScriptGenerator{
 		val type = property.type
 		if(type instanceof Classifier){
 			var sqlType = TypeUtils.getEnumType(type)
-			'''CODE_«propertyName» «sqlType» «property.generateNullable(nullable)»'''
+			'''"CODE_«propertyName»" «sqlType» «property.generateNullable(nullable)»'''
 		}
 	}
 	
@@ -365,7 +365,7 @@ public class PackageDatabaseScriptGenerator{
 	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		val name = property.name
 		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
-		'''«propertyName» «property.generateAttributType»«property.generateStringLength» «property.generateNullable(nullable)»'''
+		'''"«propertyName»" «property.generateAttributType»«property.generateStringLength» «property.generateNullable(nullable)»'''
 	}
 	
 	/**
@@ -396,7 +396,7 @@ public class PackageDatabaseScriptGenerator{
 		val idName = PropertyUtils.getDatabaseName(id, id.name, additionnalName)
 		val propertyName = PropertyUtils.getDatabaseName(property, name, idName)
 		return 
-		'''«propertyName» «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»'''
+		'''"«propertyName»" «id.generateAttributType»«id.generateStringLength» «property.generateNullable(nullable)»'''
 	}
 	
 	/**
@@ -414,8 +414,8 @@ public class PackageDatabaseScriptGenerator{
 		]
 		'''
 		
-		ALTER TABLE ONLY «ClassifierUtils.getDBTableName(clazz)»
-			ADD CONSTRAINT «ClassifierUtils.getDBTableName(clazz)»_PKEY PRIMARY KEY («name»);
+		ALTER TABLE ONLY "«ClassifierUtils.getDBTableName(clazz)»"
+			ADD CONSTRAINT «ClassifierUtils.getDBTableName(clazz)»_PKEY PRIMARY KEY ("«name»");
 		'''
 	}
 	
@@ -436,16 +436,16 @@ public class PackageDatabaseScriptGenerator{
 			val idsName = ids.fold("")[acc, id |
 				val name = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «name»'''
+					acc + ''', "«name»"'''
 				}else{
-					acc + '''«name»'''
+					acc + '''"«name»"'''
 				}
 			]
 			'''
 			
-			ALTER TABLE ONLY «ClassifierUtils.getDBTableName(fromClass)»
+			ALTER TABLE ONLY "«ClassifierUtils.getDBTableName(fromClass)»"
 			    ADD CONSTRAINT «ClassifierUtils.getDBTableName(fromClass)»_«Utils.toDbName(clazz.name)»_IDS_FKEY
-			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getDBTableName(clazz)»(«idsName»);
+			    FOREIGN KEY («idsName») REFERENCES "«ClassifierUtils.getDBTableName(clazz)»"(«idsName»);
 			'''
 		}else{
 			''''''
@@ -493,9 +493,9 @@ public class PackageDatabaseScriptGenerator{
 					val name =   id.name
 					val propertyName = PropertyUtils.getDatabaseName(id, name, additionnalName) +"_"+ PropertyUtils.getDatabaseName(property , property.name, null)
 					if(acc !=""){
-						acc + ''', «propertyName»'''
+						acc + ''', "«propertyName»"'''
 					}else{
-						acc + '''«propertyName»'''
+						acc + '''"«propertyName»"'''
 					}
 				]
 				
@@ -504,17 +504,17 @@ public class PackageDatabaseScriptGenerator{
 					val name =  field.name
 					val propertyName = PropertyUtils.getDatabaseName(field, name, null)
 					if(acc !=""){
-						acc + ''', «propertyName»'''
+						acc + ''', "«propertyName»"'''
 					}else{
-						acc + '''«propertyName»'''
+						acc + '''"«propertyName»"'''
 					}
 				]
 				return
 				'''
 				
-				ALTER TABLE ONLY «tableName»
+				ALTER TABLE ONLY "«tableName»"
 				    ADD CONSTRAINT «tableName»_«propName»_IDS_FKEY 
-				    FOREIGN KEY («fieldToClass») REFERENCES «ClassifierUtils.getDBTableName(toClass)»(«fieldInClass»);
+				    FOREIGN KEY («fieldToClass») REFERENCES "«ClassifierUtils.getDBTableName(toClass)»"(«fieldInClass»);
 				'''
 			}
 		}
@@ -529,9 +529,9 @@ public class PackageDatabaseScriptGenerator{
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
 		'''
 		
-		ALTER TABLE ONLY «tableName»
+		ALTER TABLE ONLY "«tableName»"
 		    ADD CONSTRAINT «tableName»_«propertyName»_CODE_FKEY 
-		    FOREIGN KEY (CODE_«propertyName») REFERENCES «ClassifierUtils.getDBTableName(type as Classifier)»(CODE);
+		    FOREIGN KEY ("CODE_«propertyName»") REFERENCES "«ClassifierUtils.getDBTableName(type as Classifier)»"("CODE");
 		'''
 	}
 	
@@ -580,16 +580,16 @@ public class PackageDatabaseScriptGenerator{
 		val idsName = ids.fold("")[acc, id |
 			val idName = PropertyUtils.getDatabaseName(id, id.name, null)
 			if(acc != ""){
-				acc + ''', «idName»'''
+				acc + ''', "«idName»"'''
 			}else{
-				acc + '''«idName»'''
+				acc + '''"«idName»"'''
 			}
 		]
 		
 		'''
 		
-		CREATE TABLE «tableName»(
-			«propertyName» «property.generateAttributType»«property.generateStringLength» NOT NULL,
+		CREATE TABLE "«tableName»"(
+			"«propertyName»" «property.generateAttributType»«property.generateStringLength» NOT NULL,
 			«ids.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',
@@ -600,12 +600,12 @@ public class PackageDatabaseScriptGenerator{
 			]»
 		);
 		
-		ALTER TABLE ONLY «tableName»
+		ALTER TABLE ONLY "«tableName»"
 		    ADD CONSTRAINT «tableName»_IDS_FKEY
-		    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getDBTableName(fromClass)»(«idsName»);
+		    FOREIGN KEY («idsName») REFERENCES "«ClassifierUtils.getDBTableName(fromClass)»"(«idsName»);
 		    
-		ALTER TABLE ONLY «tableName»
-		    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY(«idsName», «propertyName»);
+		ALTER TABLE ONLY "«tableName»"
+		    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY(«idsName», "«propertyName»");
 		'''
 		
 	}
@@ -625,42 +625,42 @@ public class PackageDatabaseScriptGenerator{
 			val idsOwnerName = idsOwner.fold("")[acc, id |
 				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «propertyName»_«Utils.toDbName(fromClass.name)»'''
+					acc + ''', "«propertyName»_«Utils.toDbName(fromClass.name)»"'''
 				}else{
-					acc + '''«propertyName»_«Utils.toDbName(fromClass.name)»'''
+					acc + '''"«propertyName»_«Utils.toDbName(fromClass.name)»"'''
 				}
 			]
 			val idsOwnerBaseName = idsOwner.fold("")[acc, id |
 				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «propertyName»'''
+					acc + ''', "«propertyName»"'''
 				}else{
-					acc + '''«propertyName»'''
+					acc + '''"«propertyName»"'''
 				}
 			]
 			
 			val idsPropsName = idsProps.fold("")[acc, id |
 				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «propertyName»_«fieldName»'''
+					acc + ''', "«propertyName»_«fieldName»"'''
 				}else{
-					acc + '''«propertyName»_«fieldName»'''
+					acc + '''"«propertyName»_«fieldName»"'''
 				}
 			]
 			
 			val idsPropsBaseName = idsProps.fold("")[acc, id |
 				val propertyName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «propertyName»'''
+					acc + ''', "«propertyName»"'''
 				}else{
-					acc + '''«propertyName»'''
+					acc + '''"«propertyName»"'''
 				}
 			]
 			
 			val data =
 			'''
 			
-			CREATE TABLE «tableName»(
+			CREATE TABLE "«tableName»"(
 				«idsProps.fold("")[acc, id |
 					if(acc != ""){
 						acc + ''',
@@ -679,15 +679,15 @@ public class PackageDatabaseScriptGenerator{
 				]»
 			);
 			
-			ALTER TABLE ONLY «tableName»
+			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_«Utils.toDbName(fromClass.name)»_IDS_FKEY
-			    FOREIGN KEY («idsOwnerName») REFERENCES «ClassifierUtils.getDBTableName(fromClass)»(«idsOwnerBaseName»);
+			    FOREIGN KEY («idsOwnerName») REFERENCES "«ClassifierUtils.getDBTableName(fromClass)»"(«idsOwnerBaseName»);
 			    
-			ALTER TABLE ONLY «tableName»
+			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_«Utils.toDbName(type.name)»_IDS_FKEY
-			    FOREIGN KEY («idsPropsName») REFERENCES «ClassifierUtils.getDBTableName(type)»(«idsPropsBaseName»);
+			    FOREIGN KEY («idsPropsName») REFERENCES "«ClassifierUtils.getDBTableName(type)»"(«idsPropsBaseName»);
 			    
-			ALTER TABLE ONLY «tableName»
+			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY(«idsOwnerName», «idsPropsName»);
 			'''
 			if(!(property.owner instanceof Interface)){
@@ -721,7 +721,7 @@ public class PackageDatabaseScriptGenerator{
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 		val owner = property.owner
 		if(owner instanceof Classifier){
-			'''«propertyName»_«additionnalName» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+			'''"«propertyName»_«additionnalName»" «property.generateAttributType»«property.generateStringLength» NOT NULL'''
 		}
 	}
 	
@@ -733,7 +733,7 @@ public class PackageDatabaseScriptGenerator{
 		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val owner = property.owner
 		if(owner instanceof Classifier){
-			'''«propertyName»_«Utils.toDbName(owner.name)» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+			'''"«propertyName»_«Utils.toDbName(owner.name)»" «property.generateAttributType»«property.generateStringLength» NOT NULL'''
 		}
 	}
 	
@@ -748,15 +748,15 @@ public class PackageDatabaseScriptGenerator{
 			val idsName = idsOwner.fold("")[acc, id |
 				val idName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «idName»'''
+					acc + ''', "«idName»"'''
 				}else{
-					acc + '''«idName»'''
+					acc + '''"«idName»"'''
 				}
 			]
-			val pkeys = idsName + ', ' + Utils.getListComma(type.getAttributList(newArrayList(), name))
+			val pkeys = idsName + ', ' + Utils.getListStringComma(type.getAttributList(newArrayList(), name))
 			'''
 			
-			CREATE TABLE «tableName»(
+			CREATE TABLE "«tableName»"(
 				«type.generateAttributes(name, fromClass, false)»,
 				«idsOwner.fold("")[acc, id |
 					if(acc != ""){
@@ -769,11 +769,11 @@ public class PackageDatabaseScriptGenerator{
 			);
 			«type.generateForeignKeys(name, tableName)»
 			
-			ALTER TABLE ONLY «tableName»
+			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_IDS_FKEY
-			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getDBTableName(fromClass)»(«idsName»);
+			    FOREIGN KEY («idsName») REFERENCES "«ClassifierUtils.getDBTableName(fromClass)»"(«idsName»);
 			    
-			ALTER TABLE ONLY «tableName»
+			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY(«pkeys»);
 			    
 			'''	
@@ -821,17 +821,17 @@ public class PackageDatabaseScriptGenerator{
 			val idsName = idsOwner.fold("")[acc, id |
 				val idName= PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «idName»'''
+					acc + ''', "«idName»"'''
 				}else{
-					acc + '''«idName»'''
+					acc + '''"«idName»"'''
 				}
 			]
 			
 			val sqlType = TypeUtils.getEnumType(type)
 			'''
 			
-			CREATE TABLE «tableName»(
-				CODE «sqlType» NOT NULL,
+			CREATE TABLE "«tableName»"(
+				"CODE" «sqlType» NOT NULL,
 				«idsOwner.fold("")[acc, id |
 					if(acc != ""){
 						acc + ''',
@@ -842,16 +842,16 @@ public class PackageDatabaseScriptGenerator{
 				]»
 			);«type.generateForeignKeys(Utils.toDbName(property.name), tableName)»
 			
-			ALTER TABLE ONLY «tableName»
+			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_IDS_FKEY
-			    FOREIGN KEY («idsName») REFERENCES «ClassifierUtils.getDBTableName(fromClass)»(«idsName»);
+			    FOREIGN KEY («idsName») REFERENCES "«ClassifierUtils.getDBTableName(fromClass)»"(«idsName»);
 			
-			ALTER TABLE ONLY «tableName»
+			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_CODE_FKEY
-			    FOREIGN KEY (CODE) REFERENCES «ClassifierUtils.getDBTableName(type)»(CODE);
+			    FOREIGN KEY ("CODE") REFERENCES "«ClassifierUtils.getDBTableName(type)»"("CODE");
 			
-			ALTER TABLE ONLY «tableName»
-			    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY («idsName», CODE);
+			ALTER TABLE ONLY "«tableName»"
+			    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY («idsName», "CODE");
 			'''	
 		}	
 		
@@ -897,10 +897,10 @@ public class PackageDatabaseScriptGenerator{
 			    «cycle»;
 			    
 			ALTER SEQUENCE «name»_SEQ 
-				OWNED BY «ClassifierUtils.getDBTableName(owner)».«propertyName»;
+				OWNED BY "«ClassifierUtils.getDBTableName(owner)»"."«propertyName»";
 			
-			ALTER TABLE ONLY «ClassifierUtils.getDBTableName(owner)» 
-				ALTER COLUMN «propertyName» 
+			ALTER TABLE ONLY "«ClassifierUtils.getDBTableName(owner)»" 
+				ALTER COLUMN "«propertyName»" 
 				SET DEFAULT nextval('«name»_SEQ'::regclass);
 			'''
 		}
@@ -909,13 +909,13 @@ public class PackageDatabaseScriptGenerator{
 	static def generateAssociationTable(AssociationClass clazz){
 		'''
 		
-		CREATE TABLE «Utils.toDbName(clazz.name)»(
+		CREATE TABLE "«Utils.toDbName(clazz.name)»"(
 			«clazz.generateAssociationAttributes("", clazz)»
 		);
 		«clazz.generateAssociationForeignKeys()»
 		
-		ALTER TABLE ONLY «Utils.toDbName(clazz.name)»
-			ADD CONSTRAINT «Utils.toDbName(clazz.name)»_PKEY PRIMARY KEY («Utils.getListComma(clazz.getAssociationAttributList(newArrayList(), ""))»);
+		ALTER TABLE ONLY "«Utils.toDbName(clazz.name)»"
+			ADD CONSTRAINT «Utils.toDbName(clazz.name)»_PKEY PRIMARY KEY («Utils.getListStringComma(clazz.getAssociationAttributList(newArrayList(), ""))»);
 		'''
 	}
 	
@@ -988,9 +988,9 @@ public class PackageDatabaseScriptGenerator{
 			val idsName = ids.fold("")[acc, id |
 				val idName = PropertyUtils.getDatabaseName(id, id.name, null)
 				if(acc != ""){
-					acc + ''', «idName»'''
+					acc + ''', "«idName»"'''
 				}else{
-					acc + '''«idName»'''
+					acc + '''"«idName»"'''
 				}
 			]
 			
@@ -998,17 +998,17 @@ public class PackageDatabaseScriptGenerator{
 				val idName = PropertyUtils.getDatabaseName(id, id.name, null)
 				val propName = PropertyUtils.getDatabaseName(property, property.name, idName)
 				if(acc != ""){
-					acc + ''', «propName»'''
+					acc + ''', "«propName»"'''
 				}else{
-					acc + '''«propName»'''
+					acc + '''"«propName»"'''
 				}
 			]
 			val propName = PropertyUtils.getDatabaseName(property, property.name, null)
 			return '''
 			
-			ALTER TABLE ONLY «ClassifierUtils.getDBTableName(fromClass)»
+			ALTER TABLE ONLY "«ClassifierUtils.getDBTableName(fromClass)»"
 				ADD CONSTRAINT «ClassifierUtils.getDBTableName(fromClass)»_«propName»_IDS_FKEY
-				FOREIGN KEY («idsNameInClass») REFERENCES «ClassifierUtils.getDBTableName(type)»(«idsName»);
+				FOREIGN KEY («idsNameInClass») REFERENCES "«ClassifierUtils.getDBTableName(type)»"(«idsName»);
 			'''
 		}
 		return ''''''
@@ -1021,9 +1021,9 @@ public class PackageDatabaseScriptGenerator{
 			val propName = "CODE_" + PropertyUtils.getDatabaseName(property, property.name, null)
 			return '''
 			
-			ALTER TABLE ONLY «ClassifierUtils.getDBTableName(fromClass)»
+			ALTER TABLE ONLY "«ClassifierUtils.getDBTableName(fromClass)»"
 				ADD CONSTRAINT «ClassifierUtils.getDBTableName(fromClass)»_«propName»_CODE_FKEY 
-				FOREIGN KEY («propName») REFERENCES «ClassifierUtils.getDBTableName(type)»(CODE);
+				FOREIGN KEY ("«propName»") REFERENCES "«ClassifierUtils.getDBTableName(type)»"("CODE");
 			'''
 		}
 		return ''''''
@@ -1063,13 +1063,13 @@ public class PackageDatabaseScriptGenerator{
 		var sqlType = TypeUtils.getEnumType(clazz)
 		'''
 		
-		CREATE TABLE «ClassifierUtils.getDBTableName(clazz)»(
-			CODE «sqlType» NOT NULL,
-			LIBELLE text
+		CREATE TABLE "«ClassifierUtils.getDBTableName(clazz)»"(
+			"CODE" «sqlType» NOT NULL,
+			"LIBELLE" text
 		);
 		
-		ALTER TABLE ONLY «ClassifierUtils.getDBTableName(clazz)»
-			ADD CONSTRAINT «ClassifierUtils.getDBTableName(clazz)»_PKEY PRIMARY KEY (CODE);
+		ALTER TABLE ONLY "«ClassifierUtils.getDBTableName(clazz)»"
+			ADD CONSTRAINT «ClassifierUtils.getDBTableName(clazz)»_PKEY PRIMARY KEY ("CODE");
 		«IF !hasCode»
 		
 		CREATE SEQUENCE «ClassifierUtils.getDBTableName(clazz)»_CODE_SEQ
@@ -1081,7 +1081,7 @@ public class PackageDatabaseScriptGenerator{
 		    NO CYCLE;
 		    
 		ALTER SEQUENCE «ClassifierUtils.getDBTableName(clazz)»_CODE_SEQ
-			OWNED BY «ClassifierUtils.getDBTableName(clazz)».CODE;
+			OWNED BY "«ClassifierUtils.getDBTableName(clazz)»"."CODE";
 		«ENDIF»
 		'''
 	}

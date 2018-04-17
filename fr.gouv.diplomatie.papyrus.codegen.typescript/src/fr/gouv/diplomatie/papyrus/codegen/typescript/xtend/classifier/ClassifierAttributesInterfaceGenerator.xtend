@@ -632,12 +632,22 @@ public class ClassifierAttributesInterfaceGenerator {
 			member.type !== fromClass
 		]
 		
-		val name = member.get(0).name
-		'''
-		«Utils.getFirstToLowerCase(name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
-		get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
+		if(member.length >1){
+			'''
+			«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
+			get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
+			
+			'''
+		}else{
+			val name = member.get(0).name
+			'''
+			«Utils.getFirstToLowerCase(name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
+			get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
+			
+			'''
+		}
 		
-		'''
+
 		
 	}
 	

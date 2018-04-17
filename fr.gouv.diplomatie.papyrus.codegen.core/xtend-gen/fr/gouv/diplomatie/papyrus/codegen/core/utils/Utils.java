@@ -497,6 +497,24 @@ public class Utils {
   }
   
   /**
+   * renvoie la liste des noms séparés par des virgules
+   */
+  public static String getListStringComma(final ArrayList<String> names) {
+    String result = "";
+    for (final String name : names) {
+      boolean _equals = Objects.equal(result, "");
+      if (_equals) {
+        String _result = result;
+        result = (_result + (("\"" + name) + "\""));
+      } else {
+        String _result_1 = result;
+        result = (_result_1 + ((", \"" + name) + "\""));
+      }
+    }
+    return result;
+  }
+  
+  /**
    * renvoie la liste en notation pointée
    */
   public static String getNameFromList(final ArrayList<String> names) {

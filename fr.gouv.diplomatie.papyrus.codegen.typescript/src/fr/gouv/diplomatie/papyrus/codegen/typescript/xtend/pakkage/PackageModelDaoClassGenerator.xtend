@@ -133,6 +133,9 @@ class PackageModelDaoClassGenerator{
 		    «associationsClasses.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateAssociationClassDeclaration»'''
 		    ]»
+		    «associationsClassesInPakkage.fold("")[acc, clazz |
+		    	acc + '''«(clazz as Classifier).generateAssociationClassDeclaration»'''
+		    ]»
 		    
 		    /**
 		    * ATTENTION: pensez à ajouter la clé dans l'injector-context
@@ -191,6 +194,10 @@ class PackageModelDaoClassGenerator{
 			type instanceof AssociationClass
 		]
 		
+		val associationsClassesInPkg = pakkage.getOwnedTypes().filter[type|
+			type instanceof AssociationClass
+		]
+		
 		'''
 		«classes.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateModelImport»'''
@@ -198,12 +205,16 @@ class PackageModelDaoClassGenerator{
 	    	acc + '''«(clazz as Classifier).generateModelImport»'''
 	    ]»«associationsClasses.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAssociationModelImport»'''
+	    ]»«associationsClassesInPkg.fold("")[acc, clazz |
+	    	acc + '''«(clazz as Classifier).generateAssociationModelImport»'''
 	    ]»
 		«classes.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAttributesImport»'''
 	    ]»«enums.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAttributesImport»'''
 	    ]»«associationsClasses.fold("")[acc, clazz |
+	    	acc + '''«(clazz as Classifier).generateAssociationAttributesImport»'''
+	    ]»«associationsClassesInPkg.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAssociationAttributesImport»'''
 	    ]»
 		'''
@@ -773,16 +784,30 @@ class PackageModelDaoClassGenerator{
 			member.type !== fromClass
 		)
 		'''
-		«members.fold("")[acc, member |
-			val name = PropertyUtils.getDatabaseName(property,property.name,"")+ "_" +  Utils.toDbName(member.name)
-			acc + generateInitRelationBelongsToMany(
-				'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
-				'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
-				'''"«test.get(0).name»"''',
-				'''"«name»"''',
-				'''"«Utils.toDbName(clazz.name)»"''',
-				'''"«name»"'''
-			)
+		«test.fold("")[acc, member |
+			val name = PropertyUtils.getDatabaseName(property,property.name,"")+ "_" +  Utils.toDbName(members.get(0).name)
+			val type = member.type as Classifier
+			if(Utils.isEntity(type)){
+				val id = ClassifierUtils.getId(type).get(0)
+				val otherKeyName = PropertyUtils.getDatabaseName(id, id.name,"")+ "_" +  Utils.toDbName(type.name)
+				acc + generateInitRelationBelongsToMany(
+					'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+					'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+					'''"«test.get(0).name»"''',
+					'''"«name»"''',
+					'''"«Utils.toDbName(clazz.name)»"''',
+					'''"«otherKeyName»"'''
+				)
+			}else{
+				acc + generateInitRelationBelongsToMany(
+					'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+					'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+					'''"«test.get(0).name»"''',
+					'''"«name»"''',
+					'''"«Utils.toDbName(clazz.name)»"'''
+				)
+			}
+			
 		]»
 		'''	
 	}

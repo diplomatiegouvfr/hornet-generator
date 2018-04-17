@@ -417,6 +417,17 @@
         </eAnnotations>
         <ownedEnd xmi:type="uml:Property" xmi:id="_aIf1IYZsEee5xsVzDe5KuQ" name="partenaire" type="_7g7NUHdhEeeM2-35BsQdHA" association="_aIa8oIZsEee5xsVzDe5KuQ"/>
       </packagedElement>
+      <packagedElement xmi:type="uml:AssociationClass" xmi:id="_CKqyoD7-Eei4_J7tBFVTNg" name="LetestAssociationClasse" memberEnd="_CKsAwT7-Eei4_J7tBFVTNg _CKsAwj7-Eei4_J7tBFVTNg _aR5b4D7_Eei4_J7tBFVTNg">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_CKrZsD7-Eei4_J7tBFVTNg" source="org.eclipse.papyrus">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_CKsAwD7-Eei4_J7tBFVTNg" key="nature" value="UML_Nature"/>
+        </eAnnotations>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_CKsAwT7-Eei4_J7tBFVTNg" name="utilisateur" type="_1Cb7YHdrEeeM2-35BsQdHA" association="_CKqyoD7-Eei4_J7tBFVTNg"/>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_CKsAwj7-Eei4_J7tBFVTNg" name="civilite" type="_gXmksHdjEeeM2-35BsQdHA" association="_CKqyoD7-Eei4_J7tBFVTNg"/>
+        <ownedEnd xmi:type="uml:Property" xmi:id="_aR5b4D7_Eei4_J7tBFVTNg" name="pays" visibility="public" type="_5K7w4HdiEeeM2-35BsQdHA" association="_CKqyoD7-Eei4_J7tBFVTNg">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_aR5b4T7_Eei4_J7tBFVTNg" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aR5b4j7_Eei4_J7tBFVTNg" value="1"/>
+        </ownedEnd>
+      </packagedElement>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_uUqx8HdiEeeM2-35BsQdHA">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_uUqx8XdiEeeM2-35BsQdHA" source="http://www.eclipse.org/uml2/2.0.0/UML">

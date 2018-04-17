@@ -174,6 +174,8 @@ public class AssociationClassModelGenerator {
 	    val name = property.name
 		val fieldName = PropertyUtils.getDatabaseName(property, property.name, null )
 		val type = property.type
+		''''''
+		/* 
 		'''
 		«name»: {
 			type: Sequelize.«TypeUtils.getEnumSequelizeType(type as Classifier)»,
@@ -184,7 +186,7 @@ public class AssociationClassModelGenerator {
 				model: "«ClassifierUtils.getModelName(type as Classifier)»",
 				key: "code"
 			}
-		}'''
+		}'''*/
 	}
 	
 	/**

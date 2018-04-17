@@ -180,10 +180,10 @@ public class PackageDatabaseScriptGenerator {
       final Iterable<Property> attributes = IterableExtensions.<Property>filter(ClassifierUtils.getOwnedAttributes(clazz), _function);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("CREATE TABLE ");
+      _builder.append("CREATE TABLE \"");
       String _dBTableName = ClassifierUtils.getDBTableName(clazz);
       _builder.append(_dBTableName);
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       CharSequence _generateExtendsId = PackageDatabaseScriptGenerator.generateExtendsId(clazz);
@@ -258,8 +258,9 @@ public class PackageDatabaseScriptGenerator {
       final String fieldName = (_plus_1 + dbPropertyName);
       final boolean nullable = PropertyUtils.isNullable(property);
       StringConcatenation _builder = new StringConcatenation();
+      _builder.append("\"");
       _builder.append(fieldName);
-      _builder.append(" ");
+      _builder.append("\" ");
       Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
       _builder.append(_generateAttributType);
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(id);
@@ -329,9 +330,10 @@ public class PackageDatabaseScriptGenerator {
       final String fieldName = (_plus_1 + dbPropertyName);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       String _dBTableName = ClassifierUtils.getDBTableName(clazz);
       _builder.append(_dBTableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
@@ -345,14 +347,14 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("_IDS_FKEY");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
-      _builder.append("FOREIGN KEY (");
+      _builder.append("FOREIGN KEY (\"");
       _builder.append(fieldName, "    ");
-      _builder.append(") REFERENCES ");
+      _builder.append("\") REFERENCES \"");
       String _dBTableName_2 = ClassifierUtils.getDBTableName(owner);
       _builder.append(_dBTableName_2, "    ");
-      _builder.append("(");
+      _builder.append("\"(\"");
       _builder.append(idDbName, "    ");
-      _builder.append(");");
+      _builder.append("\");");
       _builder.newLineIfNotEmpty();
       _xblockexpression = _builder;
     }
@@ -397,8 +399,9 @@ public class PackageDatabaseScriptGenerator {
       final String name = id.getName();
       final String propertyName = PropertyUtils.getDatabaseName(id, name, null);
       StringConcatenation _builder = new StringConcatenation();
+      _builder.append("\"");
       _builder.append(propertyName);
-      _builder.append(" ");
+      _builder.append("\" ");
       Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
       _builder.append(_generateAttributType);
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(id);
@@ -501,8 +504,9 @@ public class PackageDatabaseScriptGenerator {
       final String name = property.getName();
       String propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName);
       StringConcatenation _builder = new StringConcatenation();
+      _builder.append("\"");
       _builder.append(propertyName);
-      _builder.append(" ");
+      _builder.append("\" ");
       Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
       _builder.append(_generateAttributType);
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
@@ -623,9 +627,9 @@ public class PackageDatabaseScriptGenerator {
         {
           String sqlType = TypeUtils.getEnumType(((Classifier)type));
           StringConcatenation _builder = new StringConcatenation();
-          _builder.append("CODE_");
+          _builder.append("\"CODE_");
           _builder.append(propertyName);
-          _builder.append(" ");
+          _builder.append("\" ");
           _builder.append(sqlType);
           _builder.append(" ");
           CharSequence _generateNullable = PackageDatabaseScriptGenerator.generateNullable(property, nullable);
@@ -648,8 +652,9 @@ public class PackageDatabaseScriptGenerator {
       final String name = property.getName();
       final String propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName);
       StringConcatenation _builder = new StringConcatenation();
+      _builder.append("\"");
       _builder.append(propertyName);
-      _builder.append(" ");
+      _builder.append("\" ");
       Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
       _builder.append(_generateAttributType);
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
@@ -714,8 +719,9 @@ public class PackageDatabaseScriptGenerator {
     final String idName = PropertyUtils.getDatabaseName(id, id.getName(), additionnalName);
     final String propertyName = PropertyUtils.getDatabaseName(property, name, idName);
     StringConcatenation _builder = new StringConcatenation();
+    _builder.append("\"");
     _builder.append(propertyName);
-    _builder.append(" ");
+    _builder.append("\" ");
     Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(id);
     _builder.append(_generateAttributType);
     CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(id);
@@ -756,17 +762,18 @@ public class PackageDatabaseScriptGenerator {
       final String name = IterableExtensions.<Property, String>fold(ids, "", _function);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       String _dBTableName = ClassifierUtils.getDBTableName(clazz);
       _builder.append(_dBTableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("ADD CONSTRAINT ");
       String _dBTableName_1 = ClassifierUtils.getDBTableName(clazz);
       _builder.append(_dBTableName_1, "\t");
-      _builder.append("_PKEY PRIMARY KEY (");
+      _builder.append("_PKEY PRIMARY KEY (\"");
       _builder.append(name, "\t");
-      _builder.append(");");
+      _builder.append("\");");
       _builder.newLineIfNotEmpty();
       _xblockexpression = _builder;
     }
@@ -814,12 +821,15 @@ public class PackageDatabaseScriptGenerator {
               boolean _notEquals = (!Objects.equal(acc, ""));
               if (_notEquals) {
                 StringConcatenation _builder = new StringConcatenation();
-                _builder.append(", ");
+                _builder.append(", \"");
                 _builder.append(name);
+                _builder.append("\"");
                 _xifexpression_1 = (acc + _builder);
               } else {
                 StringConcatenation _builder_1 = new StringConcatenation();
+                _builder_1.append("\"");
                 _builder_1.append(name);
+                _builder_1.append("\"");
                 _xifexpression_1 = (acc + _builder_1);
               }
               _xblockexpression_2 = _xifexpression_1;
@@ -829,9 +839,10 @@ public class PackageDatabaseScriptGenerator {
           final String idsName = IterableExtensions.<Property, String>fold(ids, "", _function);
           StringConcatenation _builder = new StringConcatenation();
           _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
+          _builder.append("ALTER TABLE ONLY \"");
           String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
           _builder.append(_dBTableName);
+          _builder.append("\"");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
           _builder.append("ADD CONSTRAINT ");
@@ -845,10 +856,10 @@ public class PackageDatabaseScriptGenerator {
           _builder.append("    ");
           _builder.append("FOREIGN KEY (");
           _builder.append(idsName, "    ");
-          _builder.append(") REFERENCES ");
+          _builder.append(") REFERENCES \"");
           String _dBTableName_2 = ClassifierUtils.getDBTableName(clazz);
           _builder.append(_dBTableName_2, "    ");
-          _builder.append("(");
+          _builder.append("\"(");
           _builder.append(idsName, "    ");
           _builder.append(");");
           _builder.newLineIfNotEmpty();
@@ -950,12 +961,15 @@ public class PackageDatabaseScriptGenerator {
             boolean _notEquals = (!Objects.equal(acc, ""));
             if (_notEquals) {
               StringConcatenation _builder = new StringConcatenation();
-              _builder.append(", ");
+              _builder.append(", \"");
               _builder.append(propertyName);
+              _builder.append("\"");
               _xifexpression = (acc + _builder);
             } else {
               StringConcatenation _builder_1 = new StringConcatenation();
+              _builder_1.append("\"");
               _builder_1.append(propertyName);
+              _builder_1.append("\"");
               _xifexpression = (acc + _builder_1);
             }
             _xblockexpression = _xifexpression;
@@ -972,12 +986,15 @@ public class PackageDatabaseScriptGenerator {
             boolean _notEquals = (!Objects.equal(acc, ""));
             if (_notEquals) {
               StringConcatenation _builder = new StringConcatenation();
-              _builder.append(", ");
+              _builder.append(", \"");
               _builder.append(propertyName);
+              _builder.append("\"");
               _xifexpression = (acc + _builder);
             } else {
               StringConcatenation _builder_1 = new StringConcatenation();
+              _builder_1.append("\"");
               _builder_1.append(propertyName);
+              _builder_1.append("\"");
               _xifexpression = (acc + _builder_1);
             }
             _xblockexpression = _xifexpression;
@@ -987,8 +1004,9 @@ public class PackageDatabaseScriptGenerator {
         String fieldInClass = IterableExtensions.<Property, String>fold(ids, "", _function_1);
         StringConcatenation _builder = new StringConcatenation();
         _builder.newLine();
-        _builder.append("ALTER TABLE ONLY ");
+        _builder.append("ALTER TABLE ONLY \"");
         _builder.append(tableName);
+        _builder.append("\"");
         _builder.newLineIfNotEmpty();
         _builder.append("    ");
         _builder.append("ADD CONSTRAINT ");
@@ -1000,10 +1018,10 @@ public class PackageDatabaseScriptGenerator {
         _builder.append("    ");
         _builder.append("FOREIGN KEY (");
         _builder.append(fieldToClass, "    ");
-        _builder.append(") REFERENCES ");
+        _builder.append(") REFERENCES \"");
         String _dBTableName = ClassifierUtils.getDBTableName(((Classifier)toClass));
         _builder.append(_dBTableName, "    ");
-        _builder.append("(");
+        _builder.append("\"(");
         _builder.append(fieldInClass, "    ");
         _builder.append(");");
         _builder.newLineIfNotEmpty();
@@ -1024,8 +1042,9 @@ public class PackageDatabaseScriptGenerator {
       final String propertyName = PropertyUtils.getDatabaseName(property, property.getName(), additionnalName);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       _builder.append(tableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
@@ -1035,12 +1054,12 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("_CODE_FKEY ");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
-      _builder.append("FOREIGN KEY (CODE_");
+      _builder.append("FOREIGN KEY (\"CODE_");
       _builder.append(propertyName, "    ");
-      _builder.append(") REFERENCES ");
+      _builder.append("\") REFERENCES \"");
       String _dBTableName = ClassifierUtils.getDBTableName(((Classifier) type));
       _builder.append(_dBTableName, "    ");
-      _builder.append("(CODE);");
+      _builder.append("\"(\"CODE\");");
       _builder.newLineIfNotEmpty();
       _xblockexpression = _builder;
     }
@@ -1160,12 +1179,15 @@ public class PackageDatabaseScriptGenerator {
           boolean _notEquals = (!Objects.equal(acc, ""));
           if (_notEquals) {
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append(", ");
+            _builder.append(", \"");
             _builder.append(idName);
+            _builder.append("\"");
             _xifexpression = (acc + _builder);
           } else {
             StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("\"");
             _builder_1.append(idName);
+            _builder_1.append("\"");
             _xifexpression = (acc + _builder_1);
           }
           _xblockexpression_1 = _xifexpression;
@@ -1175,13 +1197,14 @@ public class PackageDatabaseScriptGenerator {
       final String idsName = IterableExtensions.<Property, String>fold(ids, "", _function);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("CREATE TABLE ");
+      _builder.append("CREATE TABLE \"");
       _builder.append(tableName);
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
+      _builder.append("\"");
       _builder.append(propertyName, "\t");
-      _builder.append(" ");
+      _builder.append("\" ");
       Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
       _builder.append(_generateAttributType, "\t");
       CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
@@ -1215,8 +1238,9 @@ public class PackageDatabaseScriptGenerator {
       _builder.append(");");
       _builder.newLine();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       _builder.append(tableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
@@ -1226,26 +1250,27 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("    ");
       _builder.append("FOREIGN KEY (");
       _builder.append(idsName, "    ");
-      _builder.append(") REFERENCES ");
+      _builder.append(") REFERENCES \"");
       String _dBTableName_1 = ClassifierUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName_1, "    ");
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.append(idsName, "    ");
       _builder.append(");");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       _builder.append(tableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
       _builder.append(tableName, "    ");
       _builder.append("_PKEY PRIMARY KEY(");
       _builder.append(idsName, "    ");
-      _builder.append(", ");
+      _builder.append(", \"");
       _builder.append(propertyName, "    ");
-      _builder.append(");");
+      _builder.append("\");");
       _builder.newLineIfNotEmpty();
       _xblockexpression = _builder;
     }
@@ -1273,18 +1298,21 @@ public class PackageDatabaseScriptGenerator {
           boolean _notEquals = (!Objects.equal(acc, ""));
           if (_notEquals) {
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append(", ");
+            _builder.append(", \"");
             _builder.append(propertyName);
             _builder.append("_");
             String _dbName = Utils.toDbName(fromClass.getName());
             _builder.append(_dbName);
+            _builder.append("\"");
             _xifexpression = (acc + _builder);
           } else {
             StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("\"");
             _builder_1.append(propertyName);
             _builder_1.append("_");
             String _dbName_1 = Utils.toDbName(fromClass.getName());
             _builder_1.append(_dbName_1);
+            _builder_1.append("\"");
             _xifexpression = (acc + _builder_1);
           }
           _xblockexpression = _xifexpression;
@@ -1300,12 +1328,15 @@ public class PackageDatabaseScriptGenerator {
           boolean _notEquals = (!Objects.equal(acc, ""));
           if (_notEquals) {
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append(", ");
+            _builder.append(", \"");
             _builder.append(propertyName);
+            _builder.append("\"");
             _xifexpression = (acc + _builder);
           } else {
             StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("\"");
             _builder_1.append(propertyName);
+            _builder_1.append("\"");
             _xifexpression = (acc + _builder_1);
           }
           _xblockexpression = _xifexpression;
@@ -1321,16 +1352,19 @@ public class PackageDatabaseScriptGenerator {
           boolean _notEquals = (!Objects.equal(acc, ""));
           if (_notEquals) {
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append(", ");
+            _builder.append(", \"");
             _builder.append(propertyName);
             _builder.append("_");
             _builder.append(fieldName);
+            _builder.append("\"");
             _xifexpression = (acc + _builder);
           } else {
             StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("\"");
             _builder_1.append(propertyName);
             _builder_1.append("_");
             _builder_1.append(fieldName);
+            _builder_1.append("\"");
             _xifexpression = (acc + _builder_1);
           }
           _xblockexpression = _xifexpression;
@@ -1346,12 +1380,15 @@ public class PackageDatabaseScriptGenerator {
           boolean _notEquals = (!Objects.equal(acc, ""));
           if (_notEquals) {
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append(", ");
+            _builder.append(", \"");
             _builder.append(propertyName);
+            _builder.append("\"");
             _xifexpression = (acc + _builder);
           } else {
             StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("\"");
             _builder_1.append(propertyName);
+            _builder_1.append("\"");
             _xifexpression = (acc + _builder_1);
           }
           _xblockexpression = _xifexpression;
@@ -1361,9 +1398,9 @@ public class PackageDatabaseScriptGenerator {
       final String idsPropsBaseName = IterableExtensions.<Property, String>fold(idsProps, "", _function_3);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("CREATE TABLE ");
+      _builder.append("CREATE TABLE \"");
       _builder.append(tableName);
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       final Function2<String, Property, String> _function_4 = (String acc, Property id) -> {
@@ -1417,8 +1454,9 @@ public class PackageDatabaseScriptGenerator {
       _builder.append(");");
       _builder.newLine();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       _builder.append(tableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
@@ -1431,17 +1469,18 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("    ");
       _builder.append("FOREIGN KEY (");
       _builder.append(idsOwnerName, "    ");
-      _builder.append(") REFERENCES ");
+      _builder.append(") REFERENCES \"");
       String _dBTableName_1 = ClassifierUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName_1, "    ");
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.append(idsOwnerBaseName, "    ");
       _builder.append(");");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       _builder.append(tableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
@@ -1454,17 +1493,18 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("    ");
       _builder.append("FOREIGN KEY (");
       _builder.append(idsPropsName, "    ");
-      _builder.append(") REFERENCES ");
+      _builder.append(") REFERENCES \"");
       String _dBTableName_2 = ClassifierUtils.getDBTableName(((Classifier)type));
       _builder.append(_dBTableName_2, "    ");
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.append(idsPropsBaseName, "    ");
       _builder.append(");");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       _builder.append(tableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
@@ -1521,10 +1561,11 @@ public class PackageDatabaseScriptGenerator {
       CharSequence _xifexpression = null;
       if ((owner instanceof Classifier)) {
         StringConcatenation _builder = new StringConcatenation();
+        _builder.append("\"");
         _builder.append(propertyName);
         _builder.append("_");
         _builder.append(additionnalName);
-        _builder.append(" ");
+        _builder.append("\" ");
         Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
         _builder.append(_generateAttributType);
         CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
@@ -1549,11 +1590,12 @@ public class PackageDatabaseScriptGenerator {
       CharSequence _xifexpression = null;
       if ((owner instanceof Classifier)) {
         StringConcatenation _builder = new StringConcatenation();
+        _builder.append("\"");
         _builder.append(propertyName);
         _builder.append("_");
         String _dbName = Utils.toDbName(((Classifier)owner).getName());
         _builder.append(_dbName);
-        _builder.append(" ");
+        _builder.append("\" ");
         Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
         _builder.append(_generateAttributType);
         CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
@@ -1586,12 +1628,15 @@ public class PackageDatabaseScriptGenerator {
               boolean _notEquals = (!Objects.equal(acc, ""));
               if (_notEquals) {
                 StringConcatenation _builder = new StringConcatenation();
-                _builder.append(", ");
+                _builder.append(", \"");
                 _builder.append(idName);
+                _builder.append("\"");
                 _xifexpression_1 = (acc + _builder);
               } else {
                 StringConcatenation _builder_1 = new StringConcatenation();
+                _builder_1.append("\"");
                 _builder_1.append(idName);
+                _builder_1.append("\"");
                 _xifexpression_1 = (acc + _builder_1);
               }
               _xblockexpression_2 = _xifexpression_1;
@@ -1599,13 +1644,13 @@ public class PackageDatabaseScriptGenerator {
             return _xblockexpression_2;
           };
           final String idsName = IterableExtensions.<Property, String>fold(idsOwner, "", _function);
-          String _listComma = Utils.getListComma(PackageDatabaseScriptGenerator.getAttributList(((Classifier)type), CollectionLiterals.<String>newArrayList(), name));
-          final String pkeys = ((idsName + ", ") + _listComma);
+          String _listStringComma = Utils.getListStringComma(PackageDatabaseScriptGenerator.getAttributList(((Classifier)type), CollectionLiterals.<String>newArrayList(), name));
+          final String pkeys = ((idsName + ", ") + _listStringComma);
           StringConcatenation _builder = new StringConcatenation();
           _builder.newLine();
-          _builder.append("CREATE TABLE ");
+          _builder.append("CREATE TABLE \"");
           _builder.append(tableName);
-          _builder.append("(");
+          _builder.append("\"(");
           _builder.newLineIfNotEmpty();
           _builder.append("\t");
           CharSequence _generateAttributes = PackageDatabaseScriptGenerator.generateAttributes(((Classifier)type), name, fromClass, Boolean.valueOf(false));
@@ -1642,8 +1687,9 @@ public class PackageDatabaseScriptGenerator {
           _builder.append(_generateForeignKeys);
           _builder.newLineIfNotEmpty();
           _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
+          _builder.append("ALTER TABLE ONLY \"");
           _builder.append(tableName);
+          _builder.append("\"");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
           _builder.append("ADD CONSTRAINT ");
@@ -1653,17 +1699,18 @@ public class PackageDatabaseScriptGenerator {
           _builder.append("    ");
           _builder.append("FOREIGN KEY (");
           _builder.append(idsName, "    ");
-          _builder.append(") REFERENCES ");
+          _builder.append(") REFERENCES \"");
           String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
           _builder.append(_dBTableName, "    ");
-          _builder.append("(");
+          _builder.append("\"(");
           _builder.append(idsName, "    ");
           _builder.append(");");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
           _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
+          _builder.append("ALTER TABLE ONLY \"");
           _builder.append(tableName);
+          _builder.append("\"");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
           _builder.append("ADD CONSTRAINT ");
@@ -1744,12 +1791,15 @@ public class PackageDatabaseScriptGenerator {
               boolean _notEquals = (!Objects.equal(acc, ""));
               if (_notEquals) {
                 StringConcatenation _builder = new StringConcatenation();
-                _builder.append(", ");
+                _builder.append(", \"");
                 _builder.append(idName);
+                _builder.append("\"");
                 _xifexpression_1 = (acc + _builder);
               } else {
                 StringConcatenation _builder_1 = new StringConcatenation();
+                _builder_1.append("\"");
                 _builder_1.append(idName);
+                _builder_1.append("\"");
                 _xifexpression_1 = (acc + _builder_1);
               }
               _xblockexpression_2 = _xifexpression_1;
@@ -1760,12 +1810,12 @@ public class PackageDatabaseScriptGenerator {
           final String sqlType = TypeUtils.getEnumType(((Classifier)type));
           StringConcatenation _builder = new StringConcatenation();
           _builder.newLine();
-          _builder.append("CREATE TABLE ");
+          _builder.append("CREATE TABLE \"");
           _builder.append(tableName);
-          _builder.append("(");
+          _builder.append("\"(");
           _builder.newLineIfNotEmpty();
           _builder.append("\t");
-          _builder.append("CODE ");
+          _builder.append("\"CODE\" ");
           _builder.append(sqlType, "\t");
           _builder.append(" NOT NULL,");
           _builder.newLineIfNotEmpty();
@@ -1798,8 +1848,9 @@ public class PackageDatabaseScriptGenerator {
           _builder.append(_generateForeignKeys);
           _builder.newLineIfNotEmpty();
           _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
+          _builder.append("ALTER TABLE ONLY \"");
           _builder.append(tableName);
+          _builder.append("\"");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
           _builder.append("ADD CONSTRAINT ");
@@ -1809,16 +1860,17 @@ public class PackageDatabaseScriptGenerator {
           _builder.append("    ");
           _builder.append("FOREIGN KEY (");
           _builder.append(idsName, "    ");
-          _builder.append(") REFERENCES ");
+          _builder.append(") REFERENCES \"");
           String _dBTableName_1 = ClassifierUtils.getDBTableName(fromClass);
           _builder.append(_dBTableName_1, "    ");
-          _builder.append("(");
+          _builder.append("\"(");
           _builder.append(idsName, "    ");
           _builder.append(");");
           _builder.newLineIfNotEmpty();
           _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
+          _builder.append("ALTER TABLE ONLY \"");
           _builder.append(tableName);
+          _builder.append("\"");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
           _builder.append("ADD CONSTRAINT ");
@@ -1826,21 +1878,22 @@ public class PackageDatabaseScriptGenerator {
           _builder.append("_CODE_FKEY");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
-          _builder.append("FOREIGN KEY (CODE) REFERENCES ");
+          _builder.append("FOREIGN KEY (\"CODE\") REFERENCES \"");
           String _dBTableName_2 = ClassifierUtils.getDBTableName(((Classifier)type));
           _builder.append(_dBTableName_2, "    ");
-          _builder.append("(CODE);");
+          _builder.append("\"(\"CODE\");");
           _builder.newLineIfNotEmpty();
           _builder.newLine();
-          _builder.append("ALTER TABLE ONLY ");
+          _builder.append("ALTER TABLE ONLY \"");
           _builder.append(tableName);
+          _builder.append("\"");
           _builder.newLineIfNotEmpty();
           _builder.append("    ");
           _builder.append("ADD CONSTRAINT ");
           _builder.append(tableName, "    ");
           _builder.append("_PKEY PRIMARY KEY (");
           _builder.append(idsName, "    ");
-          _builder.append(", CODE);");
+          _builder.append(", \"CODE\");");
           _builder.newLineIfNotEmpty();
           _xblockexpression_1 = _builder;
         }
@@ -1931,23 +1984,23 @@ public class PackageDatabaseScriptGenerator {
           _builder_4.append("_SEQ ");
           _builder_4.newLineIfNotEmpty();
           _builder_4.append("\t");
-          _builder_4.append("OWNED BY ");
+          _builder_4.append("OWNED BY \"");
           String _dBTableName_1 = ClassifierUtils.getDBTableName(((Classifier)owner));
           _builder_4.append(_dBTableName_1, "\t");
-          _builder_4.append(".");
+          _builder_4.append("\".\"");
           _builder_4.append(propertyName, "\t");
-          _builder_4.append(";");
+          _builder_4.append("\";");
           _builder_4.newLineIfNotEmpty();
           _builder_4.newLine();
-          _builder_4.append("ALTER TABLE ONLY ");
+          _builder_4.append("ALTER TABLE ONLY \"");
           String _dBTableName_2 = ClassifierUtils.getDBTableName(((Classifier)owner));
           _builder_4.append(_dBTableName_2);
-          _builder_4.append(" ");
+          _builder_4.append("\" ");
           _builder_4.newLineIfNotEmpty();
           _builder_4.append("\t");
-          _builder_4.append("ALTER COLUMN ");
+          _builder_4.append("ALTER COLUMN \"");
           _builder_4.append(propertyName, "\t");
-          _builder_4.append(" ");
+          _builder_4.append("\" ");
           _builder_4.newLineIfNotEmpty();
           _builder_4.append("\t");
           _builder_4.append("SET DEFAULT nextval(\'");
@@ -1966,10 +2019,10 @@ public class PackageDatabaseScriptGenerator {
   public static CharSequence generateAssociationTable(final AssociationClass clazz) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.newLine();
-    _builder.append("CREATE TABLE ");
+    _builder.append("CREATE TABLE \"");
     String _dbName = Utils.toDbName(clazz.getName());
     _builder.append(_dbName);
-    _builder.append("(");
+    _builder.append("\"(");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     CharSequence _generateAssociationAttributes = PackageDatabaseScriptGenerator.generateAssociationAttributes(clazz, "", clazz);
@@ -1981,17 +2034,18 @@ public class PackageDatabaseScriptGenerator {
     _builder.append(_generateAssociationForeignKeys);
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("ALTER TABLE ONLY ");
+    _builder.append("ALTER TABLE ONLY \"");
     String _dbName_1 = Utils.toDbName(clazz.getName());
     _builder.append(_dbName_1);
+    _builder.append("\"");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     _builder.append("ADD CONSTRAINT ");
     String _dbName_2 = Utils.toDbName(clazz.getName());
     _builder.append(_dbName_2, "\t");
     _builder.append("_PKEY PRIMARY KEY (");
-    String _listComma = Utils.getListComma(PackageDatabaseScriptGenerator.getAssociationAttributList(clazz, CollectionLiterals.<String>newArrayList(), ""));
-    _builder.append(_listComma, "\t");
+    String _listStringComma = Utils.getListStringComma(PackageDatabaseScriptGenerator.getAssociationAttributList(clazz, CollectionLiterals.<String>newArrayList(), ""));
+    _builder.append(_listStringComma, "\t");
     _builder.append(");");
     _builder.newLineIfNotEmpty();
     return _builder;
@@ -2130,12 +2184,15 @@ public class PackageDatabaseScriptGenerator {
           boolean _notEquals = (!Objects.equal(acc, ""));
           if (_notEquals) {
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append(", ");
+            _builder.append(", \"");
             _builder.append(idName);
+            _builder.append("\"");
             _xifexpression = (acc + _builder);
           } else {
             StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("\"");
             _builder_1.append(idName);
+            _builder_1.append("\"");
             _xifexpression = (acc + _builder_1);
           }
           _xblockexpression = _xifexpression;
@@ -2152,12 +2209,15 @@ public class PackageDatabaseScriptGenerator {
           boolean _notEquals = (!Objects.equal(acc, ""));
           if (_notEquals) {
             StringConcatenation _builder = new StringConcatenation();
-            _builder.append(", ");
+            _builder.append(", \"");
             _builder.append(propName);
+            _builder.append("\"");
             _xifexpression = (acc + _builder);
           } else {
             StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("\"");
             _builder_1.append(propName);
+            _builder_1.append("\"");
             _xifexpression = (acc + _builder_1);
           }
           _xblockexpression = _xifexpression;
@@ -2168,9 +2228,10 @@ public class PackageDatabaseScriptGenerator {
       final String propName = PropertyUtils.getDatabaseName(property, property.getName(), null);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("ADD CONSTRAINT ");
@@ -2183,10 +2244,10 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("\t");
       _builder.append("FOREIGN KEY (");
       _builder.append(idsNameInClass, "\t");
-      _builder.append(") REFERENCES ");
+      _builder.append(") REFERENCES \"");
       String _dBTableName_2 = ClassifierUtils.getDBTableName(((Classifier)type));
       _builder.append(_dBTableName_2, "\t");
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.append(idsName, "\t");
       _builder.append(");");
       _builder.newLineIfNotEmpty();
@@ -2203,9 +2264,10 @@ public class PackageDatabaseScriptGenerator {
       final String propName = ("CODE_" + _databaseName);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("ADD CONSTRAINT ");
@@ -2216,12 +2278,12 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("_CODE_FKEY ");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
-      _builder.append("FOREIGN KEY (");
+      _builder.append("FOREIGN KEY (\"");
       _builder.append(propName, "\t");
-      _builder.append(") REFERENCES ");
+      _builder.append("\") REFERENCES \"");
       String _dBTableName_2 = ClassifierUtils.getDBTableName(((Classifier)type));
       _builder.append(_dBTableName_2, "\t");
-      _builder.append("(CODE);");
+      _builder.append("\"(\"CODE\");");
       _builder.newLineIfNotEmpty();
       return _builder.toString();
     }
@@ -2272,31 +2334,32 @@ public class PackageDatabaseScriptGenerator {
       String sqlType = TypeUtils.getEnumType(clazz);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
-      _builder.append("CREATE TABLE ");
+      _builder.append("CREATE TABLE \"");
       String _dBTableName = ClassifierUtils.getDBTableName(clazz);
       _builder.append(_dBTableName);
-      _builder.append("(");
+      _builder.append("\"(");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
-      _builder.append("CODE ");
+      _builder.append("\"CODE\" ");
       _builder.append(sqlType, "\t");
       _builder.append(" NOT NULL,");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
-      _builder.append("LIBELLE text");
+      _builder.append("\"LIBELLE\" text");
       _builder.newLine();
       _builder.append(");");
       _builder.newLine();
       _builder.newLine();
-      _builder.append("ALTER TABLE ONLY ");
+      _builder.append("ALTER TABLE ONLY \"");
       String _dBTableName_1 = ClassifierUtils.getDBTableName(clazz);
       _builder.append(_dBTableName_1);
+      _builder.append("\"");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("ADD CONSTRAINT ");
       String _dBTableName_2 = ClassifierUtils.getDBTableName(clazz);
       _builder.append(_dBTableName_2, "\t");
-      _builder.append("_PKEY PRIMARY KEY (CODE);");
+      _builder.append("_PKEY PRIMARY KEY (\"CODE\");");
       _builder.newLineIfNotEmpty();
       {
         if ((!hasCode)) {
@@ -2332,10 +2395,10 @@ public class PackageDatabaseScriptGenerator {
           _builder.append("_CODE_SEQ");
           _builder.newLineIfNotEmpty();
           _builder.append("\t");
-          _builder.append("OWNED BY ");
+          _builder.append("OWNED BY \"");
           String _dBTableName_5 = ClassifierUtils.getDBTableName(clazz);
           _builder.append(_dBTableName_5, "\t");
-          _builder.append(".CODE;");
+          _builder.append("\".\"CODE\";");
           _builder.newLineIfNotEmpty();
         }
       }

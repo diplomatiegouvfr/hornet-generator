@@ -160,7 +160,7 @@ public class ClassifierDtoClassGenerator{
 		val fieldName = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
 		'''
 		
-		@Map()
+		@Map(«ClassifierUtils.getDtoClassName(owner)»)
 		«fieldName»: «ClassifierUtils.getDtoClassName(owner)»;
 		'''
 	}
@@ -293,7 +293,7 @@ public class ClassifierDtoClassGenerator{
 				acc + 
 				'''
 				
-				@Map()
+				@Map(«ClassifierUtils.getDtoClassName(parent.general)»)
 				«Utils.getFirstToLowerCase(parent.general.name)»: «ClassifierUtils.getDtoClassName(parent.general)»;
 				'''
 			]»'''
@@ -420,7 +420,7 @@ public class ClassifierDtoClassGenerator{
 					acc + '''«property.generateEntityAttribute(id, names)»'''
 				]»
 				
-				@Map()
+				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«alias»
 				«name»: «ClassifierUtils.getDtoClassName(type)»;
 				'''
@@ -428,7 +428,7 @@ public class ClassifierDtoClassGenerator{
 			}else{
 				return '''
 				
-				@Map()
+				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 				'''
 			}
@@ -461,7 +461,7 @@ public class ClassifierDtoClassGenerator{
 				«codeAlias»
 				«codeName»: number;
 				
-				@Map()
+				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«alias»
 				«name»: «ClassifierUtils.getDtoClassName(type)»;
 				'''
@@ -471,7 +471,7 @@ public class ClassifierDtoClassGenerator{
 				@Map()
 				«codeName»: Array<number>;
 				
-				@Map()
+				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 				'''
 			}
@@ -581,7 +581,7 @@ public class ClassifierDtoClassGenerator{
 				}
 			]»
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
 			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 		}
 		'''
@@ -648,7 +648,7 @@ public class ClassifierDtoClassGenerator{
 				}
 			]»
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
 			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 			«idsOwner.fold("")[acc, id |
 				if(acc != ""){
@@ -658,7 +658,7 @@ public class ClassifierDtoClassGenerator{
 				}
 			]»
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
 			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
 		'''
@@ -692,7 +692,7 @@ public class ClassifierDtoClassGenerator{
 				}
 			]»
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
 			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 			«idsProp.fold("")[acc, id |
 				if(acc != ""){
@@ -702,7 +702,7 @@ public class ClassifierDtoClassGenerator{
 				}
 			]»
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
 			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
 		'''
@@ -725,7 +725,7 @@ public class ClassifierDtoClassGenerator{
 	static def generateAssociationClassAtributes(AssociationClass clazz, Classifier fromClass){
 		'''
 		
-		@Map()
+		@Map(«ClassifierUtils.getDtoClassName(clazz)»)
 		«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getDtoClassName(clazz)»>;
 		'''
 		
@@ -745,7 +745,7 @@ public class ClassifierDtoClassGenerator{
 				}
 			]»
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
 			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 			«(type as Classifier).generateAttributes(newArrayList(property.name), type as Classifier)»
 			
@@ -768,10 +768,10 @@ public class ClassifierDtoClassGenerator{
 				}
 			]»
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
 			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 			
-			@Map()
+			@Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
 			«Utils.getFirstToLowerCase(property.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
 		'''

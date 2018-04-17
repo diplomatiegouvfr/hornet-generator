@@ -426,6 +426,21 @@ public class Utils{
 		return result
 	}
 	
+		/**
+	 * renvoie la liste des noms séparés par des virgules
+	 */
+	static def String getListStringComma(ArrayList<String> names){
+		var String result=""
+		for(String name : names){
+			if(result == ""){
+				result += '"' + name + '"'
+			}else{
+				result += ', "' + name + '"'
+			}
+		}
+		return result
+	}
+	
 	/**
 	 * renvoie la liste en notation pointée
 	 */

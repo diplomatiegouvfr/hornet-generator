@@ -100,7 +100,7 @@ public class ClassifierModelGenerator {
 			«clazz.generateExtendsId»
 			«clazz.generateInterfacesAttributes»
 			«clazz.generateAttributes("", "", clazz, false, false)»
-			«clazz.generateOneToManyAttribute»
+			««««clazz.generateOneToManyAttribute»
 		}
 		
 		«clazz.generateMultivaluedAttributeModels»
