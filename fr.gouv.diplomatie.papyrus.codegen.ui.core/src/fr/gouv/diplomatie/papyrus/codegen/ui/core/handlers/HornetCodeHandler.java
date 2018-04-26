@@ -81,6 +81,7 @@ package fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -95,6 +96,7 @@ import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
+import fr.gouv.diplomatie.papyrus.codegen.ui.core.validator.HornetModelValidator;
 
 public abstract class HornetCodeHandler extends CmdHandler {
 	
@@ -116,17 +118,37 @@ public abstract class HornetCodeHandler extends CmdHandler {
 			IProject project = getCurrentProject();
 			if(project != null) {
 				try {
-					initiateAndGenerate(project, packageableElement);
+					validateAndGenerate(project, packageableElement);
 				}catch(Exception e) {
 					StringWriter errors = new StringWriter();
 					e.printStackTrace(new PrintWriter(errors));
 					console.err.println(errors.toString());
-				}finally {
-					console.success.println("Génération terminée");
 				}
 			}
 		}
 		return null;
+	}
+	
+	public void validateAndGenerate(IProject project, PackageableElement packageableElement) {
+		HornetModelValidator validator = new HornetModelValidator();
+		ArrayList<String> validationErrors = validator.validate(packageableElement, console);
+		if(validationErrors.isEmpty()) {
+			console.out.println("Modèle valide");
+			try {
+				initiateAndGenerate(project, packageableElement);
+			}catch(Exception e) {
+				StringWriter errors = new StringWriter();
+				e.printStackTrace(new PrintWriter(errors));
+				console.err.println(errors.toString());
+			}finally {
+				console.success.println("Génération terminée");
+			}
+		}else {
+			console.err.println("Modèle invalide");
+			for(String error : validationErrors) {
+				console.err.println(error);
+			}
+		}
 	}
 	
 	/**

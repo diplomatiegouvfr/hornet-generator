@@ -79,17 +79,46 @@
  */
 package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.uml2.uml.PackageableElement;
 import fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators.LombokAnnotationGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.java.transformations.ProjectJPAEntityElementsCreator;
 import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;
+import fr.gouv.diplomatie.papyrus.codegen.ui.core.validator.HornetModelValidator;
+import fr.gouv.diplomatie.papyrus.codegen.ui.validators.JavaPluginModelValidator;
 
 public class GenerateJPAEntityHandler extends HornetCodeHandler {
 
 	public GenerateJPAEntityHandler() {
 		super();
 		this.message = "= executing Generate JPA Entity Handler";
+	}
+	
+	@Override
+	public void validateAndGenerate(IProject project, PackageableElement packageableElement) {
+		JavaPluginModelValidator validator = new JavaPluginModelValidator();
+		ArrayList<String> validationErrors = validator.validate(packageableElement, console);
+		if(validationErrors.isEmpty()) {
+			console.out.println("Modèle valide");
+			try {
+				initiateAndGenerate(project, packageableElement);
+			}catch(Exception e) {
+				StringWriter errors = new StringWriter();
+				e.printStackTrace(new PrintWriter(errors));
+				console.err.println(errors.toString());
+			}finally {
+				console.success.println("Génération terminée");
+			}
+		}else {
+			console.err.println("Modèle invalide");
+			for(String error : validationErrors) {
+				console.err.println(error);
+			}
+		}
 	}
 	
 	@Override

@@ -94,7 +94,7 @@ public class ConsoleUtils {
 	public MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");
 	
 	//stream classique
-	public MessageConsoleStream out = myConsole.newMessageStream();
+	public MessageConsoleStream out = getClassicStream(myConsole);
 	
 	//stream d'erreur
 	public MessageConsoleStream err = getErrorMessageStream();
@@ -117,6 +117,15 @@ public class ConsoleUtils {
 		
 	}
 	
+	public static MessageConsoleStream getClassicStream(MessageConsole console) {
+		if(console ==null)
+		{
+			return null;
+		}else {
+			return console.newMessageStream();
+		}
+	}
+	
 	/**
 	 * récupération de la console liée au projet
 	 * @param name
@@ -124,6 +133,9 @@ public class ConsoleUtils {
 	 */
 	public static MessageConsole findConsole(String name) {
 	      ConsolePlugin plugin = ConsolePlugin.getDefault();
+	      if(plugin == null) {
+	    	  return null;
+	      }
 	      IConsoleManager conMan = plugin.getConsoleManager();
 	      IConsole[] existing = conMan.getConsoles();
 	      for (int i = 0; i < existing.length; i++)
@@ -132,7 +144,7 @@ public class ConsoleUtils {
 	      //no console found, so create a new one
 	      MessageConsole myConsole = new MessageConsole(name, null);
 	      conMan.addConsoles(new IConsole[]{myConsole});
-	      return myConsole;
+	      return myConsole;     
 	}
 	
 	/**
@@ -141,6 +153,9 @@ public class ConsoleUtils {
 	 * @return
 	 */
 	public MessageConsoleStream getErrorMessageStream() {
+		if(myConsole == null) {
+			return null;
+		}
 		MessageConsoleStream stream = myConsole.newMessageStream();
 		stream.setColor(Display.getDefault().getSystemColor(SWT.COLOR_RED));
 		return stream;
@@ -152,6 +167,9 @@ public class ConsoleUtils {
 	 * @return
 	 */
 	public MessageConsoleStream getSuccessMessageStream() {
+		if(myConsole == null) {
+			return null;
+		}
 		MessageConsoleStream stream = myConsole.newMessageStream();
 		stream.setColor(Display.getDefault().getSystemColor(SWT.COLOR_GREEN));
 		return stream;
@@ -163,6 +181,9 @@ public class ConsoleUtils {
 	 * @return
 	 */
 	public MessageConsoleStream getWarningMessageStream() {
+		if(myConsole == null) {
+			return null;
+		}
 		MessageConsoleStream stream = myConsole.newMessageStream();
 		Device device = Display.getCurrent ();
 		Color orange = new Color (device, 245, 121, 0);

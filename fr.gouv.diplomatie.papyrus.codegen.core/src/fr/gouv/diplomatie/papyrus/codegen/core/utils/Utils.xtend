@@ -174,13 +174,15 @@ public class Utils{
 	 * renvoie la chaine en lettres capitales
 	 */
 	def static capitalize(String s) {
+		var retour = "";
 		if (s === null || s.length() == 0)
-			return s;
-		if (Character.isUpperCase(s.charAt(0)))
 			return s;
 		if (s.length() == 1)
 			return s.toUpperCase();
-		return s.substring(0, 1).toUpperCase() + s.substring(1);
+		for(var i = 0; i<s.length;i++){
+			retour += Character.toUpperCase(s.charAt(i));
+		}
+		return retour;
 	}
 	
 	/**
@@ -192,6 +194,9 @@ public class Utils{
 	}
 	
 
+	/**
+	 * retourne toutes les généralisations
+	 */
 	static def Classifier[] getAllgene(Classifier elem){
 		val genes = elem.generalizations
 		var allTypes = newArrayList
@@ -312,7 +317,7 @@ public class Utils{
 	 * inverse
 	 */
 	static def toImport(String path){
-		return path.replaceAll("\\/", ".");
+		return path.replaceAll(File.separator, ".");
 	}
 	
 	

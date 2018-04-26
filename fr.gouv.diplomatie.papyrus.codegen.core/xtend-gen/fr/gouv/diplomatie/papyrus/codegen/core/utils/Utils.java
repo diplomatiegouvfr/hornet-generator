@@ -207,11 +207,8 @@ public class Utils {
    * renvoie la chaine en lettres capitales
    */
   public static String capitalize(final String s) {
+    String retour = "";
     if (((s == null) || (s.length() == 0))) {
-      return s;
-    }
-    boolean _isUpperCase = Character.isUpperCase(s.charAt(0));
-    if (_isUpperCase) {
       return s;
     }
     int _length = s.length();
@@ -219,9 +216,12 @@ public class Utils {
     if (_equals) {
       return s.toUpperCase();
     }
-    String _upperCase = s.substring(0, 1).toUpperCase();
-    String _substring = s.substring(1);
-    return (_upperCase + _substring);
+    for (int i = 0; (i < s.length()); i++) {
+      String _retour = retour;
+      char _upperCase = Character.toUpperCase(s.charAt(i));
+      retour = (_retour + Character.valueOf(_upperCase));
+    }
+    return retour;
   }
   
   /**
@@ -232,6 +232,9 @@ public class Utils {
     return Utils.toSnakeCase(name).toUpperCase();
   }
   
+  /**
+   * retourne toutes les généralisations
+   */
   public static Classifier[] getAllgene(final Classifier elem) {
     final EList<Generalization> genes = elem.getGeneralizations();
     ArrayList<Classifier> allTypes = CollectionLiterals.<Classifier>newArrayList();
@@ -356,7 +359,7 @@ public class Utils {
    * inverse
    */
   public static String toImport(final String path) {
-    return path.replaceAll("\\/", ".");
+    return path.replaceAll(File.separator, ".");
   }
   
   /**

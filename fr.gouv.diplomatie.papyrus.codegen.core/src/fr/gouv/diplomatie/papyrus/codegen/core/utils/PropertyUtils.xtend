@@ -110,6 +110,14 @@ class PropertyUtils {
 		return prop.getValue(stereotype ,property);
 	}
 	
+	static def isAttribut(Property property){
+		 return (property.getStereotype(Utils.MODEL_ATTRIBUTE) !==null && !(property.getStereotype(Utils.MODEL_ATTRIBUTE).empty))
+	}
+	
+	static def isCodeLibelleNomenclature(Property property){
+		 return (property.getStereotype(Utils.MODEL_CODELIBELLENOMENCLATURE) !==null && !(property.getStereotype(Utils.MODEL_CODELIBELLENOMENCLATURE).empty))
+	}
+	
 	/**
 	 * teste si une property est un id
 	 */

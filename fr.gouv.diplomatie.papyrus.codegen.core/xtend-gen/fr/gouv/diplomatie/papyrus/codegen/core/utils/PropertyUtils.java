@@ -111,6 +111,14 @@ public class PropertyUtils {
     return prop.getValue(stereotype, property);
   }
   
+  public static boolean isAttribut(final Property property) {
+    return ((PropertyUtils.getStereotype(property, Utils.MODEL_ATTRIBUTE) != null) && (!IterableExtensions.isEmpty(PropertyUtils.getStereotype(property, Utils.MODEL_ATTRIBUTE))));
+  }
+  
+  public static boolean isCodeLibelleNomenclature(final Property property) {
+    return ((PropertyUtils.getStereotype(property, Utils.MODEL_CODELIBELLENOMENCLATURE) != null) && (!IterableExtensions.isEmpty(PropertyUtils.getStereotype(property, Utils.MODEL_CODELIBELLENOMENCLATURE))));
+  }
+  
   /**
    * teste si une property est un id
    */

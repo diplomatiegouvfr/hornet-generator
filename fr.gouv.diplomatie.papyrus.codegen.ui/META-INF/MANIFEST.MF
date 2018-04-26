@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Générateur papyrus ui
 Bundle-SymbolicName: fr.gouv.diplomatie.papyrus.codegen.ui;singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.1.0
 Bundle-Vendor: MEAE - Ministère de l'Europe et des Affaires étrangères
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
@@ -13,8 +13,14 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
  org.eclipse.uml2.uml;bundle-version="5.3.0",
  org.eclipse.papyrus.uml.diagram.common;bundle-version="3.0.0",
  org.eclipse.papyrus.designer.languages.java.codegen;bundle-version="1.0.4",
- fr.gouv.diplomatie.papyrus.codegen.core;bundle-version="1.0.0",
- fr.gouv.diplomatie.papyrus.codegen.sql;bundle-version="1.0.0",
- fr.gouv.diplomatie.papyrus.codegen.ui.core;bundle-version="1.0.0"
+ fr.gouv.diplomatie.papyrus.codegen.core;bundle-version="1.1.0",
+ fr.gouv.diplomatie.papyrus.codegen.sql;bundle-version="1.1.0",
+ fr.gouv.diplomatie.papyrus.codegen.ui.core;bundle-version="1.1.0",
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro,
+ fr.gouv.diplomatie.papyrus.codegen.java;bundle-version="1.1.0"
 Import-Package: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators,
  fr.gouv.diplomatie.papyrus.codegen.java.transformations
+
