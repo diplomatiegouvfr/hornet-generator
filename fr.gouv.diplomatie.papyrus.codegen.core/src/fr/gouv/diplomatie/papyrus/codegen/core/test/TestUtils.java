@@ -5,11 +5,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.uml2.uml.Class;
-import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
-import org.eclipse.uml2.uml.Profile;
-import org.eclipse.uml2.uml.Stereotype;
-import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.internal.resource.UMLResourceFactoryImpl;
 import org.eclipse.uml2.uml.resource.UMLResource;
 import org.eclipse.uml2.uml.resource.XMI212UMLResource;
@@ -22,7 +18,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.uml2.uml.*;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
-import org.eclipse.uml2.uml.Enumeration;
 
 /**
  * Classe contenant des méthodes nécessaires à l'écriture des tests unitaires
@@ -241,4 +236,29 @@ public class TestUtils {
             Stereotype stereotype, Property property, Object value) {
     	namedElement.setValue(stereotype, property.getName(), value);
     }
+    
+    /**
+     * crééer une classe d'association entre les deux classes
+     * @param class_
+     * @param class2
+     * @param attrNameInFirstClass
+     * @param attrNameInSecondClass
+     * @return
+     */
+    public static AssociationClass createAssociationClass(Class class_,
+    		Class class2, String attrNameInFirstClass,String attrNameInSecondClass ) {
+    	AssociationClass association = UMLFactory.eINSTANCE
+                .createAssociationClass();
+		
+		Property att1 = TestUtils.createAttribute(class_, attrNameInFirstClass, class2, 0, -1);
+		Property att2 = TestUtils.createAttribute(class2, attrNameInSecondClass, class_, 0, -1);
+		att1.setAssociation(association);
+		att2.setAssociation(association);
+		association.getOwnedEnds().add(att1);
+		association.getOwnedEnds().add(att2);
+		class_.getNearestPackage().getPackagedElements()
+        .add(association);
+		return association;
+    }
+
 }

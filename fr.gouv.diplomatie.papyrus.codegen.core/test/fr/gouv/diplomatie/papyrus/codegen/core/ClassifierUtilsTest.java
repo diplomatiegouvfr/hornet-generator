@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.uml2.uml.AggregationKind;
+import org.eclipse.uml2.uml.Association;
+import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Model;
@@ -16,7 +18,9 @@ import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.Type;
+import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.internal.impl.AssociationClassImpl;
 import org.junit.Test;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.test.TestUtils;
@@ -234,10 +238,10 @@ public class ClassifierUtilsTest {
 		
 		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
 		class_.applyStereotype(stereotype);
+		
 		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
-		
-		
 		assertEquals(true, ClassifierUtils.getStereotypePropertyValue(class_, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED));
+		
 		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
 		assertEquals(false, ClassifierUtils.getStereotypePropertyValue(class_, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED));
 	}
@@ -430,7 +434,7 @@ public class ClassifierUtilsTest {
 		attribute2.applyStereotype(stereotype);
 		
 		Iterable<Property> result =  ClassifierUtils.getId(class_);
-		Iterator it = result.iterator();
+		Iterator<Property> it = result.iterator();
 		assertEquals(attribute1,it.next());
 		assertEquals(attribute2,it.next());
 	}
@@ -624,7 +628,6 @@ public class ClassifierUtilsTest {
 	public void testGetLinkedAssociationClass() {
 		Profile profile = TestUtils.createProfile("profile");
 		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
 		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
 	
 		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
@@ -632,10 +635,12 @@ public class ClassifierUtilsTest {
         
 		profile.define();
 		model.applyProfile(profile);
-		Class class_ = TestUtils.createClass(pkg, "maClasse", false);
-		Type type = model.createOwnedType("test", class_.eClass());
+		Class class_ = TestUtils.createClass(model, "maClasse", false);
+		Class class2_ = TestUtils.createClass(model, "autreClasse", false);
+
+		AssociationClass association = TestUtils.createAssociationClass(class_, class2_, "test1", "test2");
 		
-		fail("Not yet implemented");
+		assertEquals(association, ClassifierUtils.getLinkedAssociationClass(class_).get(0));
 	}
 
 	@Test

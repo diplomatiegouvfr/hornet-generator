@@ -10,6 +10,16 @@
                id="hornetMenu"
                label="Hornet Generation">
          <command
+               commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.validate"
+               label="Valider le modèle"
+               style="push"
+               tooltip="Valider le modèle">
+         </command>
+         <separator
+		       name="separator-gene"
+		       visible="true">
+		</separator>
+         <command
                commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
                label="Generate All Hornet code"
                style="push"
@@ -46,6 +56,13 @@
    </extension>
    <extension
          point="org.eclipse.ui.commands">
+         <command
+            categoryId="org.eclipse.papyrus.editor.category"
+            defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.ValidateModelHandler"
+            description="Valider le modèle"
+            id="fr.gouv.diplomatie.papyrus.codegen.ui.command.validate"
+            name="Valider le modèle">
+      </command>
       <command
             categoryId="org.eclipse.papyrus.editor.category"
             defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.GenerateCodeHandler"
