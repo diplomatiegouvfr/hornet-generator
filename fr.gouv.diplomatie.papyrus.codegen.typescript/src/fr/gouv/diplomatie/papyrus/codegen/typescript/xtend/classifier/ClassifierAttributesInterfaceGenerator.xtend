@@ -503,7 +503,7 @@ public class ClassifierAttributesInterfaceGenerator {
 			val name = property.name + Utils.getFirstToUpperCase(id.name)
 			val fieldName = Utils.addAdditionnalName(additionnalName, name)
 			'''
-			«fieldName»?: «TypeUtils.getTypescriptType(property.type)»'''
+			«fieldName»?: «TypeUtils.getTypescriptType(property.type)»;'''
 		}
 	}
 	
@@ -604,7 +604,7 @@ public class ClassifierAttributesInterfaceGenerator {
 			}
 			'''
 			«type.generateNotPrimitiveTypeAttributes(name)»
-			«property.name» : «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
+			«property.name»: «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
 			get«Utils.getFirstToUpperCase(property.name)»(): «array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»;
 			
 			'''

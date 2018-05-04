@@ -246,7 +246,7 @@ public class TestUtils {
      * @return
      */
     public static AssociationClass createAssociationClass(Class class_,
-    		Class class2, String attrNameInFirstClass,String attrNameInSecondClass ) {
+    		Class class2, String attrNameInFirstClass,String attrNameInSecondClass, String name ) {
     	AssociationClass association = UMLFactory.eINSTANCE
                 .createAssociationClass();
 		
@@ -258,7 +258,38 @@ public class TestUtils {
 		association.getOwnedEnds().add(att2);
 		class_.getNearestPackage().getPackagedElements()
         .add(association);
+		association.setName(name);
 		return association;
+    }
+    
+    /**
+     * crééer une classe d'association entre les deux classes
+     * @param class_
+     * @param class2
+     * @param attrNameInFirstClass
+     * @param attrNameInSecondClass
+     * @return
+     */
+    public static AssociationReturn createAssociationClassGetAll(Class class_,
+    		Class class2, String attrNameInFirstClass,String attrNameInSecondClass, String name ) {
+    	AssociationClass association = UMLFactory.eINSTANCE
+                .createAssociationClass();
+		
+		Property att1 = TestUtils.createAttribute(class_, attrNameInFirstClass, class2, 0, -1);
+		Property att2 = TestUtils.createAttribute(class2, attrNameInSecondClass, class_, 0, -1);
+		att1.setAssociation(association);
+		att2.setAssociation(association);
+		association.getOwnedEnds().add(att1);
+		association.getOwnedEnds().add(att2);
+		class_.getNearestPackage().getPackagedElements()
+        .add(association);
+		association.setName(name);
+		AssociationReturn retour = new AssociationReturn();
+		retour.association = association;
+		retour.attributeClassUn = att1;
+		retour.attributeClassDeux = att2;
+		return retour;
     }
 
 }
+

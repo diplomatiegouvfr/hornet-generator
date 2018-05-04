@@ -217,7 +217,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 		 		get«Utils.getFirstToUpperCase(name)»(): Promise<«array»«ClassifierUtils.getAttributesInterfaceName(type)»«endArray»>;
 		 		'''
 		 	}else{
-		 		'''«property.generateBasicAttribute(name)»'''
+		 		'''«property.generateBasicAttribute(additionnalName)»'''
 		 	}
 	 	}
 	 }

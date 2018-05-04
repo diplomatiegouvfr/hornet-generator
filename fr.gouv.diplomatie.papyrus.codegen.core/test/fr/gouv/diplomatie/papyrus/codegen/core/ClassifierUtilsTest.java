@@ -638,7 +638,7 @@ public class ClassifierUtilsTest {
 		Class class_ = TestUtils.createClass(model, "maClasse", false);
 		Class class2_ = TestUtils.createClass(model, "autreClasse", false);
 
-		AssociationClass association = TestUtils.createAssociationClass(class_, class2_, "test1", "test2");
+		AssociationClass association = TestUtils.createAssociationClass(class_, class2_, "test1", "test2", "asso");
 		
 		assertEquals(association, ClassifierUtils.getLinkedAssociationClass(class_).get(0));
 	}

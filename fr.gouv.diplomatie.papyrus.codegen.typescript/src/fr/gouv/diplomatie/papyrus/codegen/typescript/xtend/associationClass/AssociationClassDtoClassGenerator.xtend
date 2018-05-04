@@ -212,7 +212,7 @@ public class AssociationClassDtoClassGenerator{
 	 * génère un attribut de type value Object
 	 */
 	static def generateValueObjectAttribute(Property property, ArrayList<String> names){
-		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
+		val name = property.name //Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		val type = property.type
 		names.add(name)
 		if(type instanceof Classifier){
@@ -281,7 +281,7 @@ public class AssociationClassDtoClassGenerator{
 		val propName = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		val type = id.owner
 		if(!property.multivalued){
-			if (!names.empty){
+/* 			if (!names.empty){
 				'''
 				
 				@Map()
@@ -296,7 +296,12 @@ public class AssociationClassDtoClassGenerator{
 				«Utils.getFirstToLowerCase(fieldName)»: «TypeUtils.getMetierTypescriptType(id.type)»;
 				'''
 			}
-			
+*/				'''
+				
+				@Map()
+				@Alias('«fieldName»', '«IF !names.isEmpty»«Utils.getListPoint(names)».«ENDIF»«property.name».«id.name»')
+				«Utils.getFirstToLowerCase(fieldName)»: «TypeUtils.getMetierTypescriptType(id.type)»;
+				'''
 		}else{
 			''''''
 		}
@@ -312,7 +317,7 @@ public class AssociationClassDtoClassGenerator{
 			'''
 			
 			@Map()
-			@Alias('«name»', '«Utils.getListPoint(names)».«property.name»')
+			@Alias('«name»'«IF !names.isEmpty», '«Utils.getListPoint(names)».«property.name»'«ENDIF»)
 			«Utils.getFirstToLowerCase(name)»: «TypeUtils.getMetierTypescriptType(property.type)»;
 			'''
 		}else{

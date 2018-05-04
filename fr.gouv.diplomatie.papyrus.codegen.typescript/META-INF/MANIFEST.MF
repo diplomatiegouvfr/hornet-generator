@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.papyrus.designer.languages.common.extensionpoints;bu
  org.eclipse.ui;bundle-version="3.109.0",
  org.eclipse.ui.console;bundle-version="3.7.0",
  fr.gouv.diplomatie.papyrus.codegen.core;bundle-version="1.1.0",
- org.eclipse.uml2.uml.resources;bundle-version="5.3.0"
+ org.eclipse.uml2.uml.resources;bundle-version="5.3.0",
+ org.junit
 Export-Package: fr.gouv.diplomatie.papyrus.codegen.typescript,
  fr.gouv.diplomatie.papyrus.codegen.typescript.generators,
  fr.gouv.diplomatie.papyrus.codegen.typescript.transformations,
