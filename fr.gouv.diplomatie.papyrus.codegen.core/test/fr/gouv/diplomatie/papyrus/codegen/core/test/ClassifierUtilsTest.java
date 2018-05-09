@@ -1,4 +1,4 @@
-package fr.gouv.diplomatie.papyrus.codegen.core;
+package fr.gouv.diplomatie.papyrus.codegen.core.test;
 
 import static org.junit.Assert.*;
 

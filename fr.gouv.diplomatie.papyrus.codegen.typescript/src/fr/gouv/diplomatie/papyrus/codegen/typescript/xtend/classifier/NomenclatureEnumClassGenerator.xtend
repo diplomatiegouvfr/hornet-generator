@@ -83,7 +83,6 @@ import org.eclipse.uml2.uml.Classifier
 import org.eclipse.uml2.uml.Property
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
-import org.eclipse.uml2.uml.NamedElement
 
 public class  NomenclatureEnumClassGenerator{
 	

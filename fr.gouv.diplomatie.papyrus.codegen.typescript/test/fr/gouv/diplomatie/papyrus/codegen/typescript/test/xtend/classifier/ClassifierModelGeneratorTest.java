@@ -1,7 +1,6 @@
 package fr.gouv.diplomatie.papyrus.codegen.typescript.test.xtend.classifier;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.Class;
