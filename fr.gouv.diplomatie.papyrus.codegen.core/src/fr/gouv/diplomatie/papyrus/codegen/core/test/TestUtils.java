@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.uml2.uml.*;
 import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 
+
 /**
  * Classe contenant des méthodes nécessaires à l'écriture des tests unitaires
  *
@@ -26,7 +27,7 @@ import org.eclipse.uml2.uml.resources.util.UMLResourcesUtil;
 public class TestUtils {
 	
 	 private static final ResourceSet RESOURCE_SET = new ResourceSetImpl();
-	
+	 
 	/**
 	 * créer un model name
 	 * @param name
@@ -47,6 +48,17 @@ public class TestUtils {
 		Profile profile = UMLFactory.eINSTANCE.createProfile();
 		profile.setName(name);
         return profile;
+	}
+	
+	/**
+	 * créer une interface name
+	 * @param name
+	 * @return
+	 */
+	public static Interface createInterface(String name) {
+		Interface inter = UMLFactory.eINSTANCE.createInterface();
+		inter.setName(name);
+        return inter;
 	}
 	
 	/**
@@ -290,6 +302,5 @@ public class TestUtils {
 		retour.attributeClassDeux = att2;
 		return retour;
     }
-
 }
 

@@ -486,10 +486,18 @@ public class ClassifierUtils {
     }
     ArrayList<Type> classes = CollectionLiterals.<Type>newArrayList();
     for (final Type asso_1 : associationsClasses) {
-      classes.add(asso_1);
+      boolean _contains = classes.contains(asso_1);
+      boolean _not = (!_contains);
+      if (_not) {
+        classes.add(asso_1);
+      }
     }
     for (final Type asso_2 : assoClassesInPakkage) {
-      classes.add(asso_2);
+      boolean _contains_1 = classes.contains(asso_2);
+      boolean _not_1 = (!_contains_1);
+      if (_not_1) {
+        classes.add(asso_2);
+      }
     }
     return classes;
   }

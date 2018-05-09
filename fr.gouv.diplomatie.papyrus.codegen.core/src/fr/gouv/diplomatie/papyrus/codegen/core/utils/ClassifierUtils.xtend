@@ -427,11 +427,15 @@ class ClassifierUtils{
 		var classes = newArrayList
 		
 		for(asso : associationsClasses){
-			classes.add(asso)
+			if(!classes.contains(asso)){
+				classes.add(asso)
+			}
 		}
 	
 		for(asso : assoClassesInPakkage){
-			classes.add(asso)
+			if(!classes.contains(asso)){
+				classes.add(asso)
+			}
 		}
 		
 		return classes

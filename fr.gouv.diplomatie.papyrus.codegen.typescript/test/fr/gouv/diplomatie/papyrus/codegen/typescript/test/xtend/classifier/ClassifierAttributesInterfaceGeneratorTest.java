@@ -1,44 +1,32 @@
 package fr.gouv.diplomatie.papyrus.codegen.typescript.test.xtend.classifier;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
 import org.eclipse.uml2.uml.AggregationKind;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Class;
-import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
-import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.Type;
-import org.eclipse.uml2.uml.UMLPackage;
 import org.junit.Test;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.test.TestUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
+import fr.gouv.diplomatie.papyrus.codegen.typescript.test.testutils.HornetModelTypescript;
 import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierAttributesInterfaceGenerator;
 
 public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateManyToManyAttribute() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		
@@ -50,20 +38,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateOneToManyAttribute() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		class_.createAssociation(true, AggregationKind.NONE_LITERAL	, "test", 0, 1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 0, -1);
 		Property test = class_.getAttribute("test", class2_);
@@ -75,20 +55,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateImports() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
@@ -100,20 +72,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateExtendsImports() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		TestUtils.createGeneralization(class_, class2_);
 		
@@ -125,20 +89,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateAttributesImports() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 				
@@ -151,20 +107,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateExtends() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		TestUtils.createGeneralization(class_, class2_);
 		String expect = "extends maClasse2Attributes ";
@@ -174,20 +122,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateExtendsAttributes() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 						
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		TestUtils.createGeneralization(class_, class2_);
 		
@@ -198,22 +138,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateAttributes() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-						
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
-		
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		TestUtils.createAttribute(class_, "test", stringPT, 0, 1);
-		TestUtils.createAttribute(class_, "test2", stringPT, 0, -1);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		TestUtils.createAttribute(class_, "test2", hmodel.stringPT, 0, -1);
 		
 		String expect = "test?: string;\n";
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateAttributes(class_, "").toString());
@@ -222,24 +152,14 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateBasicAttribute() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
-		Property prop = TestUtils.createAttribute(class_, "test", stringPT, 0, 1);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
 		
 		assertEquals("test?: string;\n", ClassifierAttributesInterfaceGenerator.generateBasicAttribute(prop, "").toString());
 		assertEquals("addTest?: string;\n", ClassifierAttributesInterfaceGenerator.generateBasicAttribute(prop, "add").toString());
@@ -247,24 +167,14 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateValueObjectAttribute() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_VALUEOBJECT, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		Class class2_ = TestUtils.createClass(model, "maClasse", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class2_.applyStereotype(hmodel.valueObject);
 		Property vo = TestUtils.createAttribute(class_, "vo", class2_, 0, 1);
-		TestUtils.createAttribute(class2_, "test", stringPT, 0, 1);
-		TestUtils.createAttribute(class2_, "test2", stringPT, 0, 1);
+		TestUtils.createAttribute(class2_, "test", hmodel.stringPT, 0, 1);
+		TestUtils.createAttribute(class2_, "test2", hmodel.stringPT, 0, 1);
 		
 		String expect = "voTest?: string;\nvoTest2?: string;\n";
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateValueObjectAttribute(vo, "").toString());
@@ -272,23 +182,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateEnum() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-		Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_NOMENCLATURE, false);
-        TestUtils.createExtension(metaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 						
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype2);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.nomenclature);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
@@ -298,29 +197,15 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateEntityAttributes() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-        TestUtils.createExtension(propmetaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 						
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class2_.applyStereotype(hmodel.entity);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
-		Property prop2 = TestUtils.createAttribute(class2_, "test2", stringPT, 0, 1);
-		prop2.applyStereotype(stereotype2);
+		Property prop2 = TestUtils.createAttribute(class2_, "test2", hmodel.stringPT, 0, 1);
+		prop2.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "test2Test?: string;\n";
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateEntityAttribute(prop, prop2, "").toString());
@@ -329,58 +214,30 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateEntityAttribute() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-        TestUtils.createExtension(propmetaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
-		Property prop = TestUtils.createAttribute(class_, "test", stringPT, 0, 1);
-		Property id = TestUtils.createAttribute(class_, "id", stringPT, 0, 1);
-		id.applyStereotype(stereotype2);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
 		
 		assertEquals("idTest?: string;\n", ClassifierAttributesInterfaceGenerator.generateEntityAttribute(prop, id, "").toString());
 	}
 
 	@Test
 	public void testGenerateReferenceAttributeAssocation() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-        TestUtils.createExtension(propmetaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
-		
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
-		Property id = TestUtils.createAttribute(class2_, "id", stringPT, 0, 1);
-		id.applyStereotype(stereotype2);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
+		Property id = TestUtils.createAttribute(class2_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
 		
 		class_.createAssociation(true, AggregationKind.NONE_LITERAL, "test", 0, 1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 0, 1);
 		Property test = class_.getAttribute("test", class2_);
@@ -397,28 +254,14 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateReferenceAttributesNA() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-        TestUtils.createExtension(propmetaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
-		
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
-		Property id = TestUtils.createAttribute(class_, "id", stringPT, 0, 1);
-		id.applyStereotype(stereotype2);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
+		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "testId?: string;";
@@ -427,28 +270,14 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateReferenceAttributeNA() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-        TestUtils.createExtension(propmetaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
-		
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
-		Property id = TestUtils.createAttribute(class_, "id", stringPT, 0, 1);
-		id.applyStereotype(stereotype2);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
+		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "testId?: string;";
@@ -457,28 +286,14 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateEntityIdsAttributes() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-        TestUtils.createExtension(propmetaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
-		
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
-		Property id = TestUtils.createAttribute(class2_, "id", stringPT, 0, 1);
-		id.applyStereotype(stereotype2);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
+		Property id = TestUtils.createAttribute(class2_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "testId: Array<string>;\n";
@@ -487,30 +302,16 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateEntityIdAttribute() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-        TestUtils.createExtension(propmetaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
-		Property prop = TestUtils.createAttribute(class_, "test", stringPT, 0, 1);
-		Property id = TestUtils.createAttribute(class_, "id", stringPT, 0, 1);
-		id.applyStereotype(stereotype2);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
 		
 		assertEquals("testId: Array<string>;\n", ClassifierAttributesInterfaceGenerator.generateEntityIdAttribute(prop, id, "").toString());
 	}
@@ -518,28 +319,15 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testNomenclatureGenerateNotPrimitiveTypeAttribut() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-        
-        Stereotype stereotype2 = TestUtils.createStereotype(profile, Utils.MODEL_NOMENCLATURE, false);
-        TestUtils.createExtension(metaclass, stereotype2, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype2);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.nomenclature);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
-		TestUtils.createAttribute(class2_, "att", stringPT, 0, 1);
+		TestUtils.createAttribute(class2_, "att", hmodel.stringPT, 0, 1);
 		
 		String expect = "test: Array<maClasse2Attributes>;\n\n";
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateNotPrimitiveTypeAttribut(prop, "").toString());
@@ -547,24 +335,14 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 	
 	@Test
 	public void testGenerateNotPrimitiveTypeAttribut() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Type stringPT = TestUtils.importPrimitiveType(profile, "String");
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
-		TestUtils.createAttribute(class2_, "att", stringPT, 0, 1);
+		TestUtils.createAttribute(class2_, "att", hmodel.stringPT, 0, 1);
 		
 		String expect = "test: Array<string>;\n\n";
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateNotPrimitiveTypeAttribut(prop, "").toString());
@@ -572,19 +350,11 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testMultivaluedGenerateNPTEntityAttribut() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 						
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		
@@ -596,19 +366,11 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 	
 	@Test
 	public void testGenerateNPTEntityAttribut() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 						
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
@@ -620,20 +382,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateNPTValueObjectAttribut() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_VALUEOBJECT, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 						
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.valueObject);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
@@ -645,20 +399,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 	
 	@Test
 	public void testMultivaluedGenerateNPTValueObjectAttribut() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_VALUEOBJECT, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 						
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.valueObject);
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		
@@ -670,20 +416,12 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 
 	@Test
 	public void testGenerateAssociationClassAtributes() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(metaclass, stereotype, false);
-		
-		profile.define();
-		model.applyProfile(profile);
+		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
 				
-		Class class_ = TestUtils.createClass(model, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		Class class2_ = TestUtils.createClass(model, "maClasse2", false);
-		class2_.applyStereotype(stereotype);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
 		
 		AssociationClass asso = TestUtils.createAssociationClass(class_, class2_, "test", "test2", "asso");
 		

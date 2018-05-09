@@ -335,7 +335,7 @@ public class ClassifierDtoClassGenerator{
  		'''
 	}
 	
-		/**
+	/**
 	 * génère les attributs simples de la classe
 	 */
 	static def generateAttributes(Classifier clazz, ArrayList<String> names, Classifier fromClass){
@@ -407,14 +407,15 @@ public class ClassifierDtoClassGenerator{
 		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		val propName = Utils.getListPoint(names) + '.' + property.name 
 		//names.add(property.name)
+		var alias = ""
+		if(!names.empty){
+			alias = '''
+			@Alias('«name»', '«propName»')'''
+		}
 		if(type instanceof Classifier){
 			if(!property.multivalued){
 				val ids = ClassifierUtils.getId(type)
-				var alias = ""
-				if(!names.empty){
-					alias = '''
-					@Alias('«name»', '«propName»')'''
-				}
+				
 				return '''
 				«ids.fold("")[acc, id |
 					acc + '''«property.generateEntityAttribute(id, names)»'''
@@ -429,6 +430,7 @@ public class ClassifierDtoClassGenerator{
 				return '''
 				
 				@Map(«ClassifierUtils.getDtoClassName(type)»)
+				«alias»
 				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 				'''
 			}
@@ -442,19 +444,20 @@ public class ClassifierDtoClassGenerator{
 		val type = property.type
 		val name = Utils.addAdditionnalName(Utils.getNameFromList(names), property.name)
 		val propName = Utils.getListPoint(names) + '.' + property.name 
-		val codeName = Utils.addAdditionnalName(Utils.getNameFromList(names), "code" + Utils.getFirstToUpperCase(property.name))
+		val codeName = Utils.addAdditionnalName(Utils.getNameFromList(names),property.name + "Code" )
 		val codeAliasName = propName + '.code'
+		var alias = ""
+		var codeAlias = ""
+		if(!names.empty){
+			alias = '''
+			@Alias('«name»', '«propName»')'''
+			codeAlias = '''
+			@Alias('«codeAliasName»')'''
+			
+		}
 		if(type instanceof Classifier){
 			if(!property.multivalued){
-				var alias = ""
-				var codeAlias = ""
-				if(!names.empty){
-					alias = '''
-					@Alias('«name»', '«propName»')'''
-					codeAlias = '''
-					@Alias('«codeAliasName»')'''
-					
-				}
+				
 				return '''
 				
 				@Map()
@@ -469,9 +472,11 @@ public class ClassifierDtoClassGenerator{
 			}else{
 				return '''
 				@Map()
+				«codeAlias»
 				«codeName»: Array<number>;
 				
 				@Map(«ClassifierUtils.getDtoClassName(type)»)
+				«alias»
 				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 				'''
 			}
@@ -514,7 +519,7 @@ public class ClassifierDtoClassGenerator{
 		if(!names.empty){
 			alias = '''
 			
-			@Alias('«Utils.getListPoint(names)».«property.name»','«name»')
+			@Alias('«Utils.getListPoint(names)».«property.name»', '«name»')
 			'''
 		}
 		if(!property.multivalued){
@@ -712,13 +717,11 @@ public class ClassifierDtoClassGenerator{
 		val type = id.owner
 		if(type instanceof Classifier){
 			val idName = Utils.addAdditionnalName(id.name, type.name)
-			if(type instanceof Classifier){
-				'''
-				
-				@Map()
-				«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
-				'''
-			}
+			'''
+			
+			@Map()
+			«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
+			'''
 		}
 	}
 	
@@ -726,7 +729,7 @@ public class ClassifierDtoClassGenerator{
 		'''
 		
 		@Map(«ClassifierUtils.getDtoClassName(clazz)»)
-		«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getDtoClassName(clazz)»>;
+		«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getDtoClassName(clazz)»>;
 		'''
 		
 	}

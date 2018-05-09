@@ -1,31 +1,27 @@
 package fr.gouv.diplomatie.papyrus.codegen.core;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
-import fr.gouv.diplomatie.papyrus.codegen.core.test.TestUtils;
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
-
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Comment;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
+import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
-import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UMLPackage;
-import org.eclipse.uml2.uml.resource.UMLResource;
-import org.eclipse.uml2.uml.*;
+import org.junit.Test;
+
+import fr.gouv.diplomatie.papyrus.codegen.core.test.HornetModel;
+import fr.gouv.diplomatie.papyrus.codegen.core.test.TestUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
 public class UtilsTest {
 	
@@ -33,18 +29,10 @@ public class UtilsTest {
 	@Test
 	public void testGetDomainName() throws Exception {
 		
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_DOMAIN, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PACKAGE.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		pkg.applyStereotype(stereotype);
+		Package pkg = hmodel.pckage;
+		pkg.applyStereotype(hmodel.domain);
 		
 		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
 		
@@ -81,17 +69,11 @@ public class UtilsTest {
 
 	@Test
 	public void testGetAllgene() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-             
-		profile.define();
-		model.applyProfile(profile);
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		Classifier class2_ = TestUtils.createClass(pkg, "classe2", false);
-		Classifier class3_ = TestUtils.createClass(pkg, "classe3", false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Classifier class2_ = TestUtils.createClass(hmodel.pckage, "classe2", false);
+		Classifier class3_ = TestUtils.createClass(hmodel.pckage, "classe3", false);
 		TestUtils.createGeneralization(class_, class2_);
 		TestUtils.createGeneralization(class_, class3_);
 		
@@ -129,207 +111,107 @@ public class UtilsTest {
 
 	@Test
 	public void testHasStereotype() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
+		HornetModel hmodel = HornetModel.initModel();
+				
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
 		
 		assertEquals(true, Utils.hasStereotype(class_, Utils.MODEL_ENTITY));
 	}
 
 	@Test
 	public void testIsEntity() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
 		
 		assertEquals(true, Utils.isEntity(class_));
 	}
 
 	@Test
 	public void testIsValueObject() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_VALUEOBJECT, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.valueObject);
 		
 		assertEquals(true, Utils.isValueObject(class_));
 	}
 
 	@Test
 	public void testIsSequence() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		
-		assertEquals(true, Utils.isSequence(class_));
+		assertEquals(true, Utils.isSequence(prop));
 	}
 
 	@Test
 	public void testIsDomain() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_DOMAIN, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PACKAGE.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		pkg.applyStereotype(stereotype);
+		Package pkg = hmodel.pckage;
+		pkg.applyStereotype(hmodel.domain);
 				
 		assertEquals(true, Utils.isDomain(pkg));
 	}
 
 	@Test
 	public void testIsAssociationTable() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ASSOCIATIONTABLE, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PACKAGE.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		pkg.applyStereotype(stereotype);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.associationTable);
 				
-		assertEquals(true, Utils.isAssociationTable(pkg));
+		assertEquals(true, Utils.isAssociationTable(class_));
 	}
 
 	@Test
 	public void testIsAssociationLink() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ASSOCIATIONLINK, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.associationLink);
 				
 		assertEquals(true, Utils.isAssociationLink(class_));
 	}
 
 	@Test
 	public void testIsNomenclature() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_NOMENCLATURE, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.nomenclature);
 				
 		assertEquals(true, Utils.isNomenclature(class_));
 	}
 
 	@Test
 	public void testGetStereotype() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
 			
 		Iterable<Stereotype> result =Utils.getStereotype(class_, Utils.MODEL_ENTITY);
-		assertEquals(stereotype, result.iterator().next());
+		assertEquals(hmodel.entity, result.iterator().next());
 	}
 
 	@Test
 	public void testGetStereotypePropertyValue() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Type booleanPT = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_ENTITY_GENERATED, booleanPT, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		class_.applyStereotype(stereotype);
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entityGenerated, true);
 		
 		
 		assertEquals(true, Utils.getStereotypePropertyValue(class_, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED));
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entityGenerated, false);
 		assertEquals(false, Utils.getStereotypePropertyValue(class_, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED));
 	}
 
@@ -351,16 +233,9 @@ public class UtilsTest {
 
 	@Test
 	public void testGenerateComments() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
+		HornetModel hmodel = HornetModel.initModel();
 		
-  
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		Comment comment = class_.createOwnedComment();
 		comment.setBody("test");
 			
@@ -440,48 +315,26 @@ public class UtilsTest {
 
 	@Test
 	public void testGetRootPackage() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_APPLICATION, false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
-		Type booleanPT = TestUtils.importPrimitiveType(pkg, "String");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_APPLICATION_ROOTPACKAGE, booleanPT, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.MODEL.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		model.applyStereotype(stereotype);
-		TestUtils.setStereotypePropertyValue(model, stereotype, attribute, "test");
+		Model model = hmodel.model;
+		model.applyStereotype(hmodel.application);
+		TestUtils.setStereotypePropertyValue(model, hmodel.application, hmodel.applicationRootPackage, "test");
 		
 		assertEquals("test", Utils.getRootPackage(class_));
 	}
 
 	@Test
 	public void testGetPackagePath() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_APPLICATION, false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
-		Type booleanPT = TestUtils.importPrimitiveType(pkg, "String");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_APPLICATION_ROOTPACKAGE, booleanPT, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.MODEL.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		model.applyStereotype(stereotype);
-		TestUtils.setStereotypePropertyValue(model, stereotype, attribute, "ab.cd.ef");
+		Model model = hmodel.model;
+		model.applyStereotype(hmodel.application);
+		TestUtils.setStereotypePropertyValue(model, hmodel.application, hmodel.applicationRootPackage, "ab.cd.ef");
 		
 		String expected = "ab" + File.separator + "cd" + File.separator + "ef";
 		
@@ -501,16 +354,10 @@ public class UtilsTest {
 
 	@Test
 	public void testIsType() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Package pkg = TestUtils.createPackage(model, "package");
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		Classifier otherClass_ = TestUtils.createClass(pkg, "monAutreClasse", false);
+		HornetModel hmodel = HornetModel.initModel();
+
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Classifier otherClass_ = TestUtils.createClass(hmodel.pckage, "monAutreClasse", false);
 		TestUtils.createGeneralization(class_, otherClass_);
 		
 		assertEquals(true, Utils.isType(class_, "monAutreClasse"));
@@ -519,432 +366,245 @@ public class UtilsTest {
 
 	@Test
 	public void testGetNomenclatureCode() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
+
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.nomenclature);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.codeLibelleNomenclature);
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_CODELIBELLENOMENCLATURE, false);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.codeLibelleNomenclature, hmodel.codeLibelleNomenclatureCode, 1);
+		assertEquals(1, Utils.getNomenclatureCode(prop));
 		
-		Type integerPT = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE, integerPT, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		assertEquals(1, Utils.getNomenclatureCode(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getNomenclatureCode(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.codeLibelleNomenclature, hmodel.codeLibelleNomenclatureCode, 2);
+		assertEquals(2, Utils.getNomenclatureCode(prop));
 	}
 
 	@Test
 	public void testGetNomenclatureLibelle() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_CODELIBELLENOMENCLATURE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.nomenclature);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.codeLibelleNomenclature);
 		
-		Type stringPT = TestUtils.importPrimitiveType(pkg, "String");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE, stringPT, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.codeLibelleNomenclature, hmodel.codeLibelleNomenclatureLibelle, "test");
+		assertEquals("test", Utils.getNomenclatureLibelle(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, "test");
-		assertEquals("test", Utils.getNomenclatureLibelle(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, "testDeux");
-		assertEquals("testDeux", Utils.getNomenclatureLibelle(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.codeLibelleNomenclature, hmodel.codeLibelleNomenclatureLibelle, "testDeux");
+		assertEquals("testDeux", Utils.getNomenclatureLibelle(prop));
 	}
 
 	@Test
 	public void testAttributeGetAttributeLength() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ATTRIBUTE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_ATTRIBUTE_LENGTH, pt, 0, 1);
-		Type pt2 = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute2 = TestUtils.createAttribute(stereotype, "hasLength", pt2, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		prop.applyStereotype(hmodel.attribute);
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeLength, 1);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeHasLength, false);
+		assertEquals(null, Utils.getAttributeLength(prop));
 		
-		class_.applyStereotype(stereotype);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeHasLength, true);
+		assertEquals(1, Utils.getAttributeLength(prop));
 		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute2, false);
-		assertEquals(null, Utils.getAttributeLength(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute2, true);
-		assertEquals(1, Utils.getAttributeLength(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getAttributeLength(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeLength, 2);
+		assertEquals(2, Utils.getAttributeLength(prop));
 	}
 	
 	@Test
 	public void testKeyAttributeGetAttributeLength() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_KEYATTRIBUTE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+
+		prop.applyStereotype(hmodel.keyAttribute);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_ATTRIBUTE_LENGTH, pt, 0, 1);
-		Type pt2 = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute2 = TestUtils.createAttribute(stereotype, "hasLength", pt2, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.keyAttribute, hmodel.attributeLength, 1);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.keyAttribute, hmodel.attributeHasLength, false);
+		assertEquals(null, Utils.getAttributeLength(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.keyAttribute, hmodel.attributeHasLength, true);
+		assertEquals(1, Utils.getAttributeLength(prop));
 		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute2, false);
-		assertEquals(null, Utils.getAttributeLength(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute2, true);
-		assertEquals(1, Utils.getAttributeLength(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getAttributeLength(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.keyAttribute, hmodel.attributeLength, 2);
+		assertEquals(2, Utils.getAttributeLength(prop));
 	}
 
 	@Test
-	public void testGetSequenceStartWith() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+	public void testGetSequenceStartWith() {	
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_STARTWITH, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceStartWith, 1);
+		assertEquals(1, Utils.getSequenceStartWith(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		assertEquals(1, Utils.getSequenceStartWith(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getSequenceStartWith(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceStartWith, 2);
+		assertEquals(2, Utils.getSequenceStartWith(prop));
 	}
 
 	@Test
-	public void testGetSequenceIncrementBy() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+	public void testGetSequenceIncrementBy() {	
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_INCREMENTBY, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceIncrementBy, 1);
+		assertEquals(1, Utils.getSequenceIncrementBy(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		assertEquals(1, Utils.getSequenceIncrementBy(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getSequenceIncrementBy(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceIncrementBy, 2);
+		assertEquals(2, Utils.getSequenceIncrementBy(prop));
 	}
 
 	@Test
 	public void testGetSequenceHasMaxValue() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_HASMAXVALUE, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceHasMaxValue, true);
+		assertEquals(true, Utils.getSequenceHasMaxValue(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
-		assertEquals(true, Utils.getSequenceHasMaxValue(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
-		assertEquals(false, Utils.getSequenceHasMaxValue(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceHasMaxValue, false);
+		assertEquals(false, Utils.getSequenceHasMaxValue(prop));
 	}
 
 	@Test
 	public void testGetSequenceMaxValue() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_MAXVALUE, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceMaxValue, 1);
+		assertEquals(1, Utils.getSequenceMaxValue(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		assertEquals(1, Utils.getSequenceMaxValue(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getSequenceMaxValue(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceMaxValue, 2);
+		assertEquals(2, Utils.getSequenceMaxValue(prop));
 	}
 
 	@Test
 	public void testGetSequenceHasMinValue() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_HASMINVALUE, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceHasMinValue, true);
+		assertEquals(true, Utils.getSequenceHasMinValue(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
-		assertEquals(true, Utils.getSequenceHasMinValue(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
-		assertEquals(false, Utils.getSequenceHasMinValue(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceHasMinValue, false);
+		assertEquals(false, Utils.getSequenceHasMinValue(prop));
 	}
 
 	@Test
 	public void testGetSequenceMinValue() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_MINVALUE, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceMinValue, 1);
+		assertEquals(1, Utils.getSequenceMinValue(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		assertEquals(1, Utils.getSequenceMinValue(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getSequenceMinValue(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceMinValue, 2);
+		assertEquals(2, Utils.getSequenceMinValue(prop));
 	}
 
 	@Test
 	public void testGetSequenceCache() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Integer");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_CACHE, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceCache, 1);
+		assertEquals(1, Utils.getSequenceCache(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 1);
-		assertEquals(1, Utils.getSequenceCache(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, 2);
-		assertEquals(2, Utils.getSequenceCache(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceCache, 2);
+		assertEquals(2, Utils.getSequenceCache(prop));
 	}
 
 	@Test
 	public void testGetSequenceCycle() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_SEQUENCE, false);
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		prop.applyStereotype(hmodel.sequence);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_SEQUENCE_CYCLE, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceCycle, true);
+		assertEquals(true, Utils.getSequenceCycle(prop));
 		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
-		assertEquals(true, Utils.getSequenceCycle(class_));
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
-		assertEquals(false, Utils.getSequenceCycle(class_));
+		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceCycle, false);
+		assertEquals(false, Utils.getSequenceCycle(prop));
 	}
 	
 	@Test
 	public void testGetGenerated() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		profile.define();
-		model.applyProfile(profile);
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
 		assertEquals(true, Utils.getGenerated(class_));
 	}
 
 	@Test
 	public void testEntityGetGenerated() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_ENTITY, false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.entity);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_ENTITY_GENERATED, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entityGenerated, true);
 		assertEquals(true, Utils.getGenerated(class_));
 		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entityGenerated, false);
 		assertEquals(false, Utils.getGenerated(class_));
 	}
 	
 	@Test
 	public void testNomenclatureGetGenerated() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_NOMENCLATURE, false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.nomenclature);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_NOMENCLATURE_GENERATED, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.nomenclature, hmodel.nomenclatureGenerated, true);
 		assertEquals(true, Utils.getGenerated(class_));
 		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.nomenclature, hmodel.nomenclatureGenerated, false);
 		assertEquals(false, Utils.getGenerated(class_));
 	}
 	
 	@Test
 	public void testValueObjectGetGenerated() {
-		Profile profile = TestUtils.createProfile("profile");
-		Model model = TestUtils.createModel("model");
-		Package pkg = TestUtils.createPackage(model, "package");
+		HornetModel hmodel = HornetModel.initModel();
 		
-		Stereotype stereotype = TestUtils.createStereotype(profile, Utils.MODEL_VALUEOBJECT, false);
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		class_.applyStereotype(hmodel.valueObject);
 		
-		Type pt = TestUtils.importPrimitiveType(pkg, "Boolean");
-		Property attribute = TestUtils.createAttribute(stereotype, Utils.MODEL_VALUEOBJECT_GENERATED, pt, 0, 1);
-		Class packageMetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-        TestUtils.createExtension(packageMetaclass, stereotype, false);
-        
-		profile.define();
-		model.applyProfile(profile);
-		
-		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
-		
-		class_.applyStereotype(stereotype);
-		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, true);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.valueObject, hmodel.valueObjectGenerated, true);
 		assertEquals(true, Utils.getGenerated(class_));
 		
-		TestUtils.setStereotypePropertyValue(class_, stereotype, attribute, false);
+		TestUtils.setStereotypePropertyValue(class_, hmodel.valueObject, hmodel.valueObjectGenerated, false);
 		assertEquals(false, Utils.getGenerated(class_));
 	}
 	

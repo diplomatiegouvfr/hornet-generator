@@ -126,7 +126,7 @@ public class ClassifierModelGenerator {
 		val name = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
 		'''
 	    ,«name»: {
-	        type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+	        type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 	        field: "«fieldName»",
 	        references: {
 	            model: "«ClassifierUtils.getModelName(owner)»",
@@ -155,7 +155,7 @@ public class ClassifierModelGenerator {
 			val name = PropertyUtils.getDatabaseName(id, id.name, "")
 			'''
 			«id.name»: {
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 				field: "«name»",
 				allowNull: «PropertyUtils.isNullable(id)»,
 				references: {
@@ -227,7 +227,7 @@ public class ClassifierModelGenerator {
 		}
 		'''
 		«property.name»: {
-			type: Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateIdAttributeTypeLength»,«auto»
+			type: Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateAttributeTypeLength»,«auto»
 			field: "«name»",
 			allowNull: «isNullable»,
 			primaryKey: true
@@ -330,7 +330,7 @@ public class ClassifierModelGenerator {
 		}
 		return '''
 			«propName»: {
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateNIdAttributeTypeLength»,
+				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 				field: "«dbName»",
 				allowNull: «isNullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
 				«pk»«ENDIF»
@@ -362,9 +362,9 @@ public class ClassifierModelGenerator {
 	}
 	
 	/**
-	 * génère la déclaration de la taille du champs id
+	 * génère la déclaration de la taille du champs 
 	*/
-	static def generateIdAttributeTypeLength(Property property){
+	static def generateAttributeTypeLength(Property property){
 		val length = Utils.getAttributeLength(property)
 		if(length !== null && length != 0){
 			'''(«length»)'''
@@ -372,18 +372,7 @@ public class ClassifierModelGenerator {
 			''''''
 		}
 	}
-	
-	/**
-	 * génère la déclaration de la taille du champs non id
-	 */
-	static def generateNIdAttributeTypeLength(Property property){
-		val length = Utils.getAttributeLength(property)
-		if(length !== null && length != 0){
-			'''(«length»)'''
-		}else{
-			''''''
-		}
-	}
+
 	
 	/**
 	 * génère la déclaration de la valeur par defaut
@@ -593,22 +582,22 @@ public class ClassifierModelGenerator {
 			},
 			«ids.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«property.generateMultiValuedPrimitiveTypeModelIdAttributes(id, fromClass)»'''
+					acc + ''',«id.generateMultiValuedPrimitiveTypeModelIdAttributes( fromClass)»'''
 				}else{
-					acc + '''«property.generateMultiValuedPrimitiveTypeModelIdAttributes(id, fromClass)»'''
+					acc + '''«id.generateMultiValuedPrimitiveTypeModelIdAttributes( fromClass)»'''
 				}
 			]»
 		}
 		'''
 	}
 	
-	static def generateMultiValuedPrimitiveTypeModelIdAttributes(Property property, Property id, Classifier fromClass){
+	static def generateMultiValuedPrimitiveTypeModelIdAttributes(Property id, Classifier fromClass){
 		val idName = id.name
 		//val name = Utils.toDbName(idName + Utils.getFirstToUpperCase(fromClass.name))
 		val DBName = PropertyUtils.getDatabaseName(id, id.name, "")
 		'''
 		«idName»:{
-			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 			field: "«DBName»",
 			allowNull: false,
 			primaryKey: true,
@@ -670,12 +659,16 @@ public class ClassifierModelGenerator {
 	
 	static def generateNPTAssociationModelIdAttributes(Property property, Property id, Classifier fromClass, String additionnalName){
 		val type = property.type
-		val idFieldName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + Utils.toDbName(additionnalName)
+		var add = ""
+		if(additionnalName !== "" && additionnalName !== null){
+			add = "_" + Utils.toDbName(additionnalName)
+		}
+		val idFieldName = PropertyUtils.getDatabaseName(id, id.name, "") + add
 		val idName = Utils.addAdditionnalName(id.name, type.name)
 		if(type instanceof Classifier){
 			'''
 			«idName»:{
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 				field: "«idFieldName»",
 				allowNull: false,
 				primaryKey: true,
@@ -728,7 +721,7 @@ public class ClassifierModelGenerator {
 			if(type instanceof Classifier){
 				'''
 				«idName»:{
-					type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+					type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 					field: "«idFieldName»",
 					allowNull: false,
 					primaryKey: true,
@@ -748,7 +741,7 @@ public class ClassifierModelGenerator {
 		if(type instanceof Classifier){
 			'''
 			«idName»:{
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 				field: "«idFieldName»",
 				allowNull: false,
 				primaryKey: true,
@@ -766,20 +759,9 @@ public class ClassifierModelGenerator {
 	 * délcaration du type sequelize 
 	 */
 	static def getAttributeSequelizeTypeDeclaration(Property property){
-		'''Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateNIdAttributeTypeLength»'''
+		'''Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateAttributeTypeLength»'''
 	}
 	
-	
-	static def generateExtends(Classifier clazz){
-		val parents = clazz.generalizations
-		if(parents.length > 0){
-			'''«parents.fold("")[acc, parent |
-				acc + ''',«ClassifierUtils.getModelName(parent.general)»'''
-			]»'''
-		}else{
-			''''''
-		}
-	}
 	
 	/**
 	 * génère une table d'association pour les enums 

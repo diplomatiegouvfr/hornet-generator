@@ -412,10 +412,6 @@ public class ClassifierMetierClassGenerator {
 		
 		if(type instanceof Classifier){
 			val propName =  Utils.addAdditionnalName(additonnalName, property.name)
-			var alias = "ref" + Utils.getFirstToUpperCase(propName)
-			if(property.association !== null && property.association.name !== null){
-				alias = property.association.name
-			}
 			var array =""
 			var endArray =""
 			if(property.isMultivalued){

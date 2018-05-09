@@ -19,6 +19,7 @@ Export-Package: fr.gouv.diplomatie.papyrus.codegen.core.console,
  fr.gouv.diplomatie.papyrus.codegen.core.generators,
  fr.gouv.diplomatie.papyrus.codegen.core.test,
  fr.gouv.diplomatie.papyrus.codegen.core.utils
-Import-Package: org.eclipse.emf.transaction,
+Import-Package: fr.gouv.diplomatie.papyrus.codegen.core.test,
+ org.eclipse.emf.transaction,
  org.eclipse.gmf.runtime.emf.type.core.requests,
  org.eclipse.papyrus.designer.languages.common.base
