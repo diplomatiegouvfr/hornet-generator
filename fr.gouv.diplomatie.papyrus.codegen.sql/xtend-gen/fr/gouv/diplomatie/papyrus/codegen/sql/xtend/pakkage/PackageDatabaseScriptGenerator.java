@@ -204,7 +204,6 @@ public class PackageDatabaseScriptGenerator {
       CharSequence _generateIds = PackageDatabaseScriptGenerator.generateIds(clazz);
       _builder.append(_generateIds);
       _builder.newLineIfNotEmpty();
-      _builder.append("\t\t");
       _builder.newLine();
       final Function2<String, Property, String> _function_1 = (String acc, Property id) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
@@ -1560,18 +1559,33 @@ public class PackageDatabaseScriptGenerator {
       final Element owner = property.getOwner();
       CharSequence _xifexpression = null;
       if ((owner instanceof Classifier)) {
-        StringConcatenation _builder = new StringConcatenation();
-        _builder.append("\"");
-        _builder.append(propertyName);
-        _builder.append("_");
-        _builder.append(additionnalName);
-        _builder.append("\" ");
-        Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
-        _builder.append(_generateAttributType);
-        CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
-        _builder.append(_generateStringLength);
-        _builder.append(" NOT NULL");
-        _xifexpression = _builder;
+        CharSequence _xifexpression_1 = null;
+        if (((!Objects.equal(additionnalName, "")) && (additionnalName != null))) {
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("\"");
+          _builder.append(propertyName);
+          _builder.append("_");
+          _builder.append(additionnalName);
+          _builder.append("\" ");
+          Object _generateAttributType = PackageDatabaseScriptGenerator.generateAttributType(property);
+          _builder.append(_generateAttributType);
+          CharSequence _generateStringLength = PackageDatabaseScriptGenerator.generateStringLength(property);
+          _builder.append(_generateStringLength);
+          _builder.append(" NOT NULL");
+          _xifexpression_1 = _builder;
+        } else {
+          StringConcatenation _builder_1 = new StringConcatenation();
+          _builder_1.append("\"");
+          _builder_1.append(propertyName);
+          _builder_1.append("\" ");
+          Object _generateAttributType_1 = PackageDatabaseScriptGenerator.generateAttributType(property);
+          _builder_1.append(_generateAttributType_1);
+          CharSequence _generateStringLength_1 = PackageDatabaseScriptGenerator.generateStringLength(property);
+          _builder_1.append(_generateStringLength_1);
+          _builder_1.append(" NOT NULL");
+          _xifexpression_1 = _builder_1;
+        }
+        _xifexpression = _xifexpression_1;
       }
       _xblockexpression = _xifexpression;
     }
@@ -1644,8 +1658,14 @@ public class PackageDatabaseScriptGenerator {
             return _xblockexpression_2;
           };
           final String idsName = IterableExtensions.<Property, String>fold(idsOwner, "", _function);
-          String _listStringComma = Utils.getListStringComma(PackageDatabaseScriptGenerator.getAttributList(((Classifier)type), CollectionLiterals.<String>newArrayList(), name));
-          final String pkeys = ((idsName + ", ") + _listStringComma);
+          final String attr = Utils.getListStringComma(PackageDatabaseScriptGenerator.getAttributList(((Classifier)type), CollectionLiterals.<String>newArrayList(), name));
+          String pkeys = idsName;
+          if (((attr != null) && (!Objects.equal(attr, "")))) {
+            String _pkeys = pkeys;
+            String _listStringComma = Utils.getListStringComma(PackageDatabaseScriptGenerator.getAttributList(((Classifier)type), CollectionLiterals.<String>newArrayList(), name));
+            String _plus = (", " + _listStringComma);
+            pkeys = (_pkeys + _plus);
+          }
           StringConcatenation _builder = new StringConcatenation();
           _builder.newLine();
           _builder.append("CREATE TABLE \"");
@@ -1665,11 +1685,11 @@ public class PackageDatabaseScriptGenerator {
               StringConcatenation _builder_1 = new StringConcatenation();
               _builder_1.append(",");
               _builder_1.newLine();
-              String _plus = (acc + _builder_1);
+              String _plus_1 = (acc + _builder_1);
               StringConcatenation _builder_2 = new StringConcatenation();
               CharSequence _generateIdAttributeDefinition = PackageDatabaseScriptGenerator.generateIdAttributeDefinition(id, "");
               _builder_2.append(_generateIdAttributeDefinition);
-              _xifexpression_1 = (_plus + _builder_2);
+              _xifexpression_1 = (_plus_1 + _builder_2);
             } else {
               StringConcatenation _builder_3 = new StringConcatenation();
               CharSequence _generateIdAttributeDefinition_1 = PackageDatabaseScriptGenerator.generateIdAttributeDefinition(id, "");
@@ -1719,7 +1739,6 @@ public class PackageDatabaseScriptGenerator {
           _builder.append(pkeys, "    ");
           _builder.append(");");
           _builder.newLineIfNotEmpty();
-          _builder.append("    ");
           _builder.newLine();
           _xblockexpression_1 = _builder;
         }

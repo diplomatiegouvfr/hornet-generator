@@ -13,6 +13,12 @@ import fr.gouv.diplomatie.papyrus.codegen.core.test.TestUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ModelUtils;
 
 public class ModelUtilsTest {
+	
+	@Test
+	public void testClass() {
+		ModelUtils test = new ModelUtils();
+		assertEquals(ModelUtils.class, test.getClass());
+	}
 
 	@Test
 	public void testGetAllClasses() {

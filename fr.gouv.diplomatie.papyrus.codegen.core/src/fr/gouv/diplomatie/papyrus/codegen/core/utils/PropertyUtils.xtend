@@ -280,8 +280,8 @@ class PropertyUtils {
 					}
 				}
 			}
-			return true
-			
+			//return true
+			return false
 		}else{
 			return false
 		}

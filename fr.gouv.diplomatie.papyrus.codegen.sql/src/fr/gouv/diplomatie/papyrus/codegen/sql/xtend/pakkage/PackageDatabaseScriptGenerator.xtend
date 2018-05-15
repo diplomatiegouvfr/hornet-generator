@@ -148,7 +148,7 @@ public class PackageDatabaseScriptGenerator{
 			«clazz.generateAttributes("", clazz, false)»«clazz.generateManyToOneRef»
 		);
 		«clazz.generateIds»
-				
+		
 		«attributes.fold("")[acc, id |
 			acc + '''«id.generateSequence»'''
 		]»
@@ -721,7 +721,11 @@ public class PackageDatabaseScriptGenerator{
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 		val owner = property.owner
 		if(owner instanceof Classifier){
-			'''"«propertyName»_«additionnalName»" «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+			if(additionnalName != "" && additionnalName !== null){
+				'''"«propertyName»_«additionnalName»" «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+			}else{
+				'''"«propertyName»" «property.generateAttributType»«property.generateStringLength» NOT NULL'''
+			}
 		}
 	}
 	
@@ -753,7 +757,12 @@ public class PackageDatabaseScriptGenerator{
 					acc + '''"«idName»"'''
 				}
 			]
-			val pkeys = idsName + ', ' + Utils.getListStringComma(type.getAttributList(newArrayList(), name))
+			val attr = Utils.getListStringComma(type.getAttributList(newArrayList(), name))
+			var pkeys = idsName 
+			if(attr !== null && attr != ""){
+				pkeys += ', ' + Utils.getListStringComma(type.getAttributList(newArrayList(), name))
+			}
+			 
 			'''
 			
 			CREATE TABLE "«tableName»"(
@@ -775,7 +784,7 @@ public class PackageDatabaseScriptGenerator{
 			    
 			ALTER TABLE ONLY "«tableName»"
 			    ADD CONSTRAINT «tableName»_PKEY PRIMARY KEY(«pkeys»);
-			    
+			
 			'''	
 		}	
 	}

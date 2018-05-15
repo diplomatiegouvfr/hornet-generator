@@ -13,6 +13,12 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.AssociationClassUtils;
 
 public class AssociationClassUtilsTest {
 	
+	@Test
+	public void testClass() {
+		AssociationClassUtils test = new AssociationClassUtils();
+		assertEquals(AssociationClassUtils.class, test.getClass());
+	}
+	
 	private AssociationClass initTest(){
 		HornetModel hmodel = HornetModel.initModel();
 		Model model = hmodel.model;

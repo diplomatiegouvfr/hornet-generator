@@ -25,6 +25,11 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
 public class UtilsTest {
 	
+	@Test
+	public void testClass() {
+		Utils test = new Utils();
+		assertEquals(Utils.class, test.getClass());
+	}
 	
 	@Test
 	public void testGetDomainName() throws Exception {
@@ -38,12 +43,35 @@ public class UtilsTest {
 		
 		assertEquals("package", Utils.getDomainName(class_));
 	}
+	
+	@Test
+	public void testNoDomainGetDomainName() throws Exception {
+		HornetModel hmodel = HornetModel.initModel();
+		
+		Package pkg = hmodel.pckage;
+		
+		Classifier class_ = TestUtils.createClass(pkg, "maClasse", false);
+		
+		assertEquals("", Utils.getDomainName(class_));
+	}
 
 	@Test
 	public void testGenerateList() {
 		List<String> list = Arrays.asList("a", "b", "c", "d");
 		String test = Utils.generateList(list);
 		assertEquals("\"a\", \"b\", \"c\", \"d\"", test);
+	}
+	
+	@Test
+	public void testNamedElementGenerateList() {
+		HornetModel hmodel = HornetModel.initModel();
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Classifier class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		ArrayList<NamedElement> list = new ArrayList<NamedElement>();
+		list.add(class_);
+		list.add(class2_);
+		String test = Utils.generateList(list);
+		assertEquals("\"maClasse\", \"maClasse2\"", test);
 	}
 
 	@Test
@@ -58,6 +86,10 @@ public class UtilsTest {
 		String test = "AbCdEF";
 		String get = Utils.capitalize(test);
 		assertEquals("ABCDEF", get);
+		
+		assertEquals("",  Utils.capitalize(""));
+		assertEquals(null,  Utils.capitalize(null));
+		assertEquals("S",  Utils.capitalize("s"));
 	}
 
 	@Test
@@ -117,6 +149,11 @@ public class UtilsTest {
 		class_.applyStereotype(hmodel.entity);
 		
 		assertEquals(true, Utils.hasStereotype(class_, Utils.MODEL_ENTITY));
+	}
+	
+	@Test
+	public void testNullHasStereotype() {
+		assertEquals(false, Utils.hasStereotype(null, Utils.MODEL_ENTITY));
 	}
 
 	@Test
@@ -214,6 +251,14 @@ public class UtilsTest {
 		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entityGenerated, false);
 		assertEquals(false, Utils.getStereotypePropertyValue(class_, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED));
 	}
+	
+	@Test
+	public void testNotGetStereotypePropertyValue() {
+		HornetModel hmodel = HornetModel.initModel();
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		assertEquals(null, Utils.getStereotypePropertyValue(class_, Utils.MODEL_ENTITY, Utils.MODEL_ENTITY_GENERATED));
+		
+	}
 
 	@Test
 	public void testToPath() {
@@ -241,6 +286,18 @@ public class UtilsTest {
 			
 		String generated = Utils.generateComments(class_);
 		String expected = "/**\n* test\n*/\n";
+		assertEquals(expected,generated);
+		
+	}
+	
+	@Test
+	public void testNoCommentGenerateComments() {
+		HornetModel hmodel = HornetModel.initModel();
+		
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+			
+		String generated = Utils.generateComments(class_);
+		String expected = "";
 		assertEquals(expected,generated);
 		
 	}
@@ -285,6 +342,14 @@ public class UtilsTest {
 		String expect = "testAbcdef";
 		assertEquals(expect, get);
 	}
+	
+	@Test
+	public void testNoAddNameAddAdditionnalName() {
+		String test = "abcdef";
+		String get = Utils.addAdditionnalName("", test);
+		String expect = "abcdef";
+		assertEquals(expect, get);
+	}
 
 	@Test
 	public void testGetListPoint() {
@@ -312,6 +377,15 @@ public class UtilsTest {
 		String expect = "abCdEf";
 		assertEquals(expect, get);
 	}
+	
+	@Test
+	public void testGetListStringComma() {
+		ArrayList<String> test = new ArrayList<String>();
+		test.addAll(Arrays.asList("a","b","c"));
+		String get = Utils.getListStringComma(test);
+		String expect = "\"a\", \"b\", \"c\"";
+		assertEquals(expect, get);
+	}
 
 	@Test
 	public void testGetRootPackage() {
@@ -325,6 +399,11 @@ public class UtilsTest {
 		
 		assertEquals("test", Utils.getRootPackage(class_));
 	}
+	
+	@Test
+	public void testNullGetRootPackage() {
+		assertEquals(null, Utils.getRootPackage(null));
+	}
 
 	@Test
 	public void testGetPackagePath() {
@@ -337,6 +416,20 @@ public class UtilsTest {
 		TestUtils.setStereotypePropertyValue(model, hmodel.application, hmodel.applicationRootPackage, "ab.cd.ef");
 		
 		String expected = "ab" + File.separator + "cd" + File.separator + "ef";
+		
+		assertEquals(expected, Utils.getPackagePath(class_));
+	}
+	
+	@Test
+	public void testDefaultGetPackagePath() {
+		HornetModel hmodel = HornetModel.initModel();
+		
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		
+		Model model = hmodel.model;
+		model.applyStereotype(hmodel.application);
+		
+		String expected = "fr" + File.separator + "gouv" + File.separator + "diplomatie";
 		
 		assertEquals(expected, Utils.getPackagePath(class_));
 	}
@@ -362,6 +455,15 @@ public class UtilsTest {
 		
 		assertEquals(true, Utils.isType(class_, "monAutreClasse"));
 		assertEquals(true, Utils.isType(otherClass_, "monAutreClasse"));
+	}
+	
+	@Test
+	public void testNotIsType() {
+		HornetModel hmodel = HornetModel.initModel();
+
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		TestUtils.createClass(hmodel.pckage, "monAutreClasse", false);
+		assertEquals(false, Utils.isType(class_, "monAutreClasse"));
 	}
 
 	@Test

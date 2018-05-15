@@ -16,6 +16,12 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 public class PropertyUtilsTest {
 
 	@Test
+	public void testClass() {
+		PropertyUtils test = new PropertyUtils();
+		assertEquals(PropertyUtils.class, test.getClass());
+	}
+	
+	@Test
 	public void testGetStereotype() {
 		HornetModel hmodel = HornetModel.initModel();
 			
@@ -41,6 +47,17 @@ public class PropertyUtilsTest {
 		
 		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeColumnName, "add");
 		assertEquals("add", PropertyUtils.getStereotypePropertyValue(prop, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_COLUMNNAME));
+	}
+	
+	@Test
+	public void testNotGetStereotypePropertyValue() {
+		HornetModel hmodel = HornetModel.initModel();
+		
+		Class class_ = TestUtils.createClass(hmodel.model, "maClasse", false);
+		
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.booleanPT, 0, 1);
+		
+		assertEquals(null, PropertyUtils.getStereotypePropertyValue(prop, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_COLUMNNAME));
 	}
 
 	@Test
@@ -107,7 +124,7 @@ public class PropertyUtilsTest {
 		
 		assertEquals("test_maclasse", PropertyUtils.getIdFieldName(prop, ""));
 		assertEquals("other_test_maclasse", PropertyUtils.getIdFieldName(prop, "other"));
-		
+		assertEquals("test_maclasse", PropertyUtils.getIdFieldName(prop, null));
 	}
 
 	@Test
@@ -118,6 +135,17 @@ public class PropertyUtilsTest {
 		
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.booleanPT, 0, 1);
 		assertEquals(true, PropertyUtils.isBasicAttribute(prop));
+	}
+	
+	@Test
+	public void testNotIsBasicAttribute() {
+		HornetModel hmodel = HornetModel.initModel();
+			
+		Class class_ = TestUtils.createClass(hmodel.model, "maClasse", false);
+		Class class2_ = TestUtils.createClass(hmodel.model, "maClasse2", false);
+		
+		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
+		assertEquals(false, PropertyUtils.isBasicAttribute(prop));
 	}
 
 	@Test
@@ -142,6 +170,16 @@ public class PropertyUtilsTest {
 		Property prop = class_.getAttribute("test", class2_);
 		
 		assertEquals(true, PropertyUtils.isAssociationAttribute(prop));
+	}
+	
+	@Test
+	public void testNotIsAssociationAttribute() {
+		HornetModel hmodel = HornetModel.initModel();
+			
+		Class class_ = TestUtils.createClass(hmodel.model, "maClasse", false);		
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		
+		assertEquals(false, PropertyUtils.isAssociationAttribute(prop));
 	}
 
 	@Test
@@ -248,6 +286,12 @@ public class PropertyUtilsTest {
 		
 		assertEquals("OTHER", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
 		assertEquals("SECOND_OTHER", PropertyUtils.getDatabaseName(prop, prop.getName(), "SECOND" ));
+		
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeColumnName, "");
+		
+		assertEquals("TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
+		assertEquals("TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), null ));
+		assertEquals("SECOND_TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), "SECOND" ));
 	}
 
 	@Test
@@ -267,6 +311,12 @@ public class PropertyUtilsTest {
 		
 		assertEquals("other", PropertyUtils.getName(prop, prop.getName(), "" ));
 		assertEquals("secondOther", PropertyUtils.getName(prop, prop.getName(), "second" ));
+		
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeColumnName, "");
+		
+		assertEquals("test", PropertyUtils.getName(prop, prop.getName(), "" ));
+		assertEquals("test", PropertyUtils.getName(prop, prop.getName(), null ));
+		assertEquals("secondTest", PropertyUtils.getName(prop, prop.getName(), "second" ));
 	}
 
 	@Test
@@ -284,6 +334,39 @@ public class PropertyUtilsTest {
 		Property prop2 = class_.getAttribute("test", class2_);
 		assertEquals(true, PropertyUtils.isOneToManyAttributes(prop2));
 	}
+	
+	@Test
+	public void testNotIsOneToManyAttributes() {
+		HornetModel hmodel = HornetModel.initModel();
+			
+		Class class_ = TestUtils.createClass(hmodel.model, "maClasse", false);
+		Class class2_ = TestUtils.createClass(hmodel.model, "maClasse2", false);
+		class_.applyStereotype(hmodel.entity);
+		class2_.applyStereotype(hmodel.entity);
+		
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, -1);
+		assertEquals(false, PropertyUtils.isOneToManyAttributes(prop));
+		
+		Property prope = TestUtils.createAttribute(class_, "teste", class2_, 0, -1);
+		assertEquals(false, PropertyUtils.isOneToManyAttributes(prope));
+		
+		class_.createAssociation(true, AggregationKind.NONE_LITERAL, "test", 0, -1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 1, -1);
+		Property prop2 = class_.getAttribute("test", class2_);
+		assertEquals(false, PropertyUtils.isOneToManyAttributes(prop2));
+	}
+	
+	@Test
+	public void testEntityIsOneToManyAttributes() {
+		HornetModel hmodel = HornetModel.initModel();
+			
+		Class class_ = TestUtils.createClass(hmodel.model, "maClasse", false);
+		Class class2_ = TestUtils.createClass(hmodel.model, "maClasse2", false);
+		class_.applyStereotype(hmodel.entity);
+		class2_.applyStereotype(hmodel.entity);
+		
+		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
+		assertEquals(false, PropertyUtils.isOneToManyAttributes(prop));
+	}
 
 	@Test
 	public void testGetColumnName() {
@@ -298,6 +381,23 @@ public class PropertyUtilsTest {
 		assertEquals(null, PropertyUtils.getColumnName(prop));
 		
 		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeColumnName, "OK");
+		assertEquals("OK", PropertyUtils.getColumnName(prop));
+		
+	}
+	
+	@Test
+	public void testKeyAttributeGetColumnName() {
+		HornetModel hmodel = HornetModel.initModel();
+			
+		Class class_ = TestUtils.createClass(hmodel.model, "maClasse", false);
+		
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+				
+		prop.applyStereotype(hmodel.keyAttribute);
+		
+		assertEquals(null, PropertyUtils.getColumnName(prop));
+		
+		TestUtils.setStereotypePropertyValue(prop, hmodel.keyAttribute, hmodel.attributeColumnName, "OK");
 		assertEquals("OK", PropertyUtils.getColumnName(prop));
 		
 	}

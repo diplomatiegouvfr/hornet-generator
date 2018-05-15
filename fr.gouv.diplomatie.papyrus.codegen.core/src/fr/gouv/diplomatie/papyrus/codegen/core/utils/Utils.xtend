@@ -85,7 +85,6 @@ import java.util.ArrayList
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils
 import org.eclipse.uml2.uml.Type
 import org.eclipse.uml2.uml.Classifier
-import org.eclipse.uml2.uml.Stereotype
 
 public class Utils{
 	

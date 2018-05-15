@@ -27,6 +27,12 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 public class ClassifierUtilsTest {
 
 	@Test
+	public void testClass() {
+		ClassifierUtils test = new ClassifierUtils();
+		assertEquals(ClassifierUtils.class, test.getClass());
+	}
+	
+	@Test
 	public void testGetModelName() {
 		HornetModel hmodel = HornetModel.initModel();
 		Classifier class_ = TestUtils.createClass(hmodel.model, "MaClasse", false);
@@ -145,6 +151,15 @@ public class ClassifierUtilsTest {
 	}
 	
 	@Test
+	public void testNoAttributesGetOwnedAttributes() {
+		HornetModel hmodel = HornetModel.initModel();
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		
+		ArrayList<Property> attributes = new ArrayList<Property>();
+		assertEquals(attributes, ClassifierUtils.getOwnedAttributes(class_));
+	}
+	
+	@Test
 	public void testWithGeneralizationGetOwnedAttributes() {
 		HornetModel hmodel = HornetModel.initModel();
 		
@@ -183,6 +198,16 @@ public class ClassifierUtilsTest {
 		attributes.add(attribute2);
 		attributes.add(attribute3);
 		
+		assertEquals(attributes, ClassifierUtils.getAttributes(class_));
+	}
+	
+	@Test
+	public void testNoAttributesGetAttributes() {
+		HornetModel hmodel = HornetModel.initModel();
+		
+		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+				
+		ArrayList<Property> attributes = new ArrayList<Property>();
 		assertEquals(attributes, ClassifierUtils.getAttributes(class_));
 	}
 
@@ -467,6 +492,11 @@ public class ClassifierUtilsTest {
 		
 		assertEquals(expected, ClassifierUtils.getClassPath(class_));
 	}
+	
+	@Test
+	public void testNullGetClassPath() {
+		assertEquals(null, ClassifierUtils.getClassPath(null));
+	}
 
 	@Test
 	public void testGetTableNameValue() {
@@ -477,6 +507,14 @@ public class ClassifierUtilsTest {
 		
 		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entityTableName, "testTableName");
 		assertEquals("testTableName", ClassifierUtils.getTableNameValue(class_));
+	}
+	
+	@Test
+	public void testNoTypeGetTableNameValue() {
+		HornetModel hmodel = HornetModel.initModel();
+		
+		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		assertEquals(null, ClassifierUtils.getTableNameValue(class_));
 	}
 	
 	@Test
