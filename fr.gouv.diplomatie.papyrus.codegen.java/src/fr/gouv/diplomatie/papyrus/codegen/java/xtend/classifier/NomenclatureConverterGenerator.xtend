@@ -77,6 +77,7 @@
  * @version v1.1.0
  * @license CECILL-2.1
  */
+ /* 
 package fr.gouv.diplomatie.papyrus.codegen.java.xtend.classifier;
 
 import org.eclipse.uml2.uml.Classifier
@@ -193,3 +194,4 @@ public class NomenclatureConverterGenerator {
 	}
 
 }
+* */

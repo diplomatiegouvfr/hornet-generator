@@ -79,9 +79,9 @@
  */
 package fr.gouv.diplomatie.papyrus.codegen.java.utils
 
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import org.eclipse.uml2.uml.NamedElement
 import org.eclipse.uml2.uml.Property
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import org.eclipse.uml2.uml.internal.impl.EnumerationLiteralImpl
 
 public class JavaPluginUtils{
@@ -92,7 +92,9 @@ public class JavaPluginUtils{
 	public static var MODEL_ATTRIBUTE_SHOULDBENULL = 'shouldBeNull'
 	
 	public static var MODEL_NUMERICTYPED = 'numericTyped'
+	public static var MODEL_NUMERICTYPED_HASMIN = 'hasMin';
 	public static var MODEL_NUMERICTYPED_MIN = 'min';
+	public static var MODEL_NUMERICTYPED_HASMAX = 'hasMax';
 	public static var MODEL_NUMERICTYPED_MAX = 'max';
 	public static var MODEL_NUMERICTYPED_NEGATIVE = 'negative';
 	public static var MODEL_NUMERICTYPED_NEGATIVEORZERO = 'negativeOrZero';
@@ -101,6 +103,8 @@ public class JavaPluginUtils{
 	public static var MODEL_NUMERICTYPED_DIGITS = 'digits';
 	public static var MODEL_NUMERICTYPED_DIGITSINTEGER = 'digitsInteger';
 	public static var MODEL_NUMERICTYPED_DIGITSFRACTION = 'digitsFraction';
+	public static var MODEL_NUMERICTYPED_HASDECIMALMIN = 'hasDecimalMin';
+	public static var MODEL_NUMERICTYPED_HASDECIMALMAX = 'hasDecimalMax';
 	public static var MODEL_NUMERICTYPED_DECIMALMIN = 'decimalMin';
 	public static var MODEL_NUMERICTYPED_DECIMALMAX = 'decimalMax';
 	
@@ -118,10 +122,13 @@ public class JavaPluginUtils{
 	public static var MODEL_STRINGTYPED_CANBEEMPTY= 'canBeEmpty';
 	public static var MODEL_STRINGTYPED_PATTERN = 'pattern';
 	public static var MODEL_STRINGTYPED_SIZEMIN = 'sizeMin';
+	public static var MODEL_STRINGTYPED_HASSIZEMIN = 'HasSizeMin';
 	
 	public static var MODEL_COLLECTION = 'collection';
 	public static var MODEL_COLLECTION_SIZEMIN = 'sizeMin';
 	public static var MODEL_COLLECTION_SIZEMAX = 'sizeMax';
+	public static var MODEL_COLLECTION_HASSIZEMIN = 'hasSizeMin';
+	public static var MODEL_COLLECTION_HASSIZEMAX = 'hasSizeMax';
 	
 	/**
 	 * teste si un element est de type naturalOrder
@@ -189,7 +196,7 @@ public class JavaPluginUtils{
 	}
 	
 	static def getCollectionSizeMin(NamedElement elem){
-		val hasSizeMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasSizeMin')
+		val hasSizeMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, MODEL_COLLECTION_HASSIZEMIN)
 		if(hasSizeMin == true){
 			return Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, MODEL_COLLECTION_SIZEMIN)
 		}
@@ -197,7 +204,7 @@ public class JavaPluginUtils{
 	}
 	
 	static def getCollectionSizeMax(NamedElement elem){
-		val hasSizeMax = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasSizeMax')
+		val hasSizeMax = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, MODEL_COLLECTION_HASSIZEMAX)
 		if(hasSizeMax == true){
 			return Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, MODEL_COLLECTION_SIZEMAX)
 		}
@@ -213,7 +220,7 @@ public class JavaPluginUtils{
 	}
 	
 	static def getSizeMin(NamedElement elem){
-		val hasSizeMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasSizeMin')
+		val hasSizeMin = Utils.getStereotypePropertyValue(elem, MODEL_STRINGTYPED, MODEL_STRINGTYPED_HASSIZEMIN)
 		if(hasSizeMin == true){
 			return Utils.getStereotypePropertyValue(elem, MODEL_STRINGTYPED, MODEL_STRINGTYPED_SIZEMIN)
 		}
@@ -221,7 +228,7 @@ public class JavaPluginUtils{
 	}
 	
 	static def getMin(NamedElement elem){
-		val hasMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasMin')
+		val hasMin = Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_HASMIN)
 		if(hasMin == true){	
 			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_MIN)
 		}
@@ -229,7 +236,7 @@ public class JavaPluginUtils{
 	}
 	
 	static def getMax(NamedElement elem){
-		val hasMax = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasMax')
+		val hasMax = Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_HASMAX)
 		if(hasMax == true){	
 			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_MAX)
 		}
@@ -265,7 +272,7 @@ public class JavaPluginUtils{
 	}
 	
 	static def getDecimalMin(NamedElement elem){
-		val hasDecimalMin = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasDecimalMin')
+		val hasDecimalMin = Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_HASDECIMALMIN)
 		if(hasDecimalMin == true){	
 			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_DECIMALMIN)
 		}
@@ -273,7 +280,7 @@ public class JavaPluginUtils{
 	}
 	
 	static def getDecimalMax(NamedElement elem){
-		val hasDecimalMax = Utils.getStereotypePropertyValue(elem, MODEL_COLLECTION, 'hasDecimalMax')
+		val hasDecimalMax = Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_HASDECIMALMAX)
 		if(hasDecimalMax == true){	
 			return Utils.getStereotypePropertyValue(elem, MODEL_NUMERICTYPED, MODEL_NUMERICTYPED_DECIMALMAX)
 		}

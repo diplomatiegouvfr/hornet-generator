@@ -102,9 +102,20 @@ public class TestUtils {
 	 * @param name
 	 * @return
 	 */
-    protected static Enumeration createEnumeration(Package package_, String name) {
+    public static Enumeration createEnumeration(Package package_, String name) {
     	Enumeration enumeration = (Enumeration) package_.createOwnedEnumeration(name);
     	return enumeration;
+    }
+    
+    /**
+     * créer un champs dans une enumeration
+     * @param enumeration
+     * @param name
+     * @return
+     */
+    public static EnumerationLiteral createEnumerationLiteral(Enumeration enumeration, String name) {
+    	EnumerationLiteral enumerationLiteral = enumeration.createOwnedLiteral(name);
+    	return enumerationLiteral;
     }
 	
 	/**

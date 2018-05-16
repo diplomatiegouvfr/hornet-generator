@@ -87,7 +87,7 @@ import org.eclipse.uml2.uml.Classifier;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import fr.gouv.diplomatie.papyrus.codegen.java.xtend.classifier.ClassifierJPAEntityGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.java.xtend.classifier.NomenclatureConverterGenerator;
+//import fr.gouv.diplomatie.papyrus.codegen.java.xtend.classifier.NomenclatureConverterGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.java.xtend.classifier.NomenclatureGenerator;
 
 public class ClassifierGenerator {
@@ -136,7 +136,7 @@ public class ClassifierGenerator {
 	 * @param clazz
 	 * @param fileSystemAccess
 	 */
-	public static void generateNomenclatureConverter(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
+	/*public static void generateNomenclatureConverter(Classifier clazz, IPFileSystemAccess fileSystemAccess) {
 		
 		String fileName = GeneratorUtils.getEntityPath(clazz, false) + File.separator + clazz.getName() + "Converter.java";
 		
@@ -148,5 +148,5 @@ public class ClassifierGenerator {
 		}else {
 			Utils.console.warning.println("Le converter de la classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}
-	}
+	}*/
 }

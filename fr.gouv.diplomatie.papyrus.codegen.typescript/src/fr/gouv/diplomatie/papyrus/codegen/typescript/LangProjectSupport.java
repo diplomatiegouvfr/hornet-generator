@@ -87,10 +87,6 @@ import org.eclipse.uml2.uml.Package;
 
 public class LangProjectSupport implements ILangProjectSupport {
 
-	public LangProjectSupport() {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public IProject createProject(String arg0) {
 		// TODO Auto-generated method stub
@@ -120,5 +116,6 @@ public class LangProjectSupport implements ILangProjectSupport {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

@@ -66,15 +66,21 @@ public class HornetModel {
 	 public Type stringPT;
 	 public Type integerPT;
 	 
+	 public Class metaclass;
+	 public Class associationmetaclass;
+	 public Class propmetaclass;
+	 public Class packagemetaclass;
+	 
 	 public HornetModel() {
 		 
 		profile = TestUtils.createProfile("profile");
 		model = TestUtils.createModel("model");
 		pckage = TestUtils.createPackage(model, "package");
 			
-		Class metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
-		Class propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
-		Class packagemetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PACKAGE.getName());
+		metaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.CLASS.getName());
+		associationmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.ASSOCIATION.getName());
+		propmetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PROPERTY.getName());
+		packagemetaclass = TestUtils.referenceMetaclass(profile, UMLPackage.Literals.PACKAGE.getName());
 		
 		domain = TestUtils.createStereotype(profile, Utils.MODEL_DOMAIN, false);
 		TestUtils.createExtension(packagemetaclass, domain, false);
@@ -98,7 +104,7 @@ public class HornetModel {
 		TestUtils.createExtension(metaclass, associationTable, false);
 		
 		associationLink = TestUtils.createStereotype(profile, Utils.MODEL_ASSOCIATIONLINK, false);
-		TestUtils.createExtension(metaclass, associationLink, false);
+		TestUtils.createExtension(associationmetaclass, associationLink, false);
 		
 		attribute = TestUtils.createStereotype(profile, Utils.MODEL_ATTRIBUTE, false);
 		TestUtils.createExtension(propmetaclass, attribute, false);

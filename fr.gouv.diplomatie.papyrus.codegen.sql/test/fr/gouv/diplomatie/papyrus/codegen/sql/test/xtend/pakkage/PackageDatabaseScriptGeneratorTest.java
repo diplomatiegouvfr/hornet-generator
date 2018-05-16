@@ -16,6 +16,12 @@ import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseScrip
 public class PackageDatabaseScriptGeneratorTest {
 
 	@Test
+	public void testClass() {
+		PackageDatabaseScriptGenerator gene = new PackageDatabaseScriptGenerator();
+		assertEquals(PackageDatabaseScriptGenerator.class, gene.getClass());
+	}
+	
+	@Test
 	public void testGenerateTable() {
 		HornetModel hmodel = HornetModel.initModel();
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);

@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
  org.eclipse.xtend;bundle-version="2.2.0",
  org.eclipse.papyrus.designer.languages.common.base;bundle-version="1.0.4",
  fr.gouv.diplomatie.papyrus.codegen.core;bundle-version="1.1.0",
- org.eclipse.papyrus.infra.core;bundle-version="3.0.0"
+ org.eclipse.papyrus.infra.core;bundle-version="3.0.0",
+ org.junit
 Import-Package: org.eclipse.ui.console
 Export-Package: fr.gouv.diplomatie.papyrus.codegen.java.generators,
  fr.gouv.diplomatie.papyrus.codegen.java.transformations,

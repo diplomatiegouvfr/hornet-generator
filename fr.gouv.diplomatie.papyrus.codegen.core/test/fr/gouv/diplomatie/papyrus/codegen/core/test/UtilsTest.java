@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.uml2.uml.AggregationKind;
+import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Comment;
@@ -212,9 +214,10 @@ public class UtilsTest {
 		HornetModel hmodel = HornetModel.initModel();
 		
 		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
-		class_.applyStereotype(hmodel.associationLink);
-				
-		assertEquals(true, Utils.isAssociationLink(class_));
+		Classifier class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		Association asso = class_.createAssociation(true, AggregationKind.NONE_LITERAL, "test", 0, 1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 0, 1);
+		asso.applyStereotype(hmodel.associationLink);			
+		assertEquals(true, Utils.isAssociationLink(asso));
 	}
 
 	@Test

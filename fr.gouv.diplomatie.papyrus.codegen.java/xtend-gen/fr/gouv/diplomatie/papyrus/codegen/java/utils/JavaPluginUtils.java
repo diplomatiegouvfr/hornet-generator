@@ -87,7 +87,11 @@ public class JavaPluginUtils {
   
   public static String MODEL_NUMERICTYPED = "numericTyped";
   
+  public static String MODEL_NUMERICTYPED_HASMIN = "hasMin";
+  
   public static String MODEL_NUMERICTYPED_MIN = "min";
+  
+  public static String MODEL_NUMERICTYPED_HASMAX = "hasMax";
   
   public static String MODEL_NUMERICTYPED_MAX = "max";
   
@@ -104,6 +108,10 @@ public class JavaPluginUtils {
   public static String MODEL_NUMERICTYPED_DIGITSINTEGER = "digitsInteger";
   
   public static String MODEL_NUMERICTYPED_DIGITSFRACTION = "digitsFraction";
+  
+  public static String MODEL_NUMERICTYPED_HASDECIMALMIN = "hasDecimalMin";
+  
+  public static String MODEL_NUMERICTYPED_HASDECIMALMAX = "hasDecimalMax";
   
   public static String MODEL_NUMERICTYPED_DECIMALMIN = "decimalMin";
   
@@ -133,11 +141,17 @@ public class JavaPluginUtils {
   
   public static String MODEL_STRINGTYPED_SIZEMIN = "sizeMin";
   
+  public static String MODEL_STRINGTYPED_HASSIZEMIN = "HasSizeMin";
+  
   public static String MODEL_COLLECTION = "collection";
   
   public static String MODEL_COLLECTION_SIZEMIN = "sizeMin";
   
   public static String MODEL_COLLECTION_SIZEMAX = "sizeMax";
+  
+  public static String MODEL_COLLECTION_HASSIZEMIN = "hasSizeMin";
+  
+  public static String MODEL_COLLECTION_HASSIZEMAX = "hasSizeMax";
   
   /**
    * teste si un element est de type naturalOrder
@@ -210,7 +224,7 @@ public class JavaPluginUtils {
   }
   
   public static Object getCollectionSizeMin(final NamedElement elem) {
-    final Object hasSizeMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasSizeMin");
+    final Object hasSizeMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, JavaPluginUtils.MODEL_COLLECTION_HASSIZEMIN);
     boolean _equals = Objects.equal(hasSizeMin, Boolean.valueOf(true));
     if (_equals) {
       return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, JavaPluginUtils.MODEL_COLLECTION_SIZEMIN);
@@ -219,7 +233,7 @@ public class JavaPluginUtils {
   }
   
   public static Object getCollectionSizeMax(final NamedElement elem) {
-    final Object hasSizeMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasSizeMax");
+    final Object hasSizeMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, JavaPluginUtils.MODEL_COLLECTION_HASSIZEMAX);
     boolean _equals = Objects.equal(hasSizeMax, Boolean.valueOf(true));
     if (_equals) {
       return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, JavaPluginUtils.MODEL_COLLECTION_SIZEMAX);
@@ -236,7 +250,7 @@ public class JavaPluginUtils {
   }
   
   public static Object getSizeMin(final NamedElement elem) {
-    final Object hasSizeMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasSizeMin");
+    final Object hasSizeMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_STRINGTYPED, JavaPluginUtils.MODEL_STRINGTYPED_HASSIZEMIN);
     boolean _equals = Objects.equal(hasSizeMin, Boolean.valueOf(true));
     if (_equals) {
       return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_STRINGTYPED, JavaPluginUtils.MODEL_STRINGTYPED_SIZEMIN);
@@ -245,7 +259,7 @@ public class JavaPluginUtils {
   }
   
   public static Object getMin(final NamedElement elem) {
-    final Object hasMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasMin");
+    final Object hasMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_HASMIN);
     boolean _equals = Objects.equal(hasMin, Boolean.valueOf(true));
     if (_equals) {
       return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_MIN);
@@ -254,7 +268,7 @@ public class JavaPluginUtils {
   }
   
   public static Object getMax(final NamedElement elem) {
-    final Object hasMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasMax");
+    final Object hasMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_HASMAX);
     boolean _equals = Objects.equal(hasMax, Boolean.valueOf(true));
     if (_equals) {
       return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_MAX);
@@ -291,7 +305,7 @@ public class JavaPluginUtils {
   }
   
   public static Object getDecimalMin(final NamedElement elem) {
-    final Object hasDecimalMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasDecimalMin");
+    final Object hasDecimalMin = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_HASDECIMALMIN);
     boolean _equals = Objects.equal(hasDecimalMin, Boolean.valueOf(true));
     if (_equals) {
       return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_DECIMALMIN);
@@ -300,7 +314,7 @@ public class JavaPluginUtils {
   }
   
   public static Object getDecimalMax(final NamedElement elem) {
-    final Object hasDecimalMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_COLLECTION, "hasDecimalMax");
+    final Object hasDecimalMax = Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_HASDECIMALMAX);
     boolean _equals = Objects.equal(hasDecimalMax, Boolean.valueOf(true));
     if (_equals) {
       return Utils.getStereotypePropertyValue(elem, JavaPluginUtils.MODEL_NUMERICTYPED, JavaPluginUtils.MODEL_NUMERICTYPED_DECIMALMAX);

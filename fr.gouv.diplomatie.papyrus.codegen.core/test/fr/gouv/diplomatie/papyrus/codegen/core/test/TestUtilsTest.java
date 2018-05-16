@@ -22,6 +22,12 @@ import org.junit.Test;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
 public class TestUtilsTest {
+	
+	@Test
+	public void testClass() {
+		TestUtils utils = new TestUtils();
+		assertEquals(TestUtils.class, utils.getClass());
+	}
 
 	@Test
 	public void testCreateModel() {
