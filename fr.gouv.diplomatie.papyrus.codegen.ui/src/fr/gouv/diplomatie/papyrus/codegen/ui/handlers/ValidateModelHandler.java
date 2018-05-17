@@ -1,7 +1,5 @@
 package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 
 import org.eclipse.core.commands.ExecutionEvent;
@@ -30,6 +28,10 @@ public class ValidateModelHandler extends CmdHandler {
 			PackageableElement packageableElement = (PackageableElement) selectedEObject;
 			HornetModelValidator validator = new HornetModelValidator();
 			ArrayList<String> validationErrors = validator.validate(packageableElement, console);
+			ArrayList<String> validationWarnings = validator.warnings;
+			for(String warning : validationWarnings) {
+				console.warning.println(warning);
+			}
 			if(validationErrors.isEmpty()) {
 				console.success.println("Modèle valide");
 			}else {

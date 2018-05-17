@@ -28,7 +28,7 @@ public class NomenclatureGeneratorTest {
 				"\n" + 
 				"public enum maClasse {\n" + 
 				"}\n";
-		assertEquals(expect, NomenclatureGenerator.generateCode(class_));
+		assertEquals(expect, NomenclatureGenerator.generateCode(class_).toString());
 	}
 	
 	@Test
@@ -57,7 +57,7 @@ public class NomenclatureGeneratorTest {
 		prop.applyStereotype(hmodel.codeLibelleNomenclature);
 		
 		String expect = "test";
-		assertEquals(expect, NomenclatureGenerator.generateAttribut(prop));
+		assertEquals(expect, NomenclatureGenerator.generateAttribut(prop).toString());
 	}
 
 }

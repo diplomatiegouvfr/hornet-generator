@@ -18,6 +18,12 @@ import fr.gouv.diplomatie.papyrus.codegen.java.xtend.classifier.ClassifierJPAEnt
 public class ClassifierJPAEntityGeneratorTest {
 
 	@Test
+	public void testClass() {
+		ClassifierJPAEntityGenerator gene = new ClassifierJPAEntityGenerator();
+		assertEquals(ClassifierJPAEntityGenerator.class, gene.getClass());
+	}
+	
+	@Test
 	public void testValueObjectGenerateTypeAnnotationClassifier() {
 		HornetModelJava hmodel = HornetModelJava.initModel();
 		Classifier class_  = TestUtils.createClass(hmodel.pckage, "maClasse", false);
@@ -79,7 +85,10 @@ public class ClassifierJPAEntityGeneratorTest {
 
 		AssociationClass asso = TestUtils.createAssociationClass(class_, class2_, "att1", "att2", "asso");
 		
-		String expect = "\n@ManyToMany\n" + 
+		asso.applyStereotype(hmodel.associationTable);
+		TestUtils.setStereotypePropertyValue(asso, hmodel.associationTable, hmodel.associationTableFetchType, hmodel.fetchTypeEager);
+		
+		String expect = "\n@ManyToMany(fetch=FetchType.EAGER)\n" + 
 				"@JoinTable(name=\"ASSO\", joinColumns=@JoinColumn(name=\"ID_ATT2\", referencedColumnName=\"ID\"),\n" + 
 				"	inverseJoinColumns=@JoinColumn(name=\"ID_ATT1\", referencedColumnName=\"ID\"))\n" + 
 				"public Set<maClasse2> att1;\n";
@@ -123,7 +132,54 @@ public class ClassifierJPAEntityGeneratorTest {
 
 	@Test
 	public void testGenerateBasicAttribute() {
-		fail("Not yet implemented");
+		HornetModelJava hmodel = HornetModelJava.initModel();
+		Class class_  = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
+		String expect = "\n@Column(name = \"TEST\")\n" + 
+				"public String test;\n";
+		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
+	}
+	
+	@Test
+	public void testMultivaluedGenerateBasicAttribute() {
+		HornetModelJava hmodel = HornetModelJava.initModel();
+		Class class_  = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, -1);
+		String expect = "\n@ElementCollection\n" + 
+				"public Set<String> test;\n";
+		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
+	}
+	
+	@Test
+	public void testEntityGenerateBasicAttribute() {
+		HornetModelJava hmodel = HornetModelJava.initModel();
+		Class class_  = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Class class2_  = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
+		TestUtils.createAttribute(class2_, "id", hmodel.integerPT, 0, 1).applyStereotype(hmodel.keyAttribute);
+		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
+		String expect = "\n@ManyToOne\n" + 
+				"//@JoinColumn(name = \"ID_TEST\", nullable = true)\n" + 
+				"public maClasse2 test;\n";
+		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
+	}
+	
+	@Test
+	public void testMultivaluedEntityGenerateBasicAttribute() {
+		HornetModelJava hmodel = HornetModelJava.initModel();
+		Class class_  = TestUtils.createClass(hmodel.pckage, "maClasse", false);
+		Class class2_  = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
+		class2_.applyStereotype(hmodel.entity);
+		TestUtils.createAttribute(class2_, "id", hmodel.integerPT, 0, 1).applyStereotype(hmodel.keyAttribute);
+		TestUtils.createAttribute(class_, "id", hmodel.integerPT, 0, 1).applyStereotype(hmodel.keyAttribute);
+		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
+		prop.applyStereotype(hmodel.attribute);
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeFetchType, hmodel.fetchTypeLazy);
+		String expect = "\n@ManyToMany(fetch=FetchType.LAZY)\n" + 
+				"@JoinTable(name=\"MA_CLASSE_TEST\", joinColumns=@JoinColumn(name=\"ID_MA_CLASSE\", referencedColumnName=\"ID\"),\n" + 
+				"	inverseJoinColumns=@JoinColumn(name=\"ID_TEST\", referencedColumnName=\"ID\"))\n" + 
+				"public Set<maClasse2> test;\n";
+		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
 	}
 
 	@Test

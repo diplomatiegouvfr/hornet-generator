@@ -85,10 +85,10 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.uml2.uml.PackageableElement;
+
 import fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators.LombokAnnotationGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.java.transformations.ProjectJPAEntityElementsCreator;
 import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;
-import fr.gouv.diplomatie.papyrus.codegen.ui.core.validator.HornetModelValidator;
 import fr.gouv.diplomatie.papyrus.codegen.ui.validators.JavaPluginModelValidator;
 
 public class GenerateJPAEntityHandler extends HornetCodeHandler {

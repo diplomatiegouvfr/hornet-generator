@@ -19,12 +19,14 @@ import java.util.ArrayList
 public class HornetModelValidator {
 	
 	public ArrayList<String> errors;
+	public ArrayList<String> warnings;
 	
 	/**
 	 * Teste si le modèle passé au générateur est valide ou non
 	 */
 	public def validate(PackageableElement packageableElement, ConsoleUtils console) {
 		errors = newArrayList;
+		warnings = newArrayList;
 		console.out.println("Début de la validation");
 		validateElement(packageableElement, console);
 		return errors;
@@ -57,9 +59,18 @@ public class HornetModelValidator {
 		val isEntity = Utils.isEntity(packageableElement);
 		val isNomenclature = Utils.isNomenclature(packageableElement);
 		val isValueObject = Utils.isValueObject(packageableElement);
-		
+				
 		if(isEntity && (isNomenclature || isValueObject) || (isNomenclature && isValueObject)){
 			errors.add("La classe " + packageableElement.name + " possède plus d'un stéréotype de classe");
+		}
+		
+		if(isEntity){
+			val attributes = ClassifierUtils.getOwnedAttributes(packageableElement).filter[ att |
+				PropertyUtils.isID(att)
+			];
+			if(attributes.length == 0){
+				errors.add("La classe " + packageableElement.name + " possède le stéréotype entity mais n'a pas d'attribut possédant le stéréotype keyAttribute");
+			}
 		}
 		
 		val attributes = ClassifierUtils.getOwnedAttributes(packageableElement);

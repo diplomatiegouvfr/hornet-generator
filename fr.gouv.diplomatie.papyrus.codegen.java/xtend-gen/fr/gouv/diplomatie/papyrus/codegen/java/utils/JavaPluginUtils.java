@@ -141,7 +141,7 @@ public class JavaPluginUtils {
   
   public static String MODEL_STRINGTYPED_SIZEMIN = "sizeMin";
   
-  public static String MODEL_STRINGTYPED_HASSIZEMIN = "HasSizeMin";
+  public static String MODEL_STRINGTYPED_HASSIZEMIN = "hasSizeMin";
   
   public static String MODEL_COLLECTION = "collection";
   

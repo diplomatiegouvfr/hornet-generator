@@ -45,6 +45,12 @@
 		       name="separator-services"
 		       visible="true">
 		</separator>
+		<command
+               commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.validatejava"
+               label="Valider le modèle (Java)"
+               style="push"
+               tooltip="Valider le modèle en prenant en compte les stéréotypes pour la génération java">
+         </command>
          <command
                commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.jpaentities"
                label="Generate JPA Entities"
@@ -62,6 +68,13 @@
             description="Valider le modèle"
             id="fr.gouv.diplomatie.papyrus.codegen.ui.command.validate"
             name="Valider le modèle">
+      </command>
+      <command
+            categoryId="org.eclipse.papyrus.editor.category"
+            defaultHandler="fr.gouv.diplomatie.papyrus.codegen.ui.handlers.ValidateModelHandlerJava"
+            description="Valider le modèle (Java)"
+            id="fr.gouv.diplomatie.papyrus.codegen.ui.command.validatejava"
+            name="Valider le modèle (Java)">
       </command>
       <command
             categoryId="org.eclipse.papyrus.editor.category"

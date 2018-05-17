@@ -122,7 +122,7 @@ public class JavaPluginUtils{
 	public static var MODEL_STRINGTYPED_CANBEEMPTY= 'canBeEmpty';
 	public static var MODEL_STRINGTYPED_PATTERN = 'pattern';
 	public static var MODEL_STRINGTYPED_SIZEMIN = 'sizeMin';
-	public static var MODEL_STRINGTYPED_HASSIZEMIN = 'HasSizeMin';
+	public static var MODEL_STRINGTYPED_HASSIZEMIN = 'hasSizeMin';
 	
 	public static var MODEL_COLLECTION = 'collection';
 	public static var MODEL_COLLECTION_SIZEMIN = 'sizeMin';
