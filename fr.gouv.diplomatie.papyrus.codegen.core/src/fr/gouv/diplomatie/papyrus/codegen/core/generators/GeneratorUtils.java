@@ -161,6 +161,14 @@ public class GeneratorUtils {
 	}
 	
 	/**
+	 * chemin du fichier de création de la base de données
+	 * @return
+	 */
+	public static String getUpdateDatabaseScriptPath(Package pakkage) {
+		return DATABASE_REPOSITORY + "updateTablesPostgres";
+	}
+	
+	/**
 	 * chemin du fichier modelDAO
 	 * @param clazz
 	 * @param inCode indique si le chemin est pour la génération du chemin du fichier  ou pour un import dans le code

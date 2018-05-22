@@ -85,6 +85,7 @@ import org.eclipse.uml2.uml.Package;
 import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseScriptGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageUpdateDatabaseScriptGenerator;
 
 public class PackageGenerator{
 
@@ -94,5 +95,13 @@ public class PackageGenerator{
 		Utils.console.out.println("PackageGenerator.generateDatabaseScript : "  + pakkage.getName() + ", fichier : " + fileName);
 		
 		fileSystemAccess.generateFile(fileName, PackageDatabaseScriptGenerator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateUpdateDatabaseScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = GeneratorUtils.getUpdateDatabaseScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateUpdateDatabaseScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		fileSystemAccess.generateFile(fileName, PackageUpdateDatabaseScriptGenerator.generateCode(pakkage).toString());
 	}
 }

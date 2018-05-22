@@ -106,6 +106,7 @@ public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
 		
 		if(packageableElement instanceof Package) {
 			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
+			PackageGenerator.generateUpdateDatabaseScript((Package) packageableElement, fileSystemAccess);
 		}
 	}
 

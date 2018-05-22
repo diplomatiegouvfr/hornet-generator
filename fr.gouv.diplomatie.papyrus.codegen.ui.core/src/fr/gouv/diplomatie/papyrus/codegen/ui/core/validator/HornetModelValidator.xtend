@@ -12,6 +12,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import org.eclipse.uml2.uml.NamedElement
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import java.util.ArrayList
+import org.eclipse.uml2.uml.PrimitiveType
 
 /**
  * classe de validation d'un modèle hornet papyrus
@@ -79,8 +80,8 @@ public class HornetModelValidator {
 		]
 	}
 	
-		/**
-	 * teste la validité d'un package
+	/**
+	 * teste la validité d'une propriété
 	 */
 	public def void validateProperty(Property packageableElement, ConsoleUtils console){
 		val isAttribute = PropertyUtils.isAttribut(packageableElement);
@@ -88,6 +89,18 @@ public class HornetModelValidator {
 		val isCLNom = PropertyUtils.isCodeLibelleNomenclature(packageableElement);
 		
 		val owner = packageableElement.owner as Classifier
+		val type = packageableElement.type as NamedElement
+		
+		val hornetType = Utils.hasStereotype(type, Utils.MODEL_HORNETTYPE);
+		val primitiveType = type instanceof PrimitiveType;
+		
+		if(primitiveType && !hornetType){
+			errors.add("Le type de l'attribut " + packageableElement.name + " de la classe " + owner.name +" n'est pas un type Hornet (stéréotype hornetType)");
+		}
+		
+		if(!isAttribute && !isKeyAttribute && !isCLNom && (packageableElement.association === null)){
+			errors.add("L'attribut " + packageableElement.name + " de la classe " + owner.name +" ne possède aucun stéréotype d'attribut");
+		}
 		
 		// test un seul type d'attribut
 		if(isAttribute && (isKeyAttribute || isCLNom) || (isKeyAttribute && isCLNom)){
@@ -99,9 +112,9 @@ public class HornetModelValidator {
 			errors.add("L'attribut " + packageableElement.name + " de la classe " + owner.name +" possède un stéréotype codeLibelleNomenclature mais n'est pas présent dans une nomenclature");
 		}
 		
-		val screamingCamelCasePattern = "^[A-Z0-9_]*$"; 
-		if(packageableElement.name.matches(screamingCamelCasePattern)){
-			errors.add("Le nom de l'attribut " + packageableElement.name + " doit être écrit en camel case ou en snake case");
-		}	                        			
+		val screamingSnakeCasePattern = "^[A-Z0-9_]*$"; 
+		if(packageableElement.name.matches(screamingSnakeCasePattern)){
+			errors.add("Le nom de l'attribut " + packageableElement.name + " de la classe " + owner.name + " doit être écrit en camel case ou en snake case");
+		}	                  			
 	}
 }
