@@ -95,7 +95,7 @@ public class AssociationClassModelGenerator {
 		'''
 		import Sequelize = require("sequelize");
 		
-		export var «AssociationClassUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
+		export const «AssociationClassUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
 			«clazz.generateAttributes»
 		}
 		'''

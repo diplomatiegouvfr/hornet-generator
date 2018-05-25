@@ -89,7 +89,7 @@ public class NomenclatureModelGenerator{
 		'''
 		import Sequelize = require("sequelize");
 		
-		export var «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes={
+		export const «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes={
 			code: {
 				type: Sequelize.«TypeUtils.getEnumSequelizeType(clazz)»,
 				field: "CODE",

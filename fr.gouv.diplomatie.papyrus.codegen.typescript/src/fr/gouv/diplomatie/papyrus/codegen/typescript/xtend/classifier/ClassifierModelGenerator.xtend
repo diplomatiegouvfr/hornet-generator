@@ -92,18 +92,16 @@ public class ClassifierModelGenerator {
 	
 	static def generateCode(Classifier clazz){
 		'''
-		import * as _ from "lodash";
 		import Sequelize = require("sequelize");
 		«clazz.generateImports»
 		
-		export var «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
+		export const «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
 			«clazz.generateExtendsId»
 			«clazz.generateInterfacesAttributes»
 			«clazz.generateAttributes("", "", clazz, false, false)»
-			««««clazz.generateOneToManyAttribute»
 		}
-		
 		«clazz.generateMultivaluedAttributeModels»
+		««««clazz.generateOneToManyAttribute»
 		'''
 	}
 	
@@ -573,7 +571,7 @@ public class ClassifierModelGenerator {
 		val ids = ClassifierUtils.getId(fromClass)
 		'''
 		
-		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
 			«property.name»: {
 				type: «property.getAttributeSequelizeTypeDeclaration»,
 				field: "«Utils.toDbName(property.name)»",
@@ -637,7 +635,7 @@ public class ClassifierModelGenerator {
 		val idsProp = ClassifierUtils.getId(property.type as Classifier)
 		'''
 		
-		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
 			«idsProp.fold("")[acc, id |
 				val name = PropertyUtils.getName(property, property.name, "")
 				if(acc != ""){
@@ -687,7 +685,7 @@ public class ClassifierModelGenerator {
 		
 		'''
 		
-		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
 			«idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«id.generateNPTModelIdAttributes(fromClass, true)»'''
@@ -772,7 +770,7 @@ public class ClassifierModelGenerator {
 		
 		'''
 		
-		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
 			«idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«id.generateNPTModelIdAttributes(fromClass, false)»'''
@@ -801,7 +799,7 @@ public class ClassifierModelGenerator {
 		val name = PropertyUtils.getDatabaseName(property, property.name, "")
 		'''
 		
-		export var «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
+		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
 			«idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«id.generateNPTModelIdAttributes(fromClass, false)»'''

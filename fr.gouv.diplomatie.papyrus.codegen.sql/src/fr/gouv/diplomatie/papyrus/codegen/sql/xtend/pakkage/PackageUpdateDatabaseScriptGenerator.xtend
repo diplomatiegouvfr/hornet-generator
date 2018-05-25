@@ -163,12 +163,12 @@ public class PackageUpdateDatabaseScriptGenerator{
 		'''
 		«attributesRef.fold("")[acc, attr |
 			acc + '''
-«attr.generateAttrForeignKey(clazz, "", tableName)»'''
+«attr.generateAttrForeignKey(clazz,  tableName)»'''
 		]»
 		'''	
 	}
 	
-	static def generateAttrForeignKey(Property property, Classifier fromClass, String additionnalName, String tableName){
+	static def generateAttrForeignKey(Property property, Classifier fromClass, String tableName){
 		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 		val owner = property.owner as Classifier
 		val id = ClassifierUtils.getId(owner).get(0)
