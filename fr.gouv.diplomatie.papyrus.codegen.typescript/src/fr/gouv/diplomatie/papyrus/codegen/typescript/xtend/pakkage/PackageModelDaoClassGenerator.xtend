@@ -284,9 +284,10 @@ class PackageModelDaoClassGenerator{
 	 * génère les déclaration d'entité pour les entités
 	 */
 	static def generateEntityDeclaration(Classifier clazz){
+		val options = clazz.generateEntityDecoratorOption
 		'''
 		
-		@Entity("«ClassifierUtils.getDBTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
+		@Entity("«ClassifierUtils.getDBTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»«options»)
 		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 		«IF Utils.isEntity(clazz)»«clazz.generateMultivaluedAttributesEntityDeclaration»«ENDIF»
 		'''
@@ -319,9 +320,10 @@ class PackageModelDaoClassGenerator{
 		val tableName = ClassifierUtils.getDBTableName(fromClass)+ "_" + PropertyUtils.getDatabaseName(property, property.name, "")
 		val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 		if (!PropertyUtils.isOneToManyAttributes(property)){
+			val options = fromClass.generateEntityDecoratorOption
 			'''
 			
-			@Entity("«tableName»", «PropertyUtils.getMultivaluedPropertyModelName(property,fromClass)»)
+			@Entity("«tableName»", «PropertyUtils.getMultivaluedPropertyModelName(property,fromClass)»«options»)
 			public «Utils.getFirstToLowerCase(entityName)»Entity: HornetSequelizeInstanceModel<any>;
 			'''
 		}else{
@@ -330,9 +332,10 @@ class PackageModelDaoClassGenerator{
 	}
 	
 	static def generateAssociationClassDeclaration(Classifier clazz){
+		val options = clazz.generateEntityDecoratorOption
 		'''
 		
-		@Entity("«ClassifierUtils.getDBTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»)
+		@Entity("«ClassifierUtils.getDBTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»«options»)
 		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 		'''
 	}
@@ -521,17 +524,32 @@ class PackageModelDaoClassGenerator{
 						}
 					}
 				}
-				
-				val owner = property.owner as Classifier
-							val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
-							val id = ClassifierUtils.getId(owner).get(0)
-							val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
-							val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
-							
-				'''
-				SequelizeUtils.initRelationHasMany({ fromEntity: this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, toEntity: this.«Utils.getFirstToLowerCase(type.name)»Entity, alias: "«name»", foreignKey: "«fieldName»" });
-				'''
+				if(PropertyUtils.isOneToManyAttributes(property)){
+					val owner = property.owner as Classifier
+					val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
+					val id = ClassifierUtils.getId(owner).get(0)
+					val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
+					val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+								
+					'''
+					SequelizeUtils.initRelationHasMany({ fromEntity: this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, toEntity: this.«Utils.getFirstToLowerCase(type.name)»Entity, alias: "«name»", foreignKey: "«fieldName»" });
+					'''
+				}else{
+					val owner = property.owner as Classifier
+					val id = ClassifierUtils.getId(owner).get(0)
+					val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
+					val fieldName = idDbName + "_" + Utils.toDbName(owner.name)
+					val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
+					val througTable = Utils.toDbName(fromClass.name) + "_" + PropertyUtils.getDatabaseName(property, property.name, "")	
 					
+					return generateInitRelationBelongsToMany(
+						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
+						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
+						'''"«name»"''',
+						'''"«fieldName»"''',
+						'''"«througTable»"'''	
+					)
+				}
 				
 			}else{
 				val idsProp = ClassifierUtils.getId(type)
@@ -710,8 +728,8 @@ class PackageModelDaoClassGenerator{
 	
 	static def generateAssociationRelations(Classifier clazz){
 		val model = clazz.model
-		
-		val associationsClasses = model.getOwnedTypes().filter[type|
+
+		val associationsClasses = model.allOwnedElements.filter[type|
 			if(type instanceof AssociationClass){
 				val members = type.ownedEnds
 				var isIn = false
@@ -1106,5 +1124,13 @@ class PackageModelDaoClassGenerator{
 		'''
 		SequelizeUtils.initRelationBelongsToMany({fromEntity: «fromEntity», toEntity: «toEntity», alias: «alias», foreignKey: «foreignKey», throughTable: «throughTable»});
 		'''
+	}
+	
+	/**
+	 * génère les options du décorateur entity
+	 */
+	static def generateEntityDecoratorOption(Classifier clazz){
+		val schema = ClassifierUtils.getSchema(clazz)
+		'''«IF schema !== null && schema != ""», {schema: "«schema»"}«ENDIF»'''
 	}
 }

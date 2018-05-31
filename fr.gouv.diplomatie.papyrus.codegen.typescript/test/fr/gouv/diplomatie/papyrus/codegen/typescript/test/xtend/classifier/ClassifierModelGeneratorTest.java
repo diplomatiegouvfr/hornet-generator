@@ -287,7 +287,7 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, -1);
 		
 		String expect ="\n" + 
-				"export var MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
+				"export const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
 				"	test: {\n" + 
 				"		type: Sequelize.STRING,\n" + 
 				"		field: \"TEST\",\n" + 
@@ -352,7 +352,7 @@ public class ClassifierModelGeneratorTest {
 		prop.getAssociation().createOwnedEnd("test2", class_);
 		
 		String expect = "\n" + 
-				"export var MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
+				"export const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
 				"	id2MaClasse2:{\n" + 
 				"		type: Sequelize.STRING,\n" + 
 				"		field: \"ID2_TEST\",\n" + 
@@ -435,7 +435,7 @@ public class ClassifierModelGeneratorTest {
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
-		String expect = "\nexport var MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
+		String expect = "\nexport const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
 				"	idMaClasse:{\n" + 
 				"		type: Sequelize.STRING,\n" + 
 				"		field: \"ID_MA_CLASSE\",\n" + 
@@ -578,7 +578,7 @@ public class ClassifierModelGeneratorTest {
 		class2_.applyStereotype(hmodel.nomenclature);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		
-		String expect = "\nexport var MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
+		String expect = "\nexport const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
 				"	idMaClasse:{\n" + 
 				"		type: Sequelize.STRING,\n" + 
 				"		field: \"ID\",\n" + 
@@ -616,7 +616,7 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		TestUtils.createAttribute(class2_, "test2", hmodel.stringPT, 0, 1);
 		
-		String expect = "\nexport var MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
+		String expect = "\nexport const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
 				"	idMaClasse:{\n" + 
 				"		type: Sequelize.STRING,\n" + 
 				"		field: \"ID\",\n" + 

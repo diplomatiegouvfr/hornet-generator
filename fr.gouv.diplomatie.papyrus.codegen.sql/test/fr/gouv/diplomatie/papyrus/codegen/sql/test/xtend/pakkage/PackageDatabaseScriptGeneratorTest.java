@@ -184,7 +184,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY \"AB\"\n" + 
 				"    ADD CONSTRAINT AB_TEST_IDS_FKEY \n" + 
 				"    FOREIGN KEY (\"ID2_TEST\") REFERENCES \"MA_CLASSE2\"(\"ID2\");\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateForeignKey(prop, "", "AB").toString());
+		assertEquals(expect, PackageDatabaseScriptGenerator.generateForeignKey(prop, "", "AB", "").toString());
 		
 	}
 
@@ -203,7 +203,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY \"AB\"\n" + 
 				"    ADD CONSTRAINT AB_TEST_CODE_FKEY \n" + 
 				"    FOREIGN KEY (\"CODE_TEST\") REFERENCES \"MA_CLASSE2\"(\"CODE\");\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateEnumForeignKey(prop, "", "AB").toString());
+		assertEquals(expect, PackageDatabaseScriptGenerator.generateEnumForeignKey(prop, "", "AB", "").toString());
 	}
 
 	@Test
@@ -368,7 +368,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "prop", hmodel.stringPT, 0, 1);
 		prop.applyStereotype(hmodel.sequence);
 		
-		String expect = "CREATE SEQUENCE MA_CLASSE_PROP_SEQ\n" + 
+		String expect = "CREATE SEQUENCE \"MA_CLASSE_PROP_SEQ\"\n" + 
 				"    START WITH 0\n" + 
 				"    INCREMENT BY 0\n" + 
 				"    NO MAXVALUE\n" + 
@@ -376,12 +376,12 @@ public class PackageDatabaseScriptGeneratorTest {
 				"    CACHE 0\n" + 
 				"    NO CYCLE;\n" + 
 				"    \n" + 
-				"ALTER SEQUENCE MA_CLASSE_PROP_SEQ \n" + 
+				"ALTER SEQUENCE \"MA_CLASSE_PROP_SEQ\"\n" + 
 				"	OWNED BY \"MA_CLASSE\".\"PROP\";\n" + 
 				"\n" + 
 				"ALTER TABLE ONLY \"MA_CLASSE\" \n" + 
 				"	ALTER COLUMN \"PROP\" \n" + 
-				"	SET DEFAULT nextval('MA_CLASSE_PROP_SEQ'::regclass);\n";
+				"	SET DEFAULT nextval('\"MA_CLASSE_PROP_SEQ\"'::regclass);\n";
 		assertEquals(expect, PackageDatabaseScriptGenerator.generateSequence(prop).toString());
 		
 		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceCache, 3);
@@ -393,7 +393,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceIncrementBy, 2);
 		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceStartWith, 4);
 
-		expect = "CREATE SEQUENCE MA_CLASSE_PROP_SEQ\n" + 
+		expect = "CREATE SEQUENCE \"MA_CLASSE_PROP_SEQ\"\n" + 
 				"    START WITH 4\n" + 
 				"    INCREMENT BY 2\n" + 
 				"    MAXVALUE 10\n" + 
@@ -401,12 +401,12 @@ public class PackageDatabaseScriptGeneratorTest {
 				"    CACHE 3\n" + 
 				"    CYCLE;\n" + 
 				"    \n" + 
-				"ALTER SEQUENCE MA_CLASSE_PROP_SEQ \n" + 
+				"ALTER SEQUENCE \"MA_CLASSE_PROP_SEQ\"\n" + 
 				"	OWNED BY \"MA_CLASSE\".\"PROP\";\n" + 
 				"\n" + 
 				"ALTER TABLE ONLY \"MA_CLASSE\" \n" + 
 				"	ALTER COLUMN \"PROP\" \n" + 
-				"	SET DEFAULT nextval('MA_CLASSE_PROP_SEQ'::regclass);\n";
+				"	SET DEFAULT nextval('\"MA_CLASSE_PROP_SEQ\"'::regclass);\n";
 		assertEquals(expect, PackageDatabaseScriptGenerator.generateSequence(prop).toString());
 	}
 
@@ -497,7 +497,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY \"MA_CLASSE\"\n" + 
 				"	ADD CONSTRAINT MA_CLASSE_CODE_TEST_CODE_FKEY \n" + 
 				"	FOREIGN KEY (\"CODE_TEST\") REFERENCES \"MA_CLASSE2\"(\"CODE\");\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateAssociationForeignKeysEnum(prop, class_));
+		assertEquals(expect, PackageDatabaseScriptGenerator.generateAssociationForeignKeysEnum(prop, class_, ""));
 	}
 
 	@Test

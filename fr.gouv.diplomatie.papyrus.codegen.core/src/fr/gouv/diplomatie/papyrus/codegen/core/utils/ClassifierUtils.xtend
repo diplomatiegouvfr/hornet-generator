@@ -331,7 +331,7 @@ class ClassifierUtils{
 						return end.isMultivalued && !otherEnd.isMultivalued
 					}
 					return false
-				}else if(attr.type == ofType){
+				}else if(attr.type == ofType && !attr.multivalued){
 					return true
 				}
 				return false
@@ -513,5 +513,14 @@ class ClassifierUtils{
 			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_NOMENCLATURE_TABLENAME)
 		}
 		return null
+	}
+	
+	/**
+	 * retourne le schema dans lequel se trouve la classe
+	 * retourne null si il n'y a pas de schema
+	 */
+	static def getSchema(Classifier clazz){
+		val pkg = clazz.package
+		return Utils.getSchemaName(pkg)
 	}
 }

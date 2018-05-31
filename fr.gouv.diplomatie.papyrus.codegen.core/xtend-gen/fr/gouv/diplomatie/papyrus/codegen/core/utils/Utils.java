@@ -96,6 +96,8 @@ public class Utils {
   
   public static String MODEL_DOMAIN = "domain";
   
+  public static String MODEL_DOMAIN_SCHEMA = "schema";
+  
   public static String MODEL_ENTITY = "entity";
   
   public static String MODEL_ENTITY_GENERATED = "generated";
@@ -163,6 +165,18 @@ public class Utils {
   public static String MODEL_APPLICATION_ROOTPACKAGE = "rootPackage";
   
   public static String MODEL_HORNETTYPE = "hornetType";
+  
+  public static Object getSchemaName(final org.eclipse.uml2.uml.Package pkg) {
+    boolean _isDomain = Utils.isDomain(pkg);
+    if (_isDomain) {
+      final Object schema = Utils.getStereotypePropertyValue(pkg, Utils.MODEL_DOMAIN, Utils.MODEL_DOMAIN_SCHEMA);
+      if (((!Objects.equal(schema, "")) && (schema != null))) {
+        return schema;
+      }
+      return null;
+    }
+    return null;
+  }
   
   public static String getDomainName(final Classifier clazz) {
     final org.eclipse.uml2.uml.Package classPckg = clazz.getPackage();

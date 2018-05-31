@@ -84,6 +84,7 @@ import java.io.File
 import java.util.ArrayList
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils
 import org.eclipse.uml2.uml.Type
+import org.eclipse.uml2.uml.Package
 import org.eclipse.uml2.uml.Classifier
 
 public class Utils{
@@ -91,6 +92,7 @@ public class Utils{
 	public static var console = new ConsoleUtils();
 		
 	public static var MODEL_DOMAIN = 'domain';
+	public static var MODEL_DOMAIN_SCHEMA = 'schema';
 	
 	public static var MODEL_ENTITY = 'entity';
 	public static var MODEL_ENTITY_GENERATED = 'generated';
@@ -137,6 +139,17 @@ public class Utils{
 	public static var MODEL_APPLICATION_ROOTPACKAGE = 'rootPackage';
 	
 	public static var MODEL_HORNETTYPE = 'hornetType';
+	
+	static def getSchemaName(Package pkg){
+		if(Utils.isDomain(pkg)){
+			val schema = Utils.getStereotypePropertyValue(pkg, Utils.MODEL_DOMAIN, Utils.MODEL_DOMAIN_SCHEMA)
+			if(schema!= "" && schema !== null){
+				return schema
+			}
+			return null
+		}
+		return null
+	}
 	
 	static def getDomainName(Classifier clazz){
 		val classPckg =clazz.package

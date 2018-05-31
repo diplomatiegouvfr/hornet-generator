@@ -20,7 +20,7 @@ public class NomenclatureModelGeneratorTest {
 		
 		String expect = "import Sequelize = require(\"sequelize\");\n" + 
 				"\n" + 
-				"export var maClasseModel: Sequelize.DefineAttributes={\n" + 
+				"export const maClasseModel: Sequelize.DefineAttributes={\n" + 
 				"	code: {\n" + 
 				"		type: Sequelize.INTEGER,\n" + 
 				"		field: \"CODE\",\n" + 

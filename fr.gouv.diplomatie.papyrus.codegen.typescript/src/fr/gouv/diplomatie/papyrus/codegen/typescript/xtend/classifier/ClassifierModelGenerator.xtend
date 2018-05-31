@@ -518,7 +518,7 @@ public class ClassifierModelGenerator {
 				val secondEnd = members.filter[member | member.type !== clazz].get(0)
 				return (Utils.isEntity(type) && (attribut.multivalued) && (firstEnd.isMultivalued) && (secondEnd.isMultivalued))
 			}else{
-				return false
+				return Utils.isEntity(type) && (attribut.multivalued)
 			} 
 		]
 		

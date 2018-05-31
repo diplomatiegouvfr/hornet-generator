@@ -371,9 +371,7 @@ public class ClassifierUtils {
             }
             return Boolean.valueOf(false);
           } else {
-            Type _type = attr.getType();
-            boolean _equals = Objects.equal(_type, ofType);
-            if (_equals) {
+            if ((Objects.equal(attr.getType(), ofType) && (!attr.isMultivalued()))) {
               return Boolean.valueOf(true);
             }
           }
@@ -575,5 +573,14 @@ public class ClassifierUtils {
       }
     }
     return null;
+  }
+  
+  /**
+   * retourne le schema dans lequel se trouve la classe
+   * retourne null si il n'y a pas de schema
+   */
+  public static Object getSchema(final Classifier clazz) {
+    final org.eclipse.uml2.uml.Package pkg = clazz.getPackage();
+    return Utils.getSchemaName(pkg);
   }
 }

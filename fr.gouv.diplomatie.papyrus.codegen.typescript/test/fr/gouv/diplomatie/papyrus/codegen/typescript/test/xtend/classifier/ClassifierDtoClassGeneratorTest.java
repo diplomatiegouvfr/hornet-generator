@@ -65,20 +65,7 @@ public class ClassifierDtoClassGeneratorTest {
 		assertEquals(expect, ClassifierDtoClassGenerator.generateOneToManyAttribute(prop, class_).toString());
 		
 	}
-	
-	@Test
-	public void testGenerateOneToManyAttributes() {
-		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
-		
-		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
-		class_.applyStereotype(hmodel.entity);
-		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
-		class2_.applyStereotype(hmodel.entity);
-		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
-		
-		String expect = ClassifierDtoClassGenerator.generateOneToManyAttribute(prop, class_).toString();
-		assertEquals(expect, ClassifierDtoClassGenerator.generateOneToManyAttributes(class2_).toString());
-	}
+
 
 	@Test
 	public void testGenerateImports() {
