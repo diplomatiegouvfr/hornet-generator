@@ -87,8 +87,6 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ModelUtils
-import org.eclipse.uml2.uml.Type
-import java.util.ArrayList
 import org.eclipse.uml2.uml.AssociationClass
 
 public class ClassifierAttributesInterfaceGenerator {
@@ -163,7 +161,14 @@ public class ClassifierAttributesInterfaceGenerator {
 	 * génère les imports
 	 */
 	static def generateImports(Classifier clazz){
-		val attributesTypes = clazz.generateAttributesImports(newArrayList())
+		
+		val options = new ClassifierUtils.ImportOptions
+		options.importInterface = true
+		options.importInterfaceAttributes = false
+		options.importValueObject = true
+		options.importValueObjectAttributes = true
+		
+		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz, newArrayList(), options)
 		'''
 		«clazz.generateExtendsImports»
 		«attributesTypes.fold("")[acc, type |
@@ -192,9 +197,9 @@ public class ClassifierAttributesInterfaceGenerator {
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
+/* 	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
 	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
-			(Utils.isEntity(attribut.type))
+			((Utils.isEntity(attribut.type)) && (attribut.type !== clazz))
 		]
 		
 		val attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
@@ -207,14 +212,14 @@ public class ClassifierAttributesInterfaceGenerator {
 		if(Utils.isEntity(clazz)){
 			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
 			for(attribut : oneToManyAttributes){
-				if(!types.contains(attribut.owner)){
+				if(!types.contains(attribut.owner) && (attribut.owner != clazz)){
 					types.add(attribut.owner as Classifier)
 				}
 			}
 			
 			val manyToManyAttributes = ClassifierUtils.getManyToManyAttributes(clazz)
 			for(attribut : manyToManyAttributes){
-				if(!types.contains(attribut.owner)){
+				if(!types.contains(attribut.owner) && (attribut.owner != clazz)){
 					types.add(attribut.owner as Classifier)
 				}
 			}
@@ -261,7 +266,7 @@ public class ClassifierAttributesInterfaceGenerator {
 		]
 		return types
 	 }
-	
+*/	
 	/**
 	 * génère les extends
 	 */

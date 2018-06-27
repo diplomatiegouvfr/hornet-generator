@@ -85,8 +85,6 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
-import org.eclipse.uml2.uml.Type
-import java.util.ArrayList
 import org.eclipse.uml2.uml.AssociationClass
 
 public class ClassifierMetierClassGenerator {
@@ -165,7 +163,14 @@ public class ClassifierMetierClassGenerator {
 	 * génère les imports
 	 */
 	static def generateImports(Classifier clazz){
-		val attributesTypes = clazz.generateAttributesImports(newArrayList(), clazz)
+		
+		val options = new ClassifierUtils.ImportOptions
+		options.importInterface = true
+		options.importInterfaceAttributes = true
+		options.importValueObject = true
+		options.importValueObjectAttributes = false
+		
+		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz,newArrayList(), options)
 		'''
 		«clazz.generateExtendsImports»
 		«attributesTypes.fold("")[acc, type |
@@ -217,7 +222,7 @@ public class ClassifierMetierClassGenerator {
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types, Classifier fromClass){
+/* 	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types, Classifier fromClass){
 	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
@@ -272,7 +277,7 @@ public class ClassifierMetierClassGenerator {
 		
 		
 		
-		/* ajout des import pour les classes d'association*/ 
+		/ ajout des import pour les classes d'association/ 
 		if(Utils.isEntity(fromClass)){
 			val associationsClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
 			
@@ -285,6 +290,7 @@ public class ClassifierMetierClassGenerator {
 		}
 		return types
 	 }
+	 */
 	 
 	 /**
 	 * génère les extends

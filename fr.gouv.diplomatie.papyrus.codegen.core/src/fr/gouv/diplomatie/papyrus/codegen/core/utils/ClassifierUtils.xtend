@@ -85,6 +85,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils
 import org.eclipse.uml2.uml.AssociationClass
 import java.io.File
 import java.util.ArrayList
+import org.eclipse.uml2.uml.Type
 
 class ClassifierUtils{
 	
@@ -497,6 +498,115 @@ class ClassifierUtils{
 		
 			return classPath
 		}
+	}
+	
+	
+	/**
+	 * options de la méthodes d'import
+	 */
+	public static class ImportOptions{
+		//import de la classe d'interface
+		public Boolean importInterface
+		//import des classes liées aux attributs de l'interface
+		public Boolean importInterfaceAttributes
+		//import de la classe de type valueObject
+		public Boolean importValueObject
+		//import des classes liées aux attributs de la classe de type valueObject
+		public Boolean importValueObjectAttributes
+	}
+	
+	/**
+	 * classes nécessaires a importer liées aux attributs dans les classes
+	 */
+	static def ArrayList<Type> getAttributesImport (Classifier clazz, 
+		Classifier fromClass,
+		ArrayList<Type> types,
+		ImportOptions options
+	){
+		
+		// classes d'entité liées aux attributs
+		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			((Utils.isEntity(attribut.type)) && (attribut.type !== clazz))
+		]
+		
+		// classes d'enum liées aux attributs
+		val attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			(Utils.isNomenclature(attribut.type))
+		]
+		
+		// classes valueobject liées aux attributs
+		val attributesValueObject = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+			(Utils.isValueObject(attribut.type))
+		]
+		
+		if(Utils.isEntity(clazz)){
+			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
+			for(attribut : oneToManyAttributes){
+				if(!types.contains(attribut.owner) && (attribut.owner != clazz)){
+					types.add(attribut.owner as Classifier)
+				}
+			}
+			
+			val manyToManyAttributes = ClassifierUtils.getManyToManyAttributes(clazz)
+			for(attribut : manyToManyAttributes){
+				if(!types.contains(attribut.owner) && (attribut.owner != clazz)){
+					types.add(attribut.owner as Classifier)
+				}
+			}
+		}
+		
+		val interfaces = clazz.directlyRealizedInterfaces
+		
+		for(attribut : attributes){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
+			}
+		}
+		
+		for(attribut : attributesEnums){
+			if(!types.contains(attribut.type)){
+				types.add(attribut.type)
+			}
+		}
+		
+		//atributs venant des interfaces
+		for(interface : interfaces){
+			if(options.importInterface){
+				if(!types.contains(interface)){
+					types.add(interface)
+				}
+			}
+			if(options.importInterfaceAttributes){
+				interface.getAttributesImport(fromClass, types, options)
+			}
+			
+		}
+		
+		if(Utils.isEntity(fromClass)){
+			val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
+			
+			assosiationClasses.forEach[asso |
+				if(!types.contains(asso)){
+					types.add(asso)
+				}
+			]
+		}
+	
+		attributesValueObject.forEach[attribut |
+			var type = attribut.type
+			if(options.importValueObject){
+				if(!types.contains(type)){
+					types.add(type)
+				}
+			}
+			if(options.importValueObjectAttributes){
+				if(type instanceof Classifier){
+					type.getAttributesImport(fromClass, types, options)
+				}
+			}	
+			
+		]
+		return types
 	}
 	
 	/**                                                        *

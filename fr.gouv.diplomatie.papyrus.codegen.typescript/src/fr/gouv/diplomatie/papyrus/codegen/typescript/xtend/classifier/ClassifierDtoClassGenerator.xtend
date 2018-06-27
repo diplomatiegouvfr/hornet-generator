@@ -169,7 +169,14 @@ public class ClassifierDtoClassGenerator{
 	 * génère les imports
 	 */
 	static def generateImports(Classifier clazz){
-		val attributesTypes = clazz.generateAttributesImports(newArrayList())
+		
+		val options = new ClassifierUtils.ImportOptions
+		options.importInterface = false
+		options.importInterfaceAttributes = true
+		options.importValueObject = false
+		options.importValueObjectAttributes = true
+		
+		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz,  newArrayList(), options)
 		'''
 		«clazz.generateExtendsImports»
 		«attributesTypes.fold("")[acc, type |
@@ -198,7 +205,7 @@ public class ClassifierDtoClassGenerator{
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
+/* 	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
 	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
@@ -209,8 +216,6 @@ public class ClassifierDtoClassGenerator{
 		val attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isNomenclature(attribut.type))
 		]
-		
-		
 		
 		val interfaces = clazz.directlyRealizedInterfaces
 		
@@ -264,7 +269,7 @@ public class ClassifierDtoClassGenerator{
 		]
 		return types
 	 }
-	 
+*/	 
 	 /**
 	 * génère les extends
 	 */

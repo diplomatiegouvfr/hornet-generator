@@ -78,11 +78,14 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.AttributeOwner;
 import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
@@ -94,6 +97,19 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 @SuppressWarnings("all")
 public class ClassifierUtils {
+  /**
+   * options de la méthodes d'import
+   */
+  public static class ImportOptions {
+    public Boolean importInterface;
+    
+    public Boolean importInterfaceAttributes;
+    
+    public Boolean importValueObject;
+    
+    public Boolean importValueObjectAttributes;
+  }
+  
   /**
    * retourne le nom de la classe modèle liée à la classe
    */
@@ -557,6 +573,99 @@ public class ClassifierUtils {
       return classPath;
     }
     return null;
+  }
+  
+  /**
+   * classes nécessaires a importer liées aux attributs dans les classes
+   */
+  public static ArrayList<Type> getAttributesImport(final Classifier clazz, final Classifier fromClass, final ArrayList<Type> types, final ClassifierUtils.ImportOptions options) {
+    final Function1<Property, Boolean> _function = (Property attribut) -> {
+      return Boolean.valueOf((Utils.isEntity(attribut.getType()) && (attribut.getType() != clazz)));
+    };
+    final Iterable<Property> attributes = IterableExtensions.<Property>filter(ClassifierUtils.getOwnedAttributes(clazz), _function);
+    final Function1<Property, Boolean> _function_1 = (Property attribut) -> {
+      return Boolean.valueOf(Utils.isNomenclature(attribut.getType()));
+    };
+    final Iterable<Property> attributesEnums = IterableExtensions.<Property>filter(ClassifierUtils.getOwnedAttributes(clazz), _function_1);
+    final Function1<Property, Boolean> _function_2 = (Property attribut) -> {
+      return Boolean.valueOf(Utils.isValueObject(attribut.getType()));
+    };
+    final Iterable<Property> attributesValueObject = IterableExtensions.<Property>filter(ClassifierUtils.getOwnedAttributes(clazz), _function_2);
+    boolean _isEntity = Utils.isEntity(clazz);
+    if (_isEntity) {
+      final ArrayList<Property> oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz);
+      for (final Property attribut : oneToManyAttributes) {
+        if (((!types.contains(attribut.getOwner())) && (!Objects.equal(attribut.getOwner(), clazz)))) {
+          Element _owner = attribut.getOwner();
+          types.add(((Classifier) _owner));
+        }
+      }
+      final ArrayList<Property> manyToManyAttributes = ClassifierUtils.getManyToManyAttributes(clazz);
+      for (final Property attribut_1 : manyToManyAttributes) {
+        if (((!types.contains(attribut_1.getOwner())) && (!Objects.equal(attribut_1.getOwner(), clazz)))) {
+          Element _owner_1 = attribut_1.getOwner();
+          types.add(((Classifier) _owner_1));
+        }
+      }
+    }
+    final EList<Interface> interfaces = clazz.directlyRealizedInterfaces();
+    for (final Property attribut_2 : attributes) {
+      boolean _contains = types.contains(attribut_2.getType());
+      boolean _not = (!_contains);
+      if (_not) {
+        types.add(attribut_2.getType());
+      }
+    }
+    for (final Property attribut_3 : attributesEnums) {
+      boolean _contains_1 = types.contains(attribut_3.getType());
+      boolean _not_1 = (!_contains_1);
+      if (_not_1) {
+        types.add(attribut_3.getType());
+      }
+    }
+    for (final Interface interface_ : interfaces) {
+      {
+        if ((options.importInterface).booleanValue()) {
+          boolean _contains_2 = types.contains(interface_);
+          boolean _not_2 = (!_contains_2);
+          if (_not_2) {
+            types.add(interface_);
+          }
+        }
+        if ((options.importInterfaceAttributes).booleanValue()) {
+          ClassifierUtils.getAttributesImport(interface_, fromClass, types, options);
+        }
+      }
+    }
+    boolean _isEntity_1 = Utils.isEntity(fromClass);
+    if (_isEntity_1) {
+      final ArrayList<Type> assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz);
+      final Consumer<Type> _function_3 = (Type asso) -> {
+        boolean _contains_2 = types.contains(asso);
+        boolean _not_2 = (!_contains_2);
+        if (_not_2) {
+          types.add(asso);
+        }
+      };
+      assosiationClasses.forEach(_function_3);
+    }
+    final Consumer<Property> _function_4 = (Property attribut_4) -> {
+      Type type = attribut_4.getType();
+      if ((options.importValueObject).booleanValue()) {
+        boolean _contains_2 = types.contains(type);
+        boolean _not_2 = (!_contains_2);
+        if (_not_2) {
+          types.add(type);
+        }
+      }
+      if ((options.importValueObjectAttributes).booleanValue()) {
+        if ((type instanceof Classifier)) {
+          ClassifierUtils.getAttributesImport(((Classifier)type), fromClass, types, options);
+        }
+      }
+    };
+    attributesValueObject.forEach(_function_4);
+    return types;
   }
   
   /**

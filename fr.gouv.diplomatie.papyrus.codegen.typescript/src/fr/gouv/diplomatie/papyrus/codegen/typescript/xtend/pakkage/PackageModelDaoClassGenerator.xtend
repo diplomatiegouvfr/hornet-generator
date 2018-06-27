@@ -472,13 +472,14 @@ class PackageModelDaoClassGenerator{
 					val ids = ClassifierUtils.getId(fromClass)
 					'''«ids.fold("")[acc, id |
 						//val idName = Utils.toSnakeCase(id.name + Utils.getFirstToUpperCase(fromClass.name))
+						val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 						val idName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" +Utils.toDbName(fromClass.name)
 						acc + generateInitRelationBelongsToMany(
 							'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 							'''this.«Utils.getFirstToLowerCase(tableName)»Entity''',
 							'''"«propName»"''',
 							'''"«idName»"''',
-							'''"«Utils.toDbName(tableName)»"'''
+							'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
 						)
 					]»'''
 				}else{
@@ -510,13 +511,13 @@ class PackageModelDaoClassGenerator{
 							return '''
 							«ids.fold("")[acc, id |
 								val idName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + Utils.toDbName(fromClass.name)
-								
+								val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 								acc + generateInitRelationBelongsToMany(
 									'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 									'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 									'''"«name»"''',
 									'''"«idName»"''',
-									'''"«Utils.toDbName(tableName)»"'''
+									'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
 								)
 							]»
 							'''
@@ -539,15 +540,15 @@ class PackageModelDaoClassGenerator{
 					val id = ClassifierUtils.getId(owner).get(0)
 					val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
 					val fieldName = idDbName + "_" + Utils.toDbName(owner.name)
-					val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
 					val througTable = Utils.toDbName(fromClass.name) + "_" + PropertyUtils.getDatabaseName(property, property.name, "")	
+					val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 					
 					return generateInitRelationBelongsToMany(
 						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 						'''"«name»"''',
 						'''"«fieldName»"''',
-						'''"«througTable»"'''	
+						'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''	
 					)
 				}
 				
@@ -579,6 +580,7 @@ class PackageModelDaoClassGenerator{
 	static def generateEnumRelation(Property property, Classifier fromClass, String additionnalName, String databaseAddName){
 		val type = property.type
 		val tableName = Utils.toDbName(fromClass.name) + "_" + PropertyUtils.getDatabaseName(property, property.name, "")
+		val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 		val name = Utils.addAdditionnalName(additionnalName, property.name)
 		val propName = PropertyUtils.getDatabaseName(property, property.name, databaseAddName)
 		if(property.multivalued){
@@ -591,7 +593,7 @@ class PackageModelDaoClassGenerator{
 					'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 					'''"«name»"''',
 					'''"«idName»"''',
-					'''"«tableName»"'''
+					'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
 				)
 			]»
 			'''
@@ -610,6 +612,7 @@ class PackageModelDaoClassGenerator{
 	 */
 	static def generatePTRelation(Property property, Classifier fromClass, String additionnalName){
 		val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
+		val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 		val ids = ClassifierUtils.getId(fromClass)
 		'''
 		«ids.fold("")[acc, id |
@@ -619,7 +622,7 @@ class PackageModelDaoClassGenerator{
 				'''this.«Utils.getFirstToLowerCase(tableName)»Entity''',
 				'''"«property.name»"''',
 				'''"«idName»"''',
-				'''"«Utils.toDbName(tableName)»"'''
+				'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
 			)
 		]»
 		'''
@@ -647,7 +650,7 @@ class PackageModelDaoClassGenerator{
 				
 				val name = Utils.addAdditionnalName(additionnalName, property.name)
 				val tableName = Utils.addAdditionnalName(fromClass.name, name)
-				
+				val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 				if(property.multivalued){
 					val ids = ClassifierUtils.getId(fromClass)
 					'''«ids.fold("")[acc, id |
@@ -657,8 +660,8 @@ class PackageModelDaoClassGenerator{
 							'''this.«Utils.getFirstToLowerCase(tableName)»Entity''',
 							'''"«name»"''',
 							'''"«idName»"''',
-							'''"«Utils.toDbName(tableName)»"'''
-						)
+							'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
+						)//"«Utils.toDbName(tableName)»"
 					]»'''
 				}else{
 					'''«type.generateForeignRelations(fromClass, name)»'''
@@ -692,13 +695,14 @@ class PackageModelDaoClassGenerator{
 							name = member.get(0).name
 						}
 						val tableName = owner.name + Utils.getFirstToUpperCase(Utils.addAdditionnalName(additionnalName, property.name))
+						val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 						acc + generateInitRelationBelongsToMany(
 							'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 							'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
 							'''"«name»"''',
 							'''"«idName»"''',
-							'''"«Utils.toDbName(tableName)»"'''
-						)
+							'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
+						)//"«Utils.toDbName(tableName)»"
 					]»
 					'''
 				}else{
@@ -808,12 +812,13 @@ class PackageModelDaoClassGenerator{
 			if(Utils.isEntity(type)){
 				val id = ClassifierUtils.getId(type).get(0)
 				val otherKeyName = PropertyUtils.getDatabaseName(id, id.name,"")+ "_" +  Utils.toDbName(type.name)
+				
 				acc + generateInitRelationBelongsToMany(
 					'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 					'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 					'''"«test.get(0).name»"''',
 					'''"«name»"''',
-					'''"«Utils.toDbName(clazz.name)»"''',
+					'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
 					'''"«otherKeyName»"'''
 				)
 			}else{
@@ -822,7 +827,7 @@ class PackageModelDaoClassGenerator{
 					'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 					'''"«test.get(0).name»"''',
 					'''"«name»"''',
-					'''"«Utils.toDbName(clazz.name)»"'''
+					'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity'''
 				)
 			}
 			
@@ -851,7 +856,7 @@ class PackageModelDaoClassGenerator{
 				'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
 				'''"«member.name»"''',
 				'''"«name»"''',
-				'''"«Utils.toDbName(clazz.name)»"'''
+				'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity'''
 			)
 		]»
 		'''
@@ -908,14 +913,16 @@ class PackageModelDaoClassGenerator{
 					name = member.get(0).name
 				}
 				val tableName = owner.name + Utils.getFirstToUpperCase(Utils.addAdditionnalName(additionnalName, property.name))
+				
+				val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 				if(property.multivalued){
 					generateInitRelationBelongsToMany(
 						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 						'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
 						'''"«Utils.toDbName(name)»"''',
 						'''"CODE"''',
-						'''"«Utils.toDbName(tableName)»"'''
-					)
+						'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
+					)//"«Utils.toDbName(tableName)»"
 				}else{
 					 generateInitRelationBelongsTo(
 						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',

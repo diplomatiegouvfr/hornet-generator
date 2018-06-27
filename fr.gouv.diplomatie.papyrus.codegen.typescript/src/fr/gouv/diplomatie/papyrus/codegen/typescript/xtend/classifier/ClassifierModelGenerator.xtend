@@ -515,7 +515,13 @@ public class ClassifierModelGenerator {
 			if(association !== null){
 				val members = association.memberEnds
 				val firstEnd = members.filter[member | member.type == clazz].get(0)
-				val secondEnd = members.filter[member | member.type !== clazz].get(0)
+				var secondEnd = firstEnd
+				val secondEndMembers = members.filter[member | member.type !== clazz]
+ 				if(secondEndMembers === null || secondEndMembers.empty){
+					secondEnd = members.filter[member | member.type == clazz].get(1)
+				}else{
+					secondEnd = secondEndMembers.get(0)
+				}
 				return (Utils.isEntity(type) && (attribut.multivalued) && (firstEnd.isMultivalued) && (secondEnd.isMultivalued))
 			}else{
 				return Utils.isEntity(type) && (attribut.multivalued)
