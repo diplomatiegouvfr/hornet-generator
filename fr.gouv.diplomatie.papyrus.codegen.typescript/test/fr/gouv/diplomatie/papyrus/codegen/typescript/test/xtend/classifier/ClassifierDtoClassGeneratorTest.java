@@ -99,23 +99,6 @@ public class ClassifierDtoClassGeneratorTest {
 	}
 
 	@Test
-	public void testGenerateAttributesImports() {
-		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
-		
-		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
-		class_.applyStereotype(hmodel.entity);
-		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
-		class2_.applyStereotype(hmodel.entity);
-		TestUtils.createAttribute(class_, "test", class2_, 0, -1);
-		
-		ArrayList<Type> expect = new ArrayList<Type>();
-		expect.add(class2_);
-		
-		ArrayList<Type> list = new ArrayList<Type>();
-		assertEquals(expect, ClassifierDtoClassGenerator.generateAttributesImports(class_, list));
-	}
-
-	@Test
 	public void testGenerateExtends() {
 		HornetModelTypescript hmodel = HornetModelTypescript.initModel();	
 		

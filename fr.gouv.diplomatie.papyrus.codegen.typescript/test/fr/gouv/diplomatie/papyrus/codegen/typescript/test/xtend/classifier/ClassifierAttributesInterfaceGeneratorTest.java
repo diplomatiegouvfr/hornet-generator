@@ -14,6 +14,7 @@ import org.junit.Test;
 import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.test.TestUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils.ImportOptions;
 import fr.gouv.diplomatie.papyrus.codegen.typescript.test.testutils.HornetModelTypescript;
 import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierAttributesInterfaceGenerator;
 
@@ -85,24 +86,6 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 		String expect = "import { maClasse2Attributes } from \"" + path +"\";\n";
 		
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateExtendsImports(class_).toString());
-	}
-
-	@Test
-	public void testGenerateAttributesImports() {
-		HornetModelTypescript hmodel = HornetModelTypescript.initModel();
-				
-		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
-		class_.applyStereotype(hmodel.entity);
-		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
-		class2_.applyStereotype(hmodel.entity);
-		
-		TestUtils.createAttribute(class_, "test", class2_, 0, 1);
-				
-		ArrayList<Type> expect = new ArrayList<Type>();
-		expect.add(class2_);
-		
-		ArrayList<Type> list = new ArrayList<Type>();
-		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateAttributesImports(class_, list));		
 	}
 
 	@Test
