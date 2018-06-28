@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.1.0
+ * @version v1.1.3
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.associationClass
@@ -105,7 +105,14 @@ public class AssociationClassAttributesInterfaceGenerator{
 	 * génère les imports
 	 */
 	static def generateImports(AssociationClass clazz){
-		val attributesTypes = clazz.generateAttributesImports(newArrayList())
+		//val attributesTypes = clazz.generateAttributesImports(newArrayList())
+		val options = new ClassifierUtils.ImportOptions
+		options.importInterface = true
+		options.importInterfaceAttributes = false
+		options.importValueObject = true
+		options.importValueObjectAttributes = true
+		
+		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz, newArrayList(), options)
 		'''
 		«attributesTypes.fold("")[acc, type |
 			acc +  '''
@@ -118,8 +125,8 @@ public class AssociationClassAttributesInterfaceGenerator{
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-	 static  def Type [] generateAttributesImports(Classifier clazz, ArrayList<Type> types){
-	 			var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
+/* 	 static  def Type [] generateAttributesImports(Classifier clazz, ArrayList<Type> types){
+	 	var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
 		
@@ -165,7 +172,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 		]
 		return types
 	 }
-	 
+*/	 
 	 static def generateAttributes(Classifier clazz, String additionnalName){
 	 	var attributes = ClassifierUtils.getOwnedAttributes(clazz)
 	 	if(clazz instanceof AssociationClass){
