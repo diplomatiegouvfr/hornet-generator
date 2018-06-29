@@ -669,6 +669,7 @@ public class ClassifierJPAEntityGenerator {
       String name = Utils.addAdditionnalName(additionnalName, property.getName());
       final EnumerationLiteralImpl fetchType = JavaPluginUtils.getFetchType(property);
       final boolean nullable = PropertyUtils.isNullable(property);
+      final Object shouldbeNull = JavaPluginUtils.getShouldBeNull(property);
       String array = "";
       String link = "";
       String endArray = "";
@@ -816,7 +817,7 @@ public class ClassifierJPAEntityGenerator {
                 _builder_2.newLineIfNotEmpty();
               } else {
                 {
-                  if ((nullable == false)) {
+                  if (((nullable == false) && (shouldbeNull != Boolean.valueOf(true)))) {
                     _builder_2.append("@NotNull");
                   }
                 }

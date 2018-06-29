@@ -406,6 +406,7 @@ public class ClassifierJPAEntityGenerator {
 		var name = Utils.addAdditionnalName(additionnalName, property.name)
 		val fetchType = JavaPluginUtils.getFetchType(property)
 		val nullable = PropertyUtils.isNullable(property)
+		val shouldbeNull = JavaPluginUtils.getShouldBeNull(property)
 		var array =""
 		var link=""
 		var endArray =""
@@ -477,7 +478,7 @@ public class ClassifierJPAEntityGenerator {
 		«link»«ELSEIF isAsso»
 		«property.generateAssociationAnnotation(fromClass)»
 		«ELSE»
-		«IF nullable == false»@NotNull«ENDIF»
+		«IF nullable == false && shouldbeNull !==true»@NotNull«ENDIF»
 		@Column(name = "«columnName»")
 		«ENDIF»«ENDIF»
 		«property.visibility.getName» «array»«typeName»«endArray» «name»;
