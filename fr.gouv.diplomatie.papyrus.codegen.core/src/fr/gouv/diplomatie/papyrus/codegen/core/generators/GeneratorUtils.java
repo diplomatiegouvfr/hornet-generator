@@ -86,8 +86,13 @@ import org.eclipse.uml2.uml.Package;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
+/**
+ * classe utilitaire pour les noms et chemins de fichier
+ *
+ */
 public class GeneratorUtils {
 
+	public static Boolean outGenerationDir = false;
 	
 	public static final String SRC_REPOSITORY = "src-gen" + File.separator;
 	public static final String SRC_INCODE_REPOSITORY = "src" + File.separator;
@@ -100,6 +105,10 @@ public class GeneratorUtils {
 	public static final String DAO_REPOSITORY = SRC_REPOSITORY  + "dao" + File.separator ;
 	public static final String DAO_INCODE_REPOSITORY = SRC_INCODE_REPOSITORY  + "dao" + File.separator ;
 	
+	public static void setOutGenerationDir(Boolean value) {
+		outGenerationDir = value;
+	}
+	
 	/**
 	 * chemin du fichier contenant la classe modèle de la classe clazz
 	 * @param clazz
@@ -107,7 +116,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getModelPath(Classifier clazz, Boolean inCode) {
-		if(inCode) {
+		if(inCode && outGenerationDir) {
 			return MODEL_INCODE_REPOSITORY +  "models" + File.separator  + Utils.toTypescriptFileName(clazz.getName()) + "-model";
 		}
 		return MODEL_REPOSITORY +  "models" + File.separator  + Utils.toTypescriptFileName(clazz.getName())+ "-model";
@@ -120,7 +129,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getAttributesInterfacePath(Classifier clazz, Boolean inCode) {
-		if(inCode) {
+		if(inCode && outGenerationDir) {
 			return MODEL_INCODE_REPOSITORY +  "attributes" + File.separator + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
 		}
 		return MODEL_REPOSITORY +  "attributes" + File.separator + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
@@ -133,7 +142,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getMetierClassPath(Classifier clazz, Boolean inCode) {
-		if(inCode) {
+		if(inCode && outGenerationDir) {
 			return MODEL_INCODE_REPOSITORY +  "metier" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
 		}
 		return MODEL_REPOSITORY +  "metier" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
@@ -146,7 +155,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getDtoClassPath(Classifier clazz, Boolean inCode) {
-		if(inCode) {
+		if(inCode && outGenerationDir) {
 			return MODEL_INCODE_REPOSITORY +  "dto" + File.separator  + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
 		}
 		return MODEL_REPOSITORY +  "dto" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
@@ -175,7 +184,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getModelDaoPath(Package pakkage, Boolean inCode) {
-		if(inCode) {
+		if(inCode && outGenerationDir) {
 			return DAO_INCODE_REPOSITORY + "model-dao";
 		}
 		return DAO_REPOSITORY + "model-dao";
@@ -188,7 +197,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getEnumPath(Classifier clazz, Boolean inCode) {
-		if(inCode) {
+		if(inCode && outGenerationDir) {
 			return MODEL_INCODE_REPOSITORY + Utils.toTypescriptFileName(clazz.getName()) + "-enum";
 		}
 		return MODEL_REPOSITORY  +Utils.toTypescriptFileName(clazz.getName())+ "-enum";

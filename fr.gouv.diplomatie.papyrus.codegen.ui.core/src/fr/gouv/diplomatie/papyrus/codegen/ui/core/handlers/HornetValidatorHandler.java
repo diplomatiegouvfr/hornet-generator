@@ -70,49 +70,94 @@
  */
 
 /**
- * fr.gouv.diplomatie.papyrus.codegen.ui - Interface papyrus pour lancer 
- * le générateur Hornet JS
+ * fr.gouv.diplomatie.papyrus.codegen.ui.core - Outils pour l'écriture d'interface papyrus
+ * de générateur 
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
  * @version v1.1.3
  * @license CECILL-2.1
  */
-package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
+package fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.papyrus.uml.diagram.common.handlers.CmdHandler;
+import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators.LombokAnnotationGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.java.transformations.ProjectJPAEntityElementsCreator;
-import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;
-import fr.gouv.diplomatie.papyrus.codegen.ui.validators.JavaPluginModelValidator;
+import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
+import fr.gouv.diplomatie.papyrus.codegen.ui.core.validator.HornetModelValidator;
 
-public class GenerateJPAEntityHandler extends HornetCodeHandler {
+/**
+ * Classe appelée par le menu de l'ui Papyrus
+ * permettant le lancement de la validation du modèle Papyrus
+ *
+ */
+public abstract class HornetValidatorHandler extends CmdHandler {
+	
+	protected ConsoleUtils console= new ConsoleUtils();
+	protected HornetModelValidator validator;
+	
+	protected String validationSuccessMessage = "Modèle valide";
+	protected String validationFailMessage = "Modèle invalide";
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		
+		if(selectedEObject instanceof PackageableElement) {
+			PackageableElement packageableElement = (PackageableElement) selectedEObject;
+			this.initiateValidator();
+			ArrayList<String> validationErrors = validator.validate(packageableElement, console);
+			ArrayList<String> validationWarnings = validator.warnings;
+			for(String warning : validationWarnings) {
+				console.warning.println(warning);
+			}
+			if(validationErrors.isEmpty()) {
+				console.success.println(validationSuccessMessage);
+			}else {
+				console.err.println(validationFailMessage);
+				for(String error : validationErrors) {
+					console.err.println(error);
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * initialisation du validateur
+	 */
+	protected abstract void initiateValidator();
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isEnabled() {
+		updateSelectedEObject();
 
-	public GenerateJPAEntityHandler() {
-		super();
-		this.message = "= executing Generate JPA Entity Handler";
+        if (selectedEObject instanceof Package || selectedEObject instanceof Classifier) {
+            URI uri = selectedEObject.eResource().getURI();
+            
+            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+            if (uri.segmentCount() < 2) {
+                return false;
+            }
+            IProject modelProject = root.getProject(uri.segment(1));
+            return modelProject.exists();
+        }
+
+        return false;
 	}
-	
-	@Override
-	protected void initValidator() {
-		validator = new JavaPluginModelValidator();
-	}
-	
-	@Override
-	public void initiateAndGenerate(IProject project, PackageableElement packageableElement) {
-		this.creator = new ProjectJPAEntityElementsCreator(project);
-		((ProjectJPAEntityElementsCreator)this.creator).addAnnotationGenerator(new LombokAnnotationGenerator());
-		generate(packageableElement);
-	}
-	
-	public void generate(PackageableElement packageableElement) {
-		console.out.println("JPA Entity Handler : generate()");
-		creator.createPackageableElement(packageableElement, null, true);
-	}
-	
+
 }

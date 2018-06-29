@@ -90,6 +90,9 @@ import org.eclipse.xtext.xbase.lib.Functions.Function2;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.StringExtensions;
 
+/**
+ * classe utilitaire
+ */
 @SuppressWarnings("all")
 public class Utils {
   public static ConsoleUtils console = new ConsoleUtils();

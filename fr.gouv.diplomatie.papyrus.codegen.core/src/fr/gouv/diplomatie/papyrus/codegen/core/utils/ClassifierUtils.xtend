@@ -87,7 +87,10 @@ import java.io.File
 import java.util.ArrayList
 import org.eclipse.uml2.uml.Type
 
-class ClassifierUtils{
+/**
+ * classe utilitaire pour les Classifier
+ */
+class ClassifierUtils {
 	
 	/**
 	 * retourne le nom de la classe modèle liée à la classe

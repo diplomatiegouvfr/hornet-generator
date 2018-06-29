@@ -71,6 +71,9 @@ package fr.gouv.diplomatie.papyrus.codegen.core.utils;
 
 import org.eclipse.uml2.uml.AssociationClass;
 
+/**
+ * classe utilitaire pour les AssociationClass
+ */
 @SuppressWarnings("all")
 public class AssociationClassUtils {
   /**

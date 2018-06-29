@@ -91,6 +91,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
 import org.eclipse.papyrus.uml.diagram.common.handlers.CmdHandler;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
@@ -98,11 +101,27 @@ import org.eclipse.uml2.uml.PackageableElement;
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
 import fr.gouv.diplomatie.papyrus.codegen.ui.core.validator.HornetModelValidator;
 
+/**
+ * Classe appelée par le menu de l'ui Papyrus
+ * permettant le lancement de la génération du code Hornet
+ *
+ */
 public abstract class HornetCodeHandler extends CmdHandler {
 	
-	protected ModelElementsCreator creator;
 	protected String message = "= executing Generate Code Handler";
+	protected String validationSucessMessage = "Modèle valide";
+	protected String validationFailMessage = "Modèle invalide";
+	protected String generationEndMessage = "Génération terminée";
+	
+	protected String dialogName = "Génération";
+	protected String dialogMessage = "Voulez vous utiliser src dans les imports plutot que src-gen? ";
+	
+	protected ModelElementsCreator creator;
 	protected ConsoleUtils console= new ConsoleUtils();
+	protected Boolean outGenerationDir = false;
+	protected Boolean askOutGenerationDir = false;
+	
+	protected HornetModelValidator validator;
 
 	/**
 	 * {@inheritDoc}
@@ -112,7 +131,6 @@ public abstract class HornetCodeHandler extends CmdHandler {
 		console.out.println(this.message);
 		
 		if(selectedEObject instanceof PackageableElement) {
-			console.out.println("= selected Object is a PackageableElement");
 			PackageableElement packageableElement = (PackageableElement) selectedEObject;
 			
 			IProject project = getCurrentProject();
@@ -129,25 +147,65 @@ public abstract class HornetCodeHandler extends CmdHandler {
 		return null;
 	}
 	
-	public void validateAndGenerate(IProject project, PackageableElement packageableElement) {
-		HornetModelValidator validator = new HornetModelValidator();
+	/**
+	 * valide le modèle puis lance la génération
+	 * @param project
+	 * @param packageableElement
+	 */
+	protected void validateAndGenerate(IProject project, PackageableElement packageableElement) {
+		this.initValidator();
 		ArrayList<String> validationErrors = validator.validate(packageableElement, console);
 		if(validationErrors.isEmpty()) {
-			console.out.println("Modèle valide");
+			console.out.println(validationSucessMessage);
 			try {
-				initiateAndGenerate(project, packageableElement);
+				if(askOutGenerationDir) {
+					askOutGenerationDir(project, packageableElement);
+				}else {
+					initiateAndGenerate(project, packageableElement);
+				}
+				
 			}catch(Exception e) {
 				StringWriter errors = new StringWriter();
 				e.printStackTrace(new PrintWriter(errors));
 				console.err.println(errors.toString());
 			}finally {
-				console.success.println("Génération terminée");
+				console.success.println(generationEndMessage);
 			}
 		}else {
-			console.err.println("Modèle invalide");
+			console.err.println(validationFailMessage);
 			for(String error : validationErrors) {
 				console.err.println(error);
 			}
+		}
+	}
+	
+	/**
+	 * initialisation du validateur
+	 */
+	protected void initValidator() {
+		this.validator = new HornetModelValidator();
+	}
+	
+	/**
+	 * ouvre une fenetre de dialog proposant a l'utilisateur de générer les imports 
+	 * soit avec src soit avec src-gen
+	 * @param project
+	 * @param packageableElement
+	 */
+	protected void askOutGenerationDir(IProject project, PackageableElement packageableElement) {
+		Shell shell = new Shell();
+		MessageBox dialog =
+			    new MessageBox(shell, SWT.YES | SWT.NO | SWT.CANCEL);
+			dialog.setText(dialogName);
+			dialog.setMessage(dialogMessage);
+
+		int returnCode = dialog.open();
+		if(returnCode == SWT.YES) {
+			this.outGenerationDir = true;
+			this.initiateAndGenerate(project, packageableElement);
+		}else if(returnCode == SWT.NO) {
+			this.outGenerationDir = false;
+			this.initiateAndGenerate(project, packageableElement);
 		}
 	}
 	
@@ -158,6 +216,9 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	 */
 	public abstract void initiateAndGenerate(IProject project, PackageableElement packageableElement);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isEnabled() {
 		updateSelectedEObject();

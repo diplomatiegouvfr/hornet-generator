@@ -90,11 +90,12 @@ public class GenerateMetierClassHandler extends HornetCodeHandler {
 	public GenerateMetierClassHandler() {
 		super();
 		this.message = "= executing Generate Metier Class Handler";
+		this.askOutGenerationDir = true;
 	}
 	
 	@Override
 	public void initiateAndGenerate(IProject project, PackageableElement packageableElement) {
-		this.creator = new ProjectMetierElementsCreator(project);
+		this.creator = new ProjectMetierElementsCreator(project, outGenerationDir);
 		generate(packageableElement);
 	}
 	

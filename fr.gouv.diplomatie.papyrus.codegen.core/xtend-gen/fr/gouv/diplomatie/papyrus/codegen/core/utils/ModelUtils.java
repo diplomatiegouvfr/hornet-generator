@@ -74,6 +74,9 @@ import org.eclipse.uml2.uml.Type;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+/**
+ * classe utilitaire pour les Model
+ */
 @SuppressWarnings("all")
 public class ModelUtils {
   /**

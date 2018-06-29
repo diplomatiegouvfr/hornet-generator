@@ -90,6 +90,7 @@ public class GenerateDatabaseScriptHandler extends HornetCodeHandler {
 	public GenerateDatabaseScriptHandler() {
 		super();
 		this.message = "= executing Generate Database Script Handler";
+		this.askOutGenerationDir = true;
 	}
 	
 	public void generate(PackageableElement packageableElement) {

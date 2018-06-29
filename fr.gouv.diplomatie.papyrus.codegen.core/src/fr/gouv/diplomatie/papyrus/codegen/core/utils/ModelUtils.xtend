@@ -82,6 +82,9 @@ package fr.gouv.diplomatie.papyrus.codegen.core.utils
 import org.eclipse.uml2.uml.Model
 import org.eclipse.uml2.uml.Class
 
+/**
+ * classe utilitaire pour les Model
+ */
 class ModelUtils{
 	
 	/**

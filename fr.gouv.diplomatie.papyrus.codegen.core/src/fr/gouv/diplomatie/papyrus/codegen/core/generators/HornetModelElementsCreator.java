@@ -70,49 +70,29 @@
  */
 
 /**
- * fr.gouv.diplomatie.papyrus.codegen.ui - Interface papyrus pour lancer 
- * le générateur Hornet JS
+ * fr.gouv.diplomatie.papyrus.codegen.core - Ensembles des outils mis à dispositions
+ * pour l'écriture d'un générateur de code Hornet
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
  * @version v1.1.3
  * @license CECILL-2.1
  */
-package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
+package fr.gouv.diplomatie.papyrus.codegen.core.generators;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.papyrus.designer.languages.common.base.HierarchyLocationStrategy;
+import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
+import org.eclipse.papyrus.infra.tools.file.ProjectBasedFileAccess;
 import org.eclipse.uml2.uml.PackageableElement;
 
-import fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators.LombokAnnotationGenerator;
-import fr.gouv.diplomatie.papyrus.codegen.java.transformations.ProjectJPAEntityElementsCreator;
-import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;
-import fr.gouv.diplomatie.papyrus.codegen.ui.validators.JavaPluginModelValidator;
+public abstract class HornetModelElementsCreator extends ModelElementsCreator{
+	
+	public HornetModelElementsCreator(IProject project, Boolean outGenerationDir) {
+		super(new ProjectBasedFileAccess(project), new HierarchyLocationStrategy(), "");
+		GeneratorUtils.setOutGenerationDir(outGenerationDir);
+	}
 
-public class GenerateJPAEntityHandler extends HornetCodeHandler {
-
-	public GenerateJPAEntityHandler() {
-		super();
-		this.message = "= executing Generate JPA Entity Handler";
-	}
-	
 	@Override
-	protected void initValidator() {
-		validator = new JavaPluginModelValidator();
-	}
-	
-	@Override
-	public void initiateAndGenerate(IProject project, PackageableElement packageableElement) {
-		this.creator = new ProjectJPAEntityElementsCreator(project);
-		((ProjectJPAEntityElementsCreator)this.creator).addAnnotationGenerator(new LombokAnnotationGenerator());
-		generate(packageableElement);
-	}
-	
-	public void generate(PackageableElement packageableElement) {
-		console.out.println("JPA Entity Handler : generate()");
-		creator.createPackageableElement(packageableElement, null, true);
-	}
-	
+	abstract protected void createPackageableElementFile(PackageableElement arg0, IProgressMonitor arg1);
 }

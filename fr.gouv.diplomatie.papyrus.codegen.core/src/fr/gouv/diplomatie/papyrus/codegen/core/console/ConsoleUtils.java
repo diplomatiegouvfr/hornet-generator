@@ -89,6 +89,9 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
+/**
+ * console pour l'affichage des messages lors de la génération Hornet Papyrus
+ */
 public class ConsoleUtils {
 
 	public MessageConsole myConsole = findConsole("Hornet Papyrus Générateur");

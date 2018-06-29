@@ -86,8 +86,6 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
-import org.eclipse.uml2.uml.Type
-import java.util.ArrayList
 
 public class AssociationClassAttributesInterfaceGenerator{
 	

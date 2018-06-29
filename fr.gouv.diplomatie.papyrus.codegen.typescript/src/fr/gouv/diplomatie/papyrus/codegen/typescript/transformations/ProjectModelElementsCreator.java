@@ -81,14 +81,12 @@ package fr.gouv.diplomatie.papyrus.codegen.typescript.transformations;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.papyrus.designer.languages.common.base.HierarchyLocationStrategy;
-import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
-import org.eclipse.papyrus.infra.tools.file.ProjectBasedFileAccess;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.PackageableElement;
 
+import fr.gouv.diplomatie.papyrus.codegen.core.generators.HornetModelElementsCreator;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.AssociationClassGenerator;
@@ -98,14 +96,12 @@ import fr.gouv.diplomatie.papyrus.codegen.typescript.generators.PackageGenerator
 
 import org.eclipse.uml2.uml.Package;
 
-public class ProjectModelElementsCreator extends ModelElementsCreator {
-
+public class ProjectModelElementsCreator extends HornetModelElementsCreator {
 	
-	public ProjectModelElementsCreator(IProject project) {
-		super(new ProjectBasedFileAccess(project), new HierarchyLocationStrategy(), "");
+	public ProjectModelElementsCreator(IProject project, Boolean outGenerationDir) {
+		super(project, outGenerationDir);
 	}
-	
-	
+
 	@Override
 	protected void createPackageableElementFile(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
 		

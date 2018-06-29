@@ -84,6 +84,9 @@ import org.eclipse.uml2.uml.NamedElement
 import org.eclipse.uml2.uml.Classifier
 import org.eclipse.uml2.uml.Class
 
+/**
+ * classe utilitaire pour les Property
+ */
 class PropertyUtils {
 	
 	/**

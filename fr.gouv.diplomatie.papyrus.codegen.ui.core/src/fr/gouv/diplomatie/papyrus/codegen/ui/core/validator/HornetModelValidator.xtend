@@ -81,7 +81,6 @@ package fr.gouv.diplomatie.papyrus.codegen.ui.core.validator;
 
 import org.eclipse.uml2.uml.PackageableElement;
 
-
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Property;
@@ -94,12 +93,14 @@ import java.util.ArrayList
 import org.eclipse.uml2.uml.PrimitiveType
 
 /**
- * classe de validation d'un modèle hornet papyrus
+ * classe de validation d'un modèle Hornet Papyrus
  */
 public class HornetModelValidator {
 	
 	public ArrayList<String> errors;
 	public ArrayList<String> warnings;
+	
+	public String startGenerationMessage = "Début de la validation";
 	
 	/**
 	 * Teste si le modèle passé au générateur est valide ou non
@@ -107,7 +108,7 @@ public class HornetModelValidator {
 	public def validate(PackageableElement packageableElement, ConsoleUtils console) {
 		errors = newArrayList;
 		warnings = newArrayList;
-		console.out.println("Début de la validation");
+		console.out.println(startGenerationMessage);
 		validateElement(packageableElement, console);
 		return errors;
 	}

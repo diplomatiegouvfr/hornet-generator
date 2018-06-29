@@ -95,6 +95,9 @@ import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
+/**
+ * classe utilitaire pour les Classifier
+ */
 @SuppressWarnings("all")
 public class ClassifierUtils {
   /**

@@ -82,6 +82,11 @@ package fr.gouv.diplomatie.papyrus.codegen.core.test;
 import org.eclipse.uml2.uml.AssociationClass;
 import org.eclipse.uml2.uml.Property;
 
+/**
+ * retour de création d'une association
+ * @author cadiomu
+ *
+ */
 public class AssociationReturn {
 	public AssociationClass association;
 	public Property attributeClassUn;

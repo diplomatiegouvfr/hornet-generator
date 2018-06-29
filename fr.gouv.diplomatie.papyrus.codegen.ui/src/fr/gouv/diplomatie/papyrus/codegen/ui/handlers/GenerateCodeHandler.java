@@ -91,11 +91,12 @@ public class GenerateCodeHandler extends HornetCodeHandler {
 	public GenerateCodeHandler() {
 		super();
 		this.message = "= executing Generate code Handler";
+		this.askOutGenerationDir = true;
 	}
 	
 	@Override
 	public void initiateAndGenerate(IProject project, PackageableElement packageableElement) {
-		this.creator = new ProjectModelElementsCreator(project);
+		this.creator = new ProjectModelElementsCreator(project, outGenerationDir);
 		generate(packageableElement);
 		this.creator = new ProjectDatabaseScriptElementsCreator(project);
 		generate(packageableElement);

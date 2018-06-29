@@ -91,6 +91,12 @@ import org.eclipse.uml2.uml.UMLPackage;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
+/**
+ * classe utilitaire pour les tests 
+ * métamodèle Hornet Papyrus
+ * @author cadiomu
+ *
+ */
 public class HornetModel {
 	
 	public static final HornetModel instance = new HornetModel();

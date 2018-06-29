@@ -87,6 +87,9 @@ import org.eclipse.uml2.uml.Type
 import org.eclipse.uml2.uml.Package
 import org.eclipse.uml2.uml.Classifier
 
+/**
+ * classe utilitaire 
+ */
 public class Utils{
 	
 	public static var console = new ConsoleUtils();
