@@ -114,5 +114,44 @@
             name="Code Generation">
       </page>
    </extension>
+   <extension
+      point="org.eclipse.ui.bindings">
+   <key
+         commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.validate"
+         contextId="org.eclipse.ui.contexts.window"
+         sequence="M1+1"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+   </key>
+   <key
+         commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate"
+         contextId="org.eclipse.ui.contexts.window"
+         sequence="M1+2"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+   </key>
+      <key
+         commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.database"
+         contextId="org.eclipse.ui.contexts.window"
+         sequence="M1+4"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+   </key>
+   <key
+         commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.models.metier"
+         contextId="org.eclipse.ui.contexts.window"
+         sequence="M1+5"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+   </key>
+      <key
+         commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.validatejava"
+         contextId="org.eclipse.ui.contexts.window"
+         sequence="M1+6"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+   </key>
+   <key
+         commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.generate.jpaentities"
+         contextId="org.eclipse.ui.contexts.window"
+         sequence="M1+7"
+         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+   </key>
+</extension>
 
 </plugin>
