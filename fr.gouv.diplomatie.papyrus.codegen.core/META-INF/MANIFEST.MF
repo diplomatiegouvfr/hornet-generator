@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Générateur papyrus core
 Bundle-SymbolicName: fr.gouv.diplomatie.papyrus.codegen.core;singleton:=true
-Bundle-Version: 1.1.3
+Bundle-Version: 1.1.3.qualifier
 Bundle-Vendor: MEAE - Ministère de l'Europe et des Affaires étrangères
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",

@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Lombok
+Bundle-Name: Générateur d'annotations Lombok
 Bundle-SymbolicName: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok;singleton:=true
-Bundle-Version: 1.1.3
+Bundle-Version: 1.1.3.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
  org.eclipse.core.runtime;bundle-version="3.13.0",
@@ -17,3 +17,4 @@ Import-Package: org.eclipse.ui.console
 Export-Package: fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators,
  fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.utils,
  fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.xtend
+Bundle-Vendor: MEAE - Ministère de l'Europe et des Affaires étrangères

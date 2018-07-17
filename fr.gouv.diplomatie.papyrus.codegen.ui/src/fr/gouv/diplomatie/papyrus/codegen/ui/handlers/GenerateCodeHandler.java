@@ -80,6 +80,7 @@
 package fr.gouv.diplomatie.papyrus.codegen.ui.handlers;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
 import org.eclipse.uml2.uml.PackageableElement;
 
 import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;

@@ -4,3 +4,4 @@ Bundle-Name: Metamodele
 Bundle-SymbolicName: fr.gouv.diplomatie.papyrus.metamodele;singleton:=true
 Bundle-Version: 1.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: MEAE - Ministère de l'Europe et des Affaires étrangères
