@@ -8,7 +8,8 @@
             locationURI="popup:org.eclipse.gmf.runtime.diagram.ui.DiagramEditorContextMenu?after=additions">
             <menu
                id="hornetMenu"
-               label="Hornet Generation">
+               label="Hornet Generation"
+               icon="icons/hornet_menu.png">
          <command
                commandId="fr.gouv.diplomatie.papyrus.codegen.ui.command.validate"
                label="Valider le modèle"
