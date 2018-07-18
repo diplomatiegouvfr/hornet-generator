@@ -60,6 +60,15 @@
          </command>
          </menu>
       </menuContribution>
+       <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.papyrus.views.modelexplorer.modelexplorer.popup?after=others">
+            <menu
+               id="hornetMenu"
+               label="Hornet Generation"
+               icon="icons/hornet_menu.png">
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

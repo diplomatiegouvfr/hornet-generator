@@ -93,17 +93,18 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 public class GeneratorUtils {
 
 	public static Boolean outGenerationDir = false;
+	public static String SEP_CHAR = "/";
 	
-	public static final String SRC_REPOSITORY = "src-gen" + File.separator;
-	public static final String SRC_INCODE_REPOSITORY = "src" + File.separator;
+	public static final String SRC_REPOSITORY = "src-gen" + SEP_CHAR;
+	public static final String SRC_INCODE_REPOSITORY = "src" + SEP_CHAR;
 	
-	public static final String MODEL_REPOSITORY = SRC_REPOSITORY + "models" + File.separator;
-	public static final String MODEL_INCODE_REPOSITORY = SRC_INCODE_REPOSITORY + "models" + File.separator;
+	public static final String MODEL_REPOSITORY = SRC_REPOSITORY + "models" + SEP_CHAR;
+	public static final String MODEL_INCODE_REPOSITORY = SRC_INCODE_REPOSITORY + "models" + SEP_CHAR;
 	
-	public static final String DATABASE_REPOSITORY = SRC_REPOSITORY + "database" + File.separator ;
+	public static final String DATABASE_REPOSITORY = SRC_REPOSITORY + "database" + SEP_CHAR ;
 	
-	public static final String DAO_REPOSITORY = SRC_REPOSITORY  + "dao" + File.separator ;
-	public static final String DAO_INCODE_REPOSITORY = SRC_INCODE_REPOSITORY  + "dao" + File.separator ;
+	public static final String DAO_REPOSITORY = SRC_REPOSITORY  + "dao" + SEP_CHAR ;
+	public static final String DAO_INCODE_REPOSITORY = SRC_INCODE_REPOSITORY  + "dao" + SEP_CHAR ;
 	
 	public static void setOutGenerationDir(Boolean value) {
 		outGenerationDir = value;
@@ -117,9 +118,9 @@ public class GeneratorUtils {
 	 */
 	public static String getModelPath(Classifier clazz, Boolean inCode) {
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "models" + File.separator  + Utils.toTypescriptFileName(clazz.getName()) + "-model";
+			return MODEL_INCODE_REPOSITORY +  "models" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName()) + "-model";
 		}
-		return MODEL_REPOSITORY +  "models" + File.separator  + Utils.toTypescriptFileName(clazz.getName())+ "-model";
+		return MODEL_REPOSITORY +  "models" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName())+ "-model";
 	}
 	
 	/**
@@ -130,9 +131,9 @@ public class GeneratorUtils {
 	 */
 	public static String getAttributesInterfacePath(Classifier clazz, Boolean inCode) {
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "attributes" + File.separator + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
+			return MODEL_INCODE_REPOSITORY +  "attributes" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
 		}
-		return MODEL_REPOSITORY +  "attributes" + File.separator + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
+		return MODEL_REPOSITORY +  "attributes" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
 	}
 	
 	/**
@@ -143,9 +144,9 @@ public class GeneratorUtils {
 	 */
 	public static String getMetierClassPath(Classifier clazz, Boolean inCode) {
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "metier" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
+			return MODEL_INCODE_REPOSITORY +  "metier" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
 		}
-		return MODEL_REPOSITORY +  "metier" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
+		return MODEL_REPOSITORY +  "metier" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
 	}
 	
 	/**
@@ -156,9 +157,9 @@ public class GeneratorUtils {
 	 */
 	public static String getDtoClassPath(Classifier clazz, Boolean inCode) {
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "dto" + File.separator  + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
+			return MODEL_INCODE_REPOSITORY +  "dto" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
 		}
-		return MODEL_REPOSITORY +  "dto" + File.separator + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
+		return MODEL_REPOSITORY +  "dto" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
 	}
 	
 	/**
