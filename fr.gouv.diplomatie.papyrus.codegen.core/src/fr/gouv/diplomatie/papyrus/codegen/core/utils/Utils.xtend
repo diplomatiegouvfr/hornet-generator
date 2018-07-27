@@ -205,7 +205,7 @@ public class Utils{
 	 * ex: idTest -> ID_TEST
 	 */
 	static def toDbName(String name){
-		return (toSnakeCase(name)).toUpperCase
+		return (toSnakeCase(name))
 	}
 	
 

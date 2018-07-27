@@ -276,10 +276,10 @@ public class PropertyUtils {
    * le paramètre additionalName ne sera pas mis en forme
    */
   public static String getDatabaseName(final Property property, final String name, final String additionnalName) {
-    String retour = Utils.toSnakeCase(name).toUpperCase();
+    String retour = Utils.toSnakeCase(name);
     final String columnName = PropertyUtils.getColumnName(property);
     if (((columnName != null) && (columnName != ""))) {
-      retour = ((String) columnName).toUpperCase();
+      retour = ((String) columnName);
     }
     if (((additionnalName != null) && (additionnalName != ""))) {
       retour = ((additionnalName + "_") + retour);

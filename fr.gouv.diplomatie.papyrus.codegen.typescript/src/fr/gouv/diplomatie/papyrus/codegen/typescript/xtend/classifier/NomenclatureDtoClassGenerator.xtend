@@ -93,11 +93,11 @@ public class NomenclatureDtoClassGenerator{
 		
 		@Bean
 		export class «ClassifierUtils.getDtoClassName(clazz)»{
-			@Map()
-			code: «TypeUtils.getEnumTypescriptType(clazz)»;
-			
-			@Map()
-			libelle: string;
+		    @Map()
+		    code: «TypeUtils.getEnumTypescriptType(clazz)»;
+		    
+		    @Map()
+		    libelle: string;
 		}
 		'''
 	}

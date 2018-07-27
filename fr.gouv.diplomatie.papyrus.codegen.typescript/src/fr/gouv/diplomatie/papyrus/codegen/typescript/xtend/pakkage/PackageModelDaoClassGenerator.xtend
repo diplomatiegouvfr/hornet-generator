@@ -142,20 +142,20 @@ class PackageModelDaoClassGenerator{
 		    * Injector.register("config", nom de la configuration);
 		    */
 		    constructor(@inject("config")conf?: string) {
-		    	super(conf);
-		    	«classes.fold("")[acc, clazz |
+		        super(conf);
+		        «classes.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEntityGetter»'''
 			    ]»
-			    «classes.fold("")[acc, clazz |
+		        «classes.fold("")[acc, clazz |
 			        acc + '''«(clazz as Classifier).generateCallMultivaluedAttributesEntityGetter»'''
 			    ]»
-			    «associationsClasses.fold("")[acc, clazz |
+		        «associationsClasses.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
 			    ]»
-			    «associationsClassesInPakkage.fold("")[acc, clazz |
+		        «associationsClassesInPakkage.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
 			    ]»
-				«enums.fold("")[acc, clazz |
+		        «enums.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEnumEntityGetter»'''
 			    ]»
 		   }
@@ -346,12 +346,12 @@ class PackageModelDaoClassGenerator{
 	static def generateEntityGetter(Classifier clazz){
 		'''
 		
-		private init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void{
-			«clazz.generateExtendsIdRelation»
-			«clazz.generateRelations(clazz,"", "")»
-			«clazz.generateForeignRelations(clazz,'')»
-			«clazz.generateAssociationRelations»
-			«clazz.generateOneToManyRelations»
+		private init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void {
+		    «clazz.generateExtendsIdRelation»
+		    «clazz.generateRelations(clazz,"", "")»
+		    «clazz.generateForeignRelations(clazz,'')»
+		    «clazz.generateAssociationRelations»
+		    «clazz.generateOneToManyRelations»
 		}
 		'''
 	}
@@ -373,9 +373,21 @@ class PackageModelDaoClassGenerator{
 		val id = ClassifierUtils.getId(owner).get(0)
 		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
 		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+/* 		'''
+		SequelizeUtils.initRelationBelongsTo({
+			fromEntity: this.«Utils.getFirstToLowerCase(clazz.name)»Entity,
+			 toEntity: this.«Utils.getFirstToLowerCase(owner.name)»Entity,
+			 alias: "«alias»",
+			 foreignKey: "«fieldName»"
+		});
 		'''
-		SequelizeUtils.initRelationBelongsTo({ fromEntity: this.«Utils.getFirstToLowerCase(clazz.name)»Entity, toEntity: this.«Utils.getFirstToLowerCase(owner.name)»Entity, alias: "«alias»", foreignKey: "«fieldName»" });
-		'''
+	*/	
+		return generateInitRelationBelongsTo(
+			'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
+			'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
+			'''"«alias»"''',
+			'''"«fieldName»"'''
+		);
 	}
 	
 	/**
@@ -533,7 +545,10 @@ class PackageModelDaoClassGenerator{
 					val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
 								
 					'''
-					SequelizeUtils.initRelationHasMany({ fromEntity: this.«Utils.getFirstToLowerCase(fromClass.name)»Entity, toEntity: this.«Utils.getFirstToLowerCase(type.name)»Entity, alias: "«name»", foreignKey: "«fieldName»" });
+					SequelizeUtils.initRelationHasMany({
+					    fromEntity: this.«Utils.getFirstToLowerCase(fromClass.name)»Entity,
+					    toEntity: this.«Utils.getFirstToLowerCase(type.name)»Entity,
+					    alias: "«name»", foreignKey: "«fieldName»"});
 					'''
 				}else{
 					val owner = property.owner as Classifier
@@ -602,7 +617,7 @@ class PackageModelDaoClassGenerator{
 				'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 				'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 				'''"«name»"''',
-				'''"CODE_«propName»"'''
+				'''"code_«propName»"'''
 			)
 		}
 	}
@@ -865,8 +880,8 @@ class PackageModelDaoClassGenerator{
 	static def generateEnumEntityGetter(Classifier clazz){
 		'''
 		
-		public init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void{
-			«clazz.generateEnumForeignRelations(clazz,'')»
+		public init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void {
+		    «clazz.generateEnumForeignRelations(clazz,'')»
 		}
 		'''
 	}
@@ -920,7 +935,7 @@ class PackageModelDaoClassGenerator{
 						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 						'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
 						'''"«Utils.toDbName(name)»"''',
-						'''"CODE"''',
+						'''"code"''',
 						'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
 					)//"«Utils.toDbName(tableName)»"
 				}else{
@@ -928,7 +943,7 @@ class PackageModelDaoClassGenerator{
 						'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 						'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
 						'''"«Utils.toDbName(name)»"''',
-						'''"CODE"'''
+						'''"code"'''
 					)
 				}
 			}
@@ -941,8 +956,8 @@ class PackageModelDaoClassGenerator{
 	static def generateACEntityGetter(Classifier clazz){
 		'''
 		
-		public init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void{
-			«clazz.generateRelations(clazz,"", "")»
+		public init«Utils.getFirstToUpperCase(clazz.name)»Entity(): void {
+		    «clazz.generateRelations(clazz,"", "")»
 		}
 		'''
 	}
@@ -986,8 +1001,8 @@ class PackageModelDaoClassGenerator{
 		if(!PropertyUtils.isOneToManyAttributes(property)){
 		'''
 		
-		public init«tableName»Entity(): void{
-			«ids.fold("")[acc, id |
+		public init«tableName»Entity(): void {
+		    «ids.fold("")[acc, id |
 				val idName = PropertyUtils.getDatabaseName(id, PropertyUtils.getDatabaseName(id, id.name, ""), "")
 				if(Utils.isEntity(type)){
 					acc + generateInitRelationBelongsTo(
@@ -1005,7 +1020,7 @@ class PackageModelDaoClassGenerator{
 					)
 				}
 			]»
-			«property.generateMARelation(fromClass, "", entityName)»
+		    «property.generateMARelation(fromClass, "", entityName)»
 		}
 		'''}else{''''''}
 	}
@@ -1056,14 +1071,14 @@ class PackageModelDaoClassGenerator{
 						'''this.«Utils.getFirstToLowerCase(entityName)»Entity''',
 						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 						'''"«Utils.getFirstToLowerCase(name)»"''',
-						'''"CODE"'''
+						'''"code"'''
 					)
 				}else{
 					generateInitRelationBelongsTo(
 						'''this.«Utils.getFirstToLowerCase(entityName)»Entity''',
 						'''this.«Utils.getFirstToLowerCase(type.name)»Entity''',
 						'''"«Utils.getFirstToLowerCase(name)»"''',
-						'''"CODE_«dbName»"'''
+						'''"code_«dbName»"'''
 					)					
 				}
 			}
@@ -1109,7 +1124,11 @@ class PackageModelDaoClassGenerator{
 	static def generateInitRelationBelongsTo(String fromEntity, String toEntity, String alias, String foreignKey){
 		return 
 		'''
-		SequelizeUtils.initRelationBelongsTo({fromEntity: «fromEntity», toEntity: «toEntity», alias: «alias», foreignKey: «foreignKey»});
+		SequelizeUtils.initRelationBelongsTo({
+		    fromEntity: «fromEntity»,
+		    toEntity: «toEntity»,
+		    alias: «alias»,
+		    foreignKey: «foreignKey»});
 		'''
 	}
 	
@@ -1119,7 +1138,13 @@ class PackageModelDaoClassGenerator{
 	static def generateInitRelationBelongsToMany(String fromEntity, String toEntity, String alias, String foreignKey, String throughTable, String otherKey){
 		return 
 		'''
-		SequelizeUtils.initRelationBelongsToMany({fromEntity: «fromEntity», toEntity: «toEntity», alias: «alias», foreignKey: «foreignKey», throughTable: «throughTable», otherKey: «otherKey»});
+		SequelizeUtils.initRelationBelongsToMany({
+		    fromEntity: «fromEntity»,
+		    toEntity: «toEntity»,
+		    alias: «alias»,
+		    foreignKey: «foreignKey»,
+		    throughTable: «throughTable»,
+		    otherKey: «otherKey»});
 		'''
 	}
 	
@@ -1129,7 +1154,12 @@ class PackageModelDaoClassGenerator{
 	static def generateInitRelationBelongsToMany(String fromEntity, String toEntity, String alias, String foreignKey, String throughTable){
 		return 
 		'''
-		SequelizeUtils.initRelationBelongsToMany({fromEntity: «fromEntity», toEntity: «toEntity», alias: «alias», foreignKey: «foreignKey», throughTable: «throughTable»});
+		SequelizeUtils.initRelationBelongsToMany({
+		    fromEntity: «fromEntity»,
+		    toEntity: «toEntity»,
+		    alias: «alias»,
+		    foreignKey: «foreignKey»,
+		    throughTable: «throughTable»});
 		'''
 	}
 	

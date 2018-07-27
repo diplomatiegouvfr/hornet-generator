@@ -103,12 +103,12 @@ public class ClassifierDtoClassGenerator{
 		
 		@Bean
 		export class «ClassifierUtils.getDtoClassName(clazz)» «clazz.generateExtends»{
-			«clazz.generateExtendsAttributes»
-			«clazz.generateInterfaceAttributes»
-			«clazz.generateAttributes(clazz)»
-			«clazz.generateAssociationAttributes»
-			«clazz.generateOneToManyAttributes»
-			«clazz.generateManyToManyAttributes»
+		    «clazz.generateExtendsAttributes»
+		    «clazz.generateInterfaceAttributes»
+		    «clazz.generateAttributes(clazz)»
+		    «clazz.generateAssociationAttributes»
+		    «clazz.generateOneToManyAttributes»
+		    «clazz.generateManyToManyAttributes»
 		}
 		
 		«clazz.generateMultivaluedAttributeDto»
@@ -415,7 +415,7 @@ public class ClassifierDtoClassGenerator{
 		var alias = ""
 		if(!names.empty){
 			alias = '''
-			@Alias('«name»', '«propName»')'''
+			@Alias("«name»", "«propName»")'''
 		}
 		if(type instanceof Classifier){
 			if(!property.multivalued){
@@ -455,9 +455,9 @@ public class ClassifierDtoClassGenerator{
 		var codeAlias = ""
 		if(!names.empty){
 			alias = '''
-			@Alias('«name»', '«propName»')'''
+			@Alias("«name»", "«propName»")'''
 			codeAlias = '''
-			@Alias('«codeAliasName»')'''
+			@Alias("«codeAliasName»")'''
 			
 		}
 		if(type instanceof Classifier){
@@ -497,14 +497,14 @@ public class ClassifierDtoClassGenerator{
 				'''
 				
 				@Map()
-				@Alias('«fieldName»')
+				@Alias("«fieldName»")
 				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
 				'''
 			}else{
 				'''
 				
 				@Map()
-				@Alias('«fieldName»', '«Utils.getListPoint(names)».«id.name»')
+				@Alias("«fieldName»", "«Utils.getListPoint(names)».«id.name»")
 				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
 				'''
 			}
@@ -524,7 +524,7 @@ public class ClassifierDtoClassGenerator{
 		if(!names.empty){
 			alias = '''
 			
-			@Alias('«Utils.getListPoint(names)».«property.name»', '«name»')
+			@Alias("«Utils.getListPoint(names)».«property.name»", "«name»")
 			'''
 		}
 		if(!property.multivalued){

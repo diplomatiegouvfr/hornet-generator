@@ -90,18 +90,18 @@ public class NomenclatureModelGenerator{
 		import Sequelize = require("sequelize");
 		
 		export const «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes={
-			code: {
-				type: Sequelize.«TypeUtils.getEnumSequelizeType(clazz)»,
-				field: "CODE",
-				allowNull: false,
-				primaryKey: true
-			},
-			libelle: {
-				type: Sequelize.TEXT,
-				field: "LIBELLE",
-				allowNull: false
-			}
-		}
+		    code: {
+		        type: Sequelize.«TypeUtils.getEnumSequelizeType(clazz)»,
+		        field: "code",
+		        allowNull: false,
+		        primaryKey: true,
+		    },
+		    libelle: {
+		        type: Sequelize.TEXT,
+		        field: "libelle",
+		        allowNull: false,
+		    },
+		};
 		'''
 	}
 }

@@ -80,19 +80,6 @@ public class SqlClassifierUtils {
     StringConcatenation _builder = new StringConcatenation();
     {
       if ((schema != null)) {
-        _builder.append("\"");
-        _builder.append(schema);
-        _builder.append("\".");
-      }
-    }
-    return _builder.toString();
-  }
-  
-  public static String generateSchemaNameSequence(final Classifier clazz) {
-    final Object schema = ClassifierUtils.getSchema(clazz);
-    StringConcatenation _builder = new StringConcatenation();
-    {
-      if ((schema != null)) {
         _builder.append(schema);
         _builder.append(".");
       }

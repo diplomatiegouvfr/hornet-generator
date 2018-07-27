@@ -237,12 +237,12 @@ class PropertyUtils {
 	 * le paramètre additionalName ne sera pas mis en forme
 	 */
 	static def getDatabaseName(Property property, String name, String additionnalName){
-		var retour = Utils.toSnakeCase(name).toUpperCase
+		var retour = Utils.toSnakeCase(name)
 		
 		//récupération du columname si l'attribut en possède un
 		val columnName = property.columnName
 		if(columnName!== null && columnName !== ""){
-			retour = (columnName as String).toUpperCase
+			retour = (columnName as String)
 			
 		}
 		//ajout de l'additionnalName (doit déja etre mis en forme)

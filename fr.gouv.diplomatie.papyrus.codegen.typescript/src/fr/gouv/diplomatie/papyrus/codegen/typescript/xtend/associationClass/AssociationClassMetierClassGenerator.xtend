@@ -100,7 +100,7 @@ public class AssociationClassMetierClassGenerator{
 		
 		@Bean
 		export class «ClassifierUtils.getMetierClassName(clazz)»{
-			«clazz.generateAttributes("")»
+		    «clazz.generateAttributes("")»
 		}
 		'''
 	}

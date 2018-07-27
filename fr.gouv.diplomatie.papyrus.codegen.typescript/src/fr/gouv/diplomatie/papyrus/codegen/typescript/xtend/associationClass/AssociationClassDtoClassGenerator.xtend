@@ -102,7 +102,7 @@ public class AssociationClassDtoClassGenerator{
 		
 		@Bean
 		export class «ClassifierUtils.getDtoClassName(clazz)» {
-			«clazz.generateAttributes(newArrayList())»
+		    «clazz.generateAttributes(newArrayList())»
 		}
 		
 		'''
@@ -299,7 +299,7 @@ public class AssociationClassDtoClassGenerator{
 */				'''
 				
 				@Map()
-				@Alias('«fieldName»', '«IF !names.isEmpty»«Utils.getListPoint(names)».«ENDIF»«property.name».«id.name»')
+				@Alias("«fieldName»", "«IF !names.isEmpty»«Utils.getListPoint(names)».«ENDIF»«property.name».«id.name»")
 				«Utils.getFirstToLowerCase(fieldName)»: «TypeUtils.getMetierTypescriptType(id.type)»;
 				'''
 		}else{
@@ -317,7 +317,7 @@ public class AssociationClassDtoClassGenerator{
 			'''
 			
 			@Map()
-			@Alias('«name»'«IF !names.isEmpty», '«Utils.getListPoint(names)».«property.name»'«ENDIF»)
+			@Alias("«name»"«IF !names.isEmpty», "«Utils.getListPoint(names)».«property.name»"«ENDIF»)
 			«Utils.getFirstToLowerCase(name)»: «TypeUtils.getMetierTypescriptType(property.type)»;
 			'''
 		}else{

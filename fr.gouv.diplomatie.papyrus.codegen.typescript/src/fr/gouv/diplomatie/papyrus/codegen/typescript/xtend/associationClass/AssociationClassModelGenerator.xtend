@@ -96,8 +96,8 @@ public class AssociationClassModelGenerator {
 		import Sequelize = require("sequelize");
 		
 		export const «AssociationClassUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
-			«clazz.generateAttributes»
-		}
+		    «clazz.generateAttributes»
+		};
 		'''
 	}
 	
@@ -110,7 +110,7 @@ public class AssociationClassModelGenerator {
 		'''
 		«members.fold("")[acc, member |
 			if(acc != ""){
-				acc + ''',
+				acc + '''
 				''' + '''«member.generateMemberAttributes(clazz)»'''	
 			}else{
 				acc + '''«member.generateMemberAttributes(clazz)»'''
@@ -140,7 +140,7 @@ public class AssociationClassModelGenerator {
 		val ids = ClassifierUtils.getId(property.type as Classifier)
 		'''«ids.fold("")[acc, id |
 			if(acc != ""){
-				acc + ''',
+				acc + '''
 				'''  + '''«property.generateEntityMemberAttribute(id, fromClass)»'''
 			}else{
 				acc + '''«property.generateEntityMemberAttribute(id, fromClass)»'''
@@ -159,15 +159,16 @@ public class AssociationClassModelGenerator {
 		val name = id.name + Utils.getFirstToUpperCase(property.name)
 		'''
 		«name»: {
-			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
-			field: "«fieldName»",
-			allowNull: «PropertyUtils.isNullable(property)»,
-			primaryKey: true,
-			references: {
-				model: "«ClassifierUtils.getModelName(property.type as Classifier)»",
-				key: "«id.name»"
-			}
-		}'''
+		    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+		    field: "«fieldName»",
+		    allowNull: «PropertyUtils.isNullable(property)»,
+		    primaryKey: true,
+		    references: {
+		        model: "«ClassifierUtils.getModelName(property.type as Classifier)»",
+		        key: "«id.name»",
+		    },
+		},
+		'''
 	}
 	
 	static def generateEnumMemberAttributes(Property property, Classifier fromClass){

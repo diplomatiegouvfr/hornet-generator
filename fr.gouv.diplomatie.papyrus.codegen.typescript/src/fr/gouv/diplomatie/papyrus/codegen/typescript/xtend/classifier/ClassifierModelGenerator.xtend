@@ -96,10 +96,10 @@ public class ClassifierModelGenerator {
 		«clazz.generateImports»
 		
 		export const «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
-			«clazz.generateExtendsId»
-			«clazz.generateInterfacesAttributes»
-			«clazz.generateAttributes("", "", clazz, false, false)»
-		}
+		    «clazz.generateExtendsId»
+		    «clazz.generateInterfacesAttributes»
+		    «clazz.generateAttributes("", "", clazz, false, false)»
+		};
 		«clazz.generateMultivaluedAttributeModels»
 		««««clazz.generateOneToManyAttribute»
 		'''
@@ -128,9 +128,9 @@ public class ClassifierModelGenerator {
 	        field: "«fieldName»",
 	        references: {
 	            model: "«ClassifierUtils.getModelName(owner)»",
-	            key: "«id.name»"
-	        }
-	    }
+	            key: "«id.name»",
+	        },
+	    },
 		'''
 	}
 	
@@ -153,14 +153,15 @@ public class ClassifierModelGenerator {
 			val name = PropertyUtils.getDatabaseName(id, id.name, "")
 			'''
 			«id.name»: {
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
-				field: "«name»",
-				allowNull: «PropertyUtils.isNullable(id)»,
-				references: {
-					model: "«ClassifierUtils.getModelName(extend.general)»",
-					key: "«id.name»"
-				}
-			},'''
+			    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
+			    field: "«name»",
+			    allowNull: «PropertyUtils.isNullable(id)»,
+			    references: {
+			        model: "«ClassifierUtils.getModelName(extend.general)»",
+			        key: "«id.name»",
+			    },
+			},
+			'''
 		}
 		
 	}
@@ -171,7 +172,7 @@ public class ClassifierModelGenerator {
 			'''
 			«interfaces.fold("")[acc, interface |
 				acc + '''«interface.generateAttributes("", "", clazz, false, false)»'''
-			]»,
+			]»
 			'''
 		}else{
 			''''''
@@ -186,7 +187,7 @@ public class ClassifierModelGenerator {
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
 		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
- 				acc + ''',
+ 				acc + '''
  				''' + '''«attribut.generateAttributDefinition(additionnalName, databaseAddName, fromClass, isPrimaryKey, nullable)»'''
  			}else{
  				acc + '''«attribut.generateAttributDefinition(additionnalName, databaseAddName, fromClass, isPrimaryKey, nullable)»'''
@@ -225,11 +226,12 @@ public class ClassifierModelGenerator {
 		}
 		'''
 		«property.name»: {
-			type: Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateAttributeTypeLength»,«auto»
-			field: "«name»",
-			allowNull: «isNullable»,
-			primaryKey: true
-		}'''
+		    type: Sequelize.«TypeUtils.getSequelizeType(property.type)»«property.generateAttributeTypeLength»,«auto»
+		    field: "«name»",
+		    allowNull: «isNullable»,
+		    primaryKey: true,
+		},
+		'''
 	}
 	
 	/**
@@ -280,7 +282,7 @@ public class ClassifierModelGenerator {
 			val ids = ClassifierUtils.getId(type)
 			ids.fold("")[acc , id |
 				if(acc != ""){
-					acc + ''',«property.generateEntityAttributeDefinition(id, additonnalName, dbAddName, fromClass, isPrimaryKey, nullable)»'''
+					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, dbAddName, fromClass, isPrimaryKey, nullable)»'''
 				}else{
 					acc + '''«property.generateEntityAttributeDefinition(id, additonnalName, dbAddName, fromClass, isPrimaryKey, nullable)»'''
 				}
@@ -303,15 +305,16 @@ public class ClassifierModelGenerator {
 		var pk = '''primaryKey: true,'''
 		return '''
 			code«Utils.getFirstToUpperCase(propName)»: {
-				type: Sequelize.«sqlType»,
-				field: "CODE_«name»",
-				allowNull: «isNullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
-				«pk»«ENDIF»
-				references: {
-					model: "«ClassifierUtils.getModelName(type as Classifier)»",
-					key: "code"
-				}
-			}'''
+			    type: Sequelize.«sqlType»,
+			    field: "code_«name»",
+			    allowNull: «isNullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
+			    «pk»«ENDIF»
+			    references: {
+			        model: "«ClassifierUtils.getModelName(type as Classifier)»",
+			        key: "code",
+			    },
+			},
+			'''
 	}
 	
 	/**
@@ -328,15 +331,16 @@ public class ClassifierModelGenerator {
 		}
 		return '''
 			«propName»: {
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
-				field: "«dbName»",
-				allowNull: «isNullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
-				«pk»«ENDIF»
-				references: {
-					model: "«ClassifierUtils.getModelName(type as Classifier)»",
-					key: "«id.name»"
-				}
-			}'''
+			    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
+			    field: "«dbName»",
+			    allowNull: «isNullable»,«IF isPrimaryKey && !PropertyUtils.isNullable(property)»
+			    «pk»«ENDIF»
+			    references: {
+			        model: "«ClassifierUtils.getModelName(type as Classifier)»",
+			        key: "«id.name»",
+			    },
+			},
+			'''
 	}
 	
 	/**
@@ -352,11 +356,12 @@ public class ClassifierModelGenerator {
 		}
 		'''
 		«propName»: {
-			type: «property.getAttributeSequelizeTypeDeclaration»«property.generateNIdAttributeDefaultValue»,
-			field: "«name»",«IF isPrimaryKey && !isNullable»
-			«pk»«ENDIF»
-			allowNull: «isNullable»
-		}'''
+		    type: «property.getAttributeSequelizeTypeDeclaration»«property.generateNIdAttributeDefaultValue»,
+		    field: "«name»",«IF isPrimaryKey && !isNullable»
+		    «pk»«ENDIF»
+		    allowNull: «isNullable»,
+		},
+		'''
 	}
 	
 	/**
@@ -404,7 +409,7 @@ public class ClassifierModelGenerator {
 			if(!hasAttributes && acc==""){
 				acc + '''«ref.generateReferenceAttributes(clazz, additionnalName)»'''
 			}else{
-				acc + ''',«ref.generateReferenceAttributes(clazz, additionnalName)»'''
+				acc + '''«ref.generateReferenceAttributes(clazz, additionnalName)»'''
 			}
 		]»
 		'''
@@ -432,7 +437,7 @@ public class ClassifierModelGenerator {
 				val ids = ClassifierUtils.getId(fromClass)
 				'''«ids.fold("")[acc, id |
 					if(acc != ""){
-						acc + ''',
+						acc + '''
 						''' + '''«property.generateReferenceAttributeAssocation(id, clazz, additionnalName)»'''
 					}else{
 						acc + '''«property.generateReferenceAttributeAssocation(id, clazz, additionnalName)»'''
@@ -454,14 +459,15 @@ public class ClassifierModelGenerator {
 		var fieldName = Utils.addAdditionnalName(additionnalName, name)
 		'''
 		«fieldName»: {
-			type: «id.getAttributeSequelizeTypeDeclaration»,
-			field: "«fieldName»",
-			allowNull: «PropertyUtils.isNullable(property)»,
-			references: {
-				model: "«ClassifierUtils.getModelName(fromClass as Classifier)»",
-				key: "«id.name»"
-			}
-		}'''
+		    type: «id.getAttributeSequelizeTypeDeclaration»,
+		    field: "«fieldName»",
+		    allowNull: «PropertyUtils.isNullable(property)»,
+		    references: {
+		        model: "«ClassifierUtils.getModelName(fromClass as Classifier)»",
+		        key: "«id.name»",
+		    },
+		},
+		'''
 	}
 	
 	static def generateReferenceAttributesNA(Property property, Classifier clazz, String additionnalName){
@@ -470,7 +476,7 @@ public class ClassifierModelGenerator {
 			val ids = ClassifierUtils.getId(fromClass)
 			'''«ids.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',
+					acc + '''
 					''' + '''«property.generateReferenceAttributeNA(id, clazz, additionnalName)»'''
 				}else{
 					acc + '''«property.generateReferenceAttributeNA(id, clazz, additionnalName)»'''
@@ -486,14 +492,15 @@ public class ClassifierModelGenerator {
 			val fieldName = Utils.addAdditionnalName(additionnalName, name)
 			'''
 			«fieldName»: {
-				type: «property.getAttributeSequelizeTypeDeclaration»,
-				field: "«fieldName»",
-				allowNull: «PropertyUtils.isNullable(property)»,
-				references: {
-					model: "«ClassifierUtils.getModelName(fromClass as Classifier)»",
-					key: "«id.name»"
-				}
-			}'''
+			    type: «property.getAttributeSequelizeTypeDeclaration»,
+			    field: "«fieldName»",
+			    allowNull: «PropertyUtils.isNullable(property)»,
+			    references: {
+			        model: "«ClassifierUtils.getModelName(fromClass as Classifier)»",
+			        key: "«id.name»",
+			    },
+			},
+			'''
 		}
 	}
 
@@ -578,20 +585,20 @@ public class ClassifierModelGenerator {
 		'''
 		
 		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
-			«property.name»: {
-				type: «property.getAttributeSequelizeTypeDeclaration»,
-				field: "«Utils.toDbName(property.name)»",
-				primaryKey: true,
-				allowNull: false
-			},
-			«ids.fold("")[acc, id |
+		    «property.name»: {
+		        type: «property.getAttributeSequelizeTypeDeclaration»,
+		        field: "«Utils.toDbName(property.name)»",
+		        primaryKey: true,
+		        allowNull: false,
+		    },
+		    «ids.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«id.generateMultiValuedPrimitiveTypeModelIdAttributes( fromClass)»'''
+					acc + '''«id.generateMultiValuedPrimitiveTypeModelIdAttributes( fromClass)»'''
 				}else{
 					acc + '''«id.generateMultiValuedPrimitiveTypeModelIdAttributes( fromClass)»'''
 				}
 			]»
-		}
+		};
 		'''
 	}
 	
@@ -601,15 +608,15 @@ public class ClassifierModelGenerator {
 		val DBName = PropertyUtils.getDatabaseName(id, id.name, "")
 		'''
 		«idName»:{
-			type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
-			field: "«DBName»",
-			allowNull: false,
-			primaryKey: true,
-			references: {
-				model: "«ClassifierUtils.getModelName(fromClass)»",
-				key: "«idName»"
-			}
-		}
+		    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
+		    field: "«DBName»",
+		    allowNull: false,
+		    primaryKey: true,
+		    references: {
+		        model: "«ClassifierUtils.getModelName(fromClass)»",
+		        key: "«idName»",
+		    },
+		},
 		'''
 	}
 	
@@ -642,22 +649,22 @@ public class ClassifierModelGenerator {
 		'''
 		
 		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
-			«idsProp.fold("")[acc, id |
+		    «idsProp.fold("")[acc, id |
 				val name = PropertyUtils.getName(property, property.name, "")
 				if(acc != ""){
-					acc + ''',«property.generateNPTAssociationModelIdAttributes(id, fromClass, name)»'''
+					acc + '''«property.generateNPTAssociationModelIdAttributes(id, fromClass, name)»'''
 				}else{
 					acc + '''«property.generateNPTAssociationModelIdAttributes(id, fromClass, name)»'''
 				}
-			]»,
-			«idsOwner.fold("")[acc, id |
+			]»
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«member.generateNPTAssociationModelIdAttributes(id, fromClass, fromClass.name)»'''
+					acc + '''«member.generateNPTAssociationModelIdAttributes(id, fromClass, fromClass.name)»'''
 				}else{
 					acc + '''«member.generateNPTAssociationModelIdAttributes(id, fromClass, fromClass.name)»'''
 				}
 			]»
-		}
+		};
 		'''
 	}
 	
@@ -672,15 +679,16 @@ public class ClassifierModelGenerator {
 		if(type instanceof Classifier){
 			'''
 			«idName»:{
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
-				field: "«idFieldName»",
-				allowNull: false,
-				primaryKey: true,
-				references: {
-					model: "«ClassifierUtils.getModelName(type)»",
-					key: "«id.name»"
-				}
-			}'''
+			    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
+			    field: "«idFieldName»",
+			    allowNull: false,
+			    primaryKey: true,
+			    references: {
+			        model: "«ClassifierUtils.getModelName(type)»",
+			        key: "«id.name»",
+			    },
+			},
+			'''
 		}
 	}
 	
@@ -692,21 +700,21 @@ public class ClassifierModelGenerator {
 		'''
 		
 		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
-			«idsOwner.fold("")[acc, id |
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«id.generateNPTModelIdAttributes(fromClass, true)»'''
+					acc + '''«id.generateNPTModelIdAttributes(fromClass, true)»'''
 				}else{
 					acc + '''«id.generateNPTModelIdAttributes(fromClass, true)»'''
 				}
-			]»,
-			«idsProp.fold("")[acc, id |
+			]»
+		    «idsProp.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«property.generateNPTModelIdAttributes(id, fromClass)»'''
+					acc + '''«property.generateNPTModelIdAttributes(id, fromClass)»'''
 				}else{
 					acc + '''«property.generateNPTModelIdAttributes(id, fromClass)»'''
 				}
 			]»
-		}
+		};
 		'''
 	}
 	
@@ -725,15 +733,16 @@ public class ClassifierModelGenerator {
 			if(type instanceof Classifier){
 				'''
 				«idName»:{
-					type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
-					field: "«idFieldName»",
-					allowNull: false,
-					primaryKey: true,
-					references: {
-						model: "«ClassifierUtils.getModelName(type)»",
-						key: "«id.name»"
-					}
-				}'''
+				    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
+				    field: "«idFieldName»",
+				    allowNull: false,
+				    primaryKey: true,
+				    references: {
+				        model: "«ClassifierUtils.getModelName(type)»",
+				        key: "«id.name»",
+				    },
+				},
+				'''
 			}
 		}
 	}
@@ -745,15 +754,15 @@ public class ClassifierModelGenerator {
 		if(type instanceof Classifier){
 			'''
 			«idName»:{
-				type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
-				field: "«idFieldName»",
-				allowNull: false,
-				primaryKey: true,
-				references: {
-					model: "«ClassifierUtils.getModelName(type)»",
-					key: "«id.name»"
-				}
-			}
+			    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
+			    field: "«idFieldName»",
+			    allowNull: false,
+			    primaryKey: true,
+			    references: {
+			        model: "«ClassifierUtils.getModelName(type)»",
+			        key: "«id.name»",
+			    },
+			},
 			'''
 		}
 	}
@@ -777,24 +786,24 @@ public class ClassifierModelGenerator {
 		'''
 		
 		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
-			«idsOwner.fold("")[acc, id |
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«id.generateNPTModelIdAttributes(fromClass, false)»'''
+					acc + '''«id.generateNPTModelIdAttributes(fromClass, false)»'''
 				}else{
 					acc + '''«id.generateNPTModelIdAttributes(fromClass, false)»'''
 				}
-			]»,
-			code: {
-				type: Sequelize.«TypeUtils.getEnumSequelizeType(type as Classifier)»,
-				field: "CODE",
-				allowNull: false,
-				primaryKey: true,
-				references: {
-					model: "«ClassifierUtils.getModelName(type as Classifier)»",
-					key: "code"
-				}
-			}
-		}
+			]»
+		    code: {
+		        type: Sequelize.«TypeUtils.getEnumSequelizeType(type as Classifier)»,
+		        field: "code",
+		        allowNull: false,
+		        primaryKey: true,
+		        references: {
+		            model: "«ClassifierUtils.getModelName(type as Classifier)»",
+		            key: "code",
+		        },
+		    },
+		};
 		'''
 		
 	}
@@ -806,15 +815,15 @@ public class ClassifierModelGenerator {
 		'''
 		
 		export const «PropertyUtils.getMultivaluedPropertyModelName(property, fromClass)»: Sequelize.DefineAttributes={
-			«idsOwner.fold("")[acc, id |
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
-					acc + ''',«id.generateNPTModelIdAttributes(fromClass, false)»'''
+					acc + '''«id.generateNPTModelIdAttributes(fromClass, false)»'''
 				}else{
 					acc + '''«id.generateNPTModelIdAttributes(fromClass, false)»'''
 				}
-			]»,
-			«(type as Classifier).generateAttributes(property.name, name, fromClass, true, false)»
-		}
+			]»
+		    «(type as Classifier).generateAttributes(property.name, name, fromClass, true, false)»
+		};
 		'''
 	}
 	

@@ -97,14 +97,13 @@ public class ClassifierAttributesInterfaceGenerator {
 		«clazz.generateImports»
 		
 		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» «clazz.generateExtends»{
-			
-			«clazz.generateAttributes("")»
-			««««clazz.generateMultiValuedEntityAttributes("")»
-			
-			«clazz.generateNotPrimitiveTypeAttributes("")»
-			«IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
-			«clazz.generateAllAssociationClassAtributes()»
-			«clazz.generateManyToManyAttributes»«ENDIF»
+		    
+		    «clazz.generateAttributes("")»
+
+		    «clazz.generateNotPrimitiveTypeAttributes("")»
+		    «IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
+		    «clazz.generateAllAssociationClassAtributes()»
+		    «clazz.generateManyToManyAttributes»«ENDIF»
 		}
 		'''
 	}

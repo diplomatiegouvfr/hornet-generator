@@ -246,7 +246,7 @@ public class Utils {
    * ex: idTest -> ID_TEST
    */
   public static String toDbName(final String name) {
-    return Utils.toSnakeCase(name).toUpperCase();
+    return Utils.toSnakeCase(name);
   }
   
   /**

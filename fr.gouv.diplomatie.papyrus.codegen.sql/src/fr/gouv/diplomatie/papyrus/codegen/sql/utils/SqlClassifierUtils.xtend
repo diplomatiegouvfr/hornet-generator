@@ -86,13 +86,7 @@ class SqlClassifierUtils{
 	
 		static def generateSchemaName(Classifier clazz){
 		val schema = ClassifierUtils.getSchema(clazz)
-		return '''«IF schema !== null»"«schema»".«ENDIF»'''
-	}
-	
-	static def generateSchemaNameSequence(Classifier clazz){
-		val schema = ClassifierUtils.getSchema(clazz)
 		return '''«IF schema !== null»«schema».«ENDIF»'''
 	}
-	
 	
 }

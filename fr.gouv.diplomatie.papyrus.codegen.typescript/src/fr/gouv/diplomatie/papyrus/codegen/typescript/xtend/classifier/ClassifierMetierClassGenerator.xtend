@@ -99,12 +99,12 @@ public class ClassifierMetierClassGenerator {
 		«Utils.generateComments(clazz)»
 		@Bean
 		export class «ClassifierUtils.getMetierClassName(clazz)» «clazz.generateExtends»«clazz.generateImplements»{
-			«clazz.generateInterfaceAttributes»
-			«clazz.generateAttributes("")»
-			«IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
-			«clazz.generateAssociationsAttributes»
-			«clazz.generateManyToManyAttributes»«ENDIF»
-			
+		    «clazz.generateInterfaceAttributes»
+		    «clazz.generateAttributes("")»
+		    «IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
+		    «clazz.generateAssociationsAttributes»
+		    «clazz.generateManyToManyAttributes»«ENDIF»
+		    
 		}
 		'''
 	}
@@ -403,7 +403,7 @@ public class ClassifierMetierClassGenerator {
 			endArray =">"
 		}
 		'''
-			
+		
 		«Utils.generateComments(property)»
 		@Map()
 		«Utils.getFirstToLowerCase(propName)»: «array»«Utils.getFirstToUpperCase(type.name)»«endArray»;

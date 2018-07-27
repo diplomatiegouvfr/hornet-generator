@@ -86,6 +86,8 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
+import org.eclipse.uml2.uml.Type
+import java.util.ArrayList
 
 public class AssociationClassAttributesInterfaceGenerator{
 	
@@ -94,7 +96,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 		«clazz.generateImports»
 		
 		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» {
-			«clazz.generateAttributes("")»
+		    «clazz.generateAttributes("")»
 		}
 		'''
 	}
@@ -103,14 +105,14 @@ public class AssociationClassAttributesInterfaceGenerator{
 	 * génère les imports
 	 */
 	static def generateImports(AssociationClass clazz){
-		//val attributesTypes = clazz.generateAttributesImports(newArrayList())
-		val options = new ClassifierUtils.ImportOptions
+		val attributesTypes = clazz.generateAttributesImports(newArrayList())
+	/* 	val options = new ClassifierUtils.ImportOptions
 		options.importInterface = true
 		options.importInterfaceAttributes = false
 		options.importValueObject = true
 		options.importValueObjectAttributes = true
 		
-		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz, newArrayList(), options)
+		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz, newArrayList(), options)*/
 		'''
 		«attributesTypes.fold("")[acc, type |
 			acc +  '''
@@ -123,7 +125,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
-/* 	 static  def Type [] generateAttributesImports(Classifier clazz, ArrayList<Type> types){
+ 	 static  def Type [] generateAttributesImports(Classifier clazz, ArrayList<Type> types){
 	 	var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]
@@ -170,7 +172,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 		]
 		return types
 	 }
-*/	 
+	 
 	 static def generateAttributes(Classifier clazz, String additionnalName){
 	 	var attributes = ClassifierUtils.getOwnedAttributes(clazz)
 	 	if(clazz instanceof AssociationClass){
