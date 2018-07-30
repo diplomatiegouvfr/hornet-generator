@@ -621,7 +621,11 @@ public class Utils {
    * retourne le code de la propriété de la nomenclature
    */
   public static Object getNomenclatureLibelle(final NamedElement elem) {
-    return Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE);
+    Object libelle = Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE);
+    if (((libelle == null) || Objects.equal(libelle, ""))) {
+      libelle = elem.getName();
+    }
+    return libelle;
   }
   
   public static Object getAttributeLength(final NamedElement elem) {

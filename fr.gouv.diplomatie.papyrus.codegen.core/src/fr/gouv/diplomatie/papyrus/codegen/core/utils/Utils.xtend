@@ -543,7 +543,11 @@ public class Utils{
 	 * retourne le code de la propriété de la nomenclature
 	 */
 	static def getNomenclatureLibelle(NamedElement elem){
-		return Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE)
+		var libelle =  Utils.getStereotypePropertyValue(elem, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_LIBELLE)
+		if(libelle === null || libelle == ""){
+			libelle = elem.name
+		}
+		return libelle
 	}
 	
 	static def getAttributeLength(NamedElement elem){

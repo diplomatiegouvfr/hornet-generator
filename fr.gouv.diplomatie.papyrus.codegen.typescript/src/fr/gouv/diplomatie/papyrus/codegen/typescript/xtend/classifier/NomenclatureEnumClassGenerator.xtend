@@ -115,9 +115,6 @@ public class  NomenclatureEnumClassGenerator{
 	static def generateValue(Property value){
 		val code = Utils.getNomenclatureCode(value)
 		var libelle = Utils.getNomenclatureLibelle(value)
-		if(libelle === null || libelle == ""){
-			libelle = value.name
-		}
 		if(code !== null){
 			'''«libelle» = «code»'''
 		}else{

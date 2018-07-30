@@ -1105,6 +1105,7 @@ public class PackageDatabaseScriptGenerator{
 		val hasCode = ClassifierUtils.isEnumWithCode(clazz)
 		var sqlType = TypeUtils.getEnumType(clazz)
 		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val attributes = ClassifierUtils.getOwnedAttributes(clazz);
 		'''
 		
 		CREATE TABLE «schema»«ClassifierUtils.getDBTableName(clazz)»(
@@ -1127,7 +1128,27 @@ public class PackageDatabaseScriptGenerator{
 		ALTER SEQUENCE «schema»«ClassifierUtils.getDBTableName(clazz)»_code_seq
 			OWNED BY «schema»«ClassifierUtils.getDBTableName(clazz)».code;
 		«ENDIF»
+		
+		«attributes.fold("")[acc, att |
+			acc + '''«att.generateInsertValue(clazz)»'''
+		]»
 		'''
+	}
+	
+	static def generateInsertValue(Property prop, Classifier owner){
+		val schema = SqlClassifierUtils.generateSchemaName(owner);
+		val hasCode = ClassifierUtils.isEnumWithCode(owner);
+		val code = Utils.getNomenclatureCode(prop)
+		var libelle = Utils.getNomenclatureLibelle(prop)
+		if(!hasCode){
+			'''
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (LIBELLE) VALUES («libelle»);
+			'''
+		}else{
+			'''
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («code», '«libelle»');
+			'''
+		}
 	}
 	
 

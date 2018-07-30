@@ -1117,6 +1117,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		val tableName = ClassifierUtils.getDBTableName(clazz)
 		val schema = SqlClassifierUtils.generateSchemaName(clazz)
 		val schemaseq = SqlClassifierUtils.generateSchemaName(clazz)
+		val attributes = ClassifierUtils.getOwnedAttributes(clazz);
 		'''
 		
 		CREATE TABLE IF NOT EXISTS «schema»«tableName»();
@@ -1145,6 +1146,26 @@ public class PackageUpdateDatabaseScriptGenerator{
 			ALTER COLUMN code
 			SET DEFAULT nextval('«schemaseq»«ClassifierUtils.getDBTableName(clazz)»_code_seq'::regclass);
 		«ENDIF»
+		
+		«attributes.fold("")[acc, att |
+			acc + '''«att.generateInsertValue(clazz)»'''
+		]»
 		'''
+	}
+	
+	static def generateInsertValue(Property prop, Classifier owner){
+		val schema = SqlClassifierUtils.generateSchemaName(owner);
+		val hasCode = ClassifierUtils.isEnumWithCode(owner);
+		val code = Utils.getNomenclatureCode(prop)
+		var libelle = Utils.getNomenclatureLibelle(prop)
+		if(!hasCode){
+			'''
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (LIBELLE) VALUES («libelle») ON CONFLICT DO NOTHING;
+			'''
+		}else{
+			'''
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («code», '«libelle»') ON CONFLICT DO NOTHING;
+			'''
+		}
 	}
 }

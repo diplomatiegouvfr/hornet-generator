@@ -76,6 +76,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import fr.gouv.diplomatie.papyrus.codegen.sql.utils.SqlClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.sql.utils.TypeUtils;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.uml2.uml.Association;
@@ -2380,6 +2381,7 @@ public class PackageDatabaseScriptGenerator {
       final boolean hasCode = ClassifierUtils.isEnumWithCode(clazz);
       String sqlType = TypeUtils.getEnumType(clazz);
       final String schema = SqlClassifierUtils.generateSchemaName(clazz);
+      final Collection<Property> attributes = ClassifierUtils.getOwnedAttributes(clazz);
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
       _builder.append("CREATE TABLE ");
@@ -2454,7 +2456,55 @@ public class PackageDatabaseScriptGenerator {
           _builder.newLineIfNotEmpty();
         }
       }
+      _builder.newLine();
+      final Function2<String, Property, String> _function = (String acc, Property att) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateInsertValue = PackageDatabaseScriptGenerator.generateInsertValue(att, clazz);
+        _builder_1.append(_generateInsertValue);
+        return (acc + _builder_1);
+      };
+      String _fold = IterableExtensions.<Property, String>fold(attributes, "", _function);
+      _builder.append(_fold);
+      _builder.newLineIfNotEmpty();
       _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateInsertValue(final Property prop, final Classifier owner) {
+    CharSequence _xblockexpression = null;
+    {
+      final String schema = SqlClassifierUtils.generateSchemaName(owner);
+      final boolean hasCode = ClassifierUtils.isEnumWithCode(owner);
+      final Object code = Utils.getNomenclatureCode(prop);
+      Object libelle = Utils.getNomenclatureLibelle(prop);
+      CharSequence _xifexpression = null;
+      if ((!hasCode)) {
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("INSERT INTO ");
+        _builder.append(schema);
+        String _dBTableName = ClassifierUtils.getDBTableName(owner);
+        _builder.append(_dBTableName);
+        _builder.append(" (LIBELLE) VALUES (");
+        _builder.append(libelle);
+        _builder.append(");");
+        _builder.newLineIfNotEmpty();
+        _xifexpression = _builder;
+      } else {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        _builder_1.append("INSERT INTO ");
+        _builder_1.append(schema);
+        String _dBTableName_1 = ClassifierUtils.getDBTableName(owner);
+        _builder_1.append(_dBTableName_1);
+        _builder_1.append(" (CODE, LIBELLE) VALUES (");
+        _builder_1.append(code);
+        _builder_1.append(", \'");
+        _builder_1.append(libelle);
+        _builder_1.append("\');");
+        _builder_1.newLineIfNotEmpty();
+        _xifexpression = _builder_1;
+      }
+      _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
   }
