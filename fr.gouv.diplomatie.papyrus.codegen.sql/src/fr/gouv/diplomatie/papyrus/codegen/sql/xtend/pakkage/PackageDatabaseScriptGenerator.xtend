@@ -138,9 +138,9 @@ public class PackageDatabaseScriptGenerator{
 		«associationsClasses.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
 		]»
-		«assoInPakkage.fold("")[acc, clazz |
+		«IF pakkage != model»«assoInPakkage.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
-		]»
+		]»«ENDIF»
 		'''
 	}
 	

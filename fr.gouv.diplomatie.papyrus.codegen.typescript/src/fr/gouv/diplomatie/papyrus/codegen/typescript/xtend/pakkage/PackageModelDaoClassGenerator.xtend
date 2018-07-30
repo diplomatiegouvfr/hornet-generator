@@ -133,9 +133,9 @@ class PackageModelDaoClassGenerator{
 		    «associationsClasses.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateAssociationClassDeclaration»'''
 		    ]»
-		    «associationsClassesInPakkage.fold("")[acc, clazz |
+		    «IF pakkage != model»«associationsClassesInPakkage.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateAssociationClassDeclaration»'''
-		    ]»
+		    ]»«ENDIF»
 		    
 		    /**
 		    * ATTENTION: pensez à ajouter la clé dans l'injector-context
@@ -152,9 +152,9 @@ class PackageModelDaoClassGenerator{
 		        «associationsClasses.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
 			    ]»
-		        «associationsClassesInPakkage.fold("")[acc, clazz |
+		        «IF pakkage != model»«associationsClassesInPakkage.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallACEntityGetter»'''
-			    ]»
+			    ]»«ENDIF»
 		        «enums.fold("")[acc, clazz |
 			    	acc + '''«(clazz as Classifier).generateCallEnumEntityGetter»'''
 			    ]»
@@ -170,9 +170,9 @@ class PackageModelDaoClassGenerator{
 		    «associationsClasses.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateACEntityGetter»'''
 		    ]»
-		    «associationsClassesInPakkage.fold("")[acc, clazz |
+		    «IF pakkage != model»«associationsClassesInPakkage.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateACEntityGetter»'''
-		    ]»
+		    ]»«ENDIF»
 		    «enums.fold("")[acc, clazz |
 		    	acc + '''«(clazz as Classifier).generateEnumEntityGetter»'''
 		    ]»

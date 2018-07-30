@@ -172,14 +172,19 @@ public class PackageDatabaseScriptGenerator {
       String _fold_4 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_9);
       _builder.append(_fold_4);
       _builder.newLineIfNotEmpty();
-      final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
-        StringConcatenation _builder_1 = new StringConcatenation();
-        CharSequence _generateAssociationTable = PackageDatabaseScriptGenerator.generateAssociationTable(((AssociationClass) clazz));
-        _builder_1.append(_generateAssociationTable);
-        return (acc + _builder_1);
-      };
-      String _fold_5 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_10);
-      _builder.append(_fold_5);
+      {
+        boolean _notEquals = (!Objects.equal(pakkage, model));
+        if (_notEquals) {
+          final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            CharSequence _generateAssociationTable = PackageDatabaseScriptGenerator.generateAssociationTable(((AssociationClass) clazz));
+            _builder_1.append(_generateAssociationTable);
+            return (acc + _builder_1);
+          };
+          String _fold_5 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_10);
+          _builder.append(_fold_5);
+        }
+      }
       _builder.newLineIfNotEmpty();
       _xblockexpression = _builder;
     }
