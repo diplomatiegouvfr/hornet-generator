@@ -289,10 +289,6 @@
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_LX04wHdbEeevdc4A4HbIwA"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_LYTZ4XdbEeevdc4A4HbIwA"/>
         </children>
-        <children xmi:type="notation:Shape" xmi:id="_OIC9oHdbEeevdc4A4HbIwA" type="Property_ClassAttributeLabel">
-          <element xmi:type="uml:Property" href="metamodele.profile.uml#_OHcgsHdbEeevdc4A4HbIwA"/>
-          <layoutConstraint xmi:type="notation:Location" xmi:id="_OIC9oXdbEeevdc4A4HbIwA"/>
-        </children>
         <children xmi:type="notation:Shape" xmi:id="_ThGF8HdbEeevdc4A4HbIwA" type="Property_ClassAttributeLabel">
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_TgqoIHdbEeevdc4A4HbIwA"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_ThGF8XdbEeevdc4A4HbIwA"/>

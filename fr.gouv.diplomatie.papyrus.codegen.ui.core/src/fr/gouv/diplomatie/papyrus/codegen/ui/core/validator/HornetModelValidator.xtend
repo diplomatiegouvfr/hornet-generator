@@ -91,6 +91,9 @@ import org.eclipse.uml2.uml.NamedElement
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import java.util.ArrayList
 import org.eclipse.uml2.uml.PrimitiveType
+import org.eclipse.uml2.uml.AssociationClass
+import org.eclipse.uml2.uml.Interface
+import org.eclipse.uml2.uml.Association
 
 /**
  * classe de validation d'un modèle Hornet Papyrus
@@ -140,6 +143,15 @@ public class HornetModelValidator {
 		val isEntity = Utils.isEntity(packageableElement);
 		val isNomenclature = Utils.isNomenclature(packageableElement);
 		val isValueObject = Utils.isValueObject(packageableElement);
+		
+		val stereotypes = packageableElement.appliedStereotypes
+		
+		if(stereotypes.empty && (!(packageableElement instanceof AssociationClass)) && 
+			(!(packageableElement instanceof Interface))&& 
+			(!(packageableElement instanceof Association))
+		){
+			errors.add("La classe " + packageableElement.name + " ne possède pas de stéréotype");
+		}
 				
 		if(isEntity && (isNomenclature || isValueObject) || (isNomenclature && isValueObject)){
 			errors.add("La classe " + packageableElement.name + " possède plus d'un stéréotype de classe");
@@ -174,12 +186,14 @@ public class HornetModelValidator {
 		val hornetType = Utils.hasStereotype(type, Utils.MODEL_HORNETTYPE);
 		val primitiveType = type instanceof PrimitiveType;
 		
-		if(primitiveType && !hornetType){
-			errors.add("Le type de l'attribut " + packageableElement.name + " de la classe " + owner.name +" n'est pas un type Hornet (stéréotype hornetType)");
+		val stereotypes = packageableElement.appliedStereotypes
+		
+		if(stereotypes.empty && packageableElement.association === null){
+			errors.add("L'attribut " + packageableElement.name + " ne possède aucun stéréotype d'attribut ( par défaut mettre le stéréotype attribute)");
 		}
 		
-		if(!isAttribute && !isKeyAttribute && !isCLNom && (packageableElement.association === null)){
-			errors.add("L'attribut " + packageableElement.name + " de la classe " + owner.name +" ne possède aucun stéréotype d'attribut");
+		if(primitiveType && !hornetType){
+			errors.add("Le type de l'attribut " + packageableElement.name + " de la classe " + owner.name +" n'est pas un type Hornet (stéréotype hornetType)");
 		}
 		
 		// test un seul type d'attribut
