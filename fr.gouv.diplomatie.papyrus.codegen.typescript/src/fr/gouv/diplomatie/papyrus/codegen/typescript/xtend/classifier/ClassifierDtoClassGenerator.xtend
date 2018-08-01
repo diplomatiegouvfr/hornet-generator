@@ -158,7 +158,14 @@ public class ClassifierDtoClassGenerator{
 	static def generateOneToManyAttribute(Property property, Classifier clazz){
 		val owner = property.owner as Classifier
 		val fieldName = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		val id = ClassifierUtils.getId(owner).get(0)
+		val idName = Utils.getFirstToLowerCase(id.name) + Utils.getFirstToUpperCase(fieldName)
+		val alias = fieldName + '.' + Utils.getFirstToLowerCase(id.name)
 		'''
+		
+		@Map()
+		@Alias("«idName»", "«alias»")
+		«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
 		
 		@Map(«ClassifierUtils.getDtoClassName(owner)»)
 		«fieldName»: «ClassifierUtils.getDtoClassName(owner)»;

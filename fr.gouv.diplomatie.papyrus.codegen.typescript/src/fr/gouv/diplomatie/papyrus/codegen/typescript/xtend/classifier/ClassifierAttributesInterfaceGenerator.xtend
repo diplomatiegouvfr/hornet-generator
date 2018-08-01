@@ -150,8 +150,11 @@ public class ClassifierAttributesInterfaceGenerator {
 	static def generateOneToManyAttribute(Property property, Classifier fromClass){
 		val owner = property.owner as Classifier
 		val fieldName = Utils.getFirstToLowerCase(owner.name)+ Utils.getFirstToUpperCase(property.name)
+		val id = ClassifierUtils.getId(owner).get(0);
+		val idName = Utils.getFirstToLowerCase(id.name) + Utils.getFirstToUpperCase(fieldName)
 		'''
-		«fieldName»: «ClassifierUtils.getAttributesInterfaceName(owner)»;
+		«idName»?: «TypeUtils.getTypescriptType(id.type)»;
+		«fieldName»?: «ClassifierUtils.getAttributesInterfaceName(owner)»;
 		get«Utils.getFirstToUpperCase(fieldName)»(): Promise<«ClassifierUtils.getAttributesInterfaceName(owner)»>;
 		'''
 	}

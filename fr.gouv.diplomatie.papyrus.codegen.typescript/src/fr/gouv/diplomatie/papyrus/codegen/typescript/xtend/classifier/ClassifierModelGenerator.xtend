@@ -99,9 +99,9 @@ public class ClassifierModelGenerator {
 		    «clazz.generateExtendsId»
 		    «clazz.generateInterfacesAttributes»
 		    «clazz.generateAttributes("", "", clazz, false, false)»
+		    «clazz.generateOneToManyAttribute»
 		};
 		«clazz.generateMultivaluedAttributeModels»
-		««««clazz.generateOneToManyAttribute»
 		'''
 	}
 	
@@ -121,9 +121,9 @@ public class ClassifierModelGenerator {
 		val id = ClassifierUtils.getId(owner).get(0)
 		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
 		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
-		val name = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		val name = id.name + Utils.getFirstToUpperCase(owner.name) + Utils.getFirstToUpperCase(property.name)
 		'''
-	    ,«name»: {
+	    «name»: {
 	        type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,
 	        field: "«fieldName»",
 	        references: {
