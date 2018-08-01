@@ -295,7 +295,7 @@ class ClassifierUtils {
 	 */
 	static def getMultivaluedReferencesToType(Classifier inClass, Classifier ofClass){
 		val attributes = inClass.getOwnedAttributes.filter[attribut |
-			return ((attribut.type == ofClass) && (attribut.multivalued))
+			return ((attribut.type == ofClass) && (attribut.multivalued) && (attribut.association === null))
 		]
 		return attributes
 	}
@@ -436,12 +436,13 @@ class ClassifierUtils {
 			}
 		}
 	
-		for(asso : assoClassesInPakkage){
-			if(!classes.contains(asso)){
-				classes.add(asso)
+		if(pakkage != model){
+			for(asso : assoClassesInPakkage){
+				if(!classes.contains(asso)){
+					classes.add(asso)
+				}
 			}
 		}
-		
 		return classes
 	}
 	

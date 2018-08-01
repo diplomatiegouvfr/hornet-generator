@@ -27,12 +27,12 @@
       <appliedProfile xmi:type="uml:Profile" href="metamodele.profile.uml#_0"/>
     </profileApplication>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_-Y8_kPSCEeeO0fw-o-XwRw">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Avl7MJQCEeiUH5JHnzsiHQ" source="PapyrusVersion">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Avl7MZQCEeiUH5JHnzsiHQ" key="Version" value="0.0.179"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Avl7MpQCEeiUH5JHnzsiHQ" key="Comment" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Avl7M5QCEeiUH5JHnzsiHQ" key="Copyright" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Avl7NJQCEeiUH5JHnzsiHQ" key="Date" value="2018-07-30"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Avl7NZQCEeiUH5JHnzsiHQ" key="Author" value=""/>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_fxzucJSkEeiQef4vy6Q3gw" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fxzucZSkEeiQef4vy6Q3gw" key="Version" value="0.0.182"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fxzucpSkEeiQef4vy6Q3gw" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fxzuc5SkEeiQef4vy6Q3gw" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fxzudJSkEeiQef4vy6Q3gw" key="Date" value="2018-07-31"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_fxzudZSkEeiQef4vy6Q3gw" key="Author" value=""/>
       </eAnnotations>
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_-Y9moPSCEeeO0fw-o-XwRw" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="metamodele.profile.uml#_rsBGoJP0EeiGv_d27tqS2g"/>

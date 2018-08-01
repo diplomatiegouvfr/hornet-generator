@@ -338,7 +338,7 @@ public class ClassifierUtils {
    */
   public static Iterable<Property> getMultivaluedReferencesToType(final Classifier inClass, final Classifier ofClass) {
     final Function1<Property, Boolean> _function = (Property attribut) -> {
-      return Boolean.valueOf((Objects.equal(attribut.getType(), ofClass) && attribut.isMultivalued()));
+      return Boolean.valueOf(((Objects.equal(attribut.getType(), ofClass) && attribut.isMultivalued()) && (attribut.getAssociation() == null)));
     };
     final Iterable<Property> attributes = IterableExtensions.<Property>filter(ClassifierUtils.getOwnedAttributes(inClass), _function);
     return attributes;
@@ -509,11 +509,14 @@ public class ClassifierUtils {
         classes.add(asso_1);
       }
     }
-    for (final Type asso_2 : assoClassesInPakkage) {
-      boolean _contains_1 = classes.contains(asso_2);
-      boolean _not_1 = (!_contains_1);
-      if (_not_1) {
-        classes.add(asso_2);
+    boolean _notEquals = (!Objects.equal(pakkage, model));
+    if (_notEquals) {
+      for (final Type asso_2 : assoClassesInPakkage) {
+        boolean _contains_1 = classes.contains(asso_2);
+        boolean _not_1 = (!_contains_1);
+        if (_not_1) {
+          classes.add(asso_2);
+        }
       }
     }
     return classes;
