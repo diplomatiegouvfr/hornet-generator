@@ -561,7 +561,7 @@ public class ClassifierDtoClassGenerator{
 
 		val multiAttributes = ownedAttributes.filter[attribut |
 			val type = attribut.type
-			return ((Utils.isEntity(type) || Utils.isValueObject(type) || Utils.isNomenclature(type)) && (attribut.multivalued))
+			return ((Utils.isEntity(type) || Utils.isValueObject(type) || Utils.isNomenclature(type)) && (attribut.multivalued) && (!PropertyUtils.isOneToManyAttributes(attribut)))
 		]
 		
 		val interfaces = clazz.directlyRealizedInterfaces

@@ -267,6 +267,7 @@ class ClassifierUtils {
 		return multiAttributes
 	}
 	
+	
 	/**
 	 * retourne les attributs multivalués
 	 * en incluant ceux venant des interfaces et des classes généralisées
