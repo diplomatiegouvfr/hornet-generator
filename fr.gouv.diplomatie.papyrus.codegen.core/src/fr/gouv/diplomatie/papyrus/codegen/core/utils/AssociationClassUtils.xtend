@@ -100,4 +100,35 @@ class AssociationClassUtils{
 		return clazz.name + "Dto"
 	}
 	
+	/**
+	 * retourne la valeur de l'attribut tableName
+	 */
+	static def getTableNameValue(AssociationClass clazz){
+		if(Utils.isAssociationTable(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ASSOCIATIONTABLE, Utils.MODEL_ASSOCIATIONTABLE_TABLENAME)
+		}
+		return null
+	}
+	
+	/**
+	 * retourne le nom de la table liée a la classe
+	 */
+	static def String getTableName(AssociationClass clazz){
+		val name = getTableNameValue(clazz)
+		if(name === null){
+			return Utils.toSnakeCase(clazz.name)
+		}
+		return name.toString
+	}
+	
+		/**
+	 * retourne le nom de la table liée a la classe
+	 */
+	static def String getDBTableName(AssociationClass clazz){
+		val name = getTableNameValue(clazz)
+		if(name === null || name === ""){
+			return Utils.toDbName(clazz.name)
+		}
+		return Utils.toDbName(name.toString)
+	}
 }

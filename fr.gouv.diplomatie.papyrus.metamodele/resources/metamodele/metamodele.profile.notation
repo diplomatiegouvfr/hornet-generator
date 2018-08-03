@@ -478,6 +478,10 @@
     <children xmi:type="notation:Shape" xmi:id="_7eL7wPR7EeeO0fw-o-XwRw" type="Stereotype_Shape">
       <children xmi:type="notation:DecorationNode" xmi:id="_7eMi0PR7EeeO0fw-o-XwRw" type="Stereotype_NameLabel"/>
       <children xmi:type="notation:BasicCompartment" xmi:id="_7eMi0fR7EeeO0fw-o-XwRw" type="Stereotype_AttributeCompartment">
+        <children xmi:type="notation:Shape" xmi:id="_p8NokJb3EeiwSZnx4mkS1g" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_p6d8IJb3EeiwSZnx4mkS1g"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_p8NokZb3EeiwSZnx4mkS1g"/>
+        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_7eMi0vR7EeeO0fw-o-XwRw"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_7eMi0_R7EeeO0fw-o-XwRw"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_7eMi1PR7EeeO0fw-o-XwRw"/>

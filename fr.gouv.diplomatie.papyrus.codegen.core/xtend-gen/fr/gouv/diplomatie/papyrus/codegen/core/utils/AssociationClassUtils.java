@@ -69,6 +69,7 @@
  */
 package fr.gouv.diplomatie.papyrus.codegen.core.utils;
 
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import org.eclipse.uml2.uml.AssociationClass;
 
 /**
@@ -90,5 +91,38 @@ public class AssociationClassUtils {
   public static String getDtoName(final AssociationClass clazz) {
     String _name = clazz.getName();
     return (_name + "Dto");
+  }
+  
+  /**
+   * retourne la valeur de l'attribut tableName
+   */
+  public static Object getTableNameValue(final AssociationClass clazz) {
+    boolean _isAssociationTable = Utils.isAssociationTable(clazz);
+    if (_isAssociationTable) {
+      return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ASSOCIATIONTABLE, Utils.MODEL_ASSOCIATIONTABLE_TABLENAME);
+    }
+    return null;
+  }
+  
+  /**
+   * retourne le nom de la table liée a la classe
+   */
+  public static String getTableName(final AssociationClass clazz) {
+    final Object name = AssociationClassUtils.getTableNameValue(clazz);
+    if ((name == null)) {
+      return Utils.toSnakeCase(clazz.getName());
+    }
+    return name.toString();
+  }
+  
+  /**
+   * retourne le nom de la table liée a la classe
+   */
+  public static String getDBTableName(final AssociationClass clazz) {
+    final Object name = AssociationClassUtils.getTableNameValue(clazz);
+    if (((name == null) || (name == ""))) {
+      return Utils.toDbName(clazz.getName());
+    }
+    return Utils.toDbName(name.toString());
   }
 }

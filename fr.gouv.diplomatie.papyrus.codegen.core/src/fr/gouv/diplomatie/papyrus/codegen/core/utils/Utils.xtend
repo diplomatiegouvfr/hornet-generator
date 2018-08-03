@@ -105,6 +105,7 @@ public class Utils{
 	public static var MODEL_FETCHTYPE = 'fetchType';
 	
 	public static var MODEL_ASSOCIATIONTABLE = 'associationTable';
+	public static var MODEL_ASSOCIATIONTABLE_TABLENAME = 'tableName';
 	
 	public static var MODEL_ASSOCIATIONLINK = 'associationLink';
 	

@@ -91,6 +91,7 @@ import org.eclipse.uml2.uml.PrimitiveType
 import org.eclipse.uml2.uml.Interface
 import java.util.ArrayList
 import fr.gouv.diplomatie.papyrus.codegen.sql.utils.SqlClassifierUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.AssociationClassUtils
 
 public class PackageUpdateDatabaseScriptGenerator{
 	
@@ -951,7 +952,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 	}
 	
 	static def generateAssociationTable(AssociationClass clazz){
-		val tableName = Utils.toDbName(clazz.name)
+		val tableName = AssociationClassUtils.getDBTableName(clazz)
 		val schema = SqlClassifierUtils.generateSchemaName(clazz)
 		'''
 		
@@ -961,10 +962,10 @@ public class PackageUpdateDatabaseScriptGenerator{
 		
 		«clazz.generateAssociationForeignKeys»
 		
-		ALTER TABLE «schema»«Utils.toDbName(clazz.name)» DROP CONSTRAINT IF EXISTS «Utils.toDbName(clazz.name)»_pkey CASCADE;
+		ALTER TABLE «schema»«tableName» DROP CONSTRAINT IF EXISTS «tableName»_pkey CASCADE;
 		
-		ALTER TABLE ONLY «schema»«Utils.toDbName(clazz.name)»
-			ADD CONSTRAINT «Utils.toDbName(clazz.name)»_pkey PRIMARY KEY («Utils.getListStringComma(clazz.getAssociationAttributList(newArrayList(), ""))»);
+		ALTER TABLE ONLY «schema»«tableName»
+			ADD CONSTRAINT «tableName»_pkey PRIMARY KEY («Utils.getListStringComma(clazz.getAssociationAttributList(newArrayList(), ""))»);
 		'''
 	}
 	
@@ -1012,14 +1013,14 @@ public class PackageUpdateDatabaseScriptGenerator{
 		]»'''
 	}
 	
-	static def generateAssociationForeignKeys(Property property, Classifier fromClass){
+	static def generateAssociationForeignKeys(Property property, AssociationClass fromClass){
 		val type = property.type
 		val schema = SqlClassifierUtils.generateSchemaName(fromClass)
 		if(type instanceof Classifier){
 			if(Utils.isEntity(type)){
 				return '''«property.generateAssociationForeignKeysEntity(fromClass)»'''
 			}else if (Utils.isValueObject(type)){
-				return '''«type.generateForeignKeys(Utils.toDbName(property.name), ClassifierUtils.getDBTableName(fromClass), schema)»'''
+				return '''«type.generateForeignKeys(Utils.toDbName(property.name), AssociationClassUtils.getDBTableName(fromClass), schema)»'''
 			}else if(Utils.isNomenclature(type)){
 				return '''«property.generateAssociationForeignKeysEnum(fromClass)»'''
 			}
@@ -1027,7 +1028,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		''''''
 	}
 	
-	static def generateAssociationForeignKeysEntity(Property property, Classifier fromClass){
+	static def generateAssociationForeignKeysEntity(Property property, AssociationClass fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
@@ -1052,12 +1053,13 @@ public class PackageUpdateDatabaseScriptGenerator{
 			val propName = PropertyUtils.getDatabaseName(property, property.name, null)
 			val schema = SqlClassifierUtils.generateSchemaName(fromClass)
 			val typeSchema = SqlClassifierUtils.generateSchemaName(type)
+			val tableName = AssociationClassUtils.getDBTableName(fromClass)
 			return '''
 			
-			ALTER TABLE «schema»«ClassifierUtils.getDBTableName(fromClass)» DROP CONSTRAINT IF EXISTS «ClassifierUtils.getDBTableName(fromClass)»_«propName»_ids_fkey CASCADE;
+			ALTER TABLE «schema»«tableName» DROP CONSTRAINT IF EXISTS «tableName»_«propName»_ids_fkey CASCADE;
 			
-			ALTER TABLE ONLY «schema»«ClassifierUtils.getDBTableName(fromClass)»
-				ADD CONSTRAINT «ClassifierUtils.getDBTableName(fromClass)»_«propName»_ids_fkey
+			ALTER TABLE ONLY «schema»«tableName»
+				ADD CONSTRAINT «tableName»_«propName»_ids_fkey
 				FOREIGN KEY («idsNameInClass») REFERENCES «typeSchema»«ClassifierUtils.getDBTableName(type)»(«idsName»);
 			'''
 		}
@@ -1065,17 +1067,18 @@ public class PackageUpdateDatabaseScriptGenerator{
 		
 	}
 	
-	static def generateAssociationForeignKeysEnum(Property property, Classifier fromClass){
+	static def generateAssociationForeignKeysEnum(Property property, AssociationClass fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
 			val propName = "code_" + PropertyUtils.getDatabaseName(property, property.name, null)
 			val schema = SqlClassifierUtils.generateSchemaName(fromClass)
 			val typeSchema = SqlClassifierUtils.generateSchemaName(type)
+			val tableName = AssociationClassUtils.getDBTableName(fromClass)
 			return '''
-			ALTER TABLE «schema»«ClassifierUtils.getDBTableName(fromClass)» DROP CONSTRAINT IF EXISTS «ClassifierUtils.getDBTableName(fromClass)»_«propName»_code_fkey CASCADE;
+			ALTER TABLE «schema»«tableName» DROP CONSTRAINT IF EXISTS «tableName»_«propName»_code_fkey CASCADE;
 			
-			ALTER TABLE ONLY «schema»«ClassifierUtils.getDBTableName(fromClass)»
-				ADD CONSTRAINT «ClassifierUtils.getDBTableName(fromClass)»_«propName»_code_fkey 
+			ALTER TABLE ONLY «schema»«tableName»
+				ADD CONSTRAINT «tableName»_«propName»_code_fkey 
 				FOREIGN KEY («propName») REFERENCES «typeSchema»«ClassifierUtils.getDBTableName(type)»(code);
 			'''
 		}

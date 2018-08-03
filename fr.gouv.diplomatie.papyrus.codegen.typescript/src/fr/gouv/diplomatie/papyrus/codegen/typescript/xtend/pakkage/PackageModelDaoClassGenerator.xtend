@@ -87,6 +87,7 @@ import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import org.eclipse.uml2.uml.Interface
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.AssociationClassUtils
 
 class PackageModelDaoClassGenerator{
 	
@@ -131,10 +132,10 @@ class PackageModelDaoClassGenerator{
 		    	
 		    ]»
 		    «associationsClasses.fold("")[acc, clazz |
-		    	acc + '''«(clazz as Classifier).generateAssociationClassDeclaration»'''
+		    	acc + '''«(clazz as AssociationClass).generateAssociationClassDeclaration»'''
 		    ]»
 		    «IF pakkage != model»«associationsClassesInPakkage.fold("")[acc, clazz |
-		    	acc + '''«(clazz as Classifier).generateAssociationClassDeclaration»'''
+		    	acc + '''«(clazz as AssociationClass).generateAssociationClassDeclaration»'''
 		    ]»«ENDIF»
 		    
 		    /**
@@ -331,11 +332,11 @@ class PackageModelDaoClassGenerator{
 		}
 	}
 	
-	static def generateAssociationClassDeclaration(Classifier clazz){
+	static def generateAssociationClassDeclaration(AssociationClass clazz){
 		val options = clazz.generateEntityDecoratorOption
 		'''
 		
-		@Entity("«ClassifierUtils.getDBTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»«options»)
+		@Entity("«AssociationClassUtils.getDBTableName(clazz)»", «ClassifierUtils.getModelName(clazz)»«options»)
 		public «Utils.getFirstToLowerCase(clazz.name)»Entity: HornetSequelizeInstanceModel<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 		'''
 	}

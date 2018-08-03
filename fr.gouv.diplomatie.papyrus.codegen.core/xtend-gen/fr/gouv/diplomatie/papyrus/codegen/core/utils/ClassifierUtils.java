@@ -559,7 +559,7 @@ public class ClassifierUtils {
    */
   public static String getDBTableName(final Classifier clazz) {
     final Object name = ClassifierUtils.getTableNameValue(clazz);
-    if ((name == null)) {
+    if (((name == null) || (name == ""))) {
       return Utils.toDbName(clazz.getName());
     }
     return Utils.toDbName(name.toString());

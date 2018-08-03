@@ -113,6 +113,8 @@ public class Utils {
   
   public static String MODEL_ASSOCIATIONTABLE = "associationTable";
   
+  public static String MODEL_ASSOCIATIONTABLE_TABLENAME = "tableName";
+  
   public static String MODEL_ASSOCIATIONLINK = "associationLink";
   
   public static String MODEL_NOMENCLATURE = "nomenclature";

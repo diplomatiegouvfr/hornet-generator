@@ -484,7 +484,7 @@ class ClassifierUtils {
 	 */
 	static def String getDBTableName(Classifier clazz){
 		val name = getTableNameValue(clazz)
-		if(name === null){
+		if(name === null || name === ""){
 			return Utils.toDbName(clazz.name)
 		}
 		return Utils.toDbName(name.toString)

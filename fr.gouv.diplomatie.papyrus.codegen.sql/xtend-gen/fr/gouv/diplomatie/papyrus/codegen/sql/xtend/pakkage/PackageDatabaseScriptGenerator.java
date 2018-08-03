@@ -70,6 +70,7 @@
 package fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage;
 
 import com.google.common.base.Objects;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.AssociationClassUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
@@ -2071,8 +2072,8 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLine();
       _builder.append("CREATE TABLE ");
       _builder.append(schema);
-      String _dbName = Utils.toDbName(clazz.getName());
-      _builder.append(_dbName);
+      String _dBTableName = AssociationClassUtils.getDBTableName(clazz);
+      _builder.append(_dBTableName);
       _builder.append("(");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
@@ -2087,13 +2088,13 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLine();
       _builder.append("ALTER TABLE ONLY ");
       _builder.append(schema);
-      String _dbName_1 = Utils.toDbName(clazz.getName());
-      _builder.append(_dbName_1);
+      String _dBTableName_1 = AssociationClassUtils.getDBTableName(clazz);
+      _builder.append(_dBTableName_1);
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("ADD CONSTRAINT ");
-      String _dbName_2 = Utils.toDbName(clazz.getName());
-      _builder.append(_dbName_2, "\t");
+      String _dBTableName_2 = AssociationClassUtils.getDBTableName(clazz);
+      _builder.append(_dBTableName_2, "\t");
       _builder.append("_pkey PRIMARY KEY (");
       String _listComma = Utils.getListComma(PackageDatabaseScriptGenerator.getAssociationAttributList(clazz, CollectionLiterals.<String>newArrayList(), ""));
       _builder.append(_listComma, "\t");
@@ -2190,7 +2191,7 @@ public class PackageDatabaseScriptGenerator {
     return _xblockexpression;
   }
   
-  public static CharSequence generateAssociationForeignKeys(final Property property, final Classifier fromClass) {
+  public static CharSequence generateAssociationForeignKeys(final Property property, final AssociationClass fromClass) {
     CharSequence _xblockexpression = null;
     {
       final Type type = property.getType();
@@ -2206,7 +2207,7 @@ public class PackageDatabaseScriptGenerator {
           boolean _isValueObject = Utils.isValueObject(type);
           if (_isValueObject) {
             StringConcatenation _builder_1 = new StringConcatenation();
-            CharSequence _generateForeignKeys = PackageDatabaseScriptGenerator.generateForeignKeys(((Classifier)type), Utils.toDbName(property.getName()), ClassifierUtils.getDBTableName(fromClass), schema);
+            CharSequence _generateForeignKeys = PackageDatabaseScriptGenerator.generateForeignKeys(((Classifier)type), Utils.toDbName(property.getName()), AssociationClassUtils.getDBTableName(fromClass), schema);
             _builder_1.append(_generateForeignKeys);
             return _builder_1.toString();
           } else {
@@ -2226,7 +2227,7 @@ public class PackageDatabaseScriptGenerator {
     return _xblockexpression;
   }
   
-  public static String generateAssociationForeignKeysEntity(final Property property, final Classifier fromClass) {
+  public static String generateAssociationForeignKeysEntity(final Property property, final AssociationClass fromClass) {
     final Type type = property.getType();
     if ((type instanceof Classifier)) {
       final Iterable<Property> ids = ClassifierUtils.getId(((Classifier)type));
@@ -2280,12 +2281,12 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLine();
       _builder.append("ALTER TABLE ONLY ");
       _builder.append(schema);
-      String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
+      String _dBTableName = AssociationClassUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName);
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("ADD CONSTRAINT ");
-      String _dBTableName_1 = ClassifierUtils.getDBTableName(fromClass);
+      String _dBTableName_1 = AssociationClassUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName_1, "\t");
       _builder.append("_");
       _builder.append(propName, "\t");
@@ -2308,7 +2309,7 @@ public class PackageDatabaseScriptGenerator {
     return _builder_1.toString();
   }
   
-  public static String generateAssociationForeignKeysEnum(final Property property, final Classifier fromClass, final String schema) {
+  public static String generateAssociationForeignKeysEnum(final Property property, final AssociationClass fromClass, final String schema) {
     final Type type = property.getType();
     if ((type instanceof Classifier)) {
       String _databaseName = PropertyUtils.getDatabaseName(property, property.getName(), null);
@@ -2318,12 +2319,12 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLine();
       _builder.append("ALTER TABLE ONLY ");
       _builder.append(schema);
-      String _dBTableName = ClassifierUtils.getDBTableName(fromClass);
+      String _dBTableName = AssociationClassUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName);
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.append("ADD CONSTRAINT ");
-      String _dBTableName_1 = ClassifierUtils.getDBTableName(fromClass);
+      String _dBTableName_1 = AssociationClassUtils.getDBTableName(fromClass);
       _builder.append(_dBTableName_1, "\t");
       _builder.append("_");
       _builder.append(propName, "\t");
