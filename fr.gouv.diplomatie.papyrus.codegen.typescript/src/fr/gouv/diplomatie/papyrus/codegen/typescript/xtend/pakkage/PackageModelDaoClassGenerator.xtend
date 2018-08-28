@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.1.3
+ * @version v1.1.5
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.pakkage;
@@ -367,22 +367,14 @@ class PackageModelDaoClassGenerator{
 	}
 	
 	static def generateOneToManyRelation(Property property, Classifier clazz){
-		val owner = property.owner as Classifier
-		val alias = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
-		
+		//val owner = property.owner as Classifier
+		val owner = property.type as Classifier
 		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 		val id = ClassifierUtils.getId(owner).get(0)
 		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
-		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
-/* 		'''
-		SequelizeUtils.initRelationBelongsTo({
-			fromEntity: this.«Utils.getFirstToLowerCase(clazz.name)»Entity,
-			 toEntity: this.«Utils.getFirstToLowerCase(owner.name)»Entity,
-			 alias: "«alias»",
-			 foreignKey: "«fieldName»"
-		});
-		'''
-	*/	
+		val alias = Utils.getFirstToLowerCase(property.name)
+		//val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		val fieldName = idDbName + "_" + dbPropertyName		
 		return generateInitRelationBelongsTo(
 			'''this.«Utils.getFirstToLowerCase(clazz.name)»Entity''',
 			'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
@@ -540,11 +532,15 @@ class PackageModelDaoClassGenerator{
 				}
 				if(PropertyUtils.isOneToManyAttributes(property)){
 					val owner = property.owner as Classifier
-					val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 					val id = ClassifierUtils.getId(owner).get(0)
 					val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
-					val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
-								
+					
+					var test = property
+					if(property.association !== null && property.association.ownedEnds !== null){
+						test = property.association.ownedEnds.get(0)
+					}	
+					val dbPropertyName = PropertyUtils.getDatabaseName(test, test.name, "")
+					val fieldName = idDbName + "_" + dbPropertyName		
 					'''
 					SequelizeUtils.initRelationHasMany({
 					    fromEntity: this.«Utils.getFirstToLowerCase(fromClass.name)»Entity,

@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.1.3
+ * @version v1.1.5
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
@@ -117,11 +117,14 @@ public class ClassifierModelGenerator {
 	
 	static def generateOneToManyAttribute(Property property, Classifier clazz){
 		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
-		val owner = property.owner as Classifier
+		//val owner = property.owner as Classifier
+		val owner = property.type as Classifier
 		val id = ClassifierUtils.getId(owner).get(0)
 		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
-		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
-		val name = id.name + Utils.getFirstToUpperCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		//val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		val fieldName = idDbName + "_" + dbPropertyName
+		//val name = id.name + Utils.getFirstToUpperCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		val name = id.name + Utils.getFirstToUpperCase(property.name)
 		'''
 	    «name»: {
 	        type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateAttributeTypeLength»,

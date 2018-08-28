@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.1.3
+ * @version v1.1.5
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage;
@@ -188,11 +188,12 @@ public class PackageUpdateDatabaseScriptGenerator{
 	
 	static def generateAttrForeignKey(Property property, Classifier fromClass, String tableName, String schema){
 		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
-		val owner = property.owner as Classifier
+		//val owner = property.owner as Classifier
+		val owner = property.type as Classifier
 		val id = ClassifierUtils.getId(owner).get(0)
 		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
-		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
-		
+		//val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		val fieldName = idDbName + "_" + dbPropertyName
 		val nullable = PropertyUtils.isNullable(property)
 		
 		'''
@@ -228,10 +229,12 @@ public class PackageUpdateDatabaseScriptGenerator{
 	
 	static def generateAttributesAlterForeignKey(Property property, Classifier clazz, String additionnalName){
 		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
-		val owner = property.owner as Classifier
+		//val owner = property.owner as Classifier
+		val owner = property.type as Classifier
 		val id = ClassifierUtils.getId(owner).get(0)
 		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
-		val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		//val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
+		val fieldName = idDbName + "_"  + dbPropertyName
 		val schema = SqlClassifierUtils.generateSchemaName(clazz)
 		val ownerSchema = SqlClassifierUtils.generateSchemaName(owner)
 		'''
@@ -239,7 +242,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		ALTER TABLE «schema»«ClassifierUtils.getDBTableName(clazz)» DROP CONSTRAINT IF EXISTS «Utils.toDbName(clazz.name)»_«ClassifierUtils.getDBTableName(owner)»_«dbPropertyName»_ids_fkey CASCADE;
 		
 		ALTER TABLE ONLY «schema»«ClassifierUtils.getDBTableName(clazz)»
-		    ADD CONSTRAINT «Utils.toDbName(clazz.name)»_«ClassifierUtils.getDBTableName(owner)»_«dbPropertyName»_ids_fkey
+		    ADD CONSTRAINT «Utils.toDbName(clazz.name)»_«dbPropertyName»_ids_fkey
 		    FOREIGN KEY («fieldName») REFERENCES «ownerSchema»«ClassifierUtils.getDBTableName(owner)»(«idDbName»);
 		'''
 	}

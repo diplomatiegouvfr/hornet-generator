@@ -4,3 +4,8 @@
 /.NomenclatureGenerator.java._trace
 /.NomenclatureConverterGenerator.java._trace
 /.test.java._trace
+/.ClassifierJPAEntityGenerator.xtendbin
+/.NomenclatureConverterGenerator.xtendbin
+/.NomenclatureGenerator.xtendbin
+/ClassifierJPAEntityGenerator.java
+/NomenclatureGenerator.java

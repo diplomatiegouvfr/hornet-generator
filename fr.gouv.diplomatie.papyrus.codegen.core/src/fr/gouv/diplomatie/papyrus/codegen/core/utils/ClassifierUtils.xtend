@@ -74,7 +74,7 @@
  * pour l'écriture d'un générateur de code Hornet
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.1.3
+ * @version v1.1.5
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.core.utils
@@ -317,7 +317,7 @@ class ClassifierUtils {
 	/**
 	 * retourne les attributs de type one to many de type ofType présents dans le package
 	 */
-	static def getOneToManyAttributes(Classifier ofType){
+	/*static def getOneToManyAttributes(Classifier ofType){
 		val pakkage = ofType.package
 		val classes = pakkage.getOwnedTypes().filter[type|
 			Utils.isEntity(type) 
@@ -332,7 +332,7 @@ class ClassifierUtils {
 					val memberEnd = attr.association.memberEnds.filter[mem |mem.type == classe]
 					if(member.length > 0 && memberEnd.length > 0){
 						val end = member.get(0);
-						val otherEnd =memberEnd.get(0) 
+						val otherEnd = memberEnd.get(0) 
 						return end.isMultivalued && !otherEnd.isMultivalued
 					}
 					return false
@@ -346,7 +346,53 @@ class ClassifierUtils {
 			}
 		}
 		return attributesRef
+	}*/
+	
+	
+	static def getOneToManyAttributes(Classifier ofType){
+		val pakkage = ofType.package
+		val classes = pakkage.getOwnedTypes().filter[type|
+			Utils.isEntity(type)
+		]
+		
+		val test = new ArrayList
+		var attributesRef = new ArrayList
+		
+		for(classe : classes){
+			val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(classe as Classifier).filter[attr |
+				if(attr.association !== null){
+					val member = attr.association.memberEnds.filter[mem |mem.type == ofType]
+					val memberEnd = attr.association.memberEnds.filter[mem |mem.type == classe]
+					if(member.length > 0 && memberEnd.length > 0){
+						val end = member.get(0);
+						val otherEnd = memberEnd.get(0) 
+						if(end.isMultivalued && !otherEnd.isMultivalued){
+							test.add(otherEnd)
+						}
+						return false
+					}
+					return false
+				}else if(attr.type == ofType && !attr.multivalued){
+					return true
+				}
+				return false
+			]
+			for(attribut : attributes){
+				attributesRef.add(attribut)
+			}
+			
+			if(!test.empty){
+				for(attribut : test){
+					if(!attributesRef.contains(attribut)){
+						attributesRef.add(attribut)
+					}
+				}
+			}
+
+		}
+		return attributesRef
 	}
+	
 	
 	/**
 	 * retourne les attributs de type many to many de type ofType présents dans le package
@@ -547,8 +593,8 @@ class ClassifierUtils {
 		if(Utils.isEntity(clazz)){
 			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
 			for(attribut : oneToManyAttributes){
-				if(!types.contains(attribut.owner) && (attribut.owner != clazz)){
-					types.add(attribut.owner as Classifier)
+				if(!types.contains(attribut.type) && (attribut.type != clazz)){
+					types.add(attribut.type as Classifier)
 				}
 			}
 			

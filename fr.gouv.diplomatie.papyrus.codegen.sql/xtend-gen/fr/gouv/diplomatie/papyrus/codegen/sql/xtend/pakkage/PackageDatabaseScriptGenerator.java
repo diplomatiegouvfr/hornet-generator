@@ -285,14 +285,11 @@ public class PackageDatabaseScriptGenerator {
     CharSequence _xblockexpression = null;
     {
       final String dbPropertyName = PropertyUtils.getDatabaseName(property, property.getName(), "");
-      Element _owner = property.getOwner();
-      final Classifier owner = ((Classifier) _owner);
+      Type _type = property.getType();
+      final Classifier owner = ((Classifier) _type);
       final Property id = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(owner), Property.class))[0];
       final String idDbName = PropertyUtils.getDatabaseName(id, id.getName(), "");
-      String _dbName = Utils.toDbName(owner.getName());
-      String _plus = ((idDbName + "_") + _dbName);
-      String _plus_1 = (_plus + "_");
-      final String fieldName = (_plus_1 + dbPropertyName);
+      final String fieldName = ((idDbName + "_") + dbPropertyName);
       final boolean nullable = PropertyUtils.isNullable(property);
       StringConcatenation _builder = new StringConcatenation();
       _builder.append(fieldName);
@@ -361,14 +358,11 @@ public class PackageDatabaseScriptGenerator {
     CharSequence _xblockexpression = null;
     {
       final String dbPropertyName = PropertyUtils.getDatabaseName(property, property.getName(), "");
-      Element _owner = property.getOwner();
-      final Classifier owner = ((Classifier) _owner);
+      Type _type = property.getType();
+      final Classifier owner = ((Classifier) _type);
       final Property id = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(owner), Property.class))[0];
       final String idDbName = PropertyUtils.getDatabaseName(id, id.getName(), "");
-      String _dbName = Utils.toDbName(owner.getName());
-      String _plus = ((idDbName + "_") + _dbName);
-      String _plus_1 = (_plus + "_");
-      final String fieldName = (_plus_1 + dbPropertyName);
+      final String fieldName = ((idDbName + "_") + dbPropertyName);
       final String schema = SqlClassifierUtils.generateSchemaName(clazz);
       final String ownerSchema = SqlClassifierUtils.generateSchemaName(owner);
       StringConcatenation _builder = new StringConcatenation();
@@ -380,11 +374,8 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLineIfNotEmpty();
       _builder.append("    ");
       _builder.append("ADD CONSTRAINT ");
-      String _dbName_1 = Utils.toDbName(clazz.getName());
-      _builder.append(_dbName_1, "    ");
-      _builder.append("_");
-      String _dBTableName_1 = ClassifierUtils.getDBTableName(owner);
-      _builder.append(_dBTableName_1, "    ");
+      String _dbName = Utils.toDbName(clazz.getName());
+      _builder.append(_dbName, "    ");
       _builder.append("_");
       _builder.append(dbPropertyName, "    ");
       _builder.append("_ids_fkey");
@@ -394,8 +385,8 @@ public class PackageDatabaseScriptGenerator {
       _builder.append(fieldName, "    ");
       _builder.append(") REFERENCES ");
       _builder.append(ownerSchema, "    ");
-      String _dBTableName_2 = ClassifierUtils.getDBTableName(owner);
-      _builder.append(_dBTableName_2, "    ");
+      String _dBTableName_1 = ClassifierUtils.getDBTableName(owner);
+      _builder.append(_dBTableName_1, "    ");
       _builder.append("(");
       _builder.append(idDbName, "    ");
       _builder.append(");");

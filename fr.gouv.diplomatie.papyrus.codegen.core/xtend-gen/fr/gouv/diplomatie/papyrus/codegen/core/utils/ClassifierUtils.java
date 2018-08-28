@@ -358,7 +358,36 @@ public class ClassifierUtils {
   }
   
   /**
-   * retourne les attributs de type one to many de type ofType présents dans le package
+   * static def getOneToManyAttributes(Classifier ofType){
+   * val pakkage = ofType.package
+   * val classes = pakkage.getOwnedTypes().filter[type|
+   * Utils.isEntity(type)
+   * ]
+   * 
+   * var attributesRef = new ArrayList
+   * 
+   * for(classe : classes){
+   * val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(classe as Classifier).filter[attr|
+   * if(attr.association !== null){
+   * val member = attr.association.memberEnds.filter[mem |mem.type == ofType]
+   * val memberEnd = attr.association.memberEnds.filter[mem |mem.type == classe]
+   * if(member.length > 0 && memberEnd.length > 0){
+   * val end = member.get(0);
+   * val otherEnd = memberEnd.get(0)
+   * return end.isMultivalued && !otherEnd.isMultivalued
+   * }
+   * return false
+   * }else if(attr.type == ofType && !attr.multivalued){
+   * return true
+   * }
+   * return false
+   * ]
+   * for(attribut : attributes){
+   * attributesRef.add(attribut)
+   * }
+   * }
+   * return attributesRef
+   * }
    */
   public static ArrayList<Property> getOneToManyAttributes(final Classifier ofType) {
     final org.eclipse.uml2.uml.Package pakkage = ofType.getPackage();
@@ -366,6 +395,7 @@ public class ClassifierUtils {
       return Boolean.valueOf(Utils.isEntity(type));
     };
     final Iterable<Type> classes = IterableExtensions.<Type>filter(pakkage.getOwnedTypes(), _function);
+    final ArrayList<Property> test = new ArrayList<Property>();
     ArrayList<Property> attributesRef = new ArrayList<Property>();
     for (final Type classe : classes) {
       {
@@ -386,7 +416,10 @@ public class ClassifierUtils {
             if (((((Object[])Conversions.unwrapArray(member, Object.class)).length > 0) && (((Object[])Conversions.unwrapArray(memberEnd, Object.class)).length > 0))) {
               final Property end = ((Property[])Conversions.unwrapArray(member, Property.class))[0];
               final Property otherEnd = ((Property[])Conversions.unwrapArray(memberEnd, Property.class))[0];
-              return Boolean.valueOf((end.isMultivalued() && (!otherEnd.isMultivalued())));
+              if ((end.isMultivalued() && (!otherEnd.isMultivalued()))) {
+                test.add(otherEnd);
+              }
+              return Boolean.valueOf(false);
             }
             return Boolean.valueOf(false);
           } else {
@@ -399,6 +432,17 @@ public class ClassifierUtils {
         final Iterable<Property> attributes = IterableExtensions.<Property>filter(ClassifierUtils.getMultivaluedOwnedAttributes(((Classifier) classe)), _function_1);
         for (final Property attribut : attributes) {
           attributesRef.add(attribut);
+        }
+        boolean _isEmpty = test.isEmpty();
+        boolean _not = (!_isEmpty);
+        if (_not) {
+          for (final Property attribut_1 : test) {
+            boolean _contains = attributesRef.contains(attribut_1);
+            boolean _not_1 = (!_contains);
+            if (_not_1) {
+              attributesRef.add(attribut_1);
+            }
+          }
         }
       }
     }
@@ -601,16 +645,16 @@ public class ClassifierUtils {
     if (_isEntity) {
       final ArrayList<Property> oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz);
       for (final Property attribut : oneToManyAttributes) {
-        if (((!types.contains(attribut.getOwner())) && (!Objects.equal(attribut.getOwner(), clazz)))) {
-          Element _owner = attribut.getOwner();
-          types.add(((Classifier) _owner));
+        if (((!types.contains(attribut.getType())) && (!Objects.equal(attribut.getType(), clazz)))) {
+          Type _type = attribut.getType();
+          types.add(((Classifier) _type));
         }
       }
       final ArrayList<Property> manyToManyAttributes = ClassifierUtils.getManyToManyAttributes(clazz);
       for (final Property attribut_1 : manyToManyAttributes) {
         if (((!types.contains(attribut_1.getOwner())) && (!Objects.equal(attribut_1.getOwner(), clazz)))) {
-          Element _owner_1 = attribut_1.getOwner();
-          types.add(((Classifier) _owner_1));
+          Element _owner = attribut_1.getOwner();
+          types.add(((Classifier) _owner));
         }
       }
     }

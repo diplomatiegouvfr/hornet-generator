@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.1.3
+ * @version v1.1.5
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
@@ -156,8 +156,9 @@ public class ClassifierDtoClassGenerator{
 	}
 	
 	static def generateOneToManyAttribute(Property property, Classifier clazz){
-		val owner = property.owner as Classifier
-		val fieldName = Utils.getFirstToLowerCase(owner.name) + Utils.getFirstToUpperCase(property.name)
+		//val owner = property.owner as Classifier
+		val owner = property.type as Classifier
+		val fieldName = Utils.getFirstToLowerCase(property.name)
 		val id = ClassifierUtils.getId(owner).get(0)
 		val idName = Utils.getFirstToLowerCase(id.name) + Utils.getFirstToUpperCase(fieldName)
 		val alias = fieldName + '.' + Utils.getFirstToLowerCase(id.name)
