@@ -101,12 +101,13 @@ public class ClassifierMetierClassGenerator {
 		export class «ClassifierUtils.getMetierClassName(clazz)» «clazz.generateExtends»«clazz.generateImplements»{
 		    «clazz.generateInterfaceAttributes»
 		    «clazz.generateAttributes("")»
-		    «IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
+		    «IF Utils.isEntity(clazz)»
 		    «clazz.generateAssociationsAttributes»
 		    «clazz.generateManyToManyAttributes»«ENDIF»
 		    
 		}
 		'''
+		//«««clazz.generateOneToManyAttributes»
 	}
 	
 	static def generateManyToManyAttributes(Classifier clazz){

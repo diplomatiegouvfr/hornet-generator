@@ -107,12 +107,12 @@ public class ClassifierDtoClassGenerator{
 		    «clazz.generateInterfaceAttributes»
 		    «clazz.generateAttributes(clazz)»
 		    «clazz.generateAssociationAttributes»
-		    «clazz.generateOneToManyAttributes»
 		    «clazz.generateManyToManyAttributes»
 		}
 		
 		«clazz.generateMultivaluedAttributeDto»
 		'''
+		//«clazz.generateOneToManyAttributes»
 	}
 	
 	static def generateManyToManyAttributes(Classifier clazz){
@@ -650,7 +650,7 @@ public class ClassifierDtoClassGenerator{
 	
 	static def generateNPTypeAssociationDto(Property property, Classifier fromClass){
 		
-		val members = property.association.ownedEnds
+		val members = property.association.memberEnds.filter[attr | attr.type == fromClass]
  		val member = members.get(0)
 		val idsOwner = ClassifierUtils.getId(fromClass)
 		val idsProp = ClassifierUtils.getId(member.type as Classifier)

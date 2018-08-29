@@ -416,7 +416,7 @@ public class ClassifierUtils {
             if (((((Object[])Conversions.unwrapArray(member, Object.class)).length > 0) && (((Object[])Conversions.unwrapArray(memberEnd, Object.class)).length > 0))) {
               final Property end = ((Property[])Conversions.unwrapArray(member, Property.class))[0];
               final Property otherEnd = ((Property[])Conversions.unwrapArray(memberEnd, Property.class))[0];
-              if ((end.isMultivalued() && (!otherEnd.isMultivalued()))) {
+              if (((end.isMultivalued() && (!otherEnd.isMultivalued())) && (otherEnd.getOwner() != ofType))) {
                 test.add(otherEnd);
               }
               return Boolean.valueOf(false);

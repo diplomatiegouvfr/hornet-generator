@@ -239,7 +239,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		val ownerSchema = SqlClassifierUtils.generateSchemaName(owner)
 		'''
 		
-		ALTER TABLE «schema»«ClassifierUtils.getDBTableName(clazz)» DROP CONSTRAINT IF EXISTS «Utils.toDbName(clazz.name)»_«ClassifierUtils.getDBTableName(owner)»_«dbPropertyName»_ids_fkey CASCADE;
+		ALTER TABLE «schema»«ClassifierUtils.getDBTableName(clazz)» DROP CONSTRAINT IF EXISTS «Utils.toDbName(clazz.name)»_«dbPropertyName»_ids_fkey CASCADE;
 		
 		ALTER TABLE ONLY «schema»«ClassifierUtils.getDBTableName(clazz)»
 		    ADD CONSTRAINT «Utils.toDbName(clazz.name)»_«dbPropertyName»_ids_fkey

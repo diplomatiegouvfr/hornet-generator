@@ -366,7 +366,8 @@ class ClassifierUtils {
 					if(member.length > 0 && memberEnd.length > 0){
 						val end = member.get(0);
 						val otherEnd = memberEnd.get(0) 
-						if(end.isMultivalued && !otherEnd.isMultivalued){
+						//test différent ofType pour ne pas avoir en double dans le cas des associations a double sens entre deux classes
+						if(end.isMultivalued && !otherEnd.isMultivalued && otherEnd.owner !== ofType){
 							test.add(otherEnd)
 						}
 						return false

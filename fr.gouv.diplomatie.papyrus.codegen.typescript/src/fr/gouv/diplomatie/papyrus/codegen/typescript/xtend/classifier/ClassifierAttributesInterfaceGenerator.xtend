@@ -101,11 +101,12 @@ public class ClassifierAttributesInterfaceGenerator {
 		    «clazz.generateAttributes("")»
 
 		    «clazz.generateNotPrimitiveTypeAttributes("")»
-		    «IF Utils.isEntity(clazz)»«clazz.generateOneToManyAttributes»
+		    «IF Utils.isEntity(clazz)»
 		    «clazz.generateAllAssociationClassAtributes()»
 		    «clazz.generateManyToManyAttributes»«ENDIF»
 		}
 		'''
+		//«clazz.generateOneToManyAttributes»
 	}
 	
 	static def generateManyToManyAttributes(Classifier clazz){
@@ -197,79 +198,6 @@ public class ClassifierAttributesInterfaceGenerator {
 		}
 	}
 	
-	/**
-	 * génère les imports liés aux types des attributs
-	 */
-/* 	 static def generateAttributesImports(Classifier clazz, ArrayList<Type> types){
-	 	val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
-			((Utils.isEntity(attribut.type)) && (attribut.type !== clazz))
-		]
-		
-		val attributesEnums = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
-			(Utils.isNomenclature(attribut.type))
-		]
-		
-		val attributesValueObject = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
-			(Utils.isValueObject(attribut.type))
-		]
-		if(Utils.isEntity(clazz)){
-			val oneToManyAttributes = ClassifierUtils.getOneToManyAttributes(clazz)
-			for(attribut : oneToManyAttributes){
-				if(!types.contains(attribut.owner) && (attribut.owner != clazz)){
-					types.add(attribut.owner as Classifier)
-				}
-			}
-			
-			val manyToManyAttributes = ClassifierUtils.getManyToManyAttributes(clazz)
-			for(attribut : manyToManyAttributes){
-				if(!types.contains(attribut.owner) && (attribut.owner != clazz)){
-					types.add(attribut.owner as Classifier)
-				}
-			}
-		}
-		
-		val interfaces = clazz.allRealizedInterfaces
-		
-		for(attribut : attributes){
-			if(!types.contains(attribut.type)){
-				types.add(attribut.type)
-			}
-		}
-		
-		for(attribut : attributesEnums){
-			if(!types.contains(attribut.type)){
-				types.add(attribut.type)
-			}
-		}
-		
-		for(interface : interfaces){
-			if(!types.contains(interface)){
-				types.add(interface)
-			}
-		}
-		
-		if(Utils.isEntity(clazz)){
-			val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
-			
-			assosiationClasses.forEach[asso |
-				if(!types.contains(asso)){
-					types.add(asso)
-				}
-			]
-		}
-	
-		attributesValueObject.forEach[attribut |
-			var type = attribut.type
-			if(type instanceof Classifier){
-				type.generateAttributesImports(types)
-			}
-			if(!types.contains(type)){
-				types.add(type)
-			}
-		]
-		return types
-	 }
-*/	
 	/**
 	 * génère les extends
 	 */
@@ -575,13 +503,7 @@ public class ClassifierAttributesInterfaceGenerator {
 	}
 	
 	static def generateNPTEntityAttribut(Property property, String additionnalName){
-		var name = "";
-		/* 
-		if(property.association !== null && property.association.name!== null){
-			name = property.association.name
-		}else{*/
-			name = Utils.addAdditionnalName(additionnalName,property.name)
-		//}
+		var name = Utils.addAdditionnalName(additionnalName,property.name)
 		
 		if(property.type instanceof Classifier){
 			if(property.multivalued){

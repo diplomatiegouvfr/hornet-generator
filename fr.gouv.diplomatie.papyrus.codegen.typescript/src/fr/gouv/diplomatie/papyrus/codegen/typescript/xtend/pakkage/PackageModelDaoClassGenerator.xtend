@@ -352,9 +352,9 @@ class PackageModelDaoClassGenerator{
 		    «clazz.generateRelations(clazz,"", "")»
 		    «clazz.generateForeignRelations(clazz,'')»
 		    «clazz.generateAssociationRelations»
-		    «clazz.generateOneToManyRelations»
 		}
 		'''
+		//«clazz.generateOneToManyRelations»
 	}
 	
 	static def generateOneToManyRelations(Classifier clazz){
@@ -536,8 +536,11 @@ class PackageModelDaoClassGenerator{
 					val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
 					
 					var test = property
-					if(property.association !== null && property.association.ownedEnds !== null){
-						test = property.association.ownedEnds.get(0)
+					if(property.association !== null && property.association.memberEnds !== null){
+						val result = property.association.memberEnds.filter[attr| attr.type  == owner]
+						if(result !== null){
+							test = result.get(0)
+						}
 					}	
 					val dbPropertyName = PropertyUtils.getDatabaseName(test, test.name, "")
 					val fieldName = idDbName + "_" + dbPropertyName		

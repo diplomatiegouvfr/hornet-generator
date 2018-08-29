@@ -645,7 +645,7 @@ public class ClassifierModelGenerator {
 	}
 	
 	static def generateNPTypeAssociationModel(Property property, Classifier fromClass){
-		val members = property.association.ownedEnds
+		val members = property.association.memberEnds.filter[attr | attr.type == fromClass]
  		val member = members.get(0)
 		val idsOwner = ClassifierUtils.getId(fromClass)
 		val idsProp = ClassifierUtils.getId(property.type as Classifier)
