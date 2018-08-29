@@ -139,8 +139,14 @@ public class PackageDatabaseScriptGenerator{
 		«associationsClasses.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
 		]»
+		«associationsClasses.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateAlters()»'''
+		]»
 		«IF pakkage != model»«assoInPakkage.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
+		]»
+		«assoInPakkage.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateAlters()»'''
 		]»«ENDIF»
 		'''
 	}
@@ -954,6 +960,7 @@ public class PackageDatabaseScriptGenerator{
 		
 		CREATE TABLE «schema»«AssociationClassUtils.getDBTableName(clazz)»(
 			«clazz.generateAssociationAttributes("", clazz)»
+			«clazz.generateAttributes("", clazz, false)»
 		);
 		«clazz.generateAssociationForeignKeys()»
 		

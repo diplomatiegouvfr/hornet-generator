@@ -88,6 +88,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
 import java.util.ArrayList
 import org.eclipse.uml2.uml.Type
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierMetierClassGenerator
 
 public class AssociationClassMetierClassGenerator{
 	
@@ -101,6 +102,7 @@ public class AssociationClassMetierClassGenerator{
 		@Bean
 		export class «ClassifierUtils.getMetierClassName(clazz)»{
 		    «clazz.generateAttributes("")»
+		    «ClassifierMetierClassGenerator.generateAttributes(clazz, "")»
 		}
 		'''
 	}
@@ -110,6 +112,16 @@ public class AssociationClassMetierClassGenerator{
 	 */
 	static def generateImports(AssociationClass clazz){
 		val attributesTypes = clazz.generateAttributesImports(newArrayList(), clazz)
+		
+		val options = new ClassifierUtils.ImportOptions
+		options.importInterface = true
+		options.importInterfaceAttributes = false
+		options.importValueObject = true
+		options.importValueObjectAttributes = true
+		
+		//ajout des imports non pris en compte
+		ClassifierUtils.getAttributesImport(clazz, clazz, attributesTypes, options)
+		
 		'''
 		«attributesTypes.fold("")[acc, type |
 			if(Utils.isNomenclature(type)){

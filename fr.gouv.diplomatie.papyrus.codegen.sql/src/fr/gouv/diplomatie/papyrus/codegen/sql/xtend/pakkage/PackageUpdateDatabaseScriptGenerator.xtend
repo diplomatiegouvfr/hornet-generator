@@ -136,8 +136,14 @@ public class PackageUpdateDatabaseScriptGenerator{
 		«associationsClasses.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
 		]»
+		«associationsClasses.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateAlters()»'''
+		]»
 		«IF pakkage != model»«assoInPakkage.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
+		]»
+		«assoInPakkage.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateAlters()»'''
 		]»«ENDIF»
 		'''
 	}
@@ -962,7 +968,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		CREATE TABLE IF NOT EXISTS «schema»«tableName»();
 		
 		«clazz.generateAssociationAttributes("", clazz, tableName)»
-		
+		«clazz.generateAttributes("", clazz, false, tableName)»
 		«clazz.generateAssociationForeignKeys»
 		
 		ALTER TABLE «schema»«tableName» DROP CONSTRAINT IF EXISTS «tableName»_pkey CASCADE;

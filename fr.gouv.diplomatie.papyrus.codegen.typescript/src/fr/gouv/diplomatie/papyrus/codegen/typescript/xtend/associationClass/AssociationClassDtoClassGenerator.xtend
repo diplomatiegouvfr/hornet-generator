@@ -88,6 +88,7 @@ import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
 import java.util.ArrayList
 import org.eclipse.uml2.uml.Type
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierDtoClassGenerator
 
 public class AssociationClassDtoClassGenerator{
 	
@@ -103,16 +104,29 @@ public class AssociationClassDtoClassGenerator{
 		@Bean
 		export class «ClassifierUtils.getDtoClassName(clazz)» {
 		    «clazz.generateAttributes(newArrayList())»
+		    «ClassifierDtoClassGenerator.generateAttributes(clazz, clazz)»
 		}
 		
 		'''
 	}
+	
+	
 	
 	/**
 	 * génère les imports
 	 */
 	static def generateImports(AssociationClass clazz){
 		val attributesTypes = clazz.generateAttributesImports(newArrayList())
+		
+		val options = new ClassifierUtils.ImportOptions
+		options.importInterface = true
+		options.importInterfaceAttributes = false
+		options.importValueObject = true
+		options.importValueObjectAttributes = true
+		
+		//ajout des imports non pris en compte
+		ClassifierUtils.getAttributesImport(clazz, clazz, attributesTypes, options)
+		
 		'''
 		«attributesTypes.fold("")[acc, type |
 			acc +  '''

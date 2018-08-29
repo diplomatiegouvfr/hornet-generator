@@ -173,17 +173,35 @@ public class PackageDatabaseScriptGenerator {
       String _fold_4 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_9);
       _builder.append(_fold_4);
       _builder.newLineIfNotEmpty();
+      final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateAlters = PackageDatabaseScriptGenerator.generateAlters(((Classifier) clazz));
+        _builder_1.append(_generateAlters);
+        return (acc + _builder_1);
+      };
+      String _fold_5 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_10);
+      _builder.append(_fold_5);
+      _builder.newLineIfNotEmpty();
       {
         boolean _notEquals = (!Objects.equal(pakkage, model));
         if (_notEquals) {
-          final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
+          final Function2<String, Type, String> _function_11 = (String acc, Type clazz) -> {
             StringConcatenation _builder_1 = new StringConcatenation();
             CharSequence _generateAssociationTable = PackageDatabaseScriptGenerator.generateAssociationTable(((AssociationClass) clazz));
             _builder_1.append(_generateAssociationTable);
             return (acc + _builder_1);
           };
-          String _fold_5 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_10);
-          _builder.append(_fold_5);
+          String _fold_6 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_11);
+          _builder.append(_fold_6);
+          _builder.newLineIfNotEmpty();
+          final Function2<String, Type, String> _function_12 = (String acc, Type clazz) -> {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            CharSequence _generateAlters = PackageDatabaseScriptGenerator.generateAlters(((Classifier) clazz));
+            _builder_1.append(_generateAlters);
+            return (acc + _builder_1);
+          };
+          String _fold_7 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_12);
+          _builder.append(_fold_7);
         }
       }
       _builder.newLineIfNotEmpty();
@@ -2070,6 +2088,10 @@ public class PackageDatabaseScriptGenerator {
       _builder.append("\t");
       CharSequence _generateAssociationAttributes = PackageDatabaseScriptGenerator.generateAssociationAttributes(clazz, "", clazz);
       _builder.append(_generateAssociationAttributes, "\t");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t");
+      CharSequence _generateAttributes = PackageDatabaseScriptGenerator.generateAttributes(clazz, "", clazz, Boolean.valueOf(false));
+      _builder.append(_generateAttributes, "\t");
       _builder.newLineIfNotEmpty();
       _builder.append(");");
       _builder.newLine();

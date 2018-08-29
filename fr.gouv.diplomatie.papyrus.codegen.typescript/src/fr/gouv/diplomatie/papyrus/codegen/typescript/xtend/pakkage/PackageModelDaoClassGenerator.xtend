@@ -88,6 +88,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 import org.eclipse.uml2.uml.Interface
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.AssociationClassUtils
+import java.util.ArrayList
 
 class PackageModelDaoClassGenerator{
 	
@@ -422,22 +423,31 @@ class PackageModelDaoClassGenerator{
 	 * génère les relations d'une classe
 	 */
 	static def generateRelations(Classifier clazz, Classifier fromClass, String additionnalName, String databaseAddName){
+		var allAttributes= new ArrayList
 		var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
 			val type = attribut.type
 			return (Utils.isEntity(type) || Utils.isValueObject(type)) || Utils.isNomenclature(type) || attribut.multivalued
 		]
 		
+		for(att: attributes){
+				allAttributes.add(att)
+			}
+		
 		if(clazz instanceof AssociationClass){
-			attributes = clazz.memberEnds.filter[attribut |
+			val other = clazz.memberEnds.filter[attribut |
 				val type = attribut.type
 				return (Utils.isEntity(type) || Utils.isValueObject(type)) || Utils.isNomenclature(type) || attribut.multivalued
 			]
+			
+			for(att: other){
+				allAttributes.add(att)
+			}
 		}
 		
 		val interfaces = clazz.directlyRealizedInterfaces
 		
 		'''
-		«attributes.fold("")[acc, attribut |
+		«allAttributes.fold("")[acc, attribut |
 			acc + '''«attribut.generateRelation(fromClass, additionnalName, databaseAddName)»'''
 		]»
 		«IF clazz instanceof AssociationClass»«interfaces.fold("")[acc, interface |

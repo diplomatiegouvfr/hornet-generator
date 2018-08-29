@@ -88,6 +88,7 @@ import org.eclipse.uml2.uml.Classifier
 import fr.gouv.diplomatie.papyrus.codegen.typescript.utils.TypeUtils
 import org.eclipse.uml2.uml.Type
 import java.util.ArrayList
+import fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier.ClassifierAttributesInterfaceGenerator
 
 public class AssociationClassAttributesInterfaceGenerator{
 	
@@ -97,6 +98,10 @@ public class AssociationClassAttributesInterfaceGenerator{
 		
 		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» {
 		    «clazz.generateAttributes("")»
+		    
+		    «ClassifierAttributesInterfaceGenerator.generateAttributes(clazz, "")»
+		    
+		    «ClassifierAttributesInterfaceGenerator.generateNotPrimitiveTypeAttributes(clazz, "")»
 		}
 		'''
 	}
@@ -106,13 +111,14 @@ public class AssociationClassAttributesInterfaceGenerator{
 	 */
 	static def generateImports(AssociationClass clazz){
 		val attributesTypes = clazz.generateAttributesImports(newArrayList())
-	/* 	val options = new ClassifierUtils.ImportOptions
+	 	val options = new ClassifierUtils.ImportOptions
 		options.importInterface = true
 		options.importInterfaceAttributes = false
 		options.importValueObject = true
 		options.importValueObjectAttributes = true
 		
-		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz, newArrayList(), options)*/
+		//ajout des imports non pris en compte
+		ClassifierUtils.getAttributesImport(clazz, clazz, attributesTypes, options)
 		'''
 		«attributesTypes.fold("")[acc, type |
 			acc +  '''
@@ -125,7 +131,7 @@ public class AssociationClassAttributesInterfaceGenerator{
 	/**
 	 * génère les imports liés aux types des attributs
 	 */
- 	 static  def Type [] generateAttributesImports(Classifier clazz, ArrayList<Type> types){
+ 	 static  def ArrayList<Type> generateAttributesImports(Classifier clazz, ArrayList<Type> types){
 	 	var attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[ attribut |
 			(Utils.isEntity(attribut.type))
 		]

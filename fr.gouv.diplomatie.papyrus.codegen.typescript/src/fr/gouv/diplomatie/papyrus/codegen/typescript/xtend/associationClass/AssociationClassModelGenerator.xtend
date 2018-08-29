@@ -97,6 +97,7 @@ public class AssociationClassModelGenerator {
 		
 		export const «AssociationClassUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
 		    «clazz.generateAttributes»
+		    «ClassifierModelGenerator.generateAttributes(clazz, "", "", clazz, false, false)»
 		};
 		'''
 	}
