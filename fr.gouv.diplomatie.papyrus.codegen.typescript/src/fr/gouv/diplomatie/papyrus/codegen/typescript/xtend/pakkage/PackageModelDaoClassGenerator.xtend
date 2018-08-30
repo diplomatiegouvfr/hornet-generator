@@ -207,9 +207,9 @@ class PackageModelDaoClassGenerator{
 	    	acc + '''«(clazz as Classifier).generateModelImport»'''
 	    ]»«associationsClasses.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAssociationModelImport»'''
-	    ]»«associationsClassesInPkg.fold("")[acc, clazz |
+	    ]»«IF pakkage != model»«associationsClassesInPkg.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAssociationModelImport»'''
-	    ]»
+	    ]»«ENDIF»
 		«classes.fold("")[acc, clazz |
 	    	acc + '''«(clazz as Classifier).generateAttributesImport»'''
 	    ]»«enums.fold("")[acc, clazz |
