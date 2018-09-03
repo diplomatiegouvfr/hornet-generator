@@ -339,4 +339,25 @@ public class PropertyUtils {
     }
     return name;
   }
+  
+  /**
+   * retourne la valeur de l'attribut index du stéréotype attribut
+   */
+  public static Object getIndex(final Property property) {
+    if (((PropertyUtils.getStereotype(property, Utils.MODEL_KEYATTRIBUTE) != null) && (!IterableExtensions.isEmpty(PropertyUtils.getStereotype(property, Utils.MODEL_KEYATTRIBUTE))))) {
+      return Utils.getStereotypePropertyValue(property, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_INDEX);
+    } else {
+      boolean _and = false;
+      Iterable<Stereotype> _stereotype = PropertyUtils.getStereotype(property, Utils.MODEL_ATTRIBUTE);
+      boolean _tripleNotEquals = (_stereotype != null);
+      if (!_tripleNotEquals) {
+        _and = false;
+      } else {
+        boolean _isEmpty = IterableExtensions.isEmpty(PropertyUtils.getStereotype(property, Utils.MODEL_KEYATTRIBUTE));
+        boolean _not = (!_isEmpty);
+        _and = _not;
+      }
+    }
+    return Utils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_INDEX);
+  }
 }

@@ -499,9 +499,13 @@ class ClassifierUtils {
 	 */
 	static def isEnumWithCode(Classifier clazz){
 		val valeurs = clazz.getOwnedAttributes
-		val value = valeurs.get(0)
-		val code = Utils.getNomenclatureCode(value)
-		return (code !== null && code != "")
+		if(!valeurs.empty){
+			val value = valeurs.get(0)
+			val code = Utils.getNomenclatureCode(value)
+			return (code !== null && code != "")
+		}else {
+			return false
+		}
 	}
 	
 	/**

@@ -136,17 +136,29 @@ public class PackageDatabaseScriptGenerator{
 		«classes.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateAlters()»'''
 		]»
+		
+		«classes.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateIndex()»'''
+		]»
 		«associationsClasses.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
 		]»
 		«associationsClasses.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateAlters()»'''
+		]»
+		
+		«associationsClasses.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateIndex()»'''
 		]»
 		«IF pakkage != model»«assoInPakkage.fold("")[acc, clazz |
 			acc + '''«(clazz as AssociationClass).generateAssociationTable()»'''
 		]»
 		«assoInPakkage.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateAlters()»'''
+		]»
+		
+		«assoInPakkage.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateIndex()»'''
 		]»«ENDIF»
 		'''
 	}
@@ -1118,6 +1130,26 @@ public class PackageDatabaseScriptGenerator{
 		var sqlType = TypeUtils.getEnumType(clazz)
 		val schema = SqlClassifierUtils.generateSchemaName(clazz);
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz);
+		
+		// Si l'enum a des doublons dans le code celui ci sera ignoré et généré comme une suite classique
+		var values = newArrayList
+		for (att : attributes){
+			val value = PropertyUtils.getStereotypePropertyValue(att, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
+			values.add(value)
+		}
+		val hasDoublon = Utils.hasDoublon(values)
+		
+		var attributesWithDoublon = ""
+		if(hasDoublon){
+			var ctp = 0
+			for(att : attributes){
+				attributesWithDoublon += '''
+				«att.generateInsertValue(clazz, ctp)»
+				'''
+				ctp++
+			}
+		}
+		
 		'''
 		
 		CREATE TABLE «schema»«ClassifierUtils.getDBTableName(clazz)»(
@@ -1141,20 +1173,24 @@ public class PackageDatabaseScriptGenerator{
 			OWNED BY «schema»«ClassifierUtils.getDBTableName(clazz)».code;
 		«ENDIF»
 		
+		«IF hasDoublon»
+		«attributesWithDoublon»
+		«ELSE»
 		«attributes.fold("")[acc, att |
 			acc + '''«att.generateInsertValue(clazz)»'''
 		]»
+		«ENDIF»
 		'''
 	}
 	
 	static def generateInsertValue(Property prop, Classifier owner){
-		val schema = SqlClassifierUtils.generateSchemaName(owner);
-		val hasCode = ClassifierUtils.isEnumWithCode(owner);
+		val schema = SqlClassifierUtils.generateSchemaName(owner)
+		val hasCode = ClassifierUtils.isEnumWithCode(owner)
 		val code = Utils.getNomenclatureCode(prop)
 		var libelle = Utils.getNomenclatureLibelle(prop)
 		if(!hasCode){
 			'''
-			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (LIBELLE) VALUES («libelle»);
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (LIBELLE) VALUES ('«libelle»');
 			'''
 		}else{
 			'''
@@ -1163,5 +1199,109 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-
+	static def generateInsertValue(Property prop, Classifier owner, Integer value){
+		val schema = SqlClassifierUtils.generateSchemaName(owner)
+		var libelle = Utils.getNomenclatureLibelle(prop)
+		'''
+		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («value», '«libelle»');
+		'''
+	}
+	
+	static def generateIndex(Classifier clazz){
+		'''
+		
+		«clazz.generateNMAttributesIndex(clazz, "")»
+		'''
+	}
+	
+	static def generateNMAttributesIndex(Classifier clazz, Classifier fromClass, String additionnalName){
+		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz).filter[att |
+			val index = PropertyUtils.getIndex(att)
+			return (index == true)
+		]
+		'''
+		«attributes.fold("")[acc, att |
+			acc + '''«att.generateAttributesIndex(clazz, fromClass, additionnalName)»'''
+		]»
+		'''
+	}
+	
+	static def generateAttributesIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+		if(PropertyUtils.isClassAttribute(property)){
+			'''«property.generateClassAttributeIndex(clazz, fromClass, additionnalName)»'''
+		}else{
+			'''«property.generateBasicAttributeIndex(clazz, fromClass, additionnalName)»'''
+		}
+	}
+	
+	static def generateBasicAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+		val tableName = ClassifierUtils.getDBTableName(fromClass)
+		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val name = property.name
+		var propertyName = PropertyUtils.getDatabaseName(property, name, "")
+		if(additionnalName !== null && additionnalName !== ""){
+			propertyName = additionnalName + "_" + propertyName
+		}
+		
+		'''«schema.generateIndexString(tableName, propertyName)»'''
+	}
+	
+	static def generateClassAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+		if(Utils.isValueObject(property.type)){
+			'''«property.generateVOAttributeIndex(clazz, fromClass, additionnalName)»'''
+		}else if(Utils.isNomenclature(property.type)){
+			'''«property.generateEumAttributeIndex(clazz, fromClass, additionnalName)»'''
+		}else{
+			'''«property.generateEntityAttributeIndex(clazz, fromClass, additionnalName)»'''
+		}
+	}
+	
+	static def generateVOAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+		val type = property.type as Classifier
+		val propertyName = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
+		'''
+		«type.generateNMAttributesIndex(fromClass, propertyName)»
+		'''
+	}
+	
+	static def generateEumAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+		val tableName = ClassifierUtils.getDBTableName(fromClass)
+		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val name = property.name
+		var propertyName = PropertyUtils.getDatabaseName(property, name, "")
+		if(additionnalName !== null && additionnalName !== ""){
+			propertyName = additionnalName + "_" + propertyName
+		}
+		propertyName = "code_" + propertyName
+		
+		'''«schema.generateIndexString(tableName, propertyName)»'''
+	}
+	
+	static def generateEntityAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+		val type = property.type as Classifier
+		val ids = ClassifierUtils.getId(type)
+		'''
+		«ids.fold("")[acc, id |
+			acc + '''«id.generateEntityIdIndex(clazz, fromClass, property, additionnalName)»'''
+		]»
+		'''
+	}
+	
+	static def generateEntityIdIndex(Property id, Classifier clazz, Classifier fromClass, Property property, String additionnalName){
+		val tableName = ClassifierUtils.getDBTableName(fromClass)
+		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val name = id.name
+		var idName = PropertyUtils.getDatabaseName(id, name, additionnalName)
+		val propertyName = PropertyUtils.getDatabaseName(property, property.name, "")
+		idName = idName + "_" + propertyName
+	
+		'''«schema.generateIndexString(tableName, idName)»'''
+	}
+	
+	static def generateIndexString(String schema, String tableName, String propertyName){
+		'''
+		CREATE INDEX ON «schema»«tableName» («propertyName»);
+		'''
+	}
+	
 }

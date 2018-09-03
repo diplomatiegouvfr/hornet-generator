@@ -83,6 +83,7 @@ import org.eclipse.uml2.uml.Classifier
 import org.eclipse.uml2.uml.Property
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.PropertyUtils
 
 public class  NomenclatureEnumClassGenerator{
 	
@@ -100,7 +101,30 @@ public class  NomenclatureEnumClassGenerator{
 	 */
 	static def generateAttributes(Classifier clazz){
 		val valeurs = ClassifierUtils.getOwnedAttributes(clazz)
+		
+		// Si l'enum a des doublons dans le code celui ci sera ignoré et généré comme une suite classique
+		var values = newArrayList
+		for (att : valeurs){
+			val value = PropertyUtils.getStereotypePropertyValue(att, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
+			values.add(value)
+		}
+		val hasDoublon = Utils.hasDoublon(values)
+		
+		var attributesWithDoublon = ""
+		if(hasDoublon){
+			var ctp = 0
+			for(att : valeurs){
+				attributesWithDoublon += '''
+				«att.generateValue(ctp)»
+				'''
+				ctp++
+			}
+		}
+		
 		'''
+		«IF hasDoublon»
+		«attributesWithDoublon»
+		«ELSE»
 		«valeurs.fold("")[ acc, valeur |
 			if(acc != ""){
 				acc + ''',
@@ -109,6 +133,7 @@ public class  NomenclatureEnumClassGenerator{
 				acc + '''«valeur.generateValue»'''					
 			}
 		]»
+		«ENDIF»
 		'''
 	}
 	
@@ -120,5 +145,10 @@ public class  NomenclatureEnumClassGenerator{
 		}else{
 			'''«libelle»'''
 		}
+	}
+	
+	static def generateValue(Property value, Integer code){
+		var libelle = Utils.getNomenclatureLibelle(value)
+		'''«libelle» = «code»'''
 	}
 }

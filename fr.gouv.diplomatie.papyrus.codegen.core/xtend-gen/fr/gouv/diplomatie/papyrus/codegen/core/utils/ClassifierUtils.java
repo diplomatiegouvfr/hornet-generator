@@ -571,9 +571,15 @@ public class ClassifierUtils {
    */
   public static boolean isEnumWithCode(final Classifier clazz) {
     final Collection<Property> valeurs = ClassifierUtils.getOwnedAttributes(clazz);
-    final Property value = ((Property[])Conversions.unwrapArray(valeurs, Property.class))[0];
-    final Object code = Utils.getNomenclatureCode(value);
-    return ((code != null) && (!Objects.equal(code, "")));
+    boolean _isEmpty = valeurs.isEmpty();
+    boolean _not = (!_isEmpty);
+    if (_not) {
+      final Property value = ((Property[])Conversions.unwrapArray(valeurs, Property.class))[0];
+      final Object code = Utils.getNomenclatureCode(value);
+      return ((code != null) && (!Objects.equal(code, "")));
+    } else {
+      return false;
+    }
   }
   
   /**

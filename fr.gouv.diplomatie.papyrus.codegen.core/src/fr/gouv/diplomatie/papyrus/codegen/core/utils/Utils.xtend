@@ -86,6 +86,8 @@ import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils
 import org.eclipse.uml2.uml.Type
 import org.eclipse.uml2.uml.Package
 import org.eclipse.uml2.uml.Classifier
+import java.util.Set
+import java.util.HashSet
 
 /**
  * classe utilitaire 
@@ -126,6 +128,7 @@ public class Utils{
 	public static var MODEL_ATTRIBUTE_LENGTH = 'length';
 	public static var MODEL_ATTRIBUTE_PERSISTENT = 'isPersistent';
 	public static var MODEL_ATTRIBUTE_COLUMNNAME = 'columnName';
+	public static var MODEL_ATTRIBUTE_INDEX = 'index';
 	
 	public static var MODEL_KEYATTRIBUTE = 'keyAttribute';
 	
@@ -527,6 +530,13 @@ public class Utils{
 			return true
 		}
 		return false
+	}
+	
+	static def hasDoublon(ArrayList list){
+        var set = new HashSet() ;
+        set.addAll(list) ;
+        var distinctList = new ArrayList(set) ;
+        return (!(list.length == distinctList.length))
 	}
 	
 	/**                                                        *

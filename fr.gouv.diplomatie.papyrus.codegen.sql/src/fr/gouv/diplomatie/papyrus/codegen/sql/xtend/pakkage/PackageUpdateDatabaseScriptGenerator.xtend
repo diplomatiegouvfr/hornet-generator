@@ -1130,6 +1130,26 @@ public class PackageUpdateDatabaseScriptGenerator{
 		val schema = SqlClassifierUtils.generateSchemaName(clazz)
 		val schemaseq = SqlClassifierUtils.generateSchemaName(clazz)
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz);
+		
+		// Si l'enum a des doublons dans le code celui ci sera ignoré et généré comme une suite classique
+		var values = newArrayList
+		for (att : attributes){
+			val value = PropertyUtils.getStereotypePropertyValue(att, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE)
+			values.add(value)
+		}
+		val hasDoublon = Utils.hasDoublon(values)
+		
+		var attributesWithDoublon = ""
+		if(hasDoublon){
+			var ctp = 0
+			for(att : attributes){
+				attributesWithDoublon += '''
+				«att.generateInsertValue(clazz, ctp)»
+				'''
+				ctp++
+			}
+		}
+		
 		'''
 		
 		CREATE TABLE IF NOT EXISTS «schema»«tableName»();
@@ -1159,9 +1179,13 @@ public class PackageUpdateDatabaseScriptGenerator{
 			SET DEFAULT nextval('«schemaseq»«ClassifierUtils.getDBTableName(clazz)»_code_seq'::regclass);
 		«ENDIF»
 		
+		«IF hasDoublon»
+		«attributesWithDoublon»
+		«ELSE»
 		«attributes.fold("")[acc, att |
 			acc + '''«att.generateInsertValue(clazz)»'''
 		]»
+		«ENDIF»
 		'''
 	}
 	
@@ -1179,5 +1203,13 @@ public class PackageUpdateDatabaseScriptGenerator{
 			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («code», '«libelle»') ON CONFLICT DO NOTHING;
 			'''
 		}
+	}
+	
+	static def generateInsertValue(Property prop, Classifier owner, Integer value){
+		val schema = SqlClassifierUtils.generateSchemaName(owner)
+		var libelle = Utils.getNomenclatureLibelle(prop)
+		'''
+		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («value», '«libelle»') ON CONFLICT DO NOTHING;
+		'''
 	}
 }

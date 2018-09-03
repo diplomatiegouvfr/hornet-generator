@@ -308,4 +308,15 @@ class PropertyUtils {
 		return name
 	}
 	
+		/**
+	 * retourne la valeur de l'attribut index du stéréotype attribut
+	 */
+	static def getIndex(Property property){
+		if (property.getStereotype(Utils.MODEL_KEYATTRIBUTE) !==null && !property.getStereotype(Utils.MODEL_KEYATTRIBUTE).empty){
+			return Utils.getStereotypePropertyValue(property, Utils.MODEL_KEYATTRIBUTE, Utils.MODEL_ATTRIBUTE_INDEX)
+		}else(property.getStereotype(Utils.MODEL_ATTRIBUTE) !==null && !property.getStereotype(Utils.MODEL_KEYATTRIBUTE).empty){
+			return Utils.getStereotypePropertyValue(property, Utils.MODEL_ATTRIBUTE, Utils.MODEL_ATTRIBUTE_INDEX)
+		}
+	}
+	
 }

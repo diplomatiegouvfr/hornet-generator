@@ -73,6 +73,7 @@ import com.google.common.base.Objects;
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Comment;
@@ -144,6 +145,8 @@ public class Utils {
   public static String MODEL_ATTRIBUTE_PERSISTENT = "isPersistent";
   
   public static String MODEL_ATTRIBUTE_COLUMNNAME = "columnName";
+  
+  public static String MODEL_ATTRIBUTE_INDEX = "index";
   
   public static String MODEL_KEYATTRIBUTE = "keyAttribute";
   
@@ -610,6 +613,17 @@ public class Utils {
       return true;
     }
     return false;
+  }
+  
+  public static boolean hasDoublon(final ArrayList list) {
+    HashSet<Object> set = new HashSet<Object>();
+    set.addAll(list);
+    ArrayList<Object> distinctList = new ArrayList<Object>(set);
+    int _length = ((Object[])Conversions.unwrapArray(list, Object.class)).length;
+    final ArrayList<Object> _converted_distinctList = (ArrayList<Object>)distinctList;
+    int _length_1 = ((Object[])Conversions.unwrapArray(_converted_distinctList, Object.class)).length;
+    boolean _equals = (_length == _length_1);
+    return (!_equals);
   }
   
   /**

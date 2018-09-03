@@ -164,44 +164,74 @@ public class PackageDatabaseScriptGenerator {
       String _fold_3 = IterableExtensions.<Type, String>fold(classes, "", _function_8);
       _builder.append(_fold_3);
       _builder.newLineIfNotEmpty();
+      _builder.newLine();
       final Function2<String, Type, String> _function_9 = (String acc, Type clazz) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateIndex = PackageDatabaseScriptGenerator.generateIndex(((Classifier) clazz));
+        _builder_1.append(_generateIndex);
+        return (acc + _builder_1);
+      };
+      String _fold_4 = IterableExtensions.<Type, String>fold(classes, "", _function_9);
+      _builder.append(_fold_4);
+      _builder.newLineIfNotEmpty();
+      final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
         CharSequence _generateAssociationTable = PackageDatabaseScriptGenerator.generateAssociationTable(((AssociationClass) clazz));
         _builder_1.append(_generateAssociationTable);
         return (acc + _builder_1);
       };
-      String _fold_4 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_9);
-      _builder.append(_fold_4);
+      String _fold_5 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_10);
+      _builder.append(_fold_5);
       _builder.newLineIfNotEmpty();
-      final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
+      final Function2<String, Type, String> _function_11 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
         CharSequence _generateAlters = PackageDatabaseScriptGenerator.generateAlters(((Classifier) clazz));
         _builder_1.append(_generateAlters);
         return (acc + _builder_1);
       };
-      String _fold_5 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_10);
-      _builder.append(_fold_5);
+      String _fold_6 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_11);
+      _builder.append(_fold_6);
+      _builder.newLineIfNotEmpty();
+      _builder.newLine();
+      final Function2<String, Type, String> _function_12 = (String acc, Type clazz) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateIndex = PackageDatabaseScriptGenerator.generateIndex(((Classifier) clazz));
+        _builder_1.append(_generateIndex);
+        return (acc + _builder_1);
+      };
+      String _fold_7 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_12);
+      _builder.append(_fold_7);
       _builder.newLineIfNotEmpty();
       {
         boolean _notEquals = (!Objects.equal(pakkage, model));
         if (_notEquals) {
-          final Function2<String, Type, String> _function_11 = (String acc, Type clazz) -> {
+          final Function2<String, Type, String> _function_13 = (String acc, Type clazz) -> {
             StringConcatenation _builder_1 = new StringConcatenation();
             CharSequence _generateAssociationTable = PackageDatabaseScriptGenerator.generateAssociationTable(((AssociationClass) clazz));
             _builder_1.append(_generateAssociationTable);
             return (acc + _builder_1);
           };
-          String _fold_6 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_11);
-          _builder.append(_fold_6);
+          String _fold_8 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_13);
+          _builder.append(_fold_8);
           _builder.newLineIfNotEmpty();
-          final Function2<String, Type, String> _function_12 = (String acc, Type clazz) -> {
+          final Function2<String, Type, String> _function_14 = (String acc, Type clazz) -> {
             StringConcatenation _builder_1 = new StringConcatenation();
             CharSequence _generateAlters = PackageDatabaseScriptGenerator.generateAlters(((Classifier) clazz));
             _builder_1.append(_generateAlters);
             return (acc + _builder_1);
           };
-          String _fold_7 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_12);
-          _builder.append(_fold_7);
+          String _fold_9 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_14);
+          _builder.append(_fold_9);
+          _builder.newLineIfNotEmpty();
+          _builder.newLine();
+          final Function2<String, Type, String> _function_15 = (String acc, Type clazz) -> {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            CharSequence _generateIndex = PackageDatabaseScriptGenerator.generateIndex(((Classifier) clazz));
+            _builder_1.append(_generateIndex);
+            return (acc + _builder_1);
+          };
+          String _fold_10 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_15);
+          _builder.append(_fold_10);
         }
       }
       _builder.newLineIfNotEmpty();
@@ -2401,6 +2431,29 @@ public class PackageDatabaseScriptGenerator {
       String sqlType = TypeUtils.getEnumType(clazz);
       final String schema = SqlClassifierUtils.generateSchemaName(clazz);
       final Collection<Property> attributes = ClassifierUtils.getOwnedAttributes(clazz);
+      ArrayList<Object> values = CollectionLiterals.<Object>newArrayList();
+      for (final Property att : attributes) {
+        {
+          final Object value = PropertyUtils.getStereotypePropertyValue(att, Utils.MODEL_CODELIBELLENOMENCLATURE, Utils.MODEL_CODELIBELLENOMENCLATURE_CODE);
+          values.add(value);
+        }
+      }
+      final boolean hasDoublon = Utils.hasDoublon(values);
+      String attributesWithDoublon = "";
+      if (hasDoublon) {
+        int ctp = 0;
+        for (final Property att_1 : attributes) {
+          {
+            String _attributesWithDoublon = attributesWithDoublon;
+            StringConcatenation _builder = new StringConcatenation();
+            CharSequence _generateInsertValue = PackageDatabaseScriptGenerator.generateInsertValue(att_1, clazz, Integer.valueOf(ctp));
+            _builder.append(_generateInsertValue);
+            _builder.newLineIfNotEmpty();
+            attributesWithDoublon = (_attributesWithDoublon + _builder);
+            ctp++;
+          }
+        }
+      }
       StringConcatenation _builder = new StringConcatenation();
       _builder.newLine();
       _builder.append("CREATE TABLE ");
@@ -2476,15 +2529,22 @@ public class PackageDatabaseScriptGenerator {
         }
       }
       _builder.newLine();
-      final Function2<String, Property, String> _function = (String acc, Property att) -> {
-        StringConcatenation _builder_1 = new StringConcatenation();
-        CharSequence _generateInsertValue = PackageDatabaseScriptGenerator.generateInsertValue(att, clazz);
-        _builder_1.append(_generateInsertValue);
-        return (acc + _builder_1);
-      };
-      String _fold = IterableExtensions.<Property, String>fold(attributes, "", _function);
-      _builder.append(_fold);
-      _builder.newLineIfNotEmpty();
+      {
+        if (hasDoublon) {
+          _builder.append(attributesWithDoublon);
+          _builder.newLineIfNotEmpty();
+        } else {
+          final Function2<String, Property, String> _function = (String acc, Property att_2) -> {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            CharSequence _generateInsertValue = PackageDatabaseScriptGenerator.generateInsertValue(att_2, clazz);
+            _builder_1.append(_generateInsertValue);
+            return (acc + _builder_1);
+          };
+          String _fold = IterableExtensions.<Property, String>fold(attributes, "", _function);
+          _builder.append(_fold);
+          _builder.newLineIfNotEmpty();
+        }
+      }
       _xblockexpression = _builder;
     }
     return _xblockexpression;
@@ -2504,9 +2564,9 @@ public class PackageDatabaseScriptGenerator {
         _builder.append(schema);
         String _dBTableName = ClassifierUtils.getDBTableName(owner);
         _builder.append(_dBTableName);
-        _builder.append(" (LIBELLE) VALUES (");
+        _builder.append(" (LIBELLE) VALUES (\'");
         _builder.append(libelle);
-        _builder.append(");");
+        _builder.append("\');");
         _builder.newLineIfNotEmpty();
         _xifexpression = _builder;
       } else {
@@ -2526,5 +2586,204 @@ public class PackageDatabaseScriptGenerator {
       _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
+  }
+  
+  public static CharSequence generateInsertValue(final Property prop, final Classifier owner, final Integer value) {
+    CharSequence _xblockexpression = null;
+    {
+      final String schema = SqlClassifierUtils.generateSchemaName(owner);
+      Object libelle = Utils.getNomenclatureLibelle(prop);
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("INSERT INTO ");
+      _builder.append(schema);
+      String _dBTableName = ClassifierUtils.getDBTableName(owner);
+      _builder.append(_dBTableName);
+      _builder.append(" (CODE, LIBELLE) VALUES (");
+      _builder.append(value);
+      _builder.append(", \'");
+      _builder.append(libelle);
+      _builder.append("\');");
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateIndex(final Classifier clazz) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.newLine();
+    CharSequence _generateNMAttributesIndex = PackageDatabaseScriptGenerator.generateNMAttributesIndex(clazz, clazz, "");
+    _builder.append(_generateNMAttributesIndex);
+    _builder.newLineIfNotEmpty();
+    return _builder;
+  }
+  
+  public static CharSequence generateNMAttributesIndex(final Classifier clazz, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      final Function1<Property, Boolean> _function = (Property att) -> {
+        final Object index = PropertyUtils.getIndex(att);
+        return Boolean.valueOf(Objects.equal(index, Boolean.valueOf(true)));
+      };
+      final Iterable<Property> attributes = IterableExtensions.<Property>filter(ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz), _function);
+      StringConcatenation _builder = new StringConcatenation();
+      final Function2<String, Property, String> _function_1 = (String acc, Property att) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateAttributesIndex = PackageDatabaseScriptGenerator.generateAttributesIndex(att, clazz, fromClass, additionnalName);
+        _builder_1.append(_generateAttributesIndex);
+        return (acc + _builder_1);
+      };
+      String _fold = IterableExtensions.<Property, String>fold(attributes, "", _function_1);
+      _builder.append(_fold);
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateAttributesIndex(final Property property, final Classifier clazz, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xifexpression = null;
+    boolean _isClassAttribute = PropertyUtils.isClassAttribute(property);
+    if (_isClassAttribute) {
+      StringConcatenation _builder = new StringConcatenation();
+      CharSequence _generateClassAttributeIndex = PackageDatabaseScriptGenerator.generateClassAttributeIndex(property, clazz, fromClass, additionnalName);
+      _builder.append(_generateClassAttributeIndex);
+      _xifexpression = _builder;
+    } else {
+      StringConcatenation _builder_1 = new StringConcatenation();
+      CharSequence _generateBasicAttributeIndex = PackageDatabaseScriptGenerator.generateBasicAttributeIndex(property, clazz, fromClass, additionnalName);
+      _builder_1.append(_generateBasicAttributeIndex);
+      _xifexpression = _builder_1;
+    }
+    return _xifexpression;
+  }
+  
+  public static CharSequence generateBasicAttributeIndex(final Property property, final Classifier clazz, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      final String tableName = ClassifierUtils.getDBTableName(fromClass);
+      final String schema = SqlClassifierUtils.generateSchemaName(clazz);
+      final String name = property.getName();
+      String propertyName = PropertyUtils.getDatabaseName(property, name, "");
+      if (((additionnalName != null) && (additionnalName != ""))) {
+        propertyName = ((additionnalName + "_") + propertyName);
+      }
+      StringConcatenation _builder = new StringConcatenation();
+      CharSequence _generateIndexString = PackageDatabaseScriptGenerator.generateIndexString(schema, tableName, propertyName);
+      _builder.append(_generateIndexString);
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateClassAttributeIndex(final Property property, final Classifier clazz, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xifexpression = null;
+    boolean _isValueObject = Utils.isValueObject(property.getType());
+    if (_isValueObject) {
+      StringConcatenation _builder = new StringConcatenation();
+      CharSequence _generateVOAttributeIndex = PackageDatabaseScriptGenerator.generateVOAttributeIndex(property, clazz, fromClass, additionnalName);
+      _builder.append(_generateVOAttributeIndex);
+      _xifexpression = _builder;
+    } else {
+      CharSequence _xifexpression_1 = null;
+      boolean _isNomenclature = Utils.isNomenclature(property.getType());
+      if (_isNomenclature) {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateEumAttributeIndex = PackageDatabaseScriptGenerator.generateEumAttributeIndex(property, clazz, fromClass, additionnalName);
+        _builder_1.append(_generateEumAttributeIndex);
+        _xifexpression_1 = _builder_1;
+      } else {
+        StringConcatenation _builder_2 = new StringConcatenation();
+        CharSequence _generateEntityAttributeIndex = PackageDatabaseScriptGenerator.generateEntityAttributeIndex(property, clazz, fromClass, additionnalName);
+        _builder_2.append(_generateEntityAttributeIndex);
+        _xifexpression_1 = _builder_2;
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    return _xifexpression;
+  }
+  
+  public static CharSequence generateVOAttributeIndex(final Property property, final Classifier clazz, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      Type _type = property.getType();
+      final Classifier type = ((Classifier) _type);
+      final String propertyName = PropertyUtils.getDatabaseName(property, property.getName(), additionnalName);
+      StringConcatenation _builder = new StringConcatenation();
+      Object _generateNMAttributesIndex = PackageDatabaseScriptGenerator.generateNMAttributesIndex(type, fromClass, propertyName);
+      _builder.append(_generateNMAttributesIndex);
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateEumAttributeIndex(final Property property, final Classifier clazz, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      final String tableName = ClassifierUtils.getDBTableName(fromClass);
+      final String schema = SqlClassifierUtils.generateSchemaName(clazz);
+      final String name = property.getName();
+      String propertyName = PropertyUtils.getDatabaseName(property, name, "");
+      if (((additionnalName != null) && (additionnalName != ""))) {
+        propertyName = ((additionnalName + "_") + propertyName);
+      }
+      propertyName = ("code_" + propertyName);
+      StringConcatenation _builder = new StringConcatenation();
+      CharSequence _generateIndexString = PackageDatabaseScriptGenerator.generateIndexString(schema, tableName, propertyName);
+      _builder.append(_generateIndexString);
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateEntityAttributeIndex(final Property property, final Classifier clazz, final Classifier fromClass, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      Type _type = property.getType();
+      final Classifier type = ((Classifier) _type);
+      final Iterable<Property> ids = ClassifierUtils.getId(type);
+      StringConcatenation _builder = new StringConcatenation();
+      final Function2<String, Property, String> _function = (String acc, Property id) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateEntityIdIndex = PackageDatabaseScriptGenerator.generateEntityIdIndex(id, clazz, fromClass, property, additionnalName);
+        _builder_1.append(_generateEntityIdIndex);
+        return (acc + _builder_1);
+      };
+      String _fold = IterableExtensions.<Property, String>fold(ids, "", _function);
+      _builder.append(_fold);
+      _builder.newLineIfNotEmpty();
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateEntityIdIndex(final Property id, final Classifier clazz, final Classifier fromClass, final Property property, final String additionnalName) {
+    CharSequence _xblockexpression = null;
+    {
+      final String tableName = ClassifierUtils.getDBTableName(fromClass);
+      final String schema = SqlClassifierUtils.generateSchemaName(clazz);
+      final String name = id.getName();
+      String idName = PropertyUtils.getDatabaseName(id, name, additionnalName);
+      final String propertyName = PropertyUtils.getDatabaseName(property, property.getName(), "");
+      idName = ((idName + "_") + propertyName);
+      StringConcatenation _builder = new StringConcatenation();
+      CharSequence _generateIndexString = PackageDatabaseScriptGenerator.generateIndexString(schema, tableName, idName);
+      _builder.append(_generateIndexString);
+      _xblockexpression = _builder;
+    }
+    return _xblockexpression;
+  }
+  
+  public static CharSequence generateIndexString(final String schema, final String tableName, final String propertyName) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("CREATE INDEX ON ");
+    _builder.append(schema);
+    _builder.append(tableName);
+    _builder.append(" (");
+    _builder.append(propertyName);
+    _builder.append(");");
+    _builder.newLineIfNotEmpty();
+    return _builder;
   }
 }
