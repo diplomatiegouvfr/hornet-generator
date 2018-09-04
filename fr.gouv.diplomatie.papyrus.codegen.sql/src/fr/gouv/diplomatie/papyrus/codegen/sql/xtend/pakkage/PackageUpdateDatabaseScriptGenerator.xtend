@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.1.5
+ * @version v1.2.0
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage;
@@ -1196,11 +1196,11 @@ public class PackageUpdateDatabaseScriptGenerator{
 		var libelle = Utils.getNomenclatureLibelle(prop)
 		if(!hasCode){
 			'''
-			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (LIBELLE) VALUES («libelle») ON CONFLICT DO NOTHING;
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (libelle) VALUES («libelle») ON CONFLICT DO NOTHING;
 			'''
 		}else{
 			'''
-			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («code», '«libelle»') ON CONFLICT DO NOTHING;
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (code, libelle) VALUES («code», '«libelle»') ON CONFLICT DO NOTHING;
 			'''
 		}
 	}
@@ -1209,7 +1209,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		val schema = SqlClassifierUtils.generateSchemaName(owner)
 		var libelle = Utils.getNomenclatureLibelle(prop)
 		'''
-		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («value», '«libelle»') ON CONFLICT DO NOTHING;
+		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (code, libelle) VALUES («value», '«libelle»') ON CONFLICT DO NOTHING;
 		'''
 	}
 }
