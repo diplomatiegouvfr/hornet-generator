@@ -40,11 +40,11 @@ public class ClassifierJPAEntityGeneratorTest {
 		class_.applyStereotype(hmodel.entity);
 		
 		String expect = "@Entity\n" + 
-				"@Table(name = \"MA_CLASSE\")\n";
+				"@Table(name = \"ma_classe\")\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateTypeAnnotation(class_).toString());
 		
 		expect = "@Entity\n" + 
-				"@Table(name = \"MA_CLASSE\", schema = \"test\")\n";
+				"@Table(name = \"ma_classe\", schema = \"test\")\n";
 		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entitySchema, "test");
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateTypeAnnotation(class_).toString());
 	}
@@ -89,8 +89,8 @@ public class ClassifierJPAEntityGeneratorTest {
 		TestUtils.setStereotypePropertyValue(asso, hmodel.associationTable, hmodel.associationTableFetchType, hmodel.fetchTypeEager);
 		
 		String expect = "\n@ManyToMany(fetch=FetchType.EAGER)\n" + 
-				"@JoinTable(name=\"ASSO\", joinColumns=@JoinColumn(name=\"ID_ATT2\", referencedColumnName=\"ID\"),\n" + 
-				"	inverseJoinColumns=@JoinColumn(name=\"ID_ATT1\", referencedColumnName=\"ID\"))\n" + 
+				"@JoinTable(name=\"asso\", joinColumns=@JoinColumn(name=\"id_att2\", referencedColumnName=\"id\"),\n" + 
+				"	inverseJoinColumns=@JoinColumn(name=\"id_att1\", referencedColumnName=\"id\"))\n" + 
 				"public Set<maClasse2> att1;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationAttributes(asso, class_).toString());
 	}
@@ -108,7 +108,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		AssociationClass asso = TestUtils.createAssociationClass(class_, class2_, "att1", "att2", "asso");
 		
 		String expect = "\n@ElementCollection\n" + 
-				"@CollectionTable(name = \"MA_CLASSE_ASSO\")\n" + 
+				"@CollectionTable(name = \"ma_classe_asso\")\n" + 
 				"public Set<maClasse2> asso;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationAttributes(asso, class_).toString());
 	}
@@ -125,7 +125,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		AssociationClass asso = TestUtils.createAssociationClass(class_, class2_, "att1", "att2", "asso");
 		
 		String expect = "\n@ElementCollection\n" + 
-				"@CollectionTable(name = \"MA_CLASSE_ASSO\", joinColumns = @JoinColumn(name = \"ID\"))\n" + 
+				"@CollectionTable(name = \"ma_classe_asso\", joinColumns = @JoinColumn(name = \"id\"))\n" + 
 				"public Set<maClasse2> asso;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationAttributes(asso, class_).toString());
 	}
@@ -135,7 +135,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		HornetModelJava hmodel = HornetModelJava.initModel();
 		Class class_  = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
-		String expect = "\n@Column(name = \"TEST\")\n" + 
+		String expect = "\n@Column(name = \"test\")\n" + 
 				"public String test;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
 	}
@@ -159,7 +159,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		TestUtils.createAttribute(class2_, "id", hmodel.integerPT, 0, 1).applyStereotype(hmodel.keyAttribute);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		String expect = "\n@ManyToOne\n" + 
-				"//@JoinColumn(name = \"ID_TEST\", nullable = true)\n" + 
+				"//@JoinColumn(name = \"id_test\", nullable = true)\n" + 
 				"public maClasse2 test;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
 	}
@@ -176,8 +176,8 @@ public class ClassifierJPAEntityGeneratorTest {
 		prop.applyStereotype(hmodel.attribute);
 		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeFetchType, hmodel.fetchTypeLazy);
 		String expect = "\n@ManyToMany(fetch=FetchType.LAZY)\n" + 
-				"@JoinTable(name=\"MA_CLASSE_TEST\", joinColumns=@JoinColumn(name=\"ID_MA_CLASSE\", referencedColumnName=\"ID\"),\n" + 
-				"	inverseJoinColumns=@JoinColumn(name=\"ID_TEST\", referencedColumnName=\"ID\"))\n" + 
+				"@JoinTable(name=\"ma_classe_test\", joinColumns=@JoinColumn(name=\"id_ma_classe\", referencedColumnName=\"id\"),\n" + 
+				"	inverseJoinColumns=@JoinColumn(name=\"id_test\", referencedColumnName=\"id\"))\n" + 
 				"public Set<maClasse2> test;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
 	}
@@ -214,7 +214,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		asso.getOwnedEnds().add(prop2);
 		prop.setAssociation(asso);
 		String expect = "@OneToOne(cascade = {CascadeType.REMOVE})\n" + 
-				"@JoinColumn(name = \"ID_TEST2\")\n";
+				"@JoinColumn(name = \"id_test2\")\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationAnnotation(prop2, class_).toString());
 	}
 	
@@ -236,7 +236,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		asso.getOwnedEnds().add(prop);
 		prop.setAssociation(asso);
 		String expect = "@ManyToOne\n" + 
-				"@JoinColumn(name = \"ID_TEST\")\n";
+				"@JoinColumn(name = \"id_test\")\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationAnnotation(prop, class_).toString());
 	}
 	
@@ -258,8 +258,8 @@ public class ClassifierJPAEntityGeneratorTest {
 		asso.getOwnedEnds().add(prop);
 		prop.setAssociation(asso);
 		String expect = "@OneToMany\n" + 
-				"@JoinTable(name=\"MA_CLASSE_TEST\", joinColumns=@JoinColumn(name=\"ID_MA_CLASSE\", referencedColumnName=\"ID\"),\n" + 
-				"	inverseJoinColumns=@JoinColumn(name=\"ID_TEST\", referencedColumnName=\"ID\", unique=true))\n";
+				"@JoinTable(name=\"ma_classe_test\", joinColumns=@JoinColumn(name=\"id_ma_classe\", referencedColumnName=\"id\"),\n" + 
+				"	inverseJoinColumns=@JoinColumn(name=\"id_test\", referencedColumnName=\"id\", unique=true))\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationAnnotation(prop, class_).toString());
 	}
 	
@@ -281,8 +281,8 @@ public class ClassifierJPAEntityGeneratorTest {
 		asso.getOwnedEnds().add(prop);
 		prop.setAssociation(asso);
 		String expect = "@ManyToMany\n" + 
-				"@JoinTable(name=\"MA_CLASSE_TEST\", joinColumns=@JoinColumn(name=\"ID_MA_CLASSE\", referencedColumnName=\"ID\"),\n" + 
-				"	inverseJoinColumns=@JoinColumn(name=\"ID_TEST\", referencedColumnName=\"ID\"))\n";
+				"@JoinTable(name=\"ma_classe_test\", joinColumns=@JoinColumn(name=\"id_ma_classe\", referencedColumnName=\"id\"),\n" + 
+				"	inverseJoinColumns=@JoinColumn(name=\"id_test\", referencedColumnName=\"id\"))\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationAnnotation(prop, class_).toString());
 	}
 
@@ -300,7 +300,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "prop", class2_, 0, 1);
 		String expect = "\n@Embedded\n" + 
 				"@AttributeOverrides({\n" + 
-				"	@AttributeOverride(name=\"att\",column = @Column(name = \"PROP_ATT\"))\n" + 
+				"	@AttributeOverride(name=\"att\",column = @Column(name = \"prop_att\"))\n" + 
 				"})\n" + 
 				"@AssociationOverrides({\n" + 
 				"})\n" + 
@@ -321,7 +321,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		
 		Property prop = TestUtils.createAttribute(class_, "prop", class2_, 0, -1);
 		String expect = "\n@ElementCollection\n" + 
-				"@CollectionTable(name = \"MA_CLASSE_PROP\", joinColumns = @JoinColumn(name = \"ID\"))\n" + 
+				"@CollectionTable(name = \"ma_classe_prop\", joinColumns = @JoinColumn(name = \"id\"))\n" + 
 				"public Set<maClasse2> prop;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateVOAttribute(prop, "", "", class_).toString());
 	}
@@ -570,12 +570,12 @@ public class ClassifierJPAEntityGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "prop", class2_, 0, 1);
 
 		String expect = "@AttributeOverrides({\n" + 
-				"	@AttributeOverride(name=\"att\",column = @Column(name = \"PROP_ATT\"))\n" + 
+				"	@AttributeOverride(name=\"att\",column = @Column(name = \"prop_att\"))\n" + 
 				"})\n" + 
 				"@AssociationOverrides({\n" + 
-				"	@AssociationOverride(name=\"att2\",joinColumns = @JoinColumn(name = \"PROP_ID_ATT2\"))\n" + 
+				"	@AssociationOverride(name=\"att2\",joinColumns = @JoinColumn(name = \"prop_id_att2\"))\n" + 
 				"})";
-		assertEquals(expect, ClassifierJPAEntityGenerator.generateVOOverrides(prop, "PROP").toString());
+		assertEquals(expect, ClassifierJPAEntityGenerator.generateVOOverrides(prop, "prop").toString());
 	}
 	
 	@Test
@@ -587,8 +587,8 @@ public class ClassifierJPAEntityGeneratorTest {
 		
 		Property prop = TestUtils.createAttribute(class_, "prop", hmodel.stringPT, 0, 1);
 		prop.applyStereotype(hmodel.attribute);
-		String expect = "@AttributeOverride(name=\"prop\",column = @Column(name = \"PROP_PROP\"))";
-		assertEquals(expect, ClassifierJPAEntityGenerator.generateAttributeOverride(prop, "PROP").toString());
+		String expect = "@AttributeOverride(name=\"prop\",column = @Column(name = \"prop_prop\"))";
+		assertEquals(expect, ClassifierJPAEntityGenerator.generateAttributeOverride(prop, "prop").toString());
 	}
 
 	@Test
@@ -619,8 +619,8 @@ public class ClassifierJPAEntityGeneratorTest {
 		
 		Property prop = TestUtils.createAttribute(class_, "prop", class2_, 0, 1);
 
-		String expect = "@AssociationOverride(name=\"prop\",joinColumns = @JoinColumn(name = \"PROP_ID_PROP\"))";
-		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationOverride(prop, "PROP").toString());
+		String expect = "@AssociationOverride(name=\"prop\",joinColumns = @JoinColumn(name = \"prop_id_prop\"))";
+		assertEquals(expect, ClassifierJPAEntityGenerator.generateAssociationOverride(prop, "prop").toString());
 	}
 
 	@Test

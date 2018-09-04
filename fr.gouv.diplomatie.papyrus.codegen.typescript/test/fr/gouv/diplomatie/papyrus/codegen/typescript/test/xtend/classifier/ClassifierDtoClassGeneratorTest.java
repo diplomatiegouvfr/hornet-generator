@@ -56,12 +56,23 @@ public class ClassifierDtoClassGeneratorTest {
 		
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		class_.applyStereotype(hmodel.entity);
+		
+		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
+		
 		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
 		class2_.applyStereotype(hmodel.entity);
+		
+		Property id2 = TestUtils.createAttribute(class2_, "id", hmodel.stringPT, 0, 1);
+		id2.applyStereotype(hmodel.keyAttribute);
+		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		
-		String expect = "\n@Map(maClasseDTO)\n" + 
-				"maClasseTest: maClasseDTO;\n";
+		String expect = "\n@Map()\n"
+				+ "@Alias(\"idTest\", \"test.id\")\n"
+				+ "idTest: string;\n"
+				+ "\n@Map(maClasse2DTO)\n" + 
+				"test: maClasse2DTO;\n";
 		assertEquals(expect, ClassifierDtoClassGenerator.generateOneToManyAttribute(prop, class_).toString());
 		
 	}
@@ -169,7 +180,7 @@ public class ClassifierDtoClassGeneratorTest {
 		ArrayList<String> list =new ArrayList<String>();
 		assertEquals(expect, ClassifierDtoClassGenerator.generateBasicAttribute(prop, list).toString());
 		
-		expect = "\n@Map()\n@Alias('add.other.test', 'addOtherTest')\naddOtherTest: string;\n";
+		expect = "\n@Map()\n@Alias(\"add.other.test\", \"addOtherTest\")\naddOtherTest: string;\n";
 		ArrayList<String> list2 =new ArrayList<String>();
 		list2.add("add");
 		list2.add("other");
@@ -285,7 +296,7 @@ public class ClassifierDtoClassGeneratorTest {
 		ArrayList<String> list =new ArrayList<String>();
 		assertEquals(expect, ClassifierDtoClassGenerator.generateEntityAttributes(prop, list).toString());
 		
-		expect = "\n@Map(maClasse2DTO)\n@Alias('addOtherTest', 'add.other.test')\naddOtherTest: maClasse2DTO;\n";
+		expect = "\n@Map(maClasse2DTO)\n@Alias(\"addOtherTest\", \"add.other.test\")\naddOtherTest: maClasse2DTO;\n";
 		ArrayList<String> list2 =new ArrayList<String>();
 		list2.add("add");
 		list2.add("other");
@@ -306,7 +317,7 @@ public class ClassifierDtoClassGeneratorTest {
 		ArrayList<String> list =new ArrayList<String>();
 		assertEquals(expect, ClassifierDtoClassGenerator.generateEntityAttributes(prop, list).toString());
 		
-		expect = "\n@Map(maClasse2DTO)\n@Alias('addOtherTest', 'add.other.test')\naddOtherTest: Array<maClasse2DTO>;\n";
+		expect = "\n@Map(maClasse2DTO)\n@Alias(\"addOtherTest\", \"add.other.test\")\naddOtherTest: Array<maClasse2DTO>;\n";
 		ArrayList<String> list2 =new ArrayList<String>();
 		list2.add("add");
 		list2.add("other");
@@ -332,10 +343,10 @@ public class ClassifierDtoClassGeneratorTest {
 		ArrayList<String> list =new ArrayList<String>();
 		assertEquals(expect, ClassifierDtoClassGenerator.generateEnumAttributes(prop, list).toString());
 		
-		expect = "\n@Map()\n@Alias('add.other.test.code')\n" + 
+		expect = "\n@Map()\n@Alias(\"add.other.test.code\")\n" + 
 				"addOtherTestCode: number;\n" + 
 				"\n" + 
-				"@Map(maClasse2DTO)\n@Alias('addOtherTest', 'add.other.test')\n" + 
+				"@Map(maClasse2DTO)\n@Alias(\"addOtherTest\", \"add.other.test\")\n" + 
 				"addOtherTest: maClasse2DTO;\n";
 		ArrayList<String> list2 =new ArrayList<String>();
 		list2.add("add");
@@ -362,10 +373,10 @@ public class ClassifierDtoClassGeneratorTest {
 		ArrayList<String> list =new ArrayList<String>();
 		assertEquals(expect, ClassifierDtoClassGenerator.generateEnumAttributes(prop, list).toString());
 		
-		expect = "@Map()\n@Alias('add.other.test.code')\n" + 
+		expect = "@Map()\n@Alias(\"add.other.test.code\")\n" + 
 				"addOtherTestCode: Array<number>;\n" + 
 				"\n" + 
-				"@Map(maClasse2DTO)\n@Alias('addOtherTest', 'add.other.test')\n" + 
+				"@Map(maClasse2DTO)\n@Alias(\"addOtherTest\", \"add.other.test\")\n" + 
 				"addOtherTest: Array<maClasse2DTO>;\n";
 		ArrayList<String> list2 =new ArrayList<String>();
 		list2.add("add");
@@ -387,13 +398,13 @@ public class ClassifierDtoClassGeneratorTest {
 		id.applyStereotype(hmodel.keyAttribute);
 		
 		String expect="\n@Map()\n" + 
-				"@Alias('idTest', 'test.id')\n" + 
+				"@Alias(\"idTest\", \"test.id\")\n" + 
 				"idTest: string;\n";
 		ArrayList<String> list =new ArrayList<String>();
 		assertEquals(expect, ClassifierDtoClassGenerator.generateEntityAttribute(prop, id, list).toString());
 		
 		expect="\n@Map()\n" + 
-				"@Alias('addOtherIdTest', 'add.other.test.id')\n" + 
+				"@Alias(\"addOtherIdTest\", \"add.other.test.id\")\n" + 
 				"addOtherIdTest: string;\n";
 		list =new ArrayList<String>();
 		list.add("add");
@@ -580,7 +591,7 @@ public class ClassifierDtoClassGeneratorTest {
 				"	maClasse: maClasseDTO;\n" + 
 				"	\n" + 
 				"	@Map()\n" + 
-				"	@Alias('test.test2', 'testTest2')\n" + 
+				"	@Alias(\"test.test2\", \"testTest2\")\n" + 
 				"	testTest2: string;\n" + 
 				"	\n" + 
 				"}\n";

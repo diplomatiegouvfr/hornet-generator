@@ -24,11 +24,11 @@ public class NomenclatureDtoClassGeneratorTest {
 				"\n" + 
 				"@Bean\n" + 
 				"export class maClasseDTO{\n" + 
-				"	@Map()\n" + 
-				"	code: number;\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	libelle: string;\n" + 
+				"    @Map()\n" + 
+				"    code: number;\n" + 
+				"    \n" + 
+				"    @Map()\n" + 
+				"    libelle: string;\n" + 
 				"}\n";
 		
 		assertEquals(expect, NomenclatureDtoClassGenerator.generateCode(class_).toString());

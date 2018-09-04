@@ -43,13 +43,20 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 				
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		class_.applyStereotype(hmodel.entity);
+		
+		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
+		id.applyStereotype(hmodel.keyAttribute);
+		
 		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
 		class2_.applyStereotype(hmodel.entity);
 		
+		Property id2 = TestUtils.createAttribute(class2_, "id", hmodel.stringPT, 0, 1);
+		id2.applyStereotype(hmodel.keyAttribute);
+		
 		class_.createAssociation(true, AggregationKind.NONE_LITERAL	, "test", 0, 1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 0, -1);
 		Property test = class_.getAttribute("test", class2_);
-		String expect = "maClasseTest: maClasseAttributes;\n" + 
-				"getMaClasseTest(): Promise<maClasseAttributes>;\n";
+		String expect = "idTest?: string;\ntest?: maClasse2Attributes;\n" + 
+				"getTest(): Promise<maClasse2Attributes>;\n";
 		
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateOneToManyAttribute(test, class_).toString());	
 	}

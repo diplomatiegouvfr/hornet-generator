@@ -70,7 +70,7 @@ public class PackageModelDaoClassGeneratorTest {
 		HornetModel hmodel = HornetModel.initModel();
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
-		String expect = "\n@Entity(\"MA_CLASSE\", maClasseModel)\n" + 
+		String expect = "\n@Entity(\"ma_classe\", maClasseModel)\n" + 
 				"public maClasseEntity: HornetSequelizeInstanceModel<maClasseAttributes>;\n";
 		assertEquals(expect, PackageModelDaoClassGenerator.generateEntityDeclaration(class_).toString());
 	}
@@ -81,7 +81,7 @@ public class PackageModelDaoClassGeneratorTest {
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
-		String expect = "\n@Entity(\"MA_CLASSE_TEST\", MaClasseTestModel)\n" + 
+		String expect = "\n@Entity(\"ma_classe_test\", MaClasseTestModel)\n" + 
 				"public maClasseTestEntity: HornetSequelizeInstanceModel<any>;\n";
 		assertEquals(expect, PackageModelDaoClassGenerator.generateMultivaluedAttributEntityDeclaration(prop, class_).toString());
 	}
@@ -101,7 +101,7 @@ public class PackageModelDaoClassGeneratorTest {
 		HornetModel hmodel = HornetModel.initModel();
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
-		String expect = "\nprivate initMaClasseEntity(): void{\n" + 
+		String expect = "\nprivate initMaClasseEntity(): void {\n" + 
 				"}\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateEntityGetter(class_).toString());
 	}
@@ -117,7 +117,7 @@ public class PackageModelDaoClassGeneratorTest {
 		class_.createAssociation(true, AggregationKind.NONE_LITERAL, "test", 0, -1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 0, 1);
 		
 		Property prop = class2_.getAttribute("test2", class_);
-		String expect = "SequelizeUtils.initRelationBelongsTo({ fromEntity: this.maClasseEntity, toEntity: this.maClasse2Entity, alias: \"maClasse2Test2\", foreignKey: \"ID2_MA_CLASSE2_TEST2\" });\n";
+		String expect = "SequelizeUtils.initRelationBelongsTo({\n    fromEntity: this.maClasseEntity,\n    toEntity: this.maClasseEntity,\n    alias: \"test2\",\n    foreignKey: \"id_test2\"});\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateOneToManyRelation(prop, class_).toString());
 	}
 
@@ -141,7 +141,7 @@ public class PackageModelDaoClassGeneratorTest {
 
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
-		String expect = "SequelizeUtils.initRelationBelongsTo({fromEntity: this.maClasseEntity, toEntity: this.maClasse2Entity, alias: \"test\", foreignKey: \"ID2_TEST\"});\n";
+		String expect = "SequelizeUtils.initRelationBelongsTo({\n    fromEntity: this.maClasseEntity,\n    toEntity: this.maClasse2Entity,\n    alias: \"test\",\n    foreignKey: \"id2_test\"});\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateEntityRelation(prop, class_, "", "").toString());
 	}
 
@@ -151,7 +151,7 @@ public class PackageModelDaoClassGeneratorTest {
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		class_.applyStereotype(hmodel.nomenclature);
 
-		String expect = "\npublic initMaClasseEntity(): void{\n" + 
+		String expect = "\npublic initMaClasseEntity(): void {\n" + 
 				"}\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateEnumEntityGetter(class_).toString());
 	}
@@ -171,7 +171,7 @@ public class PackageModelDaoClassGeneratorTest {
 		HornetModel hmodel = HornetModel.initModel();
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		
-		String expect = "\npublic initMaClasseEntity(): void{\n" + 
+		String expect = "\npublic initMaClasseEntity(): void {\n" + 
 				"}\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateACEntityGetter(class_).toString());
 	}
@@ -194,7 +194,7 @@ public class PackageModelDaoClassGeneratorTest {
 		
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		
-		String expect = "\npublic initMaClasseTestEntity(): void{\n" + 
+		String expect = "\npublic initMaClasseTestEntity(): void {\n" + 
 				"}\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateAttributEntityGetter(prop, class_, "").toString());
 	}
@@ -213,19 +213,19 @@ public class PackageModelDaoClassGeneratorTest {
 
 	@Test
 	public void testGenerateInitRelationBelongsTo() {
-		String expect = "SequelizeUtils.initRelationBelongsTo({fromEntity: ab, toEntity: cd, alias: ef, foreignKey: gh});\n";
+		String expect = "SequelizeUtils.initRelationBelongsTo({\n    fromEntity: ab,\n    toEntity: cd,\n    alias: ef,\n    foreignKey: gh});\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateInitRelationBelongsTo("ab", "cd", "ef", "gh").toString());
 	}
 
 	@Test
 	public void testGenerateInitRelationBelongsToManyWithOtherKey() {
-		String expect = "SequelizeUtils.initRelationBelongsToMany({fromEntity: ab, toEntity: cd, alias: ef, foreignKey: gh, throughTable: ij, otherKey: kl});\n";
+		String expect = "SequelizeUtils.initRelationBelongsToMany({\n    fromEntity: ab,\n    toEntity: cd,\n    alias: ef,\n    foreignKey: gh,\n    throughTable: ij,\n    otherKey: kl});\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateInitRelationBelongsToMany("ab", "cd", "ef", "gh", "ij", "kl").toString());
 	}
 
 	@Test
 	public void testGenerateInitRelationBelongsToMany() {
-		String expect = "SequelizeUtils.initRelationBelongsToMany({fromEntity: ab, toEntity: cd, alias: ef, foreignKey: gh, throughTable: ij});\n";
+		String expect = "SequelizeUtils.initRelationBelongsToMany({\n    fromEntity: ab,\n    toEntity: cd,\n    alias: ef,\n    foreignKey: gh,\n    throughTable: ij});\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateInitRelationBelongsToMany("ab", "cd", "ef", "gh", "ij").toString());
 	}
 

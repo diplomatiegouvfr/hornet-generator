@@ -1190,11 +1190,11 @@ public class PackageDatabaseScriptGenerator{
 		var libelle = Utils.getNomenclatureLibelle(prop)
 		if(!hasCode){
 			'''
-			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (LIBELLE) VALUES ('«libelle»');
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (libelle) VALUES ('«libelle»');
 			'''
 		}else{
 			'''
-			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («code», '«libelle»');
+			INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (code, libelle) VALUES («code», '«libelle»');
 			'''
 		}
 	}
@@ -1203,7 +1203,7 @@ public class PackageDatabaseScriptGenerator{
 		val schema = SqlClassifierUtils.generateSchemaName(owner)
 		var libelle = Utils.getNomenclatureLibelle(prop)
 		'''
-		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (CODE, LIBELLE) VALUES («value», '«libelle»');
+		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (code, libelle) VALUES («value», '«libelle»');
 		'''
 	}
 	

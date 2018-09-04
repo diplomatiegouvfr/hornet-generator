@@ -98,7 +98,7 @@ public class UtilsTest {
 	public void testToDbName() {
 		String test = "abCdeFg";
 		String get = Utils.toDbName(test);
-		assertEquals("AB_CDE_FG", get);
+		assertEquals("ab_cde_fg", get);
 	}
 
 	@Test

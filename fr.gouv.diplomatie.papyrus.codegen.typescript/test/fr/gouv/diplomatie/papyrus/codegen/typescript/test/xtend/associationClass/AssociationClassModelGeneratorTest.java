@@ -24,15 +24,15 @@ public class AssociationClassModelGeneratorTest {
 		Property id = TestUtils.createAttribute(class2_, "id", hmodel.integerPT, 0, 1);
 		
 		String expect = "idAtt: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID_ATT\",\n" + 
-				"	allowNull: true,\n" + 
-				"	primaryKey: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id_att\",\n" + 
+				"    allowNull: true,\n" + 
+				"    primaryKey: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, AssociationClassModelGenerator.generateEntityMemberAttribute(att, id, class_).toString());
 	}
 

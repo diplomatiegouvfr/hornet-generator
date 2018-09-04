@@ -279,19 +279,19 @@ public class PropertyUtilsTest {
 		
 		prop.applyStereotype(hmodel.attribute);
 		
-		assertEquals("TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
-		assertEquals("SECOND_TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), "SECOND" ));
+		assertEquals("test", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
+		assertEquals("second_test", PropertyUtils.getDatabaseName(prop, prop.getName(), "second" ));
 		
-		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeColumnName, "OTHER");
+		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeColumnName, "other");
 		
-		assertEquals("OTHER", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
-		assertEquals("SECOND_OTHER", PropertyUtils.getDatabaseName(prop, prop.getName(), "SECOND" ));
+		assertEquals("other", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
+		assertEquals("second_other", PropertyUtils.getDatabaseName(prop, prop.getName(), "second" ));
 		
 		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeColumnName, "");
 		
-		assertEquals("TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
-		assertEquals("TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), null ));
-		assertEquals("SECOND_TEST", PropertyUtils.getDatabaseName(prop, prop.getName(), "SECOND" ));
+		assertEquals("test", PropertyUtils.getDatabaseName(prop, prop.getName(), "" ));
+		assertEquals("test", PropertyUtils.getDatabaseName(prop, prop.getName(), null ));
+		assertEquals("second_test", PropertyUtils.getDatabaseName(prop, prop.getName(), "second" ));
 	}
 
 	@Test

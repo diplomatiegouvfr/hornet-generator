@@ -66,13 +66,13 @@ public class AssociationClassDtoClassGeneratorTest {
 		TestUtils.createAttribute(class2_, "att2", hmodel.booleanPT , 0, 1);
 				
 		String expect = "\n@Map()\n" + 
-				"@Alias('attAtt2', 'att.att2')\n" + 
+				"@Alias(\"attAtt2\", \"att.att2\")\n" + 
 				"attAtt2: string;\n";
 		ArrayList<String> list = new ArrayList<String>();
 		assertEquals(expect, AssociationClassDtoClassGenerator.generateValueObjectAttribute(att, list).toString());	
 		
 		expect = "\n@Map()\n" + 
-				"@Alias('testOtherAttAtt2', 'test.other.att.att2')\n" + 
+				"@Alias(\"testOtherAttAtt2\", \"test.other.att.att2\")\n" + 
 				"testOtherAttAtt2: string;\n";
 		ArrayList<String> list2= new ArrayList<String>();
 		list2.add("test");
@@ -142,13 +142,13 @@ public class AssociationClassDtoClassGeneratorTest {
 		Property id = TestUtils.createAttribute(class2_, "id", hmodel.stringPT, 0, 1);
 				
 		String expect = "\n@Map()\n" + 
-				"@Alias('idAtt', 'att.id')\n" + 
+				"@Alias(\"idAtt\", \"att.id\")\n" + 
 				"idAtt: string;\n";
 		ArrayList<String> list = new ArrayList<String>();
 		assertEquals(expect, AssociationClassDtoClassGenerator.generateEntityAttribute(att, id,  list).toString());	
 		
 		expect = "\n@Map()\n" + 
-				"@Alias('testOtherIdAtt', 'test.other.att.id')\n" + 
+				"@Alias(\"testOtherIdAtt\", \"test.other.att.id\")\n" + 
 				"testOtherIdAtt: string;\n";
 		list.add("test");
 		list.add("other");
@@ -166,13 +166,13 @@ public class AssociationClassDtoClassGeneratorTest {
 		Property att = TestUtils.createAttribute(class_, "att", hmodel.stringPT, 0, 1);
 				
 		String expect = "\n@Map()\n" + 
-				"@Alias('att')\n" + 
+				"@Alias(\"att\")\n" + 
 				"att: string;\n";
 		ArrayList<String> list = new ArrayList<String>();
 		assertEquals(expect, AssociationClassDtoClassGenerator.generateBasicAttribute(att, list).toString());
 		
 		expect = "\n@Map()\n" + 
-				"@Alias('testOtherAtt', 'test.other.att')\n" + 
+				"@Alias(\"testOtherAtt\", \"test.other.att\")\n" + 
 				"testOtherAtt: string;\n";
 		list.add("test");
 		list.add("other");

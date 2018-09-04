@@ -20,29 +20,25 @@ public class GeneratorUtilsTest {
 	@Test
 	public void testGetModelPath() {
 		Classifier class_ = TestUtils.getClass("model", "pkg", "test", false);
-		assertEquals("src/models/models/test-model", GeneratorUtils.getModelPath(class_, true));
-		assertEquals("src-gen/models/models/test-model", GeneratorUtils.getModelPath(class_, false));
+		assertEquals("src-gen/models/models/test-model", GeneratorUtils.getModelPath(class_, true));
 	}
 
 	@Test
 	public void testGetAttributesInterfacePath() {
 		Classifier class_ = TestUtils.getClass("model", "pkg", "test", false);
-		assertEquals("src/models/attributes/test-attributes", GeneratorUtils.getAttributesInterfacePath(class_, true));
-		assertEquals("src-gen/models/attributes/test-attributes", GeneratorUtils.getAttributesInterfacePath(class_, false));
+		assertEquals("src-gen/models/attributes/test-attributes", GeneratorUtils.getAttributesInterfacePath(class_, true));
 	}
 
 	@Test
 	public void testGetMetierClassPath() {
 		Classifier class_ = TestUtils.getClass("model", "pkg", "test", false);
-		assertEquals("src/models/metier/test-metier", GeneratorUtils.getMetierClassPath(class_, true));
-		assertEquals("src-gen/models/metier/test-metier", GeneratorUtils.getMetierClassPath(class_, false));
+		assertEquals("src-gen/models/metier/test-metier", GeneratorUtils.getMetierClassPath(class_, true));
 	}
 
 	@Test
 	public void testGetDtoClassPath() {
 		Classifier class_ = TestUtils.getClass("model", "pkg", "test", false);
-		assertEquals("src/models/dto/test-dto", GeneratorUtils.getDtoClassPath(class_, true));
-		assertEquals("src-gen/models/dto/test-dto", GeneratorUtils.getDtoClassPath(class_, false));
+		assertEquals("src-gen/models/dto/test-dto", GeneratorUtils.getDtoClassPath(class_, true));
 	}
 
 	@Test
@@ -53,15 +49,13 @@ public class GeneratorUtilsTest {
 	@Test
 	public void testGetModelDaoPath() {
 		Package pkg = TestUtils.getpackage("model", "pkg");
-		assertEquals("src/dao/model-dao", GeneratorUtils.getModelDaoPath(pkg, true));
-		assertEquals("src-gen/dao/model-dao", GeneratorUtils.getModelDaoPath(pkg, false));
+		assertEquals("src-gen/dao/model-dao", GeneratorUtils.getModelDaoPath(pkg, true));
 	}
 
 	@Test
 	public void testGetEnumPath() {
 		Classifier class_ = TestUtils.getClass("model", "pkg", "test", false);
-		assertEquals("src/models/test-enum", GeneratorUtils.getEnumPath(class_, true));
-		assertEquals("src-gen/models/test-enum", GeneratorUtils.getEnumPath(class_, false));
+		assertEquals("src-gen/models/test-enum", GeneratorUtils.getEnumPath(class_, true));
 	}
 
 }

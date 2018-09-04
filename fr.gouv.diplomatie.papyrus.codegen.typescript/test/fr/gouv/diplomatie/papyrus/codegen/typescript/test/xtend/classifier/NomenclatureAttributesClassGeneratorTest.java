@@ -19,10 +19,10 @@ public class NomenclatureAttributesClassGeneratorTest {
 		class_.applyStereotype(hmodel.nomenclature);
 		
 		String expect = "\nexport class maClasseAttributes{\n" + 
-				"	\n" + 
-				"	code?: number;\n" + 
-				"	libelle?: string;\n" + 
-				"	\n" + 
+				"    \n" + 
+				"    code?: number;\n" + 
+				"    libelle?: string;\n" + 
+				"    \n" + 
 				"}\n";
 		
 		assertEquals(expect, NomenclatureAttributesClassGenerator.generateCode(class_).toString());

@@ -78,7 +78,7 @@ public class ClassifierUtilsTest {
 	public void testGetModelPath() {
 		HornetModel hmodel = HornetModel.initModel();
 		Classifier class_ = TestUtils.createClass(hmodel.pckage, "MaClasse", false);
-		String expected = "src" + File.separator + "models" +  File.separator + "models" + File.separator  + "ma-classe-model";
+		String expected = "src-gen" + File.separator + "models" +  File.separator + "models" + File.separator  + "ma-classe-model";
 		assertEquals(expected, ClassifierUtils.getModelPath(class_));
 	}
 
@@ -86,7 +86,7 @@ public class ClassifierUtilsTest {
 	public void testGetAttributesInterfacePath() {
 		HornetModel hmodel = HornetModel.initModel();
 		Classifier class_ = TestUtils.createClass(hmodel.pckage, "MaClasse", false);
-		String expected = "src" + File.separator + "models" +  File.separator + "attributes" + File.separator  + "ma-classe-attributes";
+		String expected = "src-gen" + File.separator + "models" +  File.separator + "attributes" + File.separator  + "ma-classe-attributes";
 		assertEquals(expected, ClassifierUtils.getAttributesInterfacePath(class_));
 	}
 
@@ -94,7 +94,7 @@ public class ClassifierUtilsTest {
 	public void testGetMetierClassPath() {
 		HornetModel hmodel = HornetModel.initModel();
 		Classifier class_ = TestUtils.createClass(hmodel.pckage, "MaClasse", false);
-		String expected = "src" + File.separator + "models" +  File.separator + "metier" + File.separator  + "ma-classe-metier";
+		String expected = "src-gen" + File.separator + "models" +  File.separator + "metier" + File.separator  + "ma-classe-metier";
 		assertEquals(expected, ClassifierUtils.getMetierClassPath(class_));
 	}
 
@@ -102,7 +102,7 @@ public class ClassifierUtilsTest {
 	public void testGetDtoClassPath() {
 		HornetModel hmodel = HornetModel.initModel();
 		Classifier class_ = TestUtils.createClass(hmodel.pckage, "MaClasse", false);
-		String expected = "src" + File.separator + "models" +  File.separator + "dto" + File.separator  + "ma-classe-dto";
+		String expected = "src-gen" + File.separator + "models" +  File.separator + "dto" + File.separator  + "ma-classe-dto";
 		assertEquals(expected, ClassifierUtils.getDtoClassPath(class_));
 	}
 
@@ -110,7 +110,7 @@ public class ClassifierUtilsTest {
 	public void testGetEnumClassPath() {
 		HornetModel hmodel = HornetModel.initModel();
 		Classifier class_ = TestUtils.createClass(hmodel.pckage, "MaClasse", false);
-		String expected = "src" + File.separator + "models" +  File.separator +  "ma-classe-enum";
+		String expected = "src-gen" + File.separator + "models" +  File.separator +  "ma-classe-enum";
 		assertEquals(expected, ClassifierUtils.getEnumClassPath(class_));
 	}
 
@@ -378,7 +378,7 @@ public class ClassifierUtilsTest {
 		ArrayList<Property> result = ClassifierUtils.getOneToManyAttributes(class_);
 		Property test = result.get(0);
 			
-		assertEquals("test2",test.getName());
+		assertEquals("test",test.getName());
 	}
 
 	@Test
@@ -460,10 +460,10 @@ public class ClassifierUtilsTest {
 		Classifier class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		class_.applyStereotype(hmodel.entity);
 		
-		assertEquals("MA_CLASSE", ClassifierUtils.getDBTableName(class_));
+		assertEquals("ma_classe", ClassifierUtils.getDBTableName(class_));
 		
 		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entityTableName, "testTableName");
-		assertEquals("TEST_TABLE_NAME", ClassifierUtils.getDBTableName(class_));
+		assertEquals("test_table_name", ClassifierUtils.getDBTableName(class_));
 	}
 
 	@Test

@@ -718,7 +718,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 			    ADD CONSTRAINT «tableName»_«Utils.toDbName(fromClass.name)»_ids_fkey
 			    FOREIGN KEY («idsOwnerName») REFERENCES «schema»«ClassifierUtils.getDBTableName(fromClass)»(«idsOwnerBaseName»);
 			    
-			ALTER TABLE «schema»«tableName» DROP CONSTRAINT IF EXISTS «tableName»_«Utils.toDbName(type.name)»_IDS_FKEY CASCADE;
+			ALTER TABLE «schema»«tableName» DROP CONSTRAINT IF EXISTS «tableName»_«Utils.toDbName(type.name)»_ids_fkey CASCADE;
 			    
 			ALTER TABLE ONLY «schema»«tableName»
 			    ADD CONSTRAINT «tableName»_«Utils.toDbName(type.name)»_ids_fkey
@@ -974,7 +974,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		ALTER TABLE «schema»«tableName» DROP CONSTRAINT IF EXISTS «tableName»_pkey CASCADE;
 		
 		ALTER TABLE ONLY «schema»«tableName»
-			ADD CONSTRAINT «tableName»_pkey PRIMARY KEY («Utils.getListStringComma(clazz.getAssociationAttributList(newArrayList(), ""))»);
+			ADD CONSTRAINT «tableName»_pkey PRIMARY KEY («Utils.getListComma(clazz.getAssociationAttributList(newArrayList(), ""))»);
 		'''
 	}
 	

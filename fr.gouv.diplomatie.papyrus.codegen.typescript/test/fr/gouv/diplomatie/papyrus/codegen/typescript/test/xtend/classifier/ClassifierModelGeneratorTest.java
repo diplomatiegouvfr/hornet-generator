@@ -28,14 +28,14 @@ public class ClassifierModelGeneratorTest {
 		class_.createAssociation(true, AggregationKind.NONE_LITERAL, "test", 0, 1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 0, -1);
 		Property prop = class_.getAttribute("test", class2_);
 		
-		String expect = ",maClasseTest: {\n" + 
+		String expect = "idTest: {\n" + 
 				"    type: Sequelize.STRING,\n" + 
-				"    field: \"ID_MA_CLASSE_TEST\",\n" + 
+				"    field: \"id_test\",\n" + 
 				"    references: {\n" + 
-				"        model: \"maClasseModel\",\n" + 
-				"        key: \"id\"\n" + 
-				"    }\n" + 
-				"}\n";
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateOneToManyAttribute(prop, class_).toString());
 	}
 
@@ -54,14 +54,14 @@ public class ClassifierModelGeneratorTest {
 		TestUtils.createGeneralization(class_, class2_);
 		
 		String expect = "id: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID\",\n" + 
-				"	allowNull: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"},";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id\",\n" + 
+				"    allowNull: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateExtendsId(class_).toString());
 
 	}
@@ -77,11 +77,11 @@ public class ClassifierModelGeneratorTest {
 		id.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "id: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID\",\n" + 
-				"	allowNull: true,\n" + 
-				"	primaryKey: true\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id\",\n" + 
+				"    allowNull: true,\n" + 
+				"    primaryKey: true,\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateIdAttributeDefinition(id, "", class_, false).toString());
 		
 	}
@@ -99,11 +99,11 @@ public class ClassifierModelGeneratorTest {
 		id.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "id: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID\",\n" + 
-				"	allowNull: true,\n" + 
-				"	primaryKey: true\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id\",\n" + 
+				"    allowNull: true,\n" + 
+				"    primaryKey: true,\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateIdAttributeDefinition(id, "", class_, false).toString());
 	}
 
@@ -122,25 +122,25 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "idTest: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID_TEST\",\n" + 
-				"	allowNull: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id_test\",\n" + 
+				"    allowNull: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateEntityAttributeDefinition(prop, id, "", "", class_, false, true).toString());
 		expect = "addOtherIdTest: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ADD_OTHER_ID_TEST\",\n" + 
-				"	allowNull: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"}";
-		assertEquals(expect, ClassifierModelGenerator.generateEntityAttributeDefinition(prop, id, "addOther", "ADD_OTHER", class_, false, true).toString());
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"add_other_id_test\",\n" + 
+				"    allowNull: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
+		assertEquals(expect, ClassifierModelGenerator.generateEntityAttributeDefinition(prop, id, "addOther", "add_other", class_, false, true).toString());
 	}
 
 	@Test
@@ -155,29 +155,29 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 1, 1);
 		
 		String expect = "test: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"TEST\",\n" + 
-				"	allowNull: true\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"test\",\n" + 
+				"    allowNull: true,\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateBasicAttributeDefinition(prop, "", "", class_, false, true).toString());
 		expect = "test: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"TEST\",\n" + 
-				"	allowNull: false\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"test\",\n" + 
+				"    allowNull: false,\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateBasicAttributeDefinition(prop, "", "", class_, false, false).toString());
 		expect = "test: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"TEST\",\n" + 
-				"	allowNull: true\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"test\",\n" + 
+				"    allowNull: true,\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateBasicAttributeDefinition(prop, "", "", class_, true, true).toString());
 		expect = "test: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"TEST\",\n" + 
-				"	primaryKey: true,\n" + 
-				"	allowNull: false\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"test\",\n" + 
+				"    primaryKey: true,\n" + 
+				"    allowNull: false,\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateBasicAttributeDefinition(prop, "", "", class_, true, false).toString());
 	}
 
@@ -241,14 +241,14 @@ public class ClassifierModelGeneratorTest {
 		prop.getAssociation().createOwnedEnd("test2", class_);
 		
 		String expect = "id2Test: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"id2Test\",\n" + 
-				"	allowNull: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id2\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id2Test\",\n" + 
+				"    allowNull: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id2\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateReferenceAttributeAssocation(prop, id2, class_, "").toString());
 	}
 
@@ -264,14 +264,14 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class2_, "test", class_, 0, 1);
 		
 		String expect ="testId: {\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"testId\",\n" + 
-				"	allowNull: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"testId\",\n" + 
+				"    allowNull: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateReferenceAttributeNA(prop, id, class_, "").toString());
 	}
 
@@ -288,23 +288,23 @@ public class ClassifierModelGeneratorTest {
 		
 		String expect ="\n" + 
 				"export const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
-				"	test: {\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"TEST\",\n" + 
-				"		primaryKey: true,\n" + 
-				"		allowNull: false\n" + 
-				"	},\n" + 
-				"	id:{\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"ID\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasseModel\",\n" + 
-				"			key: \"id\"\n" + 
-				"		}\n" + 
-				"	}\n" + 
-				"}\n";
+				"    test: {\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"test\",\n" + 
+				"        primaryKey: true,\n" + 
+				"        allowNull: false,\n" + 
+				"    },\n" + 
+				"    id:{\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"id\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasseModel\",\n" + 
+				"            key: \"id\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"};\n";
 		assertEquals(expect, ClassifierModelGenerator.generateMultiValuedPrimitiveTypeModel(prop, class_).toString());
 	}
 
@@ -319,15 +319,15 @@ public class ClassifierModelGeneratorTest {
 		id.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "id:{\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID\",\n" + 
-				"	allowNull: false,\n" + 
-				"	primaryKey: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasseModel\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"}\n";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id\",\n" + 
+				"    allowNull: false,\n" + 
+				"    primaryKey: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasseModel\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateMultiValuedPrimitiveTypeModelIdAttributes(id,  class_).toString());
 
 	}
@@ -353,27 +353,27 @@ public class ClassifierModelGeneratorTest {
 		
 		String expect = "\n" + 
 				"export const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
-				"	id2MaClasse2:{\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"ID2_TEST\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasse2Model\",\n" + 
-				"			key: \"id2\"\n" + 
-				"		}\n" + 
-				"	},\n" + 
-				"	idMaClasse2:{\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"ID_MA_CLASSE\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasse2Model\",\n" + 
-				"			key: \"id\"\n" + 
-				"		}\n" + 
-				"	}\n" + 
-				"}\n" ;
+				"    id2MaClasse2:{\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"id2_test\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasse2Model\",\n" + 
+				"            key: \"id2\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"    idMaClasse:{\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"id_ma_classe\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasseModel\",\n" + 
+				"            key: \"id\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"};\n" ;
 		assertEquals(expect, ClassifierModelGenerator.generateNPTypeAssociationModel(prop,  class_).toString());
 	}
 
@@ -394,27 +394,27 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "id2MaClasse2:{\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID2\",\n" + 
-				"	allowNull: false,\n" + 
-				"	primaryKey: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id2\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id2\",\n" + 
+				"    allowNull: false,\n" + 
+				"    primaryKey: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id2\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateNPTAssociationModelIdAttributes(prop, id2, class_, "").toString());
 		
 		expect = "id2MaClasse2:{\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID2_ADD\",\n" + 
-				"	allowNull: false,\n" + 
-				"	primaryKey: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id2\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id2_add\",\n" + 
+				"    allowNull: false,\n" + 
+				"    primaryKey: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id2\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateNPTAssociationModelIdAttributes(prop, id2, class_, "add").toString());
 
 	}
@@ -436,27 +436,27 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "\nexport const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
-				"	idMaClasse:{\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"ID_MA_CLASSE\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasseModel\",\n" + 
-				"			key: \"id\"\n" + 
-				"		}\n" + 
-				"	},\n" + 
-				"	id2MaClasse2:{\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"ID2_TEST\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasse2Model\",\n" + 
-				"			key: \"id2\"\n" + 
-				"		}\n" + 
-				"	}\n" + 
-				"}\n";
+				"    idMaClasse:{\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"id_ma_classe\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasseModel\",\n" + 
+				"            key: \"id\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"    id2MaClasse2:{\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"id2_test\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasse2Model\",\n" + 
+				"            key: \"id2\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"};\n";
 		assertEquals(expect, ClassifierModelGenerator.generateNPTypeModel(prop, class_).toString());
 	}
 
@@ -475,27 +475,27 @@ public class ClassifierModelGeneratorTest {
 		id2.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "idMaClasse:{\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID\",\n" + 
-				"	allowNull: false,\n" + 
-				"	primaryKey: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasseModel\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id\",\n" + 
+				"    allowNull: false,\n" + 
+				"    primaryKey: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasseModel\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateNPTModelIdAttributes(id, class_, false).toString());
 		
 		expect = "idMaClasse:{\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID_MA_CLASSE\",\n" + 
-				"	allowNull: false,\n" + 
-				"	primaryKey: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasseModel\",\n" + 
-				"		key: \"id\"\n" + 
-				"	}\n" + 
-				"}";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id_ma_classe\",\n" + 
+				"    allowNull: false,\n" + 
+				"    primaryKey: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasseModel\",\n" + 
+				"        key: \"id\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateNPTModelIdAttributes(id, class_, true).toString());
 	}
 
@@ -516,15 +516,15 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "id2MaClasse2:{\n" + 
-				"	type: Sequelize.STRING,\n" + 
-				"	field: \"ID2_TEST\",\n" + 
-				"	allowNull: false,\n" + 
-				"	primaryKey: true,\n" + 
-				"	references: {\n" + 
-				"		model: \"maClasse2Model\",\n" + 
-				"		key: \"id2\"\n" + 
-				"	}\n" + 
-				"}\n";
+				"    type: Sequelize.STRING,\n" + 
+				"    field: \"id2_test\",\n" + 
+				"    allowNull: false,\n" + 
+				"    primaryKey: true,\n" + 
+				"    references: {\n" + 
+				"        model: \"maClasse2Model\",\n" + 
+				"        key: \"id2\",\n" + 
+				"    },\n" + 
+				"},\n";
 		assertEquals(expect, ClassifierModelGenerator.generateNPTModelIdAttributes(prop, id2, class_).toString());
 	}
 
@@ -579,27 +579,27 @@ public class ClassifierModelGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
 		
 		String expect = "\nexport const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
-				"	idMaClasse:{\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"ID\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasseModel\",\n" + 
-				"			key: \"id\"\n" + 
-				"		}\n" + 
-				"	},\n" + 
-				"	code: {\n" + 
-				"		type: Sequelize.INTEGER,\n" + 
-				"		field: \"CODE\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasse2Model\",\n" + 
-				"			key: \"code\"\n" + 
-				"		}\n" + 
-				"	}\n" + 
-				"}\n";
+				"    idMaClasse:{\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"id\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasseModel\",\n" + 
+				"            key: \"id\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"    code: {\n" + 
+				"        type: Sequelize.INTEGER,\n" + 
+				"        field: \"code\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasse2Model\",\n" + 
+				"            key: \"code\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"};\n";
 		assertEquals(expect, ClassifierModelGenerator.generateMultiValuedEnumModel(prop, class_).toString());
 	}
 
@@ -617,22 +617,22 @@ public class ClassifierModelGeneratorTest {
 		TestUtils.createAttribute(class2_, "test2", hmodel.stringPT, 0, 1);
 		
 		String expect = "\nexport const MaClasseTestModel: Sequelize.DefineAttributes={\n" + 
-				"	idMaClasse:{\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"ID\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true,\n" + 
-				"		references: {\n" + 
-				"			model: \"maClasseModel\",\n" + 
-				"			key: \"id\"\n" + 
-				"		}\n" + 
-				"	},\n" + 
-				"	testTest2: {\n" + 
-				"		type: Sequelize.STRING,\n" + 
-				"		field: \"TEST_TEST2\",\n" + 
-				"		allowNull: true\n" + 
-				"	}\n" + 
-				"}\n";
+				"    idMaClasse:{\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"id\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"        references: {\n" + 
+				"            model: \"maClasseModel\",\n" + 
+				"            key: \"id\",\n" + 
+				"        },\n" + 
+				"    },\n" + 
+				"    testTest2: {\n" + 
+				"        type: Sequelize.STRING,\n" + 
+				"        field: \"test_test2\",\n" + 
+				"        allowNull: true,\n" + 
+				"    },\n" + 
+				"};\n";
 		assertEquals(expect, ClassifierModelGenerator.generateMultiValuedVOModel(prop, class_).toString());
 
 	}

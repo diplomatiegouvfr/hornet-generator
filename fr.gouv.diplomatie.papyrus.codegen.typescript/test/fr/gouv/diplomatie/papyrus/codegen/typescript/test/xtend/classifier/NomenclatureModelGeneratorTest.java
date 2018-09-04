@@ -21,18 +21,18 @@ public class NomenclatureModelGeneratorTest {
 		String expect = "import Sequelize = require(\"sequelize\");\n" + 
 				"\n" + 
 				"export const maClasseModel: Sequelize.DefineAttributes={\n" + 
-				"	code: {\n" + 
-				"		type: Sequelize.INTEGER,\n" + 
-				"		field: \"CODE\",\n" + 
-				"		allowNull: false,\n" + 
-				"		primaryKey: true\n" + 
-				"	},\n" + 
-				"	libelle: {\n" + 
-				"		type: Sequelize.TEXT,\n" + 
-				"		field: \"LIBELLE\",\n" + 
-				"		allowNull: false\n" + 
-				"	}\n" + 
-				"}\n";
+				"    code: {\n" + 
+				"        type: Sequelize.INTEGER,\n" + 
+				"        field: \"code\",\n" + 
+				"        allowNull: false,\n" + 
+				"        primaryKey: true,\n" + 
+				"    },\n" + 
+				"    libelle: {\n" + 
+				"        type: Sequelize.TEXT,\n" + 
+				"        field: \"libelle\",\n" + 
+				"        allowNull: false,\n" + 
+				"    },\n" + 
+				"};\n";
 		assertEquals(expect, NomenclatureModelGenerator.generateCode(class_).toString());
 	}
 

@@ -2564,7 +2564,7 @@ public class PackageDatabaseScriptGenerator {
         _builder.append(schema);
         String _dBTableName = ClassifierUtils.getDBTableName(owner);
         _builder.append(_dBTableName);
-        _builder.append(" (LIBELLE) VALUES (\'");
+        _builder.append(" (libelle) VALUES (\'");
         _builder.append(libelle);
         _builder.append("\');");
         _builder.newLineIfNotEmpty();
@@ -2575,7 +2575,7 @@ public class PackageDatabaseScriptGenerator {
         _builder_1.append(schema);
         String _dBTableName_1 = ClassifierUtils.getDBTableName(owner);
         _builder_1.append(_dBTableName_1);
-        _builder_1.append(" (CODE, LIBELLE) VALUES (");
+        _builder_1.append(" (code, libelle) VALUES (");
         _builder_1.append(code);
         _builder_1.append(", \'");
         _builder_1.append(libelle);
@@ -2598,7 +2598,7 @@ public class PackageDatabaseScriptGenerator {
       _builder.append(schema);
       String _dBTableName = ClassifierUtils.getDBTableName(owner);
       _builder.append(_dBTableName);
-      _builder.append(" (CODE, LIBELLE) VALUES (");
+      _builder.append(" (code, libelle) VALUES (");
       _builder.append(value);
       _builder.append(", \'");
       _builder.append(libelle);

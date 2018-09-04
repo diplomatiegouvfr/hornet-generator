@@ -48,8 +48,8 @@ public class ClassifierMetierClassGeneratorTest {
 		class_.createAssociation(true, AggregationKind.NONE_LITERAL, "test", 0, -1, class2_, true, AggregationKind.NONE_LITERAL, "test2", 0, 1);
 		Property prop = class_.getAttribute("test", class2_);
 		
-		String expect  ="\n@Map(maClasseMetier)\n" + 
-				"maClasseTest: maClasseMetier;\n";
+		String expect  ="\n@Map(maClasse2Metier)\n" + 
+				"test: maClasse2Metier;\n";
 		assertEquals(expect, ClassifierMetierClassGenerator.generateOneToManyAttribute(prop, class_).toString());
 	}
 
