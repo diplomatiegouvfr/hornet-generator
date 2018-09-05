@@ -29,6 +29,22 @@
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_Nska4Jh-Eeex_vpJAwwjpg"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_NuKWUZh-Eeex_vpJAwwjpg"/>
         </children>
+        <children xmi:type="notation:Shape" xmi:id="_m180YLDkEeifU-jLinBY3A" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_m0rCALDkEeifU-jLinBY3A"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_m180YbDkEeifU-jLinBY3A"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_uE5R4LDlEeifU-jLinBY3A" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_uEPKkLDlEeifU-jLinBY3A"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_uE5R4bDlEeifU-jLinBY3A"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_vZGrwLDlEeifU-jLinBY3A" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_vYjSILDlEeifU-jLinBY3A"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_vZGrwbDlEeifU-jLinBY3A"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_JZWhkLDmEeifU-jLinBY3A" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_JYzvALDmEeifU-jLinBY3A"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_JZXIoLDmEeifU-jLinBY3A"/>
+        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_-VPIFHadEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_-VPIFXadEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_-VPIFnadEeegdZhmvUhwtQ"/>
@@ -41,7 +57,7 @@
         <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIHHadEeegdZhmvUhwtQ"/>
       </children>
       <element xmi:type="uml:Stereotype" href="metamodele.profile.uml#_-VN58HadEeegdZhmvUhwtQ"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIEXadEeegdZhmvUhwtQ" x="40" y="380"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIEXadEeegdZhmvUhwtQ" x="20" y="340"/>
     </children>
     <children xmi:type="notation:Shape" xmi:id="_Fmo5IHaeEeegdZhmvUhwtQ" type="Stereotype_Shape">
       <children xmi:type="notation:DecorationNode" xmi:id="_Fmo5InaeEeegdZhmvUhwtQ" type="Stereotype_NameLabel"/>
@@ -476,7 +492,7 @@
       <styles xmi:type="notation:FontStyle" xmi:id="_UyRD4XagEeegdZhmvUhwtQ"/>
       <element xmi:type="uml:Generalization" href="metamodele.profile.uml#_Ux20MHagEeegdZhmvUhwtQ"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_UyRD4nagEeegdZhmvUhwtQ" points="[-180, 320, -643984, -643984]$[-260, 240, -643984, -643984]"/>
-      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYHagEeegdZhmvUhwtQ" id="(0.5128205128205128,0.0)"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYHagEeegdZhmvUhwtQ" id="(0.5106382978723404,0.0)"/>
       <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYXagEeegdZhmvUhwtQ" id="(0.47337278106508873,1.0)"/>
     </edges>
     <edges xmi:type="notation:Connector" xmi:id="_cVk3wHa1EeegdZhmvUhwtQ" type="StereotypeCommentLink" source="_cVWOQHa1EeegdZhmvUhwtQ" target="_cVkQsHa1EeegdZhmvUhwtQ">
@@ -572,7 +588,7 @@
       <styles xmi:type="notation:FontStyle" xmi:id="_N-WWcXdYEeevdc4A4HbIwA"/>
       <element xmi:type="uml:Extension" href="metamodele.profile.uml#_N9bJYHdYEeevdc4A4HbIwA"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_N-WWcndYEeevdc4A4HbIwA" points="[20, 300, -643984, -643984]$[440, 440, -643984, -643984]"/>
-      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OAH4EHdYEeevdc4A4HbIwA" id="(1.0,0.594059405940594)"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OAH4EHdYEeevdc4A4HbIwA" id="(1.0,0.6060606060606061)"/>
       <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OAH4EXdYEeevdc4A4HbIwA" id="(0.0,0.4)"/>
     </edges>
     <edges xmi:type="notation:Connector" xmi:id="_jU3gsHdbEeevdc4A4HbIwA" type="Generalization_Edge" source="_8AEroHdaEeevdc4A4HbIwA" target="_zq2zkHaeEeegdZhmvUhwtQ">

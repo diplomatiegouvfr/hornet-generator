@@ -96,4 +96,40 @@ class ModelUtils{
 		]
 		return classes
 	}
+	
+	static def getMetierFileSuffix(Model model){
+		val suffix = Utils.getStereotypePropertyValue(model,Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_METIERFILESUFFIX);
+		if(suffix !== null && suffix !== ""){
+			return suffix
+		}
+		
+		return "metier"
+	}
+	
+	static def getModelFileSuffix(Model model){
+		val suffix = Utils.getStereotypePropertyValue(model,Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_MODELFILESUFFIX);
+		if(suffix !== null && suffix !== ""){
+			return suffix
+		}
+		
+		return "model"
+	}
+	
+	static def getDtoFileSuffix(Model model){
+		val suffix = Utils.getStereotypePropertyValue(model,Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_DTOFILESUFFIX);
+		if(suffix !== null && suffix !== ""){
+			return suffix
+		}
+		
+		return "dto"
+	}
+	
+	static def getAttributesFileSuffix(Model model){
+		val suffix = Utils.getStereotypePropertyValue(model,Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_ATTRIBUTESFILESUFFIX);
+		if(suffix !== null && suffix !== ""){
+			return suffix
+		}
+		
+		return "attributes"
+	}
 }

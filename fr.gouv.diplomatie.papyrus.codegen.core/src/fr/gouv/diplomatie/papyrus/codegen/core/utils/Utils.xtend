@@ -144,6 +144,10 @@ public class Utils{
 	
 	public static var MODEL_APPLICATION = 'application';
 	public static var MODEL_APPLICATION_ROOTPACKAGE = 'rootPackage';
+	public static var MODEL_APPLICATION_METIERFILESUFFIX = 'metierFileSuffix';
+	public static var MODEL_APPLICATION_DTOFILESUFFIX = 'dtoFileSuffix';
+	public static var MODEL_APPLICATION_MODELFILESUFFIX = 'modelFileSuffix';
+	public static var MODEL_APPLICATION_ATTRIBUTESFILESUFFIX = 'attributesFileSuffix';
 	
 	public static var MODEL_HORNETTYPE = 'hornetType';
 	

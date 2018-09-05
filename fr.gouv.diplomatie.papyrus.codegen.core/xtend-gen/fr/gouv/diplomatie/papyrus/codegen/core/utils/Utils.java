@@ -172,6 +172,14 @@ public class Utils {
   
   public static String MODEL_APPLICATION_ROOTPACKAGE = "rootPackage";
   
+  public static String MODEL_APPLICATION_METIERFILESUFFIX = "metierFileSuffix";
+  
+  public static String MODEL_APPLICATION_DTOFILESUFFIX = "dtoFileSuffix";
+  
+  public static String MODEL_APPLICATION_MODELFILESUFFIX = "modelFileSuffix";
+  
+  public static String MODEL_APPLICATION_ATTRIBUTESFILESUFFIX = "attributesFileSuffix";
+  
   public static String MODEL_HORNETTYPE = "hornetType";
   
   public static Object getSchemaName(final org.eclipse.uml2.uml.Package pkg) {

@@ -82,8 +82,10 @@ package fr.gouv.diplomatie.papyrus.codegen.core.generators;
 import java.io.File;
 
 import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
 
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ModelUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 
 /**
@@ -117,10 +119,12 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getModelPath(Classifier clazz, Boolean inCode) {
+		Model application = clazz.getModel();
+		String suffix = ModelUtils.getModelFileSuffix(application).toString();
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "models" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName()) + "-model";
+			return MODEL_INCODE_REPOSITORY +  "models" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName()) + "-" + suffix;
 		}
-		return MODEL_REPOSITORY +  "models" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName())+ "-model";
+		return MODEL_REPOSITORY +  "models" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName())+ "-" + suffix;
 	}
 	
 	/**
@@ -130,10 +134,12 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getAttributesInterfacePath(Classifier clazz, Boolean inCode) {
+		Model application = clazz.getModel();
+		String suffix = ModelUtils.getAttributesFileSuffix(application).toString();
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "attributes" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
+			return MODEL_INCODE_REPOSITORY +  "attributes" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName()) + "-" + suffix;
 		}
-		return MODEL_REPOSITORY +  "attributes" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName()) + "-attributes";
+		return MODEL_REPOSITORY +  "attributes" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName()) + "-" + suffix;
 	}
 	
 	/**
@@ -143,10 +149,12 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getMetierClassPath(Classifier clazz, Boolean inCode) {
+		Model application = clazz.getModel();
+		String suffix = ModelUtils.getMetierFileSuffix(application).toString();
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "metier" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
+			return MODEL_INCODE_REPOSITORY +  "metier" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-" + suffix;
 		}
-		return MODEL_REPOSITORY +  "metier" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-metier";
+		return MODEL_REPOSITORY +  "metier" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-" + suffix;
 	}
 	
 	/**
@@ -156,10 +164,12 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getDtoClassPath(Classifier clazz, Boolean inCode) {
+		Model application = clazz.getModel();
+		String suffix = ModelUtils.getDtoFileSuffix(application).toString();
 		if(inCode && outGenerationDir) {
-			return MODEL_INCODE_REPOSITORY +  "dto" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
+			return MODEL_INCODE_REPOSITORY +  "dto" + SEP_CHAR  + Utils.toTypescriptFileName(clazz.getName())+ "-" + suffix;
 		}
-		return MODEL_REPOSITORY +  "dto" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-dto";
+		return MODEL_REPOSITORY +  "dto" + SEP_CHAR + Utils.toTypescriptFileName(clazz.getName())+ "-" + suffix;
 	}
 	
 	/**

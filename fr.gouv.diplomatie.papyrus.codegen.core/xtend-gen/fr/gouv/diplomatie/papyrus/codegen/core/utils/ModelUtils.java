@@ -69,6 +69,7 @@
  */
 package fr.gouv.diplomatie.papyrus.codegen.core.utils;
 
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -88,5 +89,37 @@ public class ModelUtils {
     };
     final Iterable<Type> classes = IterableExtensions.<Type>filter(model.getOwnedTypes(), _function);
     return classes;
+  }
+  
+  public static Object getMetierFileSuffix(final Model model) {
+    final Object suffix = Utils.getStereotypePropertyValue(model, Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_METIERFILESUFFIX);
+    if (((suffix != null) && (suffix != ""))) {
+      return suffix;
+    }
+    return "metier";
+  }
+  
+  public static Object getModelFileSuffix(final Model model) {
+    final Object suffix = Utils.getStereotypePropertyValue(model, Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_MODELFILESUFFIX);
+    if (((suffix != null) && (suffix != ""))) {
+      return suffix;
+    }
+    return "model";
+  }
+  
+  public static Object getDtoFileSuffix(final Model model) {
+    final Object suffix = Utils.getStereotypePropertyValue(model, Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_DTOFILESUFFIX);
+    if (((suffix != null) && (suffix != ""))) {
+      return suffix;
+    }
+    return "dto";
+  }
+  
+  public static Object getAttributesFileSuffix(final Model model) {
+    final Object suffix = Utils.getStereotypePropertyValue(model, Utils.MODEL_APPLICATION, Utils.MODEL_APPLICATION_ATTRIBUTESFILESUFFIX);
+    if (((suffix != null) && (suffix != ""))) {
+      return suffix;
+    }
+    return "attributes";
   }
 }
