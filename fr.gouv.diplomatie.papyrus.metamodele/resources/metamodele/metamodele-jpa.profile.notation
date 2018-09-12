@@ -866,10 +866,6 @@
           <element xmi:type="uml:Property" href="metamodele-jpa.profile.uml#_wrpJwPR8EeeO0fw-o-XwRw"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_a94PYbZkEeiRzeNJ6UP5pQ"/>
         </children>
-        <children xmi:type="notation:Shape" xmi:id="_dQ4MwLZkEeiRzeNJ6UP5pQ" type="Property_ClassAttributeLabel">
-          <element xmi:type="uml:Property" href="metamodele-jpa.profile.uml#_SoqBkPUcEeeO0fw-o-XwRw"/>
-          <layoutConstraint xmi:type="notation:Location" xmi:id="_dQ4MwbZkEeiRzeNJ6UP5pQ"/>
-        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_aMOwBLZkEeiRzeNJ6UP5pQ"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_aMOwBbZkEeiRzeNJ6UP5pQ"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_aMOwBrZkEeiRzeNJ6UP5pQ"/>

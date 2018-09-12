@@ -158,7 +158,7 @@ public class JavaClassifierUtils {
   public static Object getSchema(final Classifier clazz) {
     boolean _isEntity = Utils.isEntity(clazz);
     if (_isEntity) {
-      return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, JavaPluginUtils.MODEL_SCHEMA);
+      return ClassifierUtils.getSchema(clazz);
     }
     return null;
   }
