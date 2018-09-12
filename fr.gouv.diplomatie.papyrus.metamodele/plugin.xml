@@ -20,13 +20,26 @@
    <extension
          point="org.eclipse.papyrus.uml.extensionpoints.UMLProfile">
       <profile
-            description="Profile Hornet generateur"
+            description="Profile Hornet generateur Lite"
             iconpath="resources/metamodele/icon.png"
-            name="Profile Hornet Generateur"
+            name="Profile Hornet Generateur Lite"
             path="pathmap://resources/metamodele/metamodele.profile.uml"
             provider="MAEDI">
       </profile>
-      
+    <profile
+            description="Profile Hornet generateur JPA"
+            iconpath="resources/metamodele/icon.png"
+            name="Profile Hornet Generateur JPA"
+            path="pathmap://resources/metamodele/metamodele-jpa.profile.uml"
+            provider="MAEDI">
+      </profile>
+      <profile
+            description="Profile Hornet Library"
+            iconpath="resources/metamodele/icon.png"
+            name="Profile Hornet Library"
+            path="pathmap://resources/metamodele/type-metamodele.profile.uml"
+            provider="MAEDI">
+      </profile>    
    </extension>
     <extension 
     		point="org.eclipse.papyrus.uml.extensionpoints.UMLLibrary">
