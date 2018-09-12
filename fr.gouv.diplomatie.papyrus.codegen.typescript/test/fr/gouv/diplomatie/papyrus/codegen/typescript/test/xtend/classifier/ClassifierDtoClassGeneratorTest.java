@@ -148,7 +148,7 @@ public class ClassifierDtoClassGeneratorTest {
 		
 		AssociationClass asso = TestUtils.createAssociationClass(class_, class2_, "test", "test2", "asso");
 		
-		String expect = "\n@Map(assoDTO)\nasso: Array<assoDTO>;\n";
+		String expect = "\n@Map(maClasse2DTO)\ntest: Array<maClasse2DTO>;\n\n@Map(assoDTO)\nasso: Array<assoDTO>;\n";
 		assertEquals(expect, ClassifierDtoClassGenerator.generateAssociationClassAtributes(asso, class_).toString());
 	}
 

@@ -629,7 +629,7 @@ public class PackageUpdateDatabaseScriptGeneratorTest {
 				"\n" + 
 				"ALTER TABLE ONLY ma_classe\n" + 
 				"	ADD CONSTRAINT ma_classe_pkey PRIMARY KEY (code);\n\n"
-				+ "INSERT INTO ma_classe (CODE, LIBELLE) VALUES (0, 'prop') ON CONFLICT DO NOTHING;\n";
+				+ "INSERT INTO ma_classe (code, libelle) VALUES (0, 'prop') ON CONFLICT DO NOTHING;\n";
 		assertEquals(expect, PackageUpdateDatabaseScriptGenerator.generateEnumTable(class_).toString());
 		
 	}

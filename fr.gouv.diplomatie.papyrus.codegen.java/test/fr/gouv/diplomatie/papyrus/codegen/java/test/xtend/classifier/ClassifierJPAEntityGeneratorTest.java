@@ -159,7 +159,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		TestUtils.createAttribute(class2_, "id", hmodel.integerPT, 0, 1).applyStereotype(hmodel.keyAttribute);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		String expect = "\n@ManyToOne\n" + 
-				"//@JoinColumn(name = \"id_test\", nullable = true)\n" + 
+				"@JoinColumn(name = \"id_test\")\n" + 
 				"public maClasse2 test;\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateBasicAttribute(prop, "", class_).toString());
 	}

@@ -235,7 +235,7 @@ public class ClassifierMetierClassGeneratorTest {
 		
 		AssociationClass asso = TestUtils.createAssociationClass(class_, class2_, "test", "test2", "asso");
 		
-		String expect = "\n@Map(assoMetier)\n" + 
+		String expect = "\n@Map(maClasse2Metier)\ntest: Array<maClasse2Metier>;\n\n@Map(assoMetier)\n" + 
 				"asso: Array<assoMetier>;\n";
 		assertEquals(expect, ClassifierMetierClassGenerator.generateAssociationAttributes(asso, class_).toString());
 	}

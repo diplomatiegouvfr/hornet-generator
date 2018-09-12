@@ -415,7 +415,7 @@ public class ClassifierAttributesInterfaceGeneratorTest {
 		
 		AssociationClass asso = TestUtils.createAssociationClass(class_, class2_, "test", "test2", "asso");
 		
-		String expect="test : Array<assoAttributes>;\n" + 
+		String expect="test: Array<maClasse2Attributes>;\ngetTest(): Promise<Array<maClasse2Attributes>>;\n\nasso: Array<assoAttributes>;\n" + 
 				"getAsso(): Promise<Array<assoAttributes>>;\n" + 
 				"\n";
 		assertEquals(expect, ClassifierAttributesInterfaceGenerator.generateAssociationClassAtributes(asso, class_).toString());
