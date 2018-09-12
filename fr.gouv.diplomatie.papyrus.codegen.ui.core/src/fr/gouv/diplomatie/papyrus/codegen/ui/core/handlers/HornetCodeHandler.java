@@ -82,12 +82,15 @@ package fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
 import org.eclipse.papyrus.uml.diagram.common.handlers.CmdHandler;
@@ -95,8 +98,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
+import org.eclipse.uml2.uml.Profile;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.console.ConsoleUtils;
 import fr.gouv.diplomatie.papyrus.codegen.ui.core.validator.HornetModelValidator;
@@ -112,6 +117,9 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	protected String validationSucessMessage = "Modèle valide";
 	protected String validationFailMessage = "Modèle invalide";
 	protected String generationEndMessage = "Génération terminée";
+	protected String profileValidationFailMessage = "Le profil utilisé pour le modèle n'est pas compatible avec cette génération: ";
+	protected String requiredProfileFailMessage = " - Profil requis: ";
+	protected String activeProfileFailMessage = "Profil actif: ";
 	
 	protected String dialogName = "Génération";
 	protected String dialogMessage = "Voulez vous utiliser src dans les imports plutot que src-gen? ";
@@ -122,7 +130,15 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	protected Boolean askOutGenerationDir = false;
 	
 	protected HornetModelValidator validator;
-
+	
+	protected String profileLabel;
+	protected String activeProfile;
+	
+	protected String hornetLiteGeneratorLabel = "Profile Hornet generateur Lite";
+	protected String hornetJpaGeneratorLabel = "Profile Hornet generateur JPA";
+	
+	protected String hornetMetamodeleName = "hornetMetamodele";
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -153,30 +169,59 @@ public abstract class HornetCodeHandler extends CmdHandler {
 	 * @param packageableElement
 	 */
 	protected void validateAndGenerate(IProject project, PackageableElement packageableElement) {
-		this.initValidator();
-		ArrayList<String> validationErrors = validator.validate(packageableElement, console);
-		if(validationErrors.isEmpty()) {
-			console.out.println(validationSucessMessage);
-			try {
-				if(askOutGenerationDir) {
-					askOutGenerationDir(project, packageableElement);
-				}else {
-					initiateAndGenerate(project, packageableElement);
+		if(this.validateProfile(packageableElement) == true) {
+			this.initValidator();
+			ArrayList<String> validationErrors = validator.validate(packageableElement, console);
+			if(validationErrors.isEmpty()) {
+				console.out.println(validationSucessMessage);
+				try {
+					if(askOutGenerationDir) {
+						askOutGenerationDir(project, packageableElement);
+					}else {
+						initiateAndGenerate(project, packageableElement);
+					}
+					
+				}catch(Exception e) {
+					StringWriter errors = new StringWriter();
+					e.printStackTrace(new PrintWriter(errors));
+					console.err.println(errors.toString());
+				}finally {
+					console.success.println(generationEndMessage);
 				}
-				
-			}catch(Exception e) {
-				StringWriter errors = new StringWriter();
-				e.printStackTrace(new PrintWriter(errors));
-				console.err.println(errors.toString());
-			}finally {
-				console.success.println(generationEndMessage);
+			}else {
+				console.err.println(validationFailMessage);
+				for(String error : validationErrors) {
+					console.err.println(error);
+				}
 			}
 		}else {
-			console.err.println(validationFailMessage);
-			for(String error : validationErrors) {
-				console.err.println(error);
-			}
+			String validationFail = activeProfileFailMessage + this.activeProfile + requiredProfileFailMessage + this.profileLabel;
+			console.err.println(profileValidationFailMessage);
+			console.err.println(validationFail);
 		}
+	}
+	
+	protected boolean validateProfile(PackageableElement packageableElement){
+		if(this.profileLabel != null && this.profileLabel != "") {
+			Model model = packageableElement.getModel();
+			if(model != null) {
+				EList<Profile> list = model.getAllAppliedProfiles();
+				List<Profile> hornetProfiles = new ArrayList();
+				for(Profile profil : list) {
+					if(profil.getName().equals(hornetMetamodeleName)) {
+						hornetProfiles.add(profil);
+					}
+				}
+				Profile profile = hornetProfiles.get(0);
+				if(profile != null) {
+					this.activeProfile = profile.getLabel();
+					return (profile.getLabel().equals(this.profileLabel));
+				}
+				return false;
+			}
+			return false;
+		}
+		return true;
 	}
 	
 	/**

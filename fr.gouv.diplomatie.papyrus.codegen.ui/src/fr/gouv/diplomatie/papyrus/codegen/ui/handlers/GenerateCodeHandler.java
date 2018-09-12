@@ -93,6 +93,7 @@ public class GenerateCodeHandler extends HornetCodeHandler {
 		super();
 		this.message = "= executing Generate code Handler";
 		this.askOutGenerationDir = true;
+		this.profileLabel = this.hornetLiteGeneratorLabel;
 	}
 	
 	@Override

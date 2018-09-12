@@ -96,6 +96,7 @@ public class GenerateJPAEntityHandler extends HornetCodeHandler {
 	public GenerateJPAEntityHandler() {
 		super();
 		this.message = "= executing Generate JPA Entity Handler";
+		this.profileLabel = this.hornetJpaGeneratorLabel;
 	}
 	
 	@Override

@@ -91,6 +91,7 @@ public class GenerateMetierClassHandler extends HornetCodeHandler {
 		super();
 		this.message = "= executing Generate Metier Class Handler";
 		this.askOutGenerationDir = true;
+		this.profileLabel = this.hornetLiteGeneratorLabel;
 	}
 	
 	@Override

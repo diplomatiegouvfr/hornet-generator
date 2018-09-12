@@ -91,6 +91,7 @@ public class GenerateDatabaseScriptHandler extends HornetCodeHandler {
 		super();
 		this.message = "= executing Generate Database Script Handler";
 		this.askOutGenerationDir = true;
+		this.profileLabel = this.hornetLiteGeneratorLabel;
 	}
 	
 	public void generate(PackageableElement packageableElement) {

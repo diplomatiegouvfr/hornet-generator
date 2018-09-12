@@ -735,6 +735,12 @@ public class ClassifierJPAEntityGenerator {
           Type _type_2 = property.getType();
           final Property idTo_1 = ((Property[])Conversions.unwrapArray(ClassifierUtils.getId(((Classifier) _type_2)), Property.class))[0];
           StringConcatenation _builder_1 = new StringConcatenation();
+          {
+            if ((nullable == false)) {
+              _builder_1.append("@NotNull");
+            }
+          }
+          _builder_1.newLineIfNotEmpty();
           _builder_1.append("@ManyToOne");
           {
             if ((fetchType != null)) {
@@ -745,15 +751,13 @@ public class ClassifierJPAEntityGenerator {
             }
           }
           _builder_1.newLineIfNotEmpty();
-          _builder_1.append("//@JoinColumn(name = \"");
+          _builder_1.append("@JoinColumn(name = \"");
           String _databaseName_3 = PropertyUtils.getDatabaseName(idTo_1, idTo_1.getName(), null);
           _builder_1.append(_databaseName_3);
           _builder_1.append("_");
           String _databaseName_4 = PropertyUtils.getDatabaseName(property, property.getName(), null);
           _builder_1.append(_databaseName_4);
-          _builder_1.append("\", nullable = ");
-          _builder_1.append(nullable);
-          _builder_1.append(")");
+          _builder_1.append("\")");
           _builder_1.newLineIfNotEmpty();
           link = _builder_1.toString();
         }
@@ -888,10 +892,14 @@ public class ClassifierJPAEntityGenerator {
   public static CharSequence generateAssociationAnnotation(final Property property, final Classifier fromClass) {
     CharSequence _xblockexpression = null;
     {
-      final EList<Property> members = property.getAssociation().getOwnedEnds();
+      final EList<Property> members = property.getAssociation().getMemberEnds();
       final boolean nullable = PropertyUtils.isNullable(property);
       final EnumerationLiteralImpl fetchType = JavaPluginUtils.getFetchType(property);
-      final Property member = members.get(0);
+      final Function1<Property, Boolean> _function = (Property att) -> {
+        Type _type = att.getType();
+        return Boolean.valueOf(Objects.equal(_type, fromClass));
+      };
+      final Property member = ((Property[])Conversions.unwrapArray(IterableExtensions.<Property>filter(members, _function), Property.class))[0];
       final boolean fromMultiplicity = member.isMultivalued();
       final boolean toMultiplicity = property.isMultivalued();
       Type _type = property.getType();

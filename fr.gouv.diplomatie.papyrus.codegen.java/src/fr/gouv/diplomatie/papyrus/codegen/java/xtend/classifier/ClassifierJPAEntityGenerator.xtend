@@ -441,8 +441,9 @@ public class ClassifierJPAEntityGenerator {
 				
 				link = 
 				'''
+				«IF nullable == false»@NotNull«ENDIF»
 				@ManyToOne«IF fetchType!==null»(fetch=FetchType.«fetchType.name»)«ENDIF»
-				//@JoinColumn(name = "«PropertyUtils.getDatabaseName(idTo, idTo.name, null)»_«PropertyUtils.getDatabaseName(property, property.name, null)»", nullable = «nullable»)
+				@JoinColumn(name = "«PropertyUtils.getDatabaseName(idTo, idTo.name, null)»_«PropertyUtils.getDatabaseName(property, property.name, null)»")
 				'''
 			}
 		}
@@ -497,10 +498,10 @@ public class ClassifierJPAEntityGenerator {
 	}
 	
 	static def generateAssociationAnnotation(Property property, Classifier fromClass){
-		val members = property.association.ownedEnds
+		val members = property.association.memberEnds
 		val nullable = PropertyUtils.isNullable(property)
 		val fetchType = JavaPluginUtils.getFetchType(property)
-		val member = members.get(0)
+		val member = members.filter[att | att.type == fromClass].get(0)
 		val fromMultiplicity = member.isMultivalued
 		val toMultiplicity = property.isMultivalued
 		val id = ClassifierUtils.getId(property.type as Classifier).get(0)
