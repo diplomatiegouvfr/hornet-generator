@@ -4,6 +4,10 @@
     <children xmi:type="notation:Shape" xmi:id="_xrVoUHadEeegdZhmvUhwtQ" type="Stereotype_Shape">
       <children xmi:type="notation:DecorationNode" xmi:id="_xrVoUnadEeegdZhmvUhwtQ" type="Stereotype_NameLabel"/>
       <children xmi:type="notation:BasicCompartment" xmi:id="_xrWPYHadEeegdZhmvUhwtQ" type="Stereotype_AttributeCompartment">
+        <children xmi:type="notation:Shape" xmi:id="_8PYrgLaUEeia0v3IUg04OQ" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele-jpa.profile.uml#_8PD7YLaUEeia0v3IUg04OQ"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_8PYrgbaUEeia0v3IUg04OQ"/>
+        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_xrWPYXadEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_xrWPYnadEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_xrWPY3adEeegdZhmvUhwtQ"/>
@@ -33,7 +37,7 @@
         <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIHHadEeegdZhmvUhwtQ"/>
       </children>
       <element xmi:type="uml:Stereotype" href="metamodele-jpa.profile.uml#_-VN58HadEeegdZhmvUhwtQ"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIEXadEeegdZhmvUhwtQ" x="100" y="380"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIEXadEeegdZhmvUhwtQ" x="140" y="380"/>
     </children>
     <children xmi:type="notation:Shape" xmi:id="_Fmo5IHaeEeegdZhmvUhwtQ" type="Stereotype_Shape">
       <children xmi:type="notation:DecorationNode" xmi:id="_Fmo5InaeEeegdZhmvUhwtQ" type="Stereotype_NameLabel"/>
@@ -465,7 +469,7 @@
       <element xmi:type="uml:Generalization" href="metamodele-jpa.profile.uml#_Ux20MHagEeegdZhmvUhwtQ"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_UyRD4nagEeegdZhmvUhwtQ" points="[-180, 320, -643984, -643984]$[-260, 240, -643984, -643984]"/>
       <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYHagEeegdZhmvUhwtQ" id="(0.6,0.0)"/>
-      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYXagEeegdZhmvUhwtQ" id="(0.6,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYXagEeegdZhmvUhwtQ" id="(0.591715976331361,1.0)"/>
     </edges>
     <edges xmi:type="notation:Connector" xmi:id="_cVk3wHa1EeegdZhmvUhwtQ" type="StereotypeCommentLink" source="_cVWOQHa1EeegdZhmvUhwtQ" target="_cVkQsHa1EeegdZhmvUhwtQ">
       <styles xmi:type="notation:FontStyle" xmi:id="_cVk3wXa1EeegdZhmvUhwtQ"/>
