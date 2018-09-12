@@ -171,6 +171,8 @@ public class ClassifierMetierClassGenerator {
 		options.importInterfaceAttributes = true
 		options.importValueObject = true
 		options.importValueObjectAttributes = false
+		options.importAssociationClassAttributes = true
+		options.importAssociationMemberAttributes = true
 		
 		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz,newArrayList(), options)
 		'''
@@ -471,8 +473,22 @@ public class ClassifierMetierClassGenerator {
 	}
 	
 	static def generateAssociationAttributes(AssociationClass clazz, Classifier fromClass){
-	
+		val members = clazz.memberEnds.filter[member |
+			member.type !== fromClass
+		]
+		
 		'''
+		«members.fold("")[acc, mem |
+			val name = mem.name
+			val type = mem.type as Classifier
+			acc + 
+			'''
+			
+			@Map(«ClassifierUtils.getMetierClassName(type)»)
+			«Utils.getFirstToLowerCase(name)»: Array<«ClassifierUtils.getMetierClassName(type)»>;
+			'''
+		]
+		»
 		
 		@Map(«ClassifierUtils.getMetierClassName(clazz)»)
 		«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getMetierClassName(clazz)»>;

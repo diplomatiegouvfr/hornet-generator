@@ -171,6 +171,8 @@ public class ClassifierAttributesInterfaceGenerator {
 		options.importInterfaceAttributes = false
 		options.importValueObject = true
 		options.importValueObjectAttributes = true
+		options.importAssociationClassAttributes = true
+		options.importAssociationMemberAttributes = true
 		
 		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz, newArrayList(), options)
 		'''
@@ -564,14 +566,34 @@ public class ClassifierAttributesInterfaceGenerator {
 		
 		if(member.length >1){
 			'''
-			«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
+			«member.fold("")[acc, mem |
+				val name = mem.name
+				val type = mem.type as Classifier
+				acc + 
+				'''
+				«Utils.getFirstToLowerCase(name)»: Array<«ClassifierUtils.getAttributesInterfaceName(type)»>;
+				get«Utils.getFirstToUpperCase(name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(type)»>>;
+				
+				'''
+			]
+			»
+			«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 			get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
 			
 			'''
+			/*'''
+			«Utils.getFirstToLowerCase(clazz.name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
+			get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
+			
+			'''*/
 		}else{
 			val name = member.get(0).name
+			val type = member.get(0).type as Classifier
 			'''
-			«Utils.getFirstToLowerCase(name)» : Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
+			«Utils.getFirstToLowerCase(name)»: Array<«ClassifierUtils.getAttributesInterfaceName(type)»>;
+			get«Utils.getFirstToUpperCase(name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(type)»>>;
+			
+			«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>;
 			get«Utils.getFirstToUpperCase(clazz.name)»(): Promise<Array<«ClassifierUtils.getAttributesInterfaceName(clazz)»>>;
 			
 			'''

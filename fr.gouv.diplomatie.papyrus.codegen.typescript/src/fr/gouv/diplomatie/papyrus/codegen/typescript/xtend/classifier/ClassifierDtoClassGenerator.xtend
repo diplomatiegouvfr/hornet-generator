@@ -183,6 +183,8 @@ public class ClassifierDtoClassGenerator{
 		options.importInterfaceAttributes = true
 		options.importValueObject = false
 		options.importValueObjectAttributes = true
+		options.importAssociationClassAttributes = true
+		options.importAssociationMemberAttributes = true
 		
 		val attributesTypes = ClassifierUtils.getAttributesImport(clazz, clazz,  newArrayList(), options)
 		'''
@@ -739,7 +741,22 @@ public class ClassifierDtoClassGenerator{
 	}
 	
 	static def generateAssociationClassAtributes(AssociationClass clazz, Classifier fromClass){
+		val members = clazz.memberEnds.filter[member |
+			member.type !== fromClass
+		]
+		
 		'''
+		«members.fold("")[acc, mem |
+			val name = mem.name
+			val type = mem.type as Classifier
+			acc + 
+			'''
+			
+			@Map(«ClassifierUtils.getDtoClassName(type)»)
+			«Utils.getFirstToLowerCase(name)»: Array<«ClassifierUtils.getDtoClassName(type)»>;
+			'''
+		]
+		»
 		
 		@Map(«ClassifierUtils.getDtoClassName(clazz)»)
 		«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getDtoClassName(clazz)»>;

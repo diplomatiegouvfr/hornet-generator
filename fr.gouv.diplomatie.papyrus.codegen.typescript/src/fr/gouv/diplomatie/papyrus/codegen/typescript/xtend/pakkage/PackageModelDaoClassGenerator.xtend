@@ -836,7 +836,7 @@ class PackageModelDaoClassGenerator{
 			val type = member.type as Classifier
 			if(Utils.isEntity(type)){
 				val id = ClassifierUtils.getId(type).get(0)
-				val otherKeyName = PropertyUtils.getDatabaseName(id, id.name,"")+ "_" +  Utils.toDbName(type.name)
+				val otherKeyName = PropertyUtils.getDatabaseName(id, id.name,"")+ "_" +  Utils.toDbName(member.name)
 				
 				acc + generateInitRelationBelongsToMany(
 					'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',

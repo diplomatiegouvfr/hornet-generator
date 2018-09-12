@@ -104,13 +104,17 @@ public class ClassifierUtils {
    * options de la méthodes d'import
    */
   public static class ImportOptions {
-    public Boolean importInterface;
+    public Boolean importInterface = Boolean.valueOf(true);
     
-    public Boolean importInterfaceAttributes;
+    public Boolean importInterfaceAttributes = Boolean.valueOf(true);
     
-    public Boolean importValueObject;
+    public Boolean importValueObject = Boolean.valueOf(true);
     
-    public Boolean importValueObjectAttributes;
+    public Boolean importValueObjectAttributes = Boolean.valueOf(true);
+    
+    public Boolean importAssociationClassAttributes = Boolean.valueOf(true);
+    
+    public Boolean importAssociationMemberAttributes = Boolean.valueOf(false);
   }
   
   /**
@@ -697,10 +701,26 @@ public class ClassifierUtils {
     if (_isEntity_1) {
       final ArrayList<Type> assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz);
       final Consumer<Type> _function_3 = (Type asso) -> {
-        boolean _contains_2 = types.contains(asso);
-        boolean _not_2 = (!_contains_2);
-        if (_not_2) {
-          types.add(asso);
+        if ((options.importAssociationClassAttributes).booleanValue()) {
+          boolean _contains_2 = types.contains(asso);
+          boolean _not_2 = (!_contains_2);
+          if (_not_2) {
+            types.add(asso);
+          }
+        }
+        if ((options.importAssociationMemberAttributes).booleanValue()) {
+          final Function1<Property, Boolean> _function_4 = (Property member) -> {
+            Type _type_1 = member.getType();
+            return Boolean.valueOf((_type_1 != fromClass));
+          };
+          final Iterable<Property> members = IterableExtensions.<Property>filter(((AssociationClass) asso).getMemberEnds(), _function_4);
+          for (final Property mem : members) {
+            boolean _contains_3 = types.contains(mem.getType());
+            boolean _not_3 = (!_contains_3);
+            if (_not_3) {
+              types.add(mem.getType());
+            }
+          }
         }
       };
       assosiationClasses.forEach(_function_3);

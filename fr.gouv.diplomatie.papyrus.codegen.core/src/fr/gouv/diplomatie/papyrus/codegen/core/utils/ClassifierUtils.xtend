@@ -562,13 +562,16 @@ class ClassifierUtils {
 	 */
 	public static class ImportOptions{
 		//import de la classe d'interface
-		public Boolean importInterface
+		public Boolean importInterface = true;
 		//import des classes liées aux attributs de l'interface
-		public Boolean importInterfaceAttributes
+		public Boolean importInterfaceAttributes = true;
 		//import de la classe de type valueObject
-		public Boolean importValueObject
+		public Boolean importValueObject = true;
 		//import des classes liées aux attributs de la classe de type valueObject
-		public Boolean importValueObjectAttributes
+		public Boolean importValueObjectAttributes = true;
+		//import des classes d'asso
+		public Boolean importAssociationClassAttributes = true;
+		public Boolean importAssociationMemberAttributes = false;
 	}
 	
 	/**
@@ -638,12 +641,26 @@ class ClassifierUtils {
 			
 		}
 		
+		//imports des classes d'association
 		if(Utils.isEntity(fromClass)){
 			val assosiationClasses = ClassifierUtils.getLinkedAssociationClass(clazz)
 			
 			assosiationClasses.forEach[asso |
-				if(!types.contains(asso)){
-					types.add(asso)
+				if(options.importAssociationClassAttributes){
+					if(!types.contains(asso)){
+						types.add(asso)
+					}
+				}
+				
+				if(options.importAssociationMemberAttributes){
+					val members = (asso as AssociationClass).memberEnds.filter[member |
+						member.type !== fromClass
+					]
+					for(mem: members){
+						if(!types.contains(mem.type)){
+							types.add(mem.type)
+						}
+					}
 				}
 			]
 		}
