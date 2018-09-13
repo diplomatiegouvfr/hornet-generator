@@ -44,8 +44,7 @@ public class ClassifierJPAEntityGeneratorTest {
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateTypeAnnotation(class_).toString());
 		
 		expect = "@Entity\n" + 
-				"@Table(name = \"ma_classe\", schema = \"test\")\n";
-		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entitySchema, "test");
+				"@Table(name = \"ma_classe\")\n";
 		assertEquals(expect, ClassifierJPAEntityGenerator.generateTypeAnnotation(class_).toString());
 	}
 	

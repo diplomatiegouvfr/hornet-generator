@@ -106,6 +106,7 @@ public class JavaClassifierUtilsTest {
 		assertEquals(null, JavaClassifierUtils.getSchema(class_));
 	}
 	
+	/*
 	@Test
 	public void testGetSchema() {
 		HornetModelJava hmodel = HornetModelJava.initModel();
@@ -113,6 +114,6 @@ public class JavaClassifierUtilsTest {
 		class_.applyStereotype(hmodel.entity);
 		TestUtils.setStereotypePropertyValue(class_, hmodel.entity, hmodel.entitySchema, "test");
 		assertEquals("test", JavaClassifierUtils.getSchema(class_));
-	}
+	}*/
 
 }
