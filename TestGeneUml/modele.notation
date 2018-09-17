@@ -911,7 +911,7 @@
       <element xmi:type="uml:AssociationClass" href="modele.uml#_CKqyoD7-Eei4_J7tBFVTNg"/>
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_COydoT7-Eei4_J7tBFVTNg" x="1540" y="520"/>
     </children>
-    <styles xmi:type="notation:StringValueStyle" xmi:id="_NjBWQXdhEeeM2-35BsQdHA" name="diagram_compatibility_version" stringValue="1.3.0"/>
+    <styles xmi:type="notation:StringValueStyle" xmi:id="_NjBWQXdhEeeM2-35BsQdHA" name="diagram_compatibility_version" stringValue="1.4.0"/>
     <styles xmi:type="notation:DiagramStyle" xmi:id="_NjBWQndhEeeM2-35BsQdHA"/>
     <styles xmi:type="style:PapyrusDiagramStyle" xmi:id="_NjBWQ3dhEeeM2-35BsQdHA" diagramKindId="org.eclipse.papyrus.uml.diagram.class">
       <owner xmi:type="uml:Model" href="modele.uml#_FXdDAHdhEeeM2-35BsQdHA"/>

@@ -124,6 +124,20 @@ public class PackageUpdateDatabaseScriptGenerator{
 			acc +  '''«(pkg as Package).generateCreateSchema»'''
 		]»
 		«classes.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«enums.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«associationsClasses.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«IF pakkage != model»
+		«assoInPakkage.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«ENDIF»
+		«classes.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateTable()»'''
 		]»
 		«enums.fold("")[acc, clazz |
@@ -150,6 +164,14 @@ public class PackageUpdateDatabaseScriptGenerator{
 	
 	static def generateCreateSchema(Package pkg){
 		val schema = Utils.getSchemaName(pkg)
+		return 
+		'''«IF schema !== null && schema != ""»
+		CREATE SCHEMA IF NOT EXISTS «schema»;«ENDIF»
+		'''
+	}
+	
+	static def generateCreateSchema(Classifier clazz){
+		val schema = ClassifierUtils.getClassSchema(clazz)
 		return 
 		'''«IF schema !== null && schema != ""»
 		CREATE SCHEMA IF NOT EXISTS «schema»;«ENDIF»

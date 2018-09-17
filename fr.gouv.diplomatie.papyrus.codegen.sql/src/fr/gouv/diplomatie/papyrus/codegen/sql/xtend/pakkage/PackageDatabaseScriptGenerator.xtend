@@ -127,6 +127,21 @@ public class PackageDatabaseScriptGenerator{
 			acc +  '''«(pkg as Package).generateCreateSchema»'''
 		]»
 		«classes.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«enums.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«associationsClasses.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«IF pakkage != model»
+		«assoInPakkage.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema()»'''
+		]»
+		«ENDIF»
+		
+		«classes.fold("")[acc, clazz |
 			acc + '''«(clazz as Classifier).generateTable()»'''
 		]»
 		«enums.fold("")[acc, clazz |
@@ -165,6 +180,14 @@ public class PackageDatabaseScriptGenerator{
 	
 	static def generateCreateSchema(Package pkg){
 		val schema = Utils.getSchemaName(pkg)
+		return 
+		'''«IF schema !== null && schema != ""»
+		CREATE SCHEMA «schema»;«ENDIF»
+		'''
+	}
+	
+	static def generateCreateSchema(Classifier pkg){
+		val schema = ClassifierUtils.getClassSchema(pkg)
 		return 
 		'''«IF schema !== null && schema != ""»
 		CREATE SCHEMA «schema»;«ENDIF»

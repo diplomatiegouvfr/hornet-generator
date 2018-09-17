@@ -9,6 +9,8 @@
 - [Hornet Lite] Ajout de la génération des attributs dans les tables d'association
 - [Hornet Lite] Ajout de champs pour la génération de table d'association (génération de listes des classes liées par la table d'association dans le DTO
 , la classe métier et l'interface attributes)
+- [Hornet Lite] Ajout de la gestion de la propriété schema pour Hornet Lite
+- Ajout de la propriété schema sur les nomenclature et les associationTable
 - Documentation: ajout d'exemple de génération
 
 ### Changed
@@ -17,10 +19,7 @@
 - Séparation des profils Lite et JPA
 - [Hornet Lite] Uniformisation des champs liés à des associations
 - [Hornet Lite] Génération de table d'association: modification nom de champs dans le DTO, la classe métier et l'interface attributes
-
-### Removed
-
-- Suppression de la variable schema sur les classes. La variable schema pris en compte sera celle du package ayant le stéréotype `domain`.
+- [Hornet Lite] Les associations bidirectionnelles sont prises en compte (certaisn champs ne seront plus générés pour des association monodirectionnelle)
 
 ### Fixed
 

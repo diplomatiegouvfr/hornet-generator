@@ -139,8 +139,8 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLineIfNotEmpty();
       final Function2<String, Type, String> _function_6 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
-        CharSequence _generateTable = PackageDatabaseScriptGenerator.generateTable(((Classifier) clazz));
-        _builder_1.append(_generateTable);
+        String _generateCreateSchema = PackageDatabaseScriptGenerator.generateCreateSchema(((Classifier) clazz));
+        _builder_1.append(_generateCreateSchema);
         return (acc + _builder_1);
       };
       String _fold_1 = IterableExtensions.<Type, String>fold(classes, "", _function_6);
@@ -148,8 +148,8 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLineIfNotEmpty();
       final Function2<String, Type, String> _function_7 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
-        CharSequence _generateEnumTable = PackageDatabaseScriptGenerator.generateEnumTable(((Classifier) clazz));
-        _builder_1.append(_generateEnumTable);
+        String _generateCreateSchema = PackageDatabaseScriptGenerator.generateCreateSchema(((Classifier) clazz));
+        _builder_1.append(_generateCreateSchema);
         return (acc + _builder_1);
       };
       String _fold_2 = IterableExtensions.<Type, String>fold(enums, "", _function_7);
@@ -157,81 +157,123 @@ public class PackageDatabaseScriptGenerator {
       _builder.newLineIfNotEmpty();
       final Function2<String, Type, String> _function_8 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
+        String _generateCreateSchema = PackageDatabaseScriptGenerator.generateCreateSchema(((Classifier) clazz));
+        _builder_1.append(_generateCreateSchema);
+        return (acc + _builder_1);
+      };
+      String _fold_3 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_8);
+      _builder.append(_fold_3);
+      _builder.newLineIfNotEmpty();
+      {
+        boolean _notEquals = (!Objects.equal(pakkage, model));
+        if (_notEquals) {
+          final Function2<String, Type, String> _function_9 = (String acc, Type clazz) -> {
+            StringConcatenation _builder_1 = new StringConcatenation();
+            String _generateCreateSchema = PackageDatabaseScriptGenerator.generateCreateSchema(((Classifier) clazz));
+            _builder_1.append(_generateCreateSchema);
+            return (acc + _builder_1);
+          };
+          String _fold_4 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_9);
+          _builder.append(_fold_4);
+          _builder.newLineIfNotEmpty();
+        }
+      }
+      _builder.newLine();
+      final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateTable = PackageDatabaseScriptGenerator.generateTable(((Classifier) clazz));
+        _builder_1.append(_generateTable);
+        return (acc + _builder_1);
+      };
+      String _fold_5 = IterableExtensions.<Type, String>fold(classes, "", _function_10);
+      _builder.append(_fold_5);
+      _builder.newLineIfNotEmpty();
+      final Function2<String, Type, String> _function_11 = (String acc, Type clazz) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        CharSequence _generateEnumTable = PackageDatabaseScriptGenerator.generateEnumTable(((Classifier) clazz));
+        _builder_1.append(_generateEnumTable);
+        return (acc + _builder_1);
+      };
+      String _fold_6 = IterableExtensions.<Type, String>fold(enums, "", _function_11);
+      _builder.append(_fold_6);
+      _builder.newLineIfNotEmpty();
+      final Function2<String, Type, String> _function_12 = (String acc, Type clazz) -> {
+        StringConcatenation _builder_1 = new StringConcatenation();
         CharSequence _generateAlters = PackageDatabaseScriptGenerator.generateAlters(((Classifier) clazz));
         _builder_1.append(_generateAlters);
         return (acc + _builder_1);
       };
-      String _fold_3 = IterableExtensions.<Type, String>fold(classes, "", _function_8);
-      _builder.append(_fold_3);
+      String _fold_7 = IterableExtensions.<Type, String>fold(classes, "", _function_12);
+      _builder.append(_fold_7);
       _builder.newLineIfNotEmpty();
       _builder.newLine();
-      final Function2<String, Type, String> _function_9 = (String acc, Type clazz) -> {
+      final Function2<String, Type, String> _function_13 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
         CharSequence _generateIndex = PackageDatabaseScriptGenerator.generateIndex(((Classifier) clazz));
         _builder_1.append(_generateIndex);
         return (acc + _builder_1);
       };
-      String _fold_4 = IterableExtensions.<Type, String>fold(classes, "", _function_9);
-      _builder.append(_fold_4);
+      String _fold_8 = IterableExtensions.<Type, String>fold(classes, "", _function_13);
+      _builder.append(_fold_8);
       _builder.newLineIfNotEmpty();
-      final Function2<String, Type, String> _function_10 = (String acc, Type clazz) -> {
+      final Function2<String, Type, String> _function_14 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
         CharSequence _generateAssociationTable = PackageDatabaseScriptGenerator.generateAssociationTable(((AssociationClass) clazz));
         _builder_1.append(_generateAssociationTable);
         return (acc + _builder_1);
       };
-      String _fold_5 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_10);
-      _builder.append(_fold_5);
+      String _fold_9 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_14);
+      _builder.append(_fold_9);
       _builder.newLineIfNotEmpty();
-      final Function2<String, Type, String> _function_11 = (String acc, Type clazz) -> {
+      final Function2<String, Type, String> _function_15 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
         CharSequence _generateAlters = PackageDatabaseScriptGenerator.generateAlters(((Classifier) clazz));
         _builder_1.append(_generateAlters);
         return (acc + _builder_1);
       };
-      String _fold_6 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_11);
-      _builder.append(_fold_6);
+      String _fold_10 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_15);
+      _builder.append(_fold_10);
       _builder.newLineIfNotEmpty();
       _builder.newLine();
-      final Function2<String, Type, String> _function_12 = (String acc, Type clazz) -> {
+      final Function2<String, Type, String> _function_16 = (String acc, Type clazz) -> {
         StringConcatenation _builder_1 = new StringConcatenation();
         CharSequence _generateIndex = PackageDatabaseScriptGenerator.generateIndex(((Classifier) clazz));
         _builder_1.append(_generateIndex);
         return (acc + _builder_1);
       };
-      String _fold_7 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_12);
-      _builder.append(_fold_7);
+      String _fold_11 = IterableExtensions.<Type, String>fold(associationsClasses, "", _function_16);
+      _builder.append(_fold_11);
       _builder.newLineIfNotEmpty();
       {
-        boolean _notEquals = (!Objects.equal(pakkage, model));
-        if (_notEquals) {
-          final Function2<String, Type, String> _function_13 = (String acc, Type clazz) -> {
+        boolean _notEquals_1 = (!Objects.equal(pakkage, model));
+        if (_notEquals_1) {
+          final Function2<String, Type, String> _function_17 = (String acc, Type clazz) -> {
             StringConcatenation _builder_1 = new StringConcatenation();
             CharSequence _generateAssociationTable = PackageDatabaseScriptGenerator.generateAssociationTable(((AssociationClass) clazz));
             _builder_1.append(_generateAssociationTable);
             return (acc + _builder_1);
           };
-          String _fold_8 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_13);
-          _builder.append(_fold_8);
+          String _fold_12 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_17);
+          _builder.append(_fold_12);
           _builder.newLineIfNotEmpty();
-          final Function2<String, Type, String> _function_14 = (String acc, Type clazz) -> {
+          final Function2<String, Type, String> _function_18 = (String acc, Type clazz) -> {
             StringConcatenation _builder_1 = new StringConcatenation();
             CharSequence _generateAlters = PackageDatabaseScriptGenerator.generateAlters(((Classifier) clazz));
             _builder_1.append(_generateAlters);
             return (acc + _builder_1);
           };
-          String _fold_9 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_14);
-          _builder.append(_fold_9);
+          String _fold_13 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_18);
+          _builder.append(_fold_13);
           _builder.newLineIfNotEmpty();
           _builder.newLine();
-          final Function2<String, Type, String> _function_15 = (String acc, Type clazz) -> {
+          final Function2<String, Type, String> _function_19 = (String acc, Type clazz) -> {
             StringConcatenation _builder_1 = new StringConcatenation();
             CharSequence _generateIndex = PackageDatabaseScriptGenerator.generateIndex(((Classifier) clazz));
             _builder_1.append(_generateIndex);
             return (acc + _builder_1);
           };
-          String _fold_10 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_15);
-          _builder.append(_fold_10);
+          String _fold_14 = IterableExtensions.<Type, String>fold(assoInPakkage, "", _function_19);
+          _builder.append(_fold_14);
         }
       }
       _builder.newLineIfNotEmpty();
@@ -242,6 +284,21 @@ public class PackageDatabaseScriptGenerator {
   
   public static String generateCreateSchema(final org.eclipse.uml2.uml.Package pkg) {
     final Object schema = Utils.getSchemaName(pkg);
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      if (((schema != null) && (!Objects.equal(schema, "")))) {
+        _builder.newLineIfNotEmpty();
+        _builder.append("CREATE SCHEMA ");
+        _builder.append(schema);
+        _builder.append(";");
+      }
+    }
+    _builder.newLineIfNotEmpty();
+    return _builder.toString();
+  }
+  
+  public static String generateCreateSchema(final Classifier pkg) {
+    final Object schema = ClassifierUtils.getClassSchema(pkg);
     StringConcatenation _builder = new StringConcatenation();
     {
       if (((schema != null) && (!Objects.equal(schema, "")))) {

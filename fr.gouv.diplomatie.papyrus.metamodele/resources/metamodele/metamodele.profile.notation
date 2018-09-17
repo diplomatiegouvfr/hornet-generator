@@ -71,6 +71,10 @@
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_sDfdQJeSEeeJhLjptnEb3g"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_sEIWcZeSEeeJhLjptnEb3g"/>
         </children>
+        <children xmi:type="notation:Shape" xmi:id="_4Q_AULqGEeiIOJM7y24n9Q" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_4P9FkLqGEeiIOJM7y24n9Q"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_4Q_AUbqGEeiIOJM7y24n9Q"/>
+        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_GjDeEnaeEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_GjDeE3aeEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_GjDeFHaeEeegdZhmvUhwtQ"/>
@@ -235,6 +239,10 @@
         <children xmi:type="notation:Shape" xmi:id="_EOznoHdbEeevdc4A4HbIwA" type="Property_ClassAttributeLabel">
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_EONxwHdbEeevdc4A4HbIwA"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_EOznoXdbEeevdc4A4HbIwA"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_79gVYLqGEeiIOJM7y24n9Q" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_78sdELqGEeiIOJM7y24n9Q"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_79gVYbqGEeiIOJM7y24n9Q"/>
         </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_8AFSsndaEeevdc4A4HbIwA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_8AFSs3daEeevdc4A4HbIwA"/>
@@ -428,6 +436,10 @@
         <children xmi:type="notation:Shape" xmi:id="_p8NokJb3EeiwSZnx4mkS1g" type="Property_ClassAttributeLabel">
           <element xmi:type="uml:Property" href="metamodele.profile.uml#_p6d8IJb3EeiwSZnx4mkS1g"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_p8NokZb3EeiwSZnx4mkS1g"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_-QbaQLqGEeiIOJM7y24n9Q" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele.profile.uml#_-P6c4LqGEeiIOJM7y24n9Q"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_-QbaQbqGEeiIOJM7y24n9Q"/>
         </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_7eMi0vR7EeeO0fw-o-XwRw"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_7eMi0_R7EeeO0fw-o-XwRw"/>

@@ -699,10 +699,28 @@ class ClassifierUtils {
 	}
 	
 	/**
+	 * retourne la valeur de l'attribut tableName
+	 */
+	static def getClassSchema(Classifier clazz){
+		if(Utils.isEntity(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_DOMAIN_SCHEMA)
+		}else if(Utils.isNomenclature(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_DOMAIN_SCHEMA)
+		}else if(Utils.isAssociationTable(clazz)){
+			return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ASSOCIATIONTABLE, Utils.MODEL_DOMAIN_SCHEMA)
+		}
+		return null
+	}
+	
+	/**
 	 * retourne le schema dans lequel se trouve la classe
 	 * retourne null si il n'y a pas de schema
 	 */
 	static def getSchema(Classifier clazz){
+		val classSchema = clazz.getClassSchema
+		if(classSchema !== null && classSchema!== ""){
+			return classSchema
+		}
 		val pkg = clazz.package
 		return Utils.getSchemaName(pkg)
 	}

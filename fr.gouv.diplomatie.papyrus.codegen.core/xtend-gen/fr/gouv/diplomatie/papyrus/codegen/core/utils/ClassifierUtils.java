@@ -761,10 +761,35 @@ public class ClassifierUtils {
   }
   
   /**
+   * retourne la valeur de l'attribut tableName
+   */
+  public static Object getClassSchema(final Classifier clazz) {
+    boolean _isEntity = Utils.isEntity(clazz);
+    if (_isEntity) {
+      return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, Utils.MODEL_DOMAIN_SCHEMA);
+    } else {
+      boolean _isNomenclature = Utils.isNomenclature(clazz);
+      if (_isNomenclature) {
+        return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_NOMENCLATURE, Utils.MODEL_DOMAIN_SCHEMA);
+      } else {
+        boolean _isAssociationTable = Utils.isAssociationTable(clazz);
+        if (_isAssociationTable) {
+          return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ASSOCIATIONTABLE, Utils.MODEL_DOMAIN_SCHEMA);
+        }
+      }
+    }
+    return null;
+  }
+  
+  /**
    * retourne le schema dans lequel se trouve la classe
    * retourne null si il n'y a pas de schema
    */
   public static Object getSchema(final Classifier clazz) {
+    final Object classSchema = ClassifierUtils.getClassSchema(clazz);
+    if (((classSchema != null) && (classSchema != ""))) {
+      return classSchema;
+    }
     final org.eclipse.uml2.uml.Package pkg = clazz.getPackage();
     return Utils.getSchemaName(pkg);
   }

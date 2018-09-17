@@ -70,7 +70,6 @@
 package fr.gouv.diplomatie.papyrus.codegen.java.utils;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils;
-import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
 import fr.gouv.diplomatie.papyrus.codegen.java.utils.JavaPluginUtils;
 import java.util.Collection;
 import org.eclipse.emf.common.util.EList;
@@ -156,10 +155,6 @@ public class JavaClassifierUtils {
    * ----------------- stereotype attributes ----------------
    */
   public static Object getSchema(final Classifier clazz) {
-    boolean _isEntity = Utils.isEntity(clazz);
-    if (_isEntity) {
-      return ClassifierUtils.getSchema(clazz);
-    }
-    return null;
+    return ClassifierUtils.getSchema(clazz);
   }
 }

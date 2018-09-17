@@ -178,11 +178,8 @@ class JavaClassifierUtils{
 	*/
 	
 	static def getSchema(Classifier clazz){
-		if(Utils.isEntity(clazz)){
 			return ClassifierUtils.getSchema(clazz);
 			//return Utils.getStereotypePropertyValue(clazz, Utils.MODEL_ENTITY, JavaPluginUtils.MODEL_SCHEMA)
-		}
-		return null
 	}
 	
 }
