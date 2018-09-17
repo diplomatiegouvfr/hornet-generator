@@ -1,16 +1,22 @@
 # Changelog
 
+## v1.2.0 -> v1.2.1:
+
+### Added
+
+- [Hornet Lite] Ajout de la gestion de la propriété schema pour Hornet Lite . Cette variable est cependant deprecated, sont utilisation est déconseillée.
+- Ajout de la propriété schema sur les nomenclature et les associationTable, deprecated aussi.
+
 ## V1.1.4 -> v1.2.0:
 
 ### Added
 
-- [Hornet Lite] Ajout de la génération des indexs pour les colonnes simples
+- [Hornet Lite] Ajout de la génération des indexs pour les co1.2.0lonnes simples
 - [Hornet Lite] Ajout de la possibilité de changer les suffixes des fichiers de model
 - [Hornet Lite] Ajout de la génération des attributs dans les tables d'association
 - [Hornet Lite] Ajout de champs pour la génération de table d'association (génération de listes des classes liées par la table d'association dans le DTO
 , la classe métier et l'interface attributes)
-- [Hornet Lite] Ajout de la gestion de la propriété schema pour Hornet Lite. Cette variable est cependant deprecated, sont utilisation est déconseillée.
-- Ajout de la propriété schema sur les nomenclature et les associationTable
+
 - Documentation: ajout d'exemple de génération
 
 ### Changed
