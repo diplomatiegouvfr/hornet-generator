@@ -17,7 +17,7 @@ Ensuite, récupérez les plugins dans le répertoire dist sur github (https://gi
 
 Si Papyrus est déjà installé, il suffit de récupérer les plugins comme indiqué ci dessus pour les mettre à jour(pensez à supprimer les anciens plugins).
 
-Si les plugins ne sont pas pris en compte avec cette méthode, faites la même chose mais en les copiant dans un dossier `dropins` a la racine du papyrus.
+Si les plugins ne sont pas pris en compte avec cette méthode, faites la même chose mais en les copiant dans un dossier `dropins` a la racine du Papyrus.
 
 ### Création du projet
 
