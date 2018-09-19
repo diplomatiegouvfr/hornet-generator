@@ -11,12 +11,11 @@
 
 ### Added
 
-- [Hornet Lite] Ajout de la génération des indexs pour les co1.2.0lonnes simples
+- [Hornet Lite] Ajout de la génération des indexs pour les colonnes simples
 - [Hornet Lite] Ajout de la possibilité de changer les suffixes des fichiers de model
 - [Hornet Lite] Ajout de la génération des attributs dans les tables d'association
 - [Hornet Lite] Ajout de champs pour la génération de table d'association (génération de listes des classes liées par la table d'association dans le DTO
 , la classe métier et l'interface attributes)
-
 - Documentation: ajout d'exemple de génération
 
 ### Changed
