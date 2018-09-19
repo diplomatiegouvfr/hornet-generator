@@ -21,7 +21,7 @@ Si les plugins ne sont pas pris en compte avec cette méthode, faites la même c
 
 ### Création du projet
 
-Utilisez le template Yeoman `generator-hornet-js-lite` pour générer un nouveau projet Hornet JS Lite
+Utilisez le template Yeoman `generator-hornet-js-lite` pour générer un nouveau projet Hornet JS Lite.
 
 ### Création du modèle
 
