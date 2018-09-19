@@ -65,7 +65,7 @@ Cliquez sur OK.
 
 ![Fin du profil](sources/finish_profile.png)
 
-`Attention cette étape n'est pas obligatoire`
+`Attention cette étape n'est pas obligatoire`.
 Cochez le type `Class Diagram` si vous souhaitez avoir uniquement un seul diagramme de classe, sinon ne cochez pas cette case.
 
 Cliquez sur Finish.
