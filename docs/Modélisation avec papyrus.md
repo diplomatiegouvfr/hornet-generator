@@ -97,7 +97,7 @@ Pour cela, sélectionnez votre diagramme dans le Model Explorer, clic droit -> i
 
 ![Model explorer](sources/model_explorer.png)
 
-Choisissez le Hornet Type Library
+Choisissez le Hornet Type Library.
 
 ![Model Hornet](sources/choose_library.png)
 
