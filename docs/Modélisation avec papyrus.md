@@ -27,7 +27,7 @@ Utilisez le template Yeoman `generator-hornet-js-lite` pour générer un nouveau
 
 Ouvrir le projet avec Papyrus (ayant les plugins de génération).
 
-Attention: il sera peut être nécessaire d'ajouter un fichier .project pour pouvoir ouvrir le projet sous eclipse (si le projet a été généré avec Yeoman):
+Attention: il sera peut être nécessaire d'ajouter un fichier .project pour pouvoir ouvrir le projet sous Eclipse (si le projet a été généré avec Yeoman):
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
