@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.2.1 -> v1.3.0:
+
+### Added
+
+- Ajout de la génération du script de création des utilisateurs et rôles par défaut.
+- Ajout de la génération du script de création de la base sqlLite.
+
+### Changed
+
+- Mise à jour du readme.
+
+### Fixed
+
+- Correction de la validation de profil (erreur si le modèle possédait un profil sans nom).
+- Ajout du Stéréotype ModelLibrary sur la bibliothèque de type HornetPrimitiveTypes.
+- Correction de la génération des champs dans une table d'association (virgule manquante)
+
 ## v1.2.0 -> v1.2.1:
 
 ### Added

@@ -184,6 +184,22 @@ public class GeneratorUtils {
 	 * chemin du fichier de création de la base de données
 	 * @return
 	 */
+	public static String getDatabaseSqliteScriptPath(Package pakkage) {
+		return DATABASE_REPOSITORY + "createTablesSqlite";
+	}
+	
+	/**
+	 * chemin du fichier de création de la base de données
+	 * @return
+	 */
+	public static String getCreateUserScriptPath(Package pakkage) {
+		return DATABASE_REPOSITORY + "createUsersPostgres";
+	}
+	
+	/**
+	 * chemin du fichier de création de la base de données
+	 * @return
+	 */
 	public static String getUpdateDatabaseScriptPath(Package pakkage) {
 		return DATABASE_REPOSITORY + "updateTablesPostgres";
 	}

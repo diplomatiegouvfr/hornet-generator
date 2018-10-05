@@ -85,13 +85,18 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 
 class TypeUtils{
 	
-	public static var MODEL_HORNETTYPE_DATABASETYPE = 'databaseType';
+	public static var MODEL_HORNETTYPE_DATABASETYPE = 'postgresqlType';
+	public static var MODEL_HORNETTYPE_SQLITETYPE = 'sqliteType';
 
 	/**
 	 * retourne le type du code de l'enum
 	 */
-	static def getEnumType(Classifier type){
+	static def getEnumPostgreslType(Classifier type){
 		return "integer"
+	}
+	
+		static def getEnumSqliteType(Classifier type){
+		return "INTEGER"
 	}
 	
 	/**                                                        *
@@ -105,6 +110,17 @@ class TypeUtils{
 		val databaseType = Utils.getStereotypePropertyValue(type,Utils.MODEL_HORNETTYPE, MODEL_HORNETTYPE_DATABASETYPE);
 		if(databaseType === null || databaseType == ""){
 			return "character"
+		}
+		return databaseType
+	}
+	
+		 /**
+	 * retourne le type dans la base de donnée
+	 */
+	static def getSqlLiteType(Type type){
+		val databaseType = Utils.getStereotypePropertyValue(type,Utils.MODEL_HORNETTYPE, MODEL_HORNETTYPE_SQLITETYPE);
+		if(databaseType === null || databaseType == ""){
+			return "text"
 		}
 		return databaseType
 	}

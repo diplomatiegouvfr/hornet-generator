@@ -25,6 +25,10 @@
     <children xmi:type="notation:Shape" xmi:id="_-VPIEHadEeegdZhmvUhwtQ" type="Stereotype_Shape">
       <children xmi:type="notation:DecorationNode" xmi:id="_-VPIEnadEeegdZhmvUhwtQ" type="Stereotype_NameLabel"/>
       <children xmi:type="notation:BasicCompartment" xmi:id="_-VPIE3adEeegdZhmvUhwtQ" type="Stereotype_AttributeCompartment">
+        <children xmi:type="notation:Shape" xmi:id="_AA1wULzqEeioaJCLISKkzg" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele-jpa.profile.uml#_AAfyELzqEeioaJCLISKkzg"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_AA1wUbzqEeioaJCLISKkzg"/>
+        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_-VPIFHadEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_-VPIFXadEeegdZhmvUhwtQ"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_-VPIFnadEeegdZhmvUhwtQ"/>
@@ -37,7 +41,7 @@
         <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIHHadEeegdZhmvUhwtQ"/>
       </children>
       <element xmi:type="uml:Stereotype" href="metamodele-jpa.profile.uml#_-VN58HadEeegdZhmvUhwtQ"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIEXadEeegdZhmvUhwtQ" x="140" y="380"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-VPIEXadEeegdZhmvUhwtQ" x="100" y="380"/>
     </children>
     <children xmi:type="notation:Shape" xmi:id="_Fmo5IHaeEeegdZhmvUhwtQ" type="Stereotype_Shape">
       <children xmi:type="notation:DecorationNode" xmi:id="_Fmo5InaeEeegdZhmvUhwtQ" type="Stereotype_NameLabel"/>
@@ -356,6 +360,10 @@
           <element xmi:type="uml:Property" href="metamodele-jpa.profile.uml#_7BrV8J1HEeehbYhnuWBVFA"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_7CU2MZ1HEeehbYhnuWBVFA"/>
         </children>
+        <children xmi:type="notation:Shape" xmi:id="_KIsUoLzrEeioaJCLISKkzg" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="metamodele-jpa.profile.uml#_KIQPwLzrEeioaJCLISKkzg"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_KIsUobzrEeioaJCLISKkzg"/>
+        </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_uWYIBJ1HEeehbYhnuWBVFA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_uWYIBZ1HEeehbYhnuWBVFA"/>
         <styles xmi:type="notation:FilteringStyle" xmi:id="_uWYIBp1HEeehbYhnuWBVFA"/>
@@ -480,7 +488,7 @@
       <styles xmi:type="notation:FontStyle" xmi:id="_UyRD4XagEeegdZhmvUhwtQ"/>
       <element xmi:type="uml:Generalization" href="metamodele-jpa.profile.uml#_Ux20MHagEeegdZhmvUhwtQ"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_UyRD4nagEeegdZhmvUhwtQ" points="[-180, 320, -643984, -643984]$[-260, 240, -643984, -643984]"/>
-      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYHagEeegdZhmvUhwtQ" id="(0.6,0.0)"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYHagEeegdZhmvUhwtQ" id="(0.5780346820809249,0.0)"/>
       <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_UypeYXagEeegdZhmvUhwtQ" id="(0.591715976331361,1.0)"/>
     </edges>
     <edges xmi:type="notation:Connector" xmi:id="_cVk3wHa1EeegdZhmvUhwtQ" type="StereotypeCommentLink" source="_cVWOQHa1EeegdZhmvUhwtQ" target="_cVkQsHa1EeegdZhmvUhwtQ">
@@ -576,7 +584,7 @@
       <styles xmi:type="notation:FontStyle" xmi:id="_N-WWcXdYEeevdc4A4HbIwA"/>
       <element xmi:type="uml:Extension" href="metamodele-jpa.profile.uml#_N9bJYHdYEeevdc4A4HbIwA"/>
       <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_N-WWcndYEeevdc4A4HbIwA" points="[20, 300, -643984, -643984]$[440, 440, -643984, -643984]"/>
-      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OAH4EHdYEeevdc4A4HbIwA" id="(1.0,0.6)"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OAH4EHdYEeevdc4A4HbIwA" id="(1.0,0.594059405940594)"/>
       <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OAH4EXdYEeevdc4A4HbIwA" id="(0.0,0.4)"/>
     </edges>
     <edges xmi:type="notation:Connector" xmi:id="_jU3gsHdbEeevdc4A4HbIwA" type="Generalization_Edge" source="_8AEroHdaEeevdc4A4HbIwA" target="_zq2zkHaeEeegdZhmvUhwtQ">

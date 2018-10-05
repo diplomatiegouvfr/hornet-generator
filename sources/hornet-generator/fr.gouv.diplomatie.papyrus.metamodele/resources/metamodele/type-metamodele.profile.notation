@@ -43,6 +43,10 @@
         <element xmi:type="uml:Property" href="type-metamodele.profile.uml#_M2qFELT7EeiSjrG3tLcEdA"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_M2vkobT7EeiSjrG3tLcEdA"/>
       </children>
+      <children xmi:type="notation:Shape" xmi:id="_RojYcLzrEeioaJCLISKkzg" type="Property_ClassAttributeLabel">
+        <element xmi:type="uml:Property" href="type-metamodele.profile.uml#_RocDsLzrEeioaJCLISKkzg"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_RojYcbzrEeioaJCLISKkzg"/>
+      </children>
       <styles xmi:type="notation:TitleStyle" xmi:id="_oMJE8rT6EeiSjrG3tLcEdA"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_oMJE87T6EeiSjrG3tLcEdA"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_oMJE9LT6EeiSjrG3tLcEdA"/>

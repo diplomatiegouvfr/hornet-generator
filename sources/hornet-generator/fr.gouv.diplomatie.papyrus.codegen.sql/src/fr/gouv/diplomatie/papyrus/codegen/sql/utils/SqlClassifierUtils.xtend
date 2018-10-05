@@ -84,7 +84,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
 
 class SqlClassifierUtils{
 	
-		static def generateSchemaName(Classifier clazz){
+	static def generateSchemaName(Classifier clazz){
 		val schema = ClassifierUtils.getSchema(clazz)
 		return '''«IF schema !== null»«schema».«ENDIF»'''
 	}

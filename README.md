@@ -30,7 +30,7 @@ Ces métamodèles seront proposés dans les profils enregistrés de Papyrus.
 
 Hornet-generator propose deux plugins core.
 
-Un plugin core (fr.gouv.diplomatie.papyrus.codegen.core) qui propose des méthodes générales qui seront utilisés par les autres plugins pour la génération de code.
+Un plugin core (fr.gouv.diplomatie.papyrus.codegen.core) qui propose des méthodes générales qui seront utilisées par les autres plugins pour la génération de code.
 Notamment, des méthodes d'accès aux données du modèle.
 
 Le plugin ui core (fr.gouv.diplomatie.papyrus.codegen.ui.core) qui propose des méthodes générales qui seront utilisées par

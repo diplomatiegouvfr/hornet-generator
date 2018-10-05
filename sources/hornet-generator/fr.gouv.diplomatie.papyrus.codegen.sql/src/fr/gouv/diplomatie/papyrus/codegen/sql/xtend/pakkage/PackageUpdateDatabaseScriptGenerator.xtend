@@ -405,7 +405,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val type = property.type
 		if(type instanceof Classifier){
-			var sqlType = TypeUtils.getEnumType(type)
+			var sqlType = type.getEnumType
 			'''
 			ALTER TABLE «schema»«tableName» ADD COLUMN IF NOT EXISTS code_«propertyName» «sqlType» «property.generateNullable(nullable)»;
 			'''
@@ -896,7 +896,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 				}
 			]
 			
-			val sqlType = TypeUtils.getEnumType(type)
+			val sqlType = type.getEnumType
 			val schema = SqlClassifierUtils.generateSchemaName(fromClass)
 			val typeSchema = SqlClassifierUtils.generateSchemaName(type)
 			'''
@@ -1147,7 +1147,7 @@ public class PackageUpdateDatabaseScriptGenerator{
 	 */
 	static def generateEnumTable(Classifier clazz){
 		val hasCode = ClassifierUtils.isEnumWithCode(clazz)
-		var sqlType = TypeUtils.getEnumType(clazz)
+		var sqlType = clazz.getEnumType
 		val tableName = ClassifierUtils.getDBTableName(clazz)
 		val schema = SqlClassifierUtils.generateSchemaName(clazz)
 		val schemaseq = SqlClassifierUtils.generateSchemaName(clazz)
@@ -1233,5 +1233,9 @@ public class PackageUpdateDatabaseScriptGenerator{
 		'''
 		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (code, libelle) VALUES («value», '«libelle»') ON CONFLICT DO NOTHING;
 		'''
+	}
+	
+	static def getEnumType(Classifier type){
+		return TypeUtils.getEnumPostgreslType(type)
 	}
 }

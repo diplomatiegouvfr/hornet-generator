@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:typemetamodele="http:///schemas/typemetamodele/_ofQRYLT-EeiSjrG3tLcEdA/3" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/typemetamodele/_ofQRYLT-EeiSjrG3tLcEdA/3 type-metamodele.profile.uml#_ofQ4cLT-EeiSjrG3tLcEdA">
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:standard="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard" xmlns:typemetamodele="http:///schemas/typemetamodele/_S6ObsLzrEeioaJCLISKkzg/5" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/typemetamodele/_S6ObsLzrEeioaJCLISKkzg/5 type-metamodele.profile.uml#_S6PCwLzrEeioaJCLISKkzg">
   <uml:Model xmi:id="_uV2MgJomEeeOu49VW2XdHQ" name="HornetPrimitiveTypes">
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_qo4WsJxDEee8yqBcJknfXg" name="Boolean"/>
     <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_HfNo0JxEEee8yqBcJknfXg" name="Integer"/>
@@ -33,26 +33,33 @@
       <appliedProfile xmi:type="uml:Profile" href="pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#ActionLanguage"/>
     </profileApplication>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_SuSKULT8EeiSjrG3tLcEdA">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_qX-tkLT-EeiSjrG3tLcEdA" source="PapyrusVersion">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_qX-tkbT-EeiSjrG3tLcEdA" key="Version" value="0.0.4"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_qX-tkrT-EeiSjrG3tLcEdA" key="Comment" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_qX-tk7T-EeiSjrG3tLcEdA" key="Copyright" value=""/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_qX-tlLT-EeiSjrG3tLcEdA" key="Date" value="2018-09-10"/>
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_qX-tlbT-EeiSjrG3tLcEdA" key="Author" value=""/>
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="__7VDIL12EeioaJCLISKkzg" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="__7VDIb12EeioaJCLISKkzg" key="Version" value="0.0.6"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="__7VDIr12EeioaJCLISKkzg" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="__7VDI712EeioaJCLISKkzg" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="__7VDJL12EeioaJCLISKkzg" key="Date" value="2018-09-20"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="__7VDJb12EeioaJCLISKkzg" key="Author" value=""/>
       </eAnnotations>
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_SuSxYLT8EeiSjrG3tLcEdA" source="http://www.eclipse.org/uml2/2.0.0/UML">
-        <references xmi:type="ecore:EPackage" href="type-metamodele.profile.uml#_ofQ4cLT-EeiSjrG3tLcEdA"/>
+        <references xmi:type="ecore:EPackage" href="type-metamodele.profile.uml#_S6PCwLzrEeioaJCLISKkzg"/>
       </eAnnotations>
       <appliedProfile xmi:type="uml:Profile" href="type-metamodele.profile.uml#_cJZEwLT6EeiSjrG3tLcEdA"/>
     </profileApplication>
+    <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_SCxv4L2nEeip06TwfXkU2g">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_SCy-AL2nEeip06TwfXkU2g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard#/"/>
+      </eAnnotations>
+      <appliedProfile xmi:type="uml:Profile" href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
+    </profileApplication>
   </uml:Model>
-  <typemetamodele:hornetType xmi:id="_Tbq0wLT8EeiSjrG3tLcEdA" base_PrimitiveType="_qo4WsJxDEee8yqBcJknfXg" metierClassType="boolean" databaseType="boolean" sequelizeType="BOOLEAN" typescriptType="boolean" javaType="Boolean"/>
-  <typemetamodele:hornetType xmi:id="_ZGvhMLT8EeiSjrG3tLcEdA" base_PrimitiveType="_KoMzAJxEEee8yqBcJknfXg" metierClassType="Buffer" databaseType="bytea" sequelizeType="BLOB" typescriptType="Buffer" javaType="byte[]"/>
-  <typemetamodele:hornetType xmi:id="_cxvW0LT9EeiSjrG3tLcEdA" base_PrimitiveType="_LrifUJxEEee8yqBcJknfXg" metierClassType="Date" databaseType="timestamp" sequelizeType="DATE" typescriptType="" javaType="Date"/>
-  <typemetamodele:hornetType xmi:id="_hrLK8LT9EeiSjrG3tLcEdA" base_PrimitiveType="_IvPGQJxEEee8yqBcJknfXg" metierClassType="number" databaseType="real" sequelizeType="FLOAT" typescriptType="number" javaType="Float"/>
-  <typemetamodele:hornetType xmi:id="_mcPGMLT9EeiSjrG3tLcEdA" base_PrimitiveType="_Jj42UJxEEee8yqBcJknfXg" metierClassType="number" databaseType="bigint" sequelizeType="BIGINT" typescriptType="number" javaType="Long"/>
-  <typemetamodele:hornetType xmi:id="_rP7esLT9EeiSjrG3tLcEdA" base_PrimitiveType="_NWBrMJxEEee8yqBcJknfXg" metierClassType="number" databaseType="double precision" sequelizeType="DOUBLE" typescriptType="number" javaType="Double"/>
-  <typemetamodele:hornetType xmi:id="_v20xULT9EeiSjrG3tLcEdA" base_PrimitiveType="_HfNo0JxEEee8yqBcJknfXg" metierClassType="number" databaseType="integer" sequelizeType="INTEGER" typescriptType="number" javaType="Integer"/>
-  <typemetamodele:hornetType xmi:id="_-XrLoLT9EeiSjrG3tLcEdA" base_PrimitiveType="_MeQ8wJxEEee8yqBcJknfXg" metierClassType="number" databaseType="decimal" sequelizeType="FLOAT" typescriptType="number" javaType="Float"/>
-  <typemetamodele:hornetType xmi:id="_DKG_4LT-EeiSjrG3tLcEdA" base_PrimitiveType="_OLWJoJxEEee8yqBcJknfXg" metierClassType="string" databaseType="character"/>
+  <typemetamodele:hornetType xmi:id="_Tbq0wLT8EeiSjrG3tLcEdA" base_PrimitiveType="_qo4WsJxDEee8yqBcJknfXg" metierClassType="boolean" postgresqlType="boolean" sequelizeType="BOOLEAN" typescriptType="boolean" javaType="Boolean" sqliteType="INTEGER"/>
+  <typemetamodele:hornetType xmi:id="_ZGvhMLT8EeiSjrG3tLcEdA" base_PrimitiveType="_KoMzAJxEEee8yqBcJknfXg" metierClassType="Buffer" postgresqlType="bytea" sequelizeType="BLOB" typescriptType="Buffer" javaType="byte[]" sqliteType="BYTEA"/>
+  <typemetamodele:hornetType xmi:id="_cxvW0LT9EeiSjrG3tLcEdA" base_PrimitiveType="_LrifUJxEEee8yqBcJknfXg" metierClassType="Date" postgresqlType="timestamp" sequelizeType="DATE" typescriptType="" javaType="Date" sqliteType="TEXT"/>
+  <typemetamodele:hornetType xmi:id="_hrLK8LT9EeiSjrG3tLcEdA" base_PrimitiveType="_IvPGQJxEEee8yqBcJknfXg" metierClassType="number" postgresqlType="real" sequelizeType="FLOAT" typescriptType="number" javaType="Float" sqliteType="REAL"/>
+  <typemetamodele:hornetType xmi:id="_mcPGMLT9EeiSjrG3tLcEdA" base_PrimitiveType="_Jj42UJxEEee8yqBcJknfXg" metierClassType="number" postgresqlType="bigint" sequelizeType="BIGINT" typescriptType="number" javaType="Long" sqliteType="INTEGER"/>
+  <typemetamodele:hornetType xmi:id="_rP7esLT9EeiSjrG3tLcEdA" base_PrimitiveType="_NWBrMJxEEee8yqBcJknfXg" metierClassType="number" postgresqlType="double precision" sequelizeType="DOUBLE" typescriptType="number" javaType="Double" sqliteType="REAL"/>
+  <typemetamodele:hornetType xmi:id="_v20xULT9EeiSjrG3tLcEdA" base_PrimitiveType="_HfNo0JxEEee8yqBcJknfXg" metierClassType="number" postgresqlType="integer" sequelizeType="INTEGER" typescriptType="number" javaType="Integer" sqliteType="INTEGER"/>
+  <typemetamodele:hornetType xmi:id="_-XrLoLT9EeiSjrG3tLcEdA" base_PrimitiveType="_MeQ8wJxEEee8yqBcJknfXg" metierClassType="number" postgresqlType="decimal" sequelizeType="FLOAT" typescriptType="number" javaType="Float" sqliteType="REAL"/>
+  <typemetamodele:hornetType xmi:id="_DKG_4LT-EeiSjrG3tLcEdA" base_PrimitiveType="_OLWJoJxEEee8yqBcJknfXg" metierClassType="string" postgresqlType="character" sqliteType="VARCHAR"/>
+  <standard:ModelLibrary xmi:id="_S6xH0L2nEeip06TwfXkU2g" base_Package="_uV2MgJomEeeOu49VW2XdHQ"/>
 </xmi:XMI>

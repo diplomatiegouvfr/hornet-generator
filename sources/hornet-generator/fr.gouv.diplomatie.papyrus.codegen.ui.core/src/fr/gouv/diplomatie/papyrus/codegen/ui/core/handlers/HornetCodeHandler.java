@@ -208,14 +208,16 @@ public abstract class HornetCodeHandler extends CmdHandler {
 				EList<Profile> list = model.getAllAppliedProfiles();
 				List<Profile> hornetProfiles = new ArrayList();
 				for(Profile profil : list) {
-					if(profil.getName().equals(hornetMetamodeleName)) {
+					if((profil.getName() != null) && profil.getName().equals(hornetMetamodeleName)) {
 						hornetProfiles.add(profil);
 					}
 				}
-				Profile profile = hornetProfiles.get(0);
-				if(profile != null) {
-					this.activeProfile = profile.getLabel();
-					return (profile.getLabel().equals(this.profileLabel));
+				if(!hornetProfiles.isEmpty()) {
+					Profile profile = hornetProfiles.get(0);
+					if(profile != null) {
+						this.activeProfile = profile.getLabel();
+						return (profile.getLabel().equals(this.profileLabel));
+					}
 				}
 				return false;
 			}

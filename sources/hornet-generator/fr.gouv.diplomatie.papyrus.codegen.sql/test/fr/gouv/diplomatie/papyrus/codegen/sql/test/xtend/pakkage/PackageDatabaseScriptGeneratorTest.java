@@ -14,6 +14,8 @@ import fr.gouv.diplomatie.papyrus.codegen.core.test.TestUtils;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseScriptGenerator;
 
 public class PackageDatabaseScriptGeneratorTest {
+	
+	private PackageDatabaseScriptGenerator generator = new PackageDatabaseScriptGenerator();
 
 	@Test
 	public void testClass() {
@@ -24,6 +26,7 @@ public class PackageDatabaseScriptGeneratorTest {
 	@Test
 	public void testGenerateTable() {
 		HornetModel hmodel = HornetModel.initModel();
+
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		TestUtils.createAttribute(class_, "id", hmodel.integerPT, 0, 1).applyStereotype(hmodel.keyAttribute);
 		
@@ -33,7 +36,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"\n" + 
 				"ALTER TABLE ONLY ma_classe\n" + 
 				"	ADD CONSTRAINT ma_classe_pkey PRIMARY KEY (id);\n\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateTable(class_).toString());
+		assertEquals(expect, generator.generateTable(class_).toString());
 	}
 
 	@Test
@@ -47,7 +50,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "id2_test text \n";
-		assertEquals(expect,PackageDatabaseScriptGenerator.generateAttrForeignKey(prop, class_, "").toString());
+		assertEquals(expect,generator.generateAttrForeignKey(prop, class_, "").toString());
 		
 	}
 
@@ -64,7 +67,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY ma_classe\n" + 
 				"    ADD CONSTRAINT ma_classe_test_ids_fkey\n" + 
 				"    FOREIGN KEY (id2_test) REFERENCES ma_classe2(id2);\n";
-		assertEquals(expect,PackageDatabaseScriptGenerator.generateAttributesAlterForeignKey(prop, class_, "").toString());
+		assertEquals(expect,generator.generateAttributesAlterForeignKey(prop, class_, "").toString());
 	}
 	
 	@Test
@@ -74,7 +77,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		TestUtils.createAttribute(class_, "id", hmodel.integerPT, 0, 1).applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "id text NOT NULL,\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateExtendId(class_).toString());
+		assertEquals(expect, generator.generateExtendId(class_).toString());
 	}
 
 	@Test
@@ -85,7 +88,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		id.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "id text NOT NULL";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateIdAttributeDefinition(id, "").toString());
+		assertEquals(expect, generator.generateIdAttributeDefinition(id, "").toString());
 	}
 
 	@Test
@@ -97,12 +100,12 @@ public class PackageDatabaseScriptGeneratorTest {
 		prop.applyStereotype(hmodel.attribute);
 		
 		String expect = "";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateStringLength(prop).toString());
+		assertEquals(expect, generator.generateStringLength(prop).toString());
 		
 		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeHasLength, true);
 		TestUtils.setStereotypePropertyValue(prop, hmodel.attribute, hmodel.attributeLength, 10);
 		expect = " varying(10)";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateStringLength(prop).toString());
+		assertEquals(expect, generator.generateStringLength(prop).toString());
 		
 	}
 
@@ -115,7 +118,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, 1);
 		
 		String expect = "code_test integer ";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateEumAttributesDefinition(prop, "", class_, true).toString());
+		assertEquals(expect, generator.generateEumAttributesDefinition(prop, "", class_, true).toString());
 	}
 
 	@Test
@@ -126,7 +129,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
 		
 		String expect = "test text ";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateBasicAttributeDefinition(prop, "", class_, true).toString());
+		assertEquals(expect, generator.generateBasicAttributeDefinition(prop, "", class_, true).toString());
 	}
 
 	@Test
@@ -137,7 +140,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
 		
 		String expect = "id_test text ";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateEntityAttributeDefinition(prop, id, "", class_, true).toString());
+		assertEquals(expect, generator.generateEntityAttributeDefinition(prop, id, "", class_, true).toString());
 	}
 
 	@Test
@@ -149,7 +152,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		
 		String expect = "\nALTER TABLE ONLY ma_classe\n" + 
 				"	ADD CONSTRAINT ma_classe_pkey PRIMARY KEY (id);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateIds(class_).toString());
+		assertEquals(expect, generator.generateIds(class_).toString());
 	}
 
 	@Test
@@ -165,7 +168,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY ma_classe\n" + 
 				"    ADD CONSTRAINT ma_classe_ma_classe2_ids_fkey\n" + 
 				"    FOREIGN KEY (id2) REFERENCES ma_classe2(id2);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateExtendForeignKey(class2_, class_).toString());
+		assertEquals(expect, generator.generateExtendForeignKey(class2_, class_).toString());
 	}
 
 	@Test
@@ -184,7 +187,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY ab\n" + 
 				"    ADD CONSTRAINT ab_test_ids_fkey\n" + 
 				"    FOREIGN KEY (id2_test) REFERENCES ma_classe2(id2);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateForeignKey(prop, "", "ab", "").toString());
+		assertEquals(expect, generator.generateForeignKey(prop, "", "ab", "").toString());
 		
 	}
 
@@ -203,7 +206,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY ab\n" + 
 				"    ADD CONSTRAINT ab_test_code_fkey\n" + 
 				"    FOREIGN KEY (code_test) REFERENCES ma_classe2(code);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateEnumForeignKey(prop, "", "ab", "").toString());
+		assertEquals(expect, generator.generateEnumForeignKey(prop, "", "ab", "").toString());
 	}
 
 	@Test
@@ -226,7 +229,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"    \n" + 
 				"ALTER TABLE ONLY ma_classe_test\n" + 
 				"    ADD CONSTRAINT ma_classe_test_pkey PRIMARY KEY(id, test);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateMutilvaluedPTTable(prop, class_).toString());
+		assertEquals(expect, generator.generateMutilvaluedPTTable(prop, class_).toString());
 	}
 
 	@Test
@@ -258,7 +261,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"    \n" + 
 				"ALTER TABLE ONLY ma_classe_test\n" + 
 				"    ADD CONSTRAINT ma_classe_test_pkey PRIMARY KEY(id_ma_classe, id2_test);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateMutilvaluedEntityTable(prop, class_).toString());
+		assertEquals(expect, generator.generateMutilvaluedEntityTable(prop, class_).toString());
 	}
 
 	@Test
@@ -268,10 +271,10 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
 		id.applyStereotype(hmodel.keyAttribute);
 		String expect = "id text NOT NULL";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateMultiIdAttributeDef(id, "").toString());
+		assertEquals(expect, generator.generateMultiIdAttributeDef(id, "").toString());
 		
 		expect = "id_add text NOT NULL";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateMultiIdAttributeDef(id, "add").toString());
+		assertEquals(expect, generator.generateMultiIdAttributeDef(id, "add").toString());
 	}
 
 	@Test
@@ -281,10 +284,10 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property id = TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
 		id.applyStereotype(hmodel.keyAttribute);
 		String expect = "id_ma_classe text NOT NULL";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateMultiIdAttributeDefinition(id, "").toString());
+		assertEquals(expect, generator.generateMultiIdAttributeDefinition(id, "").toString());
 		
 		expect = "add_id_ma_classe text NOT NULL";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateMultiIdAttributeDefinition(id, "add").toString());
+		assertEquals(expect, generator.generateMultiIdAttributeDefinition(id, "add").toString());
 	}
 
 	@Test
@@ -311,7 +314,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"    \n" + 
 				"ALTER TABLE ONLY ma_classe_test\n" + 
 				"    ADD CONSTRAINT ma_classe_test_pkey PRIMARY KEY(id);\n\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateValueObjectEntityTable(prop, class_).toString());
+		assertEquals(expect, generator.generateValueObjectEntityTable(prop, class_).toString());
 	}
 
 	@Test
@@ -327,7 +330,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		expect.add("test");
 		expect.add("test2");
 		ArrayList<String> list = new ArrayList<String>();
-		assertEquals(expect, PackageDatabaseScriptGenerator.getAttributList(class_, list, ""));
+		assertEquals(expect, generator.getAttributList(class_, list, ""));
 	}
 
 	@Test
@@ -357,7 +360,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"\n" + 
 				"ALTER TABLE ONLY ma_classe_test\n" + 
 				"    ADD CONSTRAINT ma_classe_test_pkey PRIMARY KEY (id, code);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateEnumAttributTable(prop, class_).toString());
+		assertEquals(expect, generator.generateEnumAttributTable(prop, class_).toString());
 		
 	}
 
@@ -382,7 +385,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"ALTER TABLE ONLY ma_classe \n" + 
 				"	ALTER COLUMN prop \n" + 
 				"	SET DEFAULT nextval('ma_classe_prop_seq'::regclass);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateSequence(prop).toString());
+		assertEquals(expect, generator.generateSequence(prop).toString());
 		
 		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceCache, 3);
 		TestUtils.setStereotypePropertyValue(prop, hmodel.sequence, hmodel.sequenceCycle, true);
@@ -407,7 +410,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"ALTER TABLE ONLY ma_classe \n" + 
 				"	ALTER COLUMN prop \n" + 
 				"	SET DEFAULT nextval('ma_classe_prop_seq'::regclass);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateSequence(prop).toString());
+		assertEquals(expect, generator.generateSequence(prop).toString());
 	}
 
 	@Test
@@ -438,7 +441,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"\n" + 
 				"ALTER TABLE ONLY asso\n" + 
 				"	ADD CONSTRAINT asso_pkey PRIMARY KEY (id_att2, id_att1);\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateAssociationTable(asso).toString());
+		assertEquals(expect, generator.generateAssociationTable(asso).toString());
 
 	}
 
@@ -459,7 +462,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		expect.add("id_att2");
 		expect.add("id_att1");
 		ArrayList<String> list = new ArrayList<String>();
-		assertEquals(expect, PackageDatabaseScriptGenerator.getAssociationAttributList(asso, list, ""));
+		assertEquals(expect, generator.getAssociationAttributList(asso, list, ""));
 	}
 
 	@Test
@@ -478,7 +481,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY \"MA_CLASSE\"\n" + 
 				"	ADD CONSTRAINT MA_CLASSE_TEST_IDS_FKEY\n" + 
 				"	FOREIGN KEY (\"ID_TEST\") REFERENCES \"MA_CLASSE2\"(\"ID\");\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateAssociationForeignKeysEntity(prop, class_));*/
+		assertEquals(expect, generator.generateAssociationForeignKeysEntity(prop, class_));*/
 	}
 
 	@Test
@@ -497,7 +500,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		String expect = "\nALTER TABLE ONLY \"MA_CLASSE\"\n" + 
 				"	ADD CONSTRAINT MA_CLASSE_CODE_TEST_CODE_FKEY \n" + 
 				"	FOREIGN KEY (\"CODE_TEST\") REFERENCES \"MA_CLASSE2\"(\"CODE\");\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateAssociationForeignKeysEnum(prop, class_, ""));*/
+		assertEquals(expect, generator.generateAssociationForeignKeysEnum(prop, class_, ""));*/
 	}
 
 	@Test
@@ -508,7 +511,7 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
 
 		String expect = "text";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateAttributType(prop));
+		assertEquals(expect, generator.generateAttributType(prop));
 	}
 
 	@Test
@@ -519,14 +522,14 @@ public class PackageDatabaseScriptGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, 1);
 		
 		String expect = "";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateNullable(prop, false).toString());
+		assertEquals(expect, generator.generateNullable(prop, false).toString());
 		
 		Property prop2 = TestUtils.createAttribute(class_, "test2", hmodel.stringPT, 1, 1);
 		expect = "NOT NULL";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateNullable(prop2, false).toString());
+		assertEquals(expect, generator.generateNullable(prop2, false).toString());
 		
 		expect = "";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateNullable(prop, true).toString());
+		assertEquals(expect, generator.generateNullable(prop, true).toString());
 
 	}
 
@@ -547,7 +550,7 @@ public class PackageDatabaseScriptGeneratorTest {
 				"ALTER TABLE ONLY ma_classe\n" + 
 				"	ADD CONSTRAINT ma_classe_pkey PRIMARY KEY (code);\n"
 				+ "\nINSERT INTO ma_classe (code, libelle) VALUES (0, 'test');\n";
-		assertEquals(expect, PackageDatabaseScriptGenerator.generateEnumTable(class_).toString());
+		assertEquals(expect, generator.generateEnumTable(class_).toString());
 	}
 
 }

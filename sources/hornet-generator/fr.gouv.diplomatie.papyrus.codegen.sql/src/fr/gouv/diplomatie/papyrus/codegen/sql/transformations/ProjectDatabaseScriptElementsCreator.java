@@ -97,7 +97,7 @@ public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
 	}
 	
 	/**
-	 * génère le script de database
+	 * génère les scripts de création et de mise à jour de la base de données
 	 * @param packageableElement
 	 * @param progressMonitor
 	 */
@@ -107,6 +107,8 @@ public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
 		if(packageableElement instanceof Package) {
 			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
 			PackageGenerator.generateUpdateDatabaseScript((Package) packageableElement, fileSystemAccess);
+			PackageGenerator.generateCreateUserScript((Package) packageableElement, fileSystemAccess);
+			PackageGenerator.generateDatabaseSqliteScript((Package) packageableElement, fileSystemAccess);
 		}
 	}
 

@@ -95,11 +95,7 @@ import fr.gouv.diplomatie.papyrus.codegen.core.utils.AssociationClassUtils
 
 public class PackageDatabaseScriptGenerator{
 	
-	/**
-	 * TODO
-	 * changer le nom de ref : ex: id_nationalite etc...
-	 */
-	static def generateCode(Package pakkage){
+	 def generateCode(Package pakkage){
 		
 		val model = pakkage.model
 		
@@ -178,27 +174,27 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateCreateSchema(Package pkg){
-		val schema = Utils.getSchemaName(pkg)
+	 def generateCreateSchema(Package pkg){
+		val schema = pkg.getSchemaName
 		return 
 		'''«IF schema !== null && schema != ""»
 		CREATE SCHEMA «schema»;«ENDIF»
 		'''
 	}
 	
-	static def generateCreateSchema(Classifier pkg){
-		val schema = ClassifierUtils.getClassSchema(pkg)
+	 def generateCreateSchema(Classifier clazz){
+		val schema = clazz.getClassSchema
 		return 
 		'''«IF schema !== null && schema != ""»
 		CREATE SCHEMA «schema»;«ENDIF»
 		'''
 	}
 	
-	static def generateTable(Classifier clazz){
+	 def generateTable(Classifier clazz){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter(id |
 			Utils.isSequence(id)
 		)
-		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val schema = clazz.getSchema;
 		'''
 		
 		CREATE TABLE «schema»«ClassifierUtils.getDBTableName(clazz)»(
@@ -217,7 +213,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère les clés étrangères liées aux one to many
 	 */
-	static def generateManyToOneRef(Classifier clazz){
+	 def generateManyToOneRef(Classifier clazz){
 		val attributesRef = ClassifierUtils.getOneToManyAttributes(clazz)
 		
 		'''
@@ -228,7 +224,7 @@ public class PackageDatabaseScriptGenerator{
 		'''	
 	}
 	
-	static def generateAttrForeignKey(Property property, Classifier fromClass, String additionnalName){
+	 def generateAttrForeignKey(Property property, Classifier fromClass, String additionnalName){
 		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 		//val owner = property.owner as Classifier
 		val owner = property.type as Classifier
@@ -247,8 +243,8 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère les tables d'attributs multiple et les foreign keys
 	 */
-	static def generateAlters(Classifier clazz){
-		val schema = SqlClassifierUtils.generateSchemaName(clazz)
+	 def generateAlters(Classifier clazz){
+		val schema = clazz.getSchema
 		'''
 		«clazz.generateMultivaluedAttributesTable(clazz)»
 		«clazz.generateForeignKeys("", ClassifierUtils.getDBTableName(clazz), schema)»
@@ -260,7 +256,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère les alters liés aux champs one to many
 	 */
-	static def generateOneToManyForeignKey(Classifier clazz){
+	 def generateOneToManyForeignKey(Classifier clazz){
 		val attributes = ClassifierUtils.getOneToManyAttributes(clazz)
 		
 		'''
@@ -270,7 +266,7 @@ public class PackageDatabaseScriptGenerator{
 		'''	
 	}
 	
-	static def generateAttributesAlterForeignKey(Property property, Classifier clazz, String additionnalName){
+	 def generateAttributesAlterForeignKey(Property property, Classifier clazz, String additionnalName){
 		val dbPropertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 		//val owner = property.owner as Classifier
 		val owner = property.type as Classifier
@@ -278,8 +274,8 @@ public class PackageDatabaseScriptGenerator{
 		val idDbName = PropertyUtils.getDatabaseName(id, id.name, "")
 		//val fieldName = idDbName + "_" + Utils.toDbName(owner.name) + "_" + dbPropertyName
 		val fieldName = idDbName + "_" + dbPropertyName
-		val schema = SqlClassifierUtils.generateSchemaName(clazz)
-		val ownerSchema = SqlClassifierUtils.generateSchemaName(owner)
+		val schema = clazz.getSchema
+		val ownerSchema = owner.getSchema
 		'''
 		
 		ALTER TABLE ONLY «schema»«ClassifierUtils.getDBTableName(clazz)»
@@ -291,7 +287,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère dans la classe l'id de la classe étendue
 	 */
-	static def generateExtendsId(Classifier clazz){
+	 def generateExtendsId(Classifier clazz){
 		val parents = clazz.generalizations
 		if(parents.length > 0){
 			'''«parents.fold("")[acc, parent |
@@ -302,7 +298,7 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateExtendId(Classifier clazz){
+	 def generateExtendId(Classifier clazz){
 		val ids = ClassifierUtils.getId(clazz)
 		val id = ids.get(0)
 		val name = id.name
@@ -312,7 +308,7 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateInterfaceAttributes(Classifier clazz, Classifier fromClass){
+	 def generateInterfaceAttributes(Classifier clazz, Classifier fromClass){
 		val interfaces = clazz.directlyRealizedInterfaces
 		if(interfaces !== null && !interfaces.empty){
 			'''
@@ -329,7 +325,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * Génère les attributs de la classe
 	 */
-	static def generateAttributes(Classifier clazz, String additionnalName, Classifier fromClass, Boolean nullable){
+	 def generateAttributes(Classifier clazz, String additionnalName, Classifier fromClass, Boolean nullable){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
 		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
@@ -345,7 +341,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère un attribut
 	 */ 
-	static def generateAttributDefinition(Property property, String additionalName, Classifier fromClass, Boolean nullable){
+	 def generateAttributDefinition(Property property, String additionalName, Classifier fromClass, Boolean nullable){
 		if(PropertyUtils.isID(property)){
 			'''«property.generateIdAttributeDefinition(additionalName)»'''
 		}else{
@@ -356,7 +352,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut id
 	 */
-	static def generateIdAttributeDefinition(Property property, String additionnalName){
+	 def generateIdAttributeDefinition(Property property, String additionnalName){
 		val name = property.name
 		var propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		'''«propertyName» «property.generateAttributType»«property.generateStringLength» NOT NULL'''
@@ -364,7 +360,7 @@ public class PackageDatabaseScriptGenerator{
 	
 	
 	
-	static def generateStringLength(Property property){
+	 def generateStringLength(Property property){
 		val length = Utils.getAttributeLength(property)
 		if(length !== null && length != 0){
 			''' varying(«length»)'''
@@ -376,7 +372,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut qui n'est pas un id
 	 */
-	static def generateNIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
+	 def generateNIdAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		if(PropertyUtils.isClassAttribute(property)){
 			'''«property.generateClassAttributeDefinition(additionnalName, fromClass, nullable)»'''
 		}else{
@@ -387,7 +383,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut lié a la classe
 	 */
-	static def generateClassAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
+	 def generateClassAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		if(Utils.isValueObject(property.type)){
 			'''«property.generateValueObjectAttributeDefinition(additionnalName, fromClass, nullable)»'''
 		}else if(Utils.isNomenclature(property.type)){
@@ -400,7 +396,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut de type value Object
 	 */
-	static def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
+	 def generateValueObjectAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		val name = property.name
 		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val type = property.type
@@ -414,12 +410,12 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut de type value enum
 	 */
-	static def generateEumAttributesDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
+	 def generateEumAttributesDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		var name = property.name
 		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val type = property.type
 		if(type instanceof Classifier){
-			var sqlType = TypeUtils.getEnumType(type)
+			var sqlType = type.getEnumType
 			'''code_«propertyName» «sqlType» «property.generateNullable(nullable)»'''
 		}
 	}
@@ -427,7 +423,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut basique
 	 */
-	static def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
+	 def generateBasicAttributeDefinition(Property property, String additionnalName, Classifier fromClass, Boolean nullable){
 		val name = property.name
 		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		'''«propertyName» «property.generateAttributType»«property.generateStringLength» «property.generateNullable(nullable)»'''
@@ -436,7 +432,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributesDefinition(Property property, String additonnalName, Classifier fromClass, Boolean nullable){
+	 def generateEntityAttributesDefinition(Property property, String additonnalName, Classifier fromClass, Boolean nullable){
 		val type = property.type
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
@@ -456,7 +452,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut de type entity
 	 */
-	static def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass, Boolean nullable){
+	 def generateEntityAttributeDefinition(Property property, Property id,  String additionnalName, Classifier fromClass, Boolean nullable){
 		val name = PropertyUtils.getName(property, property.name, "")
 		val idName = PropertyUtils.getDatabaseName(id, id.name, additionnalName)
 		val propertyName = PropertyUtils.getDatabaseName(property, name, idName)
@@ -467,7 +463,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la déclaration des ids
 	 */
-	static def generateIds(Classifier clazz){
+	 def generateIds(Classifier clazz){
 		val ids = ClassifierUtils.getId(clazz)
 		val name = ids.fold("")[acc, id |
 			val name =PropertyUtils.getDatabaseName(id, id.name, null)
@@ -477,7 +473,7 @@ public class PackageDatabaseScriptGenerator{
 				acc + '''«name»'''
 			}
 		]
-		val schema = SqlClassifierUtils.generateSchemaName(clazz)
+		val schema = clazz.getSchema
 		'''
 		
 		ALTER TABLE ONLY «schema»«ClassifierUtils.getDBTableName(clazz)»
@@ -485,7 +481,7 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateExtendsForeignKey(Classifier clazz){
+	 def generateExtendsForeignKey(Classifier clazz){
 		val parents = clazz.generalizations
 		if( parents !== null && !parents.empty){
 			'''«parents.fold("")[acc, parent |
@@ -496,7 +492,7 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateExtendForeignKey(Classifier clazz, Classifier fromClass){
+	 def generateExtendForeignKey(Classifier clazz, Classifier fromClass){
 		val ids = ClassifierUtils.getId(clazz)
 		if(ids !== null && !ids.empty){
 			val idsName = ids.fold("")[acc, id |
@@ -507,8 +503,8 @@ public class PackageDatabaseScriptGenerator{
 					acc + '''«name»'''
 				}
 			]
-			val fromSchema =  SqlClassifierUtils.generateSchemaName(fromClass)
-			val schema = SqlClassifierUtils.generateSchemaName(clazz)
+			val fromSchema =  fromClass.getSchema
+			val schema = clazz.getSchema
 			'''
 			
 			ALTER TABLE ONLY «fromSchema»«ClassifierUtils.getDBTableName(fromClass)»
@@ -522,7 +518,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère les clés étrangères
 	 */
-	static def generateForeignKeys(Classifier clazz, String additionnalName, String tableName, String fromSchema){
+	 def generateForeignKeys(Classifier clazz, String additionnalName, String tableName, String fromSchema){
 		val attributes = ClassifierUtils.getOwnedAttributes(clazz).filter[attribut |
 			 (
 				(Utils.isEntity(attribut.type) && !(attribut.multivalued)) || 
@@ -549,7 +545,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère une clé étrangère
 	 */
-	static def generateForeignKey(Property property, String additionnalName, String tableName, String schema){
+	 def generateForeignKey(Property property, String additionnalName, String tableName, String schema){
 		val fromClass = property.owner
 		val toClass = property.type
 		if(fromClass instanceof Classifier){
@@ -578,7 +574,7 @@ public class PackageDatabaseScriptGenerator{
 					}
 				]
 				
-				val toschema =  SqlClassifierUtils.generateSchemaName(toClass)
+				val toschema =  toClass.getSchema
 				return
 				'''
 				
@@ -594,11 +590,11 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère une clé étrangère liée à un attribut de type enum
 	 */
-	static def generateEnumForeignKey(Property property, String additionnalName, String tableName, String schema){
+	 def generateEnumForeignKey(Property property, String additionnalName, String tableName, String schema){
 		val type = property.type as Classifier
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
 		val owner = property.owner as Classifier 
-		val typeSchema =  SqlClassifierUtils.generateSchemaName(type)
+		val typeSchema = type.getSchema
 		'''
 		
 		ALTER TABLE ONLY «schema»«tableName»
@@ -607,7 +603,7 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateMultivaluedAttributesTable(Classifier clazz, Classifier fromClass){
+	 def generateMultivaluedAttributesTable(Classifier clazz, Classifier fromClass){
 		val attributes = ClassifierUtils.getMultivaluedOwnedAttributes(clazz)
 		
 		val interfaces = clazz.directlyRealizedInterfaces
@@ -619,7 +615,7 @@ public class PackageDatabaseScriptGenerator{
 		]»'''
 	}
 	
-	static def generateInterfaceMultivaluedAttributesTables(Interface interf, Classifier fromClass){
+	 def generateInterfaceMultivaluedAttributesTables(Interface interf, Classifier fromClass){
 		val attributes = ClassifierUtils.getOwnedAttributes(interf).filter[attribut |
 			(attribut.multivalued)
 		]
@@ -630,7 +626,7 @@ public class PackageDatabaseScriptGenerator{
 		]»'''
 	}
 	
-	static def generateMultivaluedAttributeTable(Property property, Classifier fromClass){
+	 def generateMultivaluedAttributeTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof PrimitiveType){
 			'''«property.generateMutilvaluedPTTable(fromClass)»'''
@@ -645,7 +641,7 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateMutilvaluedPTTable(Property property, Classifier fromClass){
+	 def generateMutilvaluedPTTable(Property property, Classifier fromClass){
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, null)
 		val tableName =  ClassifierUtils.getDBTableName(fromClass) + "_" + propertyName
 		val ids = ClassifierUtils.getId(fromClass) 
@@ -658,7 +654,7 @@ public class PackageDatabaseScriptGenerator{
 			}
 		]
 		
-		val schema =  SqlClassifierUtils.generateSchemaName(fromClass)
+		val schema =  fromClass.getSchema
 		'''
 		
 		CREATE TABLE «schema»«tableName»(
@@ -686,7 +682,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère une table d'association pour un attribut de type entity multivalué
 	 */
-	static def generateMutilvaluedEntityTable(Property property, Classifier fromClass){
+	 def generateMutilvaluedEntityTable(Property property, Classifier fromClass){
 		val type = property.type
 		val association = property.association
 		
@@ -729,8 +725,8 @@ public class PackageDatabaseScriptGenerator{
 					acc + '''«propertyName»'''
 				}
 			]
-			val schema =  SqlClassifierUtils.generateSchemaName(fromClass)
-			val typeSchema =  SqlClassifierUtils.generateSchemaName(type)
+			val schema =  fromClass.getSchema
+			val typeSchema =  type.getSchema
 			val data =
 			'''
 			
@@ -786,7 +782,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut id
 	 */
-	static def generateMultiIdAttributeDef(Property property, String additionnalName){
+	 def generateMultiIdAttributeDef(Property property, String additionnalName){
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, "")
 		val owner = property.owner
 		if(owner instanceof Classifier){
@@ -801,7 +797,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la définition d'un attribut id
 	 */
-	static def generateMultiIdAttributeDefinition(Property property, String additionnalName){
+	 def generateMultiIdAttributeDefinition(Property property, String additionnalName){
 		val name = property.name
 		val propertyName = PropertyUtils.getDatabaseName(property, name, additionnalName)
 		val owner = property.owner
@@ -810,7 +806,7 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateValueObjectEntityTable(Property property, Classifier fromClass){
+	 def generateValueObjectEntityTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
 			val name = PropertyUtils.getDatabaseName(property, property.name, null)
@@ -831,7 +827,7 @@ public class PackageDatabaseScriptGenerator{
 			if(attr !== null && attr != ""){
 				pkeys += ', ' + Utils.getListStringComma(type.getAttributList(newArrayList(), name))
 			}
-			val schema =  SqlClassifierUtils.generateSchemaName(fromClass)
+			val schema =  fromClass.getSchema
 			'''
 			
 			CREATE TABLE «schema»«tableName»(
@@ -858,7 +854,7 @@ public class PackageDatabaseScriptGenerator{
 		}	
 	}
 	
-	static def getAttributList(Classifier type, ArrayList<String> names, String additionnalName){
+	 def getAttributList(Classifier type, ArrayList<String> names, String additionnalName){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(type)
 		attributes.forEach[attribut |
 			if(!PropertyUtils.isNullable(attribut)){
@@ -889,7 +885,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère les tables liées a des tableaux d'enum
 	 */
-	static def generateEnumAttributTable(Property property, Classifier fromClass){
+	 def generateEnumAttributTable(Property property, Classifier fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
 			val propertyName = PropertyUtils.getDatabaseName(property, property.name, null)
@@ -905,9 +901,9 @@ public class PackageDatabaseScriptGenerator{
 				}
 			]
 			
-			val sqlType = TypeUtils.getEnumType(type)
-			val schema =  SqlClassifierUtils.generateSchemaName(fromClass)
-			val typeSchema =  SqlClassifierUtils.generateSchemaName(type)
+			val sqlType = type.getEnumType
+			val schema = fromClass.getSchema
+			val typeSchema = type.getSchema
 			'''
 			
 			CREATE TABLE «schema»«tableName»(
@@ -940,7 +936,7 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère la séquence liée a un attribut
 	 */
-	static def generateSequence(Property property){
+	 def generateSequence(Property property){
 		val owner = property.owner
 		if(owner instanceof Classifier){
 			var maxVal = '''NO MAXVALUE'''
@@ -968,8 +964,8 @@ public class PackageDatabaseScriptGenerator{
 			val propertyName = PropertyUtils.getDatabaseName(property, property.name, null)
 			val name = ClassifierUtils.getDBTableName(owner)  + "_" + propertyName
 			
-			val schema =  SqlClassifierUtils.generateSchemaName(owner)
-			val schemaseq =  SqlClassifierUtils.generateSchemaName(owner)
+			val schema =  owner.getSchema
+			val schemaseq =  owner.getSchema
 			'''
 			CREATE SEQUENCE «schema»«name»_seq
 			    START WITH «startWith»
@@ -989,13 +985,14 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateAssociationTable(AssociationClass clazz){
-		val schema = SqlClassifierUtils.generateSchemaName(clazz)
+	 def generateAssociationTable(AssociationClass clazz){
+		val schema = clazz.getSchema
+		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz)
 		'''
 		
 		CREATE TABLE «schema»«AssociationClassUtils.getDBTableName(clazz)»(
-			«clazz.generateAssociationAttributes("", clazz)»
-			«clazz.generateAttributes("", clazz, false)»
+			«clazz.generateAssociationAttributes("", clazz)»«IF !attributes.empty»,
+			«clazz.generateAttributes("", clazz, false)»«ENDIF»
 		);
 		«clazz.generateAssociationForeignKeys()»
 		
@@ -1004,7 +1001,7 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def getAssociationAttributList(AssociationClass type, ArrayList<String> names, String additionnalName){
+	 def getAssociationAttributList(AssociationClass type, ArrayList<String> names, String additionnalName){
 		val attributes = type.memberEnds
 		attributes.forEach[attribut |
 			val attrType = attribut.type
@@ -1032,7 +1029,7 @@ public class PackageDatabaseScriptGenerator{
 		/**
 	 * Génère les attributs de la classe
 	 */
-	static def generateAssociationAttributes(AssociationClass clazz, String additionnalName, Classifier fromClass){
+	 def generateAssociationAttributes(AssociationClass clazz, String additionnalName, Classifier fromClass){
 		val attributes = clazz.memberEnds
 		'''«attributes.fold("")[acc, attribut|
 			if(acc != ""){
@@ -1045,16 +1042,16 @@ public class PackageDatabaseScriptGenerator{
 		
 	}
 	
-	static def generateAssociationForeignKeys(AssociationClass clazz){
+	 def generateAssociationForeignKeys(AssociationClass clazz){
 		val members = clazz.memberEnds
 		'''«members.fold("")[acc, member |
 			acc + '''«member.generateAssociationForeignKeys(clazz)»'''
 		]»'''
 	}
 	
-	static def generateAssociationForeignKeys(Property property, AssociationClass fromClass){
+	 def generateAssociationForeignKeys(Property property, AssociationClass fromClass){
 		val type = property.type
-		val schema =  SqlClassifierUtils.generateSchemaName(fromClass)
+		val schema =  fromClass.getSchema
 		if(type instanceof Classifier){
 			if(Utils.isEntity(type)){
 				return '''«property.generateAssociationForeignKeysEntity(fromClass)»'''
@@ -1067,7 +1064,7 @@ public class PackageDatabaseScriptGenerator{
 		''''''
 	}
 	
-	static def generateAssociationForeignKeysEntity(Property property, AssociationClass fromClass){
+	 def generateAssociationForeignKeysEntity(Property property, AssociationClass fromClass){
 		val type = property.type
 		if(type instanceof Classifier){
 			val ids = ClassifierUtils.getId(type)
@@ -1091,8 +1088,8 @@ public class PackageDatabaseScriptGenerator{
 			]
 			val propName = PropertyUtils.getDatabaseName(property, property.name, null)
 			
-			val schema =  SqlClassifierUtils.generateSchemaName(fromClass)
-			val typeSchema =  SqlClassifierUtils.generateSchemaName(type)
+			val schema =  fromClass.getSchema
+			val typeSchema =  type.getSchema
 			return '''
 			
 			ALTER TABLE ONLY «schema»«AssociationClassUtils.getDBTableName(fromClass)»
@@ -1104,11 +1101,11 @@ public class PackageDatabaseScriptGenerator{
 		
 	}
 	
-	static def generateAssociationForeignKeysEnum(Property property, AssociationClass fromClass, String schema){
+	 def generateAssociationForeignKeysEnum(Property property, AssociationClass fromClass, String schema){
 		val type = property.type
 		if(type instanceof Classifier){
 			val propName = "code_" + PropertyUtils.getDatabaseName(property, property.name, null)
-			val typeSchema =  SqlClassifierUtils.generateSchemaName(type)
+			val typeSchema =  type.getSchema
 			return '''
 			
 			ALTER TABLE ONLY «schema»«AssociationClassUtils.getDBTableName(fromClass)»
@@ -1120,7 +1117,7 @@ public class PackageDatabaseScriptGenerator{
 		
 	}
 	
-	static def generateAttributType(Property property){
+	 def generateAttributType(Property property){
 		var type = TypeUtils.getDatabaseType(property.type)
 		if(type == 'character'){
 			val length = Utils.getAttributeLength(property)
@@ -1132,7 +1129,7 @@ public class PackageDatabaseScriptGenerator{
 		return type
 	}
 	
-	static def generateNullable(Property property, Boolean nullable){
+	 def generateNullable(Property property, Boolean nullable){
 		var isNullable = PropertyUtils.isNullable(property)
 		if(nullable){
 			isNullable = true
@@ -1148,11 +1145,12 @@ public class PackageDatabaseScriptGenerator{
 	/**
 	 * génère une table enum
 	 */
-	static def generateEnumTable(Classifier clazz){
+	 def generateEnumTable(Classifier clazz){
 		val hasCode = ClassifierUtils.isEnumWithCode(clazz)
-		var sqlType = TypeUtils.getEnumType(clazz)
-		val schema = SqlClassifierUtils.generateSchemaName(clazz);
-		val attributes = ClassifierUtils.getOwnedAttributes(clazz);
+		var sqlType = clazz.getEnumType
+		var sqlTypeLibelle = getEnumLibelleType
+		val schema = clazz.getSchema
+		val attributes = ClassifierUtils.getOwnedAttributes(clazz)
 		
 		// Si l'enum a des doublons dans le code celui ci sera ignoré et généré comme une suite classique
 		var values = newArrayList
@@ -1177,7 +1175,7 @@ public class PackageDatabaseScriptGenerator{
 		
 		CREATE TABLE «schema»«ClassifierUtils.getDBTableName(clazz)»(
 			code «sqlType» NOT NULL,
-			libelle text
+			libelle «sqlTypeLibelle»
 		);
 		
 		ALTER TABLE ONLY «schema»«ClassifierUtils.getDBTableName(clazz)»
@@ -1206,8 +1204,8 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateInsertValue(Property prop, Classifier owner){
-		val schema = SqlClassifierUtils.generateSchemaName(owner)
+	 def generateInsertValue(Property prop, Classifier owner){
+		val schema = owner.getSchema
 		val hasCode = ClassifierUtils.isEnumWithCode(owner)
 		val code = Utils.getNomenclatureCode(prop)
 		var libelle = Utils.getNomenclatureLibelle(prop)
@@ -1222,22 +1220,22 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateInsertValue(Property prop, Classifier owner, Integer value){
-		val schema = SqlClassifierUtils.generateSchemaName(owner)
+	 def generateInsertValue(Property prop, Classifier owner, Integer value){
+		val schema = owner.getSchema
 		var libelle = Utils.getNomenclatureLibelle(prop)
 		'''
 		INSERT INTO «schema»«ClassifierUtils.getDBTableName(owner)» (code, libelle) VALUES («value», '«libelle»');
 		'''
 	}
 	
-	static def generateIndex(Classifier clazz){
+	 def generateIndex(Classifier clazz){
 		'''
 		
 		«clazz.generateNMAttributesIndex(clazz, "")»
 		'''
 	}
 	
-	static def generateNMAttributesIndex(Classifier clazz, Classifier fromClass, String additionnalName){
+	 def generateNMAttributesIndex(Classifier clazz, Classifier fromClass, String additionnalName){
 		val attributes = ClassifierUtils.getNotMultivaluedOwnedAttributes(clazz).filter[att |
 			val index = PropertyUtils.getIndex(att)
 			return (index == true)
@@ -1249,7 +1247,7 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateAttributesIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+	 def generateAttributesIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
 		if(PropertyUtils.isClassAttribute(property)){
 			'''«property.generateClassAttributeIndex(clazz, fromClass, additionnalName)»'''
 		}else{
@@ -1257,9 +1255,9 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateBasicAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+	 def generateBasicAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
 		val tableName = ClassifierUtils.getDBTableName(fromClass)
-		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val schema = clazz.getSchema
 		val name = property.name
 		var propertyName = PropertyUtils.getDatabaseName(property, name, "")
 		if(additionnalName !== null && additionnalName !== ""){
@@ -1269,7 +1267,7 @@ public class PackageDatabaseScriptGenerator{
 		'''«schema.generateIndexString(tableName, propertyName)»'''
 	}
 	
-	static def generateClassAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+	 def generateClassAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
 		if(Utils.isValueObject(property.type)){
 			'''«property.generateVOAttributeIndex(clazz, fromClass, additionnalName)»'''
 		}else if(Utils.isNomenclature(property.type)){
@@ -1279,7 +1277,7 @@ public class PackageDatabaseScriptGenerator{
 		}
 	}
 	
-	static def generateVOAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+	 def generateVOAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
 		val type = property.type as Classifier
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, additionnalName)
 		'''
@@ -1287,9 +1285,9 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateEumAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+	 def generateEumAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
 		val tableName = ClassifierUtils.getDBTableName(fromClass)
-		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val schema = clazz.getSchema
 		val name = property.name
 		var propertyName = PropertyUtils.getDatabaseName(property, name, "")
 		if(additionnalName !== null && additionnalName !== ""){
@@ -1300,7 +1298,7 @@ public class PackageDatabaseScriptGenerator{
 		'''«schema.generateIndexString(tableName, propertyName)»'''
 	}
 	
-	static def generateEntityAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
+	 def generateEntityAttributeIndex(Property property, Classifier clazz, Classifier fromClass, String additionnalName){
 		val type = property.type as Classifier
 		val ids = ClassifierUtils.getId(type)
 		'''
@@ -1310,9 +1308,9 @@ public class PackageDatabaseScriptGenerator{
 		'''
 	}
 	
-	static def generateEntityIdIndex(Property id, Classifier clazz, Classifier fromClass, Property property, String additionnalName){
+	 def generateEntityIdIndex(Property id, Classifier clazz, Classifier fromClass, Property property, String additionnalName){
 		val tableName = ClassifierUtils.getDBTableName(fromClass)
-		val schema = SqlClassifierUtils.generateSchemaName(clazz);
+		val schema = clazz.getSchema
 		val name = id.name
 		var idName = PropertyUtils.getDatabaseName(id, name, additionnalName)
 		val propertyName = PropertyUtils.getDatabaseName(property, property.name, "")
@@ -1321,10 +1319,29 @@ public class PackageDatabaseScriptGenerator{
 		'''«schema.generateIndexString(tableName, idName)»'''
 	}
 	
-	static def generateIndexString(String schema, String tableName, String propertyName){
+	 def generateIndexString(String schema, String tableName, String propertyName){
 		'''
 		CREATE INDEX ON «schema»«tableName» («propertyName»);
 		'''
 	}
 	
+	def getEnumType(Classifier type){
+		return TypeUtils.getEnumPostgreslType(type)
+	}
+	
+	def getEnumLibelleType(){
+		return "text"
+	}
+	
+	def getSchema(Classifier clazz){
+		return SqlClassifierUtils.generateSchemaName(clazz);
+	}
+	
+	def getSchemaName(Package pkg){
+		return Utils.getSchemaName(pkg);
+	}
+	
+	def getClassSchema(Classifier clazz){
+		return ClassifierUtils.getClassSchema(clazz)
+	}
 }

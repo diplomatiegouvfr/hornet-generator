@@ -113,6 +113,7 @@ public class HornetModel {
 	 public Stereotype entity;
 	 public Property entityGenerated;
 	 public Property entityTableName;
+	 public Property entitySchema;
 	 
 	 public Stereotype valueObject;
 	 public Property valueObjectGenerated;
@@ -120,8 +121,10 @@ public class HornetModel {
 	 public Stereotype nomenclature;
 	 public Property nomenclatureTableName;
 	 public Property nomenclatureGenerated;
+	 public Property nomenclatureSchema;
 	 
 	 public Stereotype associationTable;
+	 public Property associationTableSchema;
 	 
 	 public Stereotype associationLink;
 	 
@@ -213,11 +216,13 @@ public class HornetModel {
 		
 		entityGenerated = TestUtils.createAttribute(entity, Utils.MODEL_ENTITY_GENERATED, booleanPT, 0, 1);
 		entityTableName = TestUtils.createAttribute(entity, Utils.MODEL_ENTITY_TABLENAME, stringPT, 0, 1);
+		entitySchema = TestUtils.createAttribute(entity, Utils.MODEL_DOMAIN_SCHEMA, stringPT, 0, 1);
 		
 		valueObjectGenerated = TestUtils.createAttribute(valueObject, Utils.MODEL_VALUEOBJECT_GENERATED, booleanPT, 0, 1);
 		
 		nomenclatureTableName = TestUtils.createAttribute(nomenclature, Utils.MODEL_NOMENCLATURE_TABLENAME, stringPT, 0, 1);
 		nomenclatureGenerated = TestUtils.createAttribute(nomenclature, Utils.MODEL_NOMENCLATURE_GENERATED, booleanPT, 0, 1);
+		nomenclatureSchema = TestUtils.createAttribute(nomenclature, Utils.MODEL_DOMAIN_SCHEMA, stringPT, 0, 1);
 		
 		attributeColumnName = TestUtils.createAttribute(attribute, Utils.MODEL_ATTRIBUTE_COLUMNNAME, stringPT, 0, 1);
 		attributeLength = TestUtils.createAttribute(attribute, Utils.MODEL_ATTRIBUTE_LENGTH, integerPT, 0, 1);
@@ -234,6 +239,8 @@ public class HornetModel {
 		sequenceMinValue = TestUtils.createAttribute(sequence, Utils.MODEL_SEQUENCE_MINVALUE, integerPT, 0, 1);
 		sequenceCache = TestUtils.createAttribute(sequence, Utils.MODEL_SEQUENCE_CACHE, integerPT, 0, 1);
 		sequenceCycle = TestUtils.createAttribute(sequence, Utils.MODEL_SEQUENCE_CYCLE, booleanPT, 0, 1);
+		
+		associationTableSchema = TestUtils.createAttribute(associationTable, Utils.MODEL_DOMAIN_SCHEMA, stringPT, 0, 1);
 		
 		TestUtils.createGeneralization(keyAttribute, attribute);
 		

@@ -84,7 +84,9 @@ import org.eclipse.uml2.uml.Package;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateUserScriptGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseScriptGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseSqLiteScriptGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageUpdateDatabaseScriptGenerator;
 
 public class PackageGenerator{
@@ -94,7 +96,9 @@ public class PackageGenerator{
 		
 		Utils.console.out.println("PackageGenerator.generateDatabaseScript : "  + pakkage.getName() + ", fichier : " + fileName);
 		
-		fileSystemAccess.generateFile(fileName, PackageDatabaseScriptGenerator.generateCode(pakkage).toString());
+		PackageDatabaseScriptGenerator generator = new PackageDatabaseScriptGenerator();
+		
+		fileSystemAccess.generateFile(fileName, generator.generateCode(pakkage).toString());
 	}
 	
 	public static void generateUpdateDatabaseScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
@@ -103,5 +107,23 @@ public class PackageGenerator{
 		Utils.console.out.println("PackageGenerator.generateUpdateDatabaseScript : "  + pakkage.getName() + ", fichier : " + fileName);
 		
 		fileSystemAccess.generateFile(fileName, PackageUpdateDatabaseScriptGenerator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateCreateUserScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = GeneratorUtils.getCreateUserScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateCreateUserScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		fileSystemAccess.generateFile(fileName, PackageCreateUserScriptGenerator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateDatabaseSqliteScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = GeneratorUtils.getDatabaseSqliteScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateDatabaseSqliteScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		PackageDatabaseSqLiteScriptGenerator generator = new PackageDatabaseSqLiteScriptGenerator();
+		
+		fileSystemAccess.generateFile(fileName, generator.generateCode(pakkage).toString());
 	}
 }

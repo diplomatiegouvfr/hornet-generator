@@ -699,7 +699,7 @@ class ClassifierUtils {
 	}
 	
 	/**
-	 * retourne la valeur de l'attribut tableName
+	 * retourne la valeur de l'attribut schema
 	 */
 	static def getClassSchema(Classifier clazz){
 		if(Utils.isEntity(clazz)){

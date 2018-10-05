@@ -88,6 +88,7 @@ import org.eclipse.uml2.uml.PackageableElement;
 
 import fr.gouv.diplomatie.papyrus.codegen.annotation.lombok.generators.LombokAnnotationGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.java.transformations.ProjectJPAEntityElementsCreator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.transformations.ProjectCreateUsersScriptElementsCreator;
 import fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers.HornetCodeHandler;
 import fr.gouv.diplomatie.papyrus.codegen.ui.validators.JavaPluginModelValidator;
 
@@ -108,6 +109,9 @@ public class GenerateJPAEntityHandler extends HornetCodeHandler {
 	public void initiateAndGenerate(IProject project, PackageableElement packageableElement) {
 		this.creator = new ProjectJPAEntityElementsCreator(project);
 		((ProjectJPAEntityElementsCreator)this.creator).addAnnotationGenerator(new LombokAnnotationGenerator());
+		generate(packageableElement);
+		
+		this.creator = new ProjectCreateUsersScriptElementsCreator(project);
 		generate(packageableElement);
 	}
 	

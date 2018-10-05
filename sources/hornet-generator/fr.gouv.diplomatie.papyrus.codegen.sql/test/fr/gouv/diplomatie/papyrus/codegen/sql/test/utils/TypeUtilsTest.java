@@ -20,7 +20,7 @@ public class TypeUtilsTest {
 	@Test
 	public void testGetEnumType() {
 		 Class class_ = TestUtils.getClass("model", "package", "class", false);
-		 assertEquals("integer",TypeUtils.getEnumType(class_));
+		 assertEquals("integer",TypeUtils.getEnumPostgreslType(class_));
 	}
 
 	@Test
