@@ -7,3 +7,10 @@
 /.PackageCreateUserScriptGenerator.java._trace
 /.PackageSqlLiteDatabaseScriptGenerator.java._trace
 /.PackageDatabaseSqLiteScriptGenerator.java._trace
+/.PackageCreateDboScriptGenerator.java._trace
+/.PackageCreateBddScriptGenerator.java._trace
+/.PackageCreateSchemaScriptGenerator.java._trace
+/.PackageCreateUserGroupsScriptGenerator.java._trace
+/.PackageCreateUsersScriptGenerator.java._trace
+/.PackageCreateObjectScriptGenerator.java._trace
+/PackageCreateObjectScriptGenerator.java

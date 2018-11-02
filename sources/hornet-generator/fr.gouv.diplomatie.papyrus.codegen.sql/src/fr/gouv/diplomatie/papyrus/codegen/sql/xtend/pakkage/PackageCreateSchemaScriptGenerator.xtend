@@ -77,47 +77,92 @@
  * @version v1.2.1
  * @license CECILL-2.1
  */
-package fr.gouv.diplomatie.papyrus.codegen.sql.transformations;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.papyrus.designer.languages.common.base.HierarchyLocationStrategy;
-import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
-import org.eclipse.papyrus.infra.tools.file.ProjectBasedFileAccess;
-import org.eclipse.uml2.uml.PackageableElement;
-
-import fr.gouv.diplomatie.papyrus.codegen.sql.generators.PackageGenerator;
+package fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage;
 
 import org.eclipse.uml2.uml.Package;
+import fr.gouv.diplomatie.papyrus.codegen.sql.utils.SqlUtils
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ClassifierUtils
+import org.eclipse.uml2.uml.Classifier
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
+import org.eclipse.uml2.uml.AssociationClass
+import fr.gouv.diplomatie.papyrus.codegen.sql.utils.SqlClassifierUtils
 
-public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
+class PackageCreateSchemaScriptGenerator{
 	
-	public ProjectDatabaseScriptElementsCreator(IProject project) {
-		super(new ProjectBasedFileAccess(project), new HierarchyLocationStrategy(), "");
+
+	def generateCode(Package pakkage){
+		
+		val model = pakkage.model
+		val nomBase = SqlUtils.getDbName(model)
+		
+		val packages = model.ownedElements.filter[elem |
+			elem instanceof Package
+		]
+		val classes = pakkage.getOwnedTypes().filter[type|
+			Utils.isEntity(type) && ClassifierUtils.canBeGenerated(type as Classifier)
+		]
+		
+		val enums = pakkage.getOwnedTypes().filter[type|
+			Utils.isNomenclature(type) && ClassifierUtils.canBeGenerated(type as Classifier)
+		]
+		
+		val associationsClasses = model.getOwnedTypes().filter[type|
+			type instanceof AssociationClass
+		]
+		
+		val assoInPakkage = pakkage.getOwnedTypes().filter[type|
+			type instanceof AssociationClass
+		]
+
+		'''
+		«packages.fold("")[acc, pkg |
+			acc +  '''«(pkg as Package).generateCreateSchema(nomBase as String)»'''
+		]»
+		«classes.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema(nomBase as String)»'''
+		]»
+		«enums.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema(nomBase as String)»'''
+		]»
+		«associationsClasses.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema(nomBase as String)»'''
+		]»
+		«IF pakkage != model»
+		«assoInPakkage.fold("")[acc, clazz |
+			acc + '''«(clazz as Classifier).generateCreateSchema(nomBase as String)»'''
+		]»
+		«ENDIF»
+		'''
 	}
 	
-	/**
-	 * génère les scripts de création et de mise à jour de la base de données
-	 * @param packageableElement
-	 * @param progressMonitor
-	 */
-	@Override
-	protected void createPackageableElementFile(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
-		
-		if(packageableElement instanceof Package) {
-			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateUpdateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateDatabaseSqliteScript((Package) packageableElement, fileSystemAccess);
-			
-			//----------------
-			PackageGenerator.generateCreateBddScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateDboScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateObjectScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateSchemaScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserGroupsScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUsersScript((Package) packageableElement, fileSystemAccess);
-		}
+	def generateCreateSchema(Package pkg, String nomBase){
+		val schema = pkg.getSchemaName
+		return 
+		'''«IF schema !== null && schema != ""»
+		CREATE SCHEMA «schema»;
+		ALTER SCHEMA «schema» OWNER TO «nomBase»_dbo;«ENDIF»
+		'''
+	}
+	
+	 def generateCreateSchema(Classifier clazz, String nomBase){
+		val schema = clazz.getClassSchema
+		return 
+		'''«IF schema !== null && schema != ""»
+		CREATE SCHEMA «schema»;
+		ALTER SCHEMA «schema» OWNER TO «nomBase»_dbo;«ENDIF»
+		'''
+	}
+	
+	def getSchema(Classifier clazz){
+		return SqlClassifierUtils.generateSchemaName(clazz);
+	}
+	
+	def getSchemaName(Package pkg){
+		return Utils.getSchemaName(pkg);
+	}
+	
+	def getClassSchema(Classifier clazz){
+		return ClassifierUtils.getClassSchema(clazz)
 	}
 
 }

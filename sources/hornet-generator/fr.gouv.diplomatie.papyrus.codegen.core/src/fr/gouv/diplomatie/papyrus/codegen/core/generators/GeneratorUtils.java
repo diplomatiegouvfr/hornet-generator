@@ -177,7 +177,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getDatabaseScriptPath(Package pakkage) {
-		return DATABASE_REPOSITORY + "createTablesPostgres";
+		return DATABASE_REPOSITORY + "old" + SEP_CHAR + "createTablesPostgres";
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getDatabaseSqliteScriptPath(Package pakkage) {
-		return DATABASE_REPOSITORY + "createTablesSqlite";
+		return DATABASE_REPOSITORY + "old" + SEP_CHAR + "createTablesSqlite";
 	}
 	
 	/**
@@ -193,7 +193,7 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getCreateUserScriptPath(Package pakkage) {
-		return DATABASE_REPOSITORY + "createUsersPostgres";
+		return DATABASE_REPOSITORY + "old" + SEP_CHAR + "createUsersPostgres";
 	}
 	
 	/**
@@ -201,8 +201,9 @@ public class GeneratorUtils {
 	 * @return
 	 */
 	public static String getUpdateDatabaseScriptPath(Package pakkage) {
-		return DATABASE_REPOSITORY + "updateTablesPostgres";
+		return DATABASE_REPOSITORY + "old" + SEP_CHAR + "updateTablesPostgres";
 	}
+
 	
 	/**
 	 * chemin du fichier modelDAO

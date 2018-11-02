@@ -77,47 +77,27 @@
  * @version v1.2.1
  * @license CECILL-2.1
  */
-package fr.gouv.diplomatie.papyrus.codegen.sql.transformations;
+package fr.gouv.diplomatie.papyrus.codegen.sql.utils
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.papyrus.designer.languages.common.base.HierarchyLocationStrategy;
-import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
-import org.eclipse.papyrus.infra.tools.file.ProjectBasedFileAccess;
-import org.eclipse.uml2.uml.PackageableElement;
+import org.eclipse.uml2.uml.Model
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils
 
-import fr.gouv.diplomatie.papyrus.codegen.sql.generators.PackageGenerator;
-
-import org.eclipse.uml2.uml.Package;
-
-public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
+class SqlUtils{
 	
-	public ProjectDatabaseScriptElementsCreator(IProject project) {
-		super(new ProjectBasedFileAccess(project), new HierarchyLocationStrategy(), "");
-	}
+	public static var MODEL_APPLICATION_DBNAME = 'dbName';
 	
 	/**
-	 * génère les scripts de création et de mise à jour de la base de données
-	 * @param packageableElement
-	 * @param progressMonitor
+	 * retourne le nom de la database
+	 * par défaut: le nom du model en snake case
 	 */
-	@Override
-	protected void createPackageableElementFile(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
-		
-		if(packageableElement instanceof Package) {
-			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateUpdateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateDatabaseSqliteScript((Package) packageableElement, fileSystemAccess);
-			
-			//----------------
-			PackageGenerator.generateCreateBddScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateDboScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateObjectScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateSchemaScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserGroupsScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUsersScript((Package) packageableElement, fileSystemAccess);
+	static def getDbName(Model model){
+		if(Utils.hasStereotype(model,Utils.MODEL_APPLICATION )){
+			val dbName =  Utils.getStereotypePropertyValue(model, Utils.MODEL_APPLICATION, MODEL_APPLICATION_DBNAME)
+			if(dbName !== null && dbName != ""){
+				return dbName
+			}
 		}
+		return Utils.toSnakeCase(model.name)
 	}
-
+	
 }

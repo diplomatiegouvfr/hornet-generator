@@ -70,54 +70,91 @@
  */
 
 /**
- * fr.gouv.diplomatie.papyrus.codegen.sql - Générateur de code sql pour 
- * des applications Hornet JS
+ * fr.gouv.diplomatie.papyrus.codegen.core - Ensembles des outils mis à dispositions
+ * pour l'écriture d'un générateur de code Hornet
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
  * @version v1.2.1
  * @license CECILL-2.1
  */
-package fr.gouv.diplomatie.papyrus.codegen.sql.transformations;
+package fr.gouv.diplomatie.papyrus.codegen.sql.utils;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.papyrus.designer.languages.common.base.HierarchyLocationStrategy;
-import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
-import org.eclipse.papyrus.infra.tools.file.ProjectBasedFileAccess;
-import org.eclipse.uml2.uml.PackageableElement;
-
-import fr.gouv.diplomatie.papyrus.codegen.sql.generators.PackageGenerator;
-
+import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
+import java.io.File;
 
-public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
-	
-	public ProjectDatabaseScriptElementsCreator(IProject project) {
-		super(new ProjectBasedFileAccess(project), new HierarchyLocationStrategy(), "");
+import org.eclipse.uml2.uml.Classifier;
+
+import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.ModelUtils;
+import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
+
+/**
+ * classe utilitaire pour les noms et chemins de fichier
+ *
+ */
+public class SqlGeneratorUtils {
+
+	/**
+	 * chemin du fichier de création de la base de données
+	 * @return
+	 */
+	public static String getCreateBddScriptPath(Package pakkage) {
+		Model model = pakkage.getModel();
+		String nomBase = (String) SqlUtils.getDbName(model);
+		return GeneratorUtils.DATABASE_REPOSITORY + nomBase + "_create_bdd";
 	}
 	
 	/**
-	 * génère les scripts de création et de mise à jour de la base de données
-	 * @param packageableElement
-	 * @param progressMonitor
+	 * chemin du fichier de création du dbo
+	 * @return
 	 */
-	@Override
-	protected void createPackageableElementFile(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
-		
-		if(packageableElement instanceof Package) {
-			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateUpdateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateDatabaseSqliteScript((Package) packageableElement, fileSystemAccess);
-			
-			//----------------
-			PackageGenerator.generateCreateBddScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateDboScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateObjectScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateSchemaScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserGroupsScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUsersScript((Package) packageableElement, fileSystemAccess);
-		}
+	public static String getCreateDboScriptPath(Package pakkage) {
+		Model model = pakkage.getModel();
+		String nomBase = (String) SqlUtils.getDbName(model);
+		return GeneratorUtils.DATABASE_REPOSITORY + nomBase + "_create_dbo";
 	}
-
+	
+	/**
+	 * chemin du fichier de création des objets de la base
+	 * @return
+	 */
+	public static String getCreateObjectScriptPath(Package pakkage) {
+		Model model = pakkage.getModel();
+		String nomBase = (String) SqlUtils.getDbName(model);
+		return GeneratorUtils.DATABASE_REPOSITORY + nomBase + "_create_objects";
+	}
+	
+	/**
+	 * chemin du fichier de création des schema
+	 * @return
+	 */
+	
+	public static String getCreateSchemaScriptPath(Package pakkage) {
+		Model model = pakkage.getModel();
+		String nomBase = (String) SqlUtils.getDbName(model);
+		return GeneratorUtils.DATABASE_REPOSITORY + nomBase + "_create_schemas";
+	}
+	
+	/**
+	 * chemin du fichier de création des groupes d'utilisateurs
+	 * @return
+	 */
+	
+	public static String getCreateUserGroupsScriptPath(Package pakkage) {
+		Model model = pakkage.getModel();
+		String nomBase = (String) SqlUtils.getDbName(model);
+		return GeneratorUtils.DATABASE_REPOSITORY + nomBase + "_create_groups";
+	}
+	
+	/**
+	 * chemin du fichier de création des utilisateurs
+	 * @return
+	 */
+	public static String getCreateUsersScriptPath(Package pakkage) {
+		Model model = pakkage.getModel();
+		String nomBase = (String) SqlUtils.getDbName(model);
+		return GeneratorUtils.DATABASE_REPOSITORY + nomBase + "_create_users";
+	}
+	
 }

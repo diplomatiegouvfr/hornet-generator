@@ -16,5 +16,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
  org.junit
 Export-Package: fr.gouv.diplomatie.papyrus.codegen.sql.generators,
  fr.gouv.diplomatie.papyrus.codegen.sql.transformations,
+ fr.gouv.diplomatie.papyrus.codegen.sql.utils,
  fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage
 Import-Package: org.eclipse.ui.console

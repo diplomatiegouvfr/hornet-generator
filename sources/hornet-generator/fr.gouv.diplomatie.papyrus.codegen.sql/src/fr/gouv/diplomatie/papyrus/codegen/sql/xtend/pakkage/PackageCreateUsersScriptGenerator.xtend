@@ -77,47 +77,33 @@
  * @version v1.2.1
  * @license CECILL-2.1
  */
-package fr.gouv.diplomatie.papyrus.codegen.sql.transformations;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.papyrus.designer.languages.common.base.HierarchyLocationStrategy;
-import org.eclipse.papyrus.designer.languages.common.base.ModelElementsCreator;
-import org.eclipse.papyrus.infra.tools.file.ProjectBasedFileAccess;
-import org.eclipse.uml2.uml.PackageableElement;
-
-import fr.gouv.diplomatie.papyrus.codegen.sql.generators.PackageGenerator;
+package fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage;
 
 import org.eclipse.uml2.uml.Package;
+import fr.gouv.diplomatie.papyrus.codegen.sql.utils.SqlUtils
 
-public class ProjectDatabaseScriptElementsCreator extends ModelElementsCreator {
+class PackageCreateUsersScriptGenerator{
 	
-	public ProjectDatabaseScriptElementsCreator(IProject project) {
-		super(new ProjectBasedFileAccess(project), new HierarchyLocationStrategy(), "");
-	}
-	
-	/**
-	 * génère les scripts de création et de mise à jour de la base de données
-	 * @param packageableElement
-	 * @param progressMonitor
-	 */
-	@Override
-	protected void createPackageableElementFile(PackageableElement packageableElement, IProgressMonitor progressMonitor) {
+
+	static def generateCode(Package pakkage){
+
+		val model = pakkage.model
+		val nomBase = SqlUtils.getDbName(model)
+		'''
+		/* Roles hérités - utilisateurs */
 		
-		if(packageableElement instanceof Package) {
-			PackageGenerator.generateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateUpdateDatabaseScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateDatabaseSqliteScript((Package) packageableElement, fileSystemAccess);
-			
-			//----------------
-			PackageGenerator.generateCreateBddScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateDboScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateObjectScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateSchemaScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUserGroupsScript((Package) packageableElement, fileSystemAccess);
-			PackageGenerator.generateCreateUsersScript((Package) packageableElement, fileSystemAccess);
-		}
+		CREATE ROLE «nomBase»_user WITH LOGIN PASSWORD 'user';
+		COMMENT ON ROLE «nomBase»_user IS 'accès de l application';
+		GRANT role_«nomBase»_maj TO «nomBase»_user;
+		
+		CREATE ROLE «nomBase»_lec WITH LOGIN PASSWORD 'lec';
+		COMMENT ON ROLE «nomBase»_lec IS 'accès en lecture seule';
+		GRANT role_«nomBase»_lec TO «nomBase»_lec;
+		
+		CREATE ROLE «nomBase»_supervision WITH LOGIN PASSWORD 'supervision';
+		COMMENT ON ROLE «nomBase»_supervision IS 'accès des outils de supervision';
+		GRANT role_«nomBase»_supervision TO «nomBase»_supervision;
+		'''
 	}
 
 }

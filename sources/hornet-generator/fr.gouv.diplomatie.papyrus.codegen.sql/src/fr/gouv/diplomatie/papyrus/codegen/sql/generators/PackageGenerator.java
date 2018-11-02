@@ -84,7 +84,14 @@ import org.eclipse.uml2.uml.Package;
 
 import fr.gouv.diplomatie.papyrus.codegen.core.generators.GeneratorUtils;
 import fr.gouv.diplomatie.papyrus.codegen.core.utils.Utils;
+import fr.gouv.diplomatie.papyrus.codegen.sql.utils.SqlGeneratorUtils;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateBddScriptGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateDboScriptGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateObjectScriptGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateSchemaScriptGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateUserGroupsScriptGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateUserScriptGenerator;
+import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageCreateUsersScriptGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseScriptGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageDatabaseSqLiteScriptGenerator;
 import fr.gouv.diplomatie.papyrus.codegen.sql.xtend.pakkage.PackageUpdateDatabaseScriptGenerator;
@@ -126,4 +133,59 @@ public class PackageGenerator{
 		
 		fileSystemAccess.generateFile(fileName, generator.generateCode(pakkage).toString());
 	}
+	
+	//--------------------------------------------
+	
+	public static void generateCreateBddScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = SqlGeneratorUtils.getCreateBddScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateCreateBddScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		fileSystemAccess.generateFile(fileName, PackageCreateBddScriptGenerator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateCreateDboScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = SqlGeneratorUtils.getCreateDboScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateCreateDboScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		fileSystemAccess.generateFile(fileName, PackageCreateDboScriptGenerator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateCreateObjectScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = SqlGeneratorUtils.getCreateObjectScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateCreateObjectScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		PackageCreateObjectScriptGenerator generator = new PackageCreateObjectScriptGenerator();
+		
+		fileSystemAccess.generateFile(fileName, generator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateCreateSchemaScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = SqlGeneratorUtils.getCreateSchemaScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateCreateSchemaScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		PackageCreateSchemaScriptGenerator generator = new PackageCreateSchemaScriptGenerator();
+
+		fileSystemAccess.generateFile(fileName, generator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateCreateUserGroupsScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = SqlGeneratorUtils.getCreateUserGroupsScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateCreateUserGroupsScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		fileSystemAccess.generateFile(fileName, PackageCreateUserGroupsScriptGenerator.generateCode(pakkage).toString());
+	}
+	
+	public static void generateCreateUsersScript(Package pakkage, IPFileSystemAccess fileSystemAccess) {
+		String fileName = SqlGeneratorUtils.getCreateUsersScriptPath(pakkage) + ".sql";
+		
+		Utils.console.out.println("PackageGenerator.generateCreateUsersScript : "  + pakkage.getName() + ", fichier : " + fileName);
+		
+		fileSystemAccess.generateFile(fileName, PackageCreateUsersScriptGenerator.generateCode(pakkage).toString());
+	}
+	
 }
