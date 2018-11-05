@@ -720,13 +720,13 @@ class PackageModelDaoClassGenerator{
 							name = member.get(0).name
 						}
 						val tableName = owner.name + Utils.getFirstToUpperCase(Utils.addAdditionnalName(additionnalName, property.name))
-						val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
+						//val entityName = fromClass.name + Utils.getFirstToUpperCase(property.name)
 						acc + generateInitRelationBelongsToMany(
 							'''this.«Utils.getFirstToLowerCase(fromClass.name)»Entity''',
 							'''this.«Utils.getFirstToLowerCase(owner.name)»Entity''',
 							'''"«name»"''',
 							'''"«idName»"''',
-							'''this.«Utils.getFirstToLowerCase(entityName)»Entity'''
+							'''this.«Utils.getFirstToLowerCase(tableName)»Entity'''
 						)//"«Utils.toDbName(tableName)»"
 					]»
 					'''
