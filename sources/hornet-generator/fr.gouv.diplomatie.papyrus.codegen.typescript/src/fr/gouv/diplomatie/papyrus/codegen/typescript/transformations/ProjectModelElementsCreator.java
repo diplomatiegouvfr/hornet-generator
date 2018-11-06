@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.transformations;
@@ -151,6 +151,7 @@ public class ProjectModelElementsCreator extends HornetModelElementsCreator {
 		if(ClassifierUtils.canBeGenerated(clazz)) {
 			ClassifierGenerator.generateValueObjectMetierClass(clazz, fileSystemAccess);
 			ClassifierGenerator.generateAttributesInterface(clazz, fileSystemAccess);
+			ClassifierGenerator.generateDto(clazz, fileSystemAccess);
 		}else {
 			Utils.console.warning.println("La classe "+ clazz.getName() + " ne sera pas générée car elle possède une propriété generated à false");
 		}

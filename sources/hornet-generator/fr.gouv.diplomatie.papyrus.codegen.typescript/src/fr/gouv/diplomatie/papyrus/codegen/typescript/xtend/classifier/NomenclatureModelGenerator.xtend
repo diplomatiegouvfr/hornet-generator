@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
@@ -87,17 +87,17 @@ public class NomenclatureModelGenerator{
 	
 	static def generateCode(Classifier clazz){
 		'''
-		import Sequelize = require("sequelize");
+		import sequelize = require("sequelize");
 		
-		export const «ClassifierUtils.getModelName(clazz)»: Sequelize.DefineAttributes={
+		export const «ClassifierUtils.getModelName(clazz)»: sequelize.DefineAttributes={
 		    code: {
-		        type: Sequelize.«TypeUtils.getEnumSequelizeType(clazz)»,
+		        type: sequelize.«TypeUtils.getEnumSequelizeType(clazz)»,
 		        field: "code",
 		        allowNull: false,
 		        primaryKey: true,
 		    },
 		    libelle: {
-		        type: Sequelize.TEXT,
+		        type: sequelize.TEXT,
 		        field: "libelle",
 		        allowNull: false,
 		    },

@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
@@ -106,8 +106,9 @@ public class ClassifierDtoClassGenerator{
 		    «clazz.generateExtendsAttributes»
 		    «clazz.generateInterfaceAttributes»
 		    «clazz.generateAttributes(clazz)»
+		    «IF !Utils.isValueObject(clazz)»
 		    «clazz.generateAssociationAttributes»
-		    «clazz.generateManyToManyAttributes»
+		    «clazz.generateManyToManyAttributes»«ENDIF»
 		}
 		
 		«clazz.generateMultivaluedAttributeDto»
@@ -140,7 +141,7 @@ public class ClassifierDtoClassGenerator{
 	static def generateManyToManyAttribute(Property prop, Classifier clazz){
 		val type = prop.type as Classifier 
 		'''
-		
+
 		@Map(«ClassifierUtils.getDtoClassName(type)»)
 		«prop.name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 		'''
@@ -163,11 +164,11 @@ public class ClassifierDtoClassGenerator{
 		val idName = Utils.getFirstToLowerCase(id.name) + Utils.getFirstToUpperCase(fieldName)
 		val alias = fieldName + '.' + Utils.getFirstToLowerCase(id.name)
 		'''
-		
+
 		@Map()
 		@Alias("«idName»", "«alias»")
 		«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
-		
+
 		@Map(«ClassifierUtils.getDtoClassName(owner)»)
 		«fieldName»: «ClassifierUtils.getDtoClassName(owner)»;
 		'''
@@ -307,7 +308,7 @@ public class ClassifierDtoClassGenerator{
 			'''«parents.fold("")[acc, parent |
 				acc + 
 				'''
-				
+
 				@Map(«ClassifierUtils.getDtoClassName(parent.general)»)
 				«Utils.getFirstToLowerCase(parent.general.name)»: «ClassifierUtils.getDtoClassName(parent.general)»;
 				'''
@@ -404,7 +405,7 @@ public class ClassifierDtoClassGenerator{
 			}else{
 				val tableName = Utils.addAdditionnalName(fromClass.name, property.name)
 				'''
-				
+
 				@Map()
 				«name»: Array<«Utils.getFirstToUpperCase(tableName)»DTO>;
 				'''
@@ -435,7 +436,7 @@ public class ClassifierDtoClassGenerator{
 				«ids.fold("")[acc, id |
 					acc + '''«property.generateEntityAttribute(id, names)»'''
 				]»
-				
+
 				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«alias»
 				«name»: «ClassifierUtils.getDtoClassName(type)»;
@@ -443,7 +444,7 @@ public class ClassifierDtoClassGenerator{
 				
 			}else{
 				return '''
-				
+
 				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«alias»
 				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
@@ -474,11 +475,11 @@ public class ClassifierDtoClassGenerator{
 			if(!property.multivalued){
 				
 				return '''
-				
+
 				@Map()
 				«codeAlias»
 				«codeName»: number;
-				
+
 				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«alias»
 				«name»: «ClassifierUtils.getDtoClassName(type)»;
@@ -489,7 +490,7 @@ public class ClassifierDtoClassGenerator{
 				@Map()
 				«codeAlias»
 				«codeName»: Array<number>;
-				
+
 				@Map(«ClassifierUtils.getDtoClassName(type)»)
 				«alias»
 				«name»: Array<«ClassifierUtils.getDtoClassName(type)»>;
@@ -505,14 +506,14 @@ public class ClassifierDtoClassGenerator{
 		if(!property.multivalued){
 			if(names.empty){
 				'''
-				
+
 				@Map()
 				@Alias("«fieldName»")
 				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
 				'''
 			}else{
 				'''
-				
+
 				@Map()
 				@Alias("«fieldName»", "«Utils.getListPoint(names)».«id.name»")
 				«fieldName»: «TypeUtils.getMetierTypescriptType(id.type)»;
@@ -539,7 +540,7 @@ public class ClassifierDtoClassGenerator{
 		}
 		if(!property.multivalued){
 			'''
-			
+
 			@Map()«alias»
 			«name»: «TypeUtils.getMetierTypescriptType(property.type)»;
 			'''
@@ -590,19 +591,19 @@ public class ClassifierDtoClassGenerator{
 		'''
 		
 		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)» {
-			
-			@Map()
-			«property.name»: «TypeUtils.getMetierTypescriptType(property.type)»;
-			«ids.fold("")[acc, id |
+
+		    @Map()
+		    «property.name»: «TypeUtils.getMetierTypescriptType(property.type)»;
+		    «ids.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«property.generateMultiValuedPrimitiveTypeDtoIdAttributes(id)»'''
 				}else{
 					acc + '''«property.generateMultiValuedPrimitiveTypeDtoIdAttributes(id)»'''
 				}
 			]»
-			
-			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
-			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+
+		    @Map(«ClassifierUtils.getDtoClassName(fromClass)»)
+		    «Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
 		}
 		'''
 	}
@@ -610,7 +611,7 @@ public class ClassifierDtoClassGenerator{
 	static def generateMultiValuedPrimitiveTypeDtoIdAttributes(Property property, Property id){
 		val idName = id.name
 		'''
-		
+
 		@Map()
 		«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
 		'''
@@ -660,26 +661,26 @@ public class ClassifierDtoClassGenerator{
 		'''
 		
 		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
-			«idsProp.fold("")[acc, id |
+		    «idsProp.fold("")[acc, id |
 				if(acc != ""){
 					acc + '''«member.generateNPTDtoIdAttributes(id)»'''
 				}else{
 					acc + '''«member.generateNPTDtoIdAttributes(id)»'''
 				}
 			]»
-			
-			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
-			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
-			«idsOwner.fold("")[acc, id |
+
+		    @Map(«ClassifierUtils.getDtoClassName(fromClass)»)
+		    «Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + '''«property.generateNPTDtoIdAttributes(id)»'''
 				}else{
 					acc + '''«property.generateNPTDtoIdAttributes(id)»'''
 				}
 			]»
-			
-			@Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
-			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
+
+		    @Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
+		    «Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
 		'''
 	}
@@ -689,7 +690,7 @@ public class ClassifierDtoClassGenerator{
 		val idName = Utils.addAdditionnalName(id.name, type.name)
 		if(type instanceof Classifier){
 			'''
-			
+
 			@Map()
 			«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
 			'''
@@ -704,26 +705,26 @@ public class ClassifierDtoClassGenerator{
 		'''
 		
 		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
-			«idsOwner.fold("")[acc, id |
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«id.generateNPTModelIdAttributes()»'''
 				}else{
 					acc + '''«id.generateNPTModelIdAttributes()»'''
 				}
 			]»
-			
-			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
-			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
-			«idsProp.fold("")[acc, id |
+
+		    @Map(«ClassifierUtils.getDtoClassName(fromClass)»)
+		    «Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+		    «idsProp.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«property.generateNPTDtoIdAttributes(id)»'''
 				}else{
 					acc + '''«property.generateNPTDtoIdAttributes(id)»'''
 				}
 			]»
-			
-			@Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
-			«Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
+
+		    @Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
+		    «Utils.getFirstToLowerCase(type.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
 		'''
 	}
@@ -733,7 +734,7 @@ public class ClassifierDtoClassGenerator{
 		if(type instanceof Classifier){
 			val idName = Utils.addAdditionnalName(id.name, type.name)
 			'''
-			
+
 			@Map()
 			«idName»: «TypeUtils.getMetierTypescriptType(id.type)»;
 			'''
@@ -751,13 +752,13 @@ public class ClassifierDtoClassGenerator{
 			val type = mem.type as Classifier
 			acc + 
 			'''
-			
+
 			@Map(«ClassifierUtils.getDtoClassName(type)»)
 			«Utils.getFirstToLowerCase(name)»: Array<«ClassifierUtils.getDtoClassName(type)»>;
 			'''
 		]
 		»
-		
+
 		@Map(«ClassifierUtils.getDtoClassName(clazz)»)
 		«Utils.getFirstToLowerCase(clazz.name)»: Array<«ClassifierUtils.getDtoClassName(clazz)»>;
 		'''
@@ -770,18 +771,18 @@ public class ClassifierDtoClassGenerator{
 		'''
 		
 		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
-			«idsOwner.fold("")[acc, id |
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«id.generateNPTModelIdAttributes()»'''
 				}else{
 					acc + '''«id.generateNPTModelIdAttributes()»'''
 				}
 			]»
-			
-			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
-			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
-			«(type as Classifier).generateAttributes(newArrayList(property.name), type as Classifier)»
-			
+
+		    @Map(«ClassifierUtils.getDtoClassName(fromClass)»)
+		    «Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+		    «(type as Classifier).generateAttributes(newArrayList(property.name), type as Classifier)»
+
 		}
 		'''
 	}
@@ -793,19 +794,19 @@ public class ClassifierDtoClassGenerator{
 		'''
 		
 		export class «PropertyUtils.getMultivaluedPropertyDtoName(property, fromClass)»{
-			«idsOwner.fold("")[acc, id |
+		    «idsOwner.fold("")[acc, id |
 				if(acc != ""){
 					acc + ''',«id.generateNPTModelIdAttributes()»'''
 				}else{
 					acc + '''«id.generateNPTModelIdAttributes()»'''
 				}
 			]»
-			
-			@Map(«ClassifierUtils.getDtoClassName(fromClass)»)
-			«Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
-			
-			@Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
-			«Utils.getFirstToLowerCase(property.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
+
+		    @Map(«ClassifierUtils.getDtoClassName(fromClass)»)
+		    «Utils.getFirstToLowerCase(fromClass.name)»: «ClassifierUtils.getDtoClassName(fromClass)»;
+
+		    @Map(«ClassifierUtils.getDtoClassName(type as Classifier)»)
+		    «Utils.getFirstToLowerCase(property.name)»: «ClassifierUtils.getDtoClassName(type as Classifier)»;
 		}
 		'''
 	}

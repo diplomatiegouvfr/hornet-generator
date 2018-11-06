@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.0 -> v1.3.2:
+
+### Fixed
+
+- Correction de la génération des DTO valueobject
+- Correction de la génération des classes metier pour des associations entre une entité et une nomenclature
+
+
 ## v1.3.0 -> v1.3.1:
 
 ### Fixed

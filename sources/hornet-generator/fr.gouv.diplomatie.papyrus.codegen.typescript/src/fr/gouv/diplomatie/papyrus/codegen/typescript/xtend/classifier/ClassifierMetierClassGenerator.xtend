@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
@@ -484,8 +484,13 @@ public class ClassifierMetierClassGenerator {
 			acc + 
 			'''
 			
+			«IF Utils.isNomenclature(type)»
+			@Map(«type.name»)
+			«Utils.getFirstToLowerCase(name)»: Array<«type.name»>;
+			«ELSE»
 			@Map(«ClassifierUtils.getMetierClassName(type)»)
 			«Utils.getFirstToLowerCase(name)»: Array<«ClassifierUtils.getMetierClassName(type)»>;
+			«ENDIF»
 			'''
 		]
 		»

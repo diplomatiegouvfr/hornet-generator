@@ -74,7 +74,7 @@
  * pour l'écriture d'un générateur de code Hornet
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.core.utils
@@ -96,7 +96,7 @@ class ClassifierUtils {
 	 * retourne le nom de la classe modèle liée à la classe
 	 */
 	static def getModelName(Classifier clazz){
-		return clazz.name + "Model"
+		return Utils.getFirstToLowerCase(clazz.name) + "Model"
 	}
 	
 	/**
