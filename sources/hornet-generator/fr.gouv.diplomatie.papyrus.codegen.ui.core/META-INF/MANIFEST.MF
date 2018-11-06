@@ -20,5 +20,5 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.109.0",
  org.eclipse.xtend.lib.macro
 Export-Package: fr.gouv.diplomatie.papyrus.codegen.ui.core.handlers,
  fr.gouv.diplomatie.papyrus.codegen.ui.core.validator
-Bundle-Version: 1.3.0
+Bundle-Version: 1.3.1
 
