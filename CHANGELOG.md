@@ -1,12 +1,12 @@
 # Changelog
 
-## v1.3.0 -> v1.3.2:
+## v1.3.1 -> v1.3.2:
 
 ### Fixed
 
-- Correction de la génération des DTO valueobject
-- Correction de la génération des classes metier pour des associations entre une entité et une nomenclature
-
+- Correction de la génération des DTO valueobject.
+- Correction de la génération des classes metier pour des associations entre une entité et une nomenclature.
+- correction génération modelDAO. problème de génération de nom d'id dans le cas d'un champ de type entité dans une entité.
 
 ## v1.3.0 -> v1.3.1:
 
