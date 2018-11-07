@@ -100,7 +100,6 @@ public class ClassifierDtoClassGenerator{
 		import Map from "hornet-js-bean/src/decorators/Map";
 		
 		«clazz.generateImports»
-		
 		@Bean
 		export class «ClassifierUtils.getDtoClassName(clazz)» «clazz.generateExtends»{
 		    «clazz.generateExtendsAttributes»
@@ -110,7 +109,6 @@ public class ClassifierDtoClassGenerator{
 		    «clazz.generateAssociationAttributes»
 		    «clazz.generateManyToManyAttributes»«ENDIF»
 		}
-		
 		«clazz.generateMultivaluedAttributeDto»
 		'''
 		//«clazz.generateOneToManyAttributes»
@@ -195,6 +193,7 @@ public class ClassifierDtoClassGenerator{
 			import { «ClassifierUtils.getDtoClassName(type as Classifier)» } from "«ClassifierUtils.getDtoClassPath(type as Classifier)»";
 			'''
 		]»
+
 		'''
 	}
 	

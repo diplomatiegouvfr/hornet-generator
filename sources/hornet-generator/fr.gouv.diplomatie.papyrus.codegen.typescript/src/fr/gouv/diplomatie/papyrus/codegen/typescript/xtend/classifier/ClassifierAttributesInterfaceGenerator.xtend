@@ -97,7 +97,7 @@ public class ClassifierAttributesInterfaceGenerator {
 		«clazz.generateImports»
 		
 		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» «clazz.generateExtends»{
-		    
+		
 		    «clazz.generateAttributes("")»
 
 		    «clazz.generateNotPrimitiveTypeAttributes("")»
