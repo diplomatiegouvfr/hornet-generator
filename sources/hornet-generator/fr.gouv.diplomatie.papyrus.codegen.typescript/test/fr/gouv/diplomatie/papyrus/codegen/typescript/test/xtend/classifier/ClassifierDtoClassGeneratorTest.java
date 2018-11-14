@@ -443,15 +443,15 @@ public class ClassifierDtoClassGeneratorTest {
 		id.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "\nexport class MaClasseTestDTO {\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	test: string;\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	id: string;\n" + 
-				"	\n" + 
-				"	@Map(maClasseDTO)\n" + 
-				"	maClasse: maClasseDTO;\n" + 
+				"\n" + 
+				"    @Map()\n" + 
+				"    test: string;\n" + 
+				"    \n" + 
+				"    @Map()\n" + 
+				"    id: string;\n" + 
+				"\n" + 
+				"    @Map(maClasseDTO)\n" + 
+				"    maClasse: maClasseDTO;\n" + 
 				"}\n";
 		assertEquals(expect, ClassifierDtoClassGenerator.generateMultiValuedPrimitiveTypeDto(prop, class_).toString());
 
@@ -490,12 +490,12 @@ public class ClassifierDtoClassGeneratorTest {
 		TestUtils.createAttribute(class_, "id", hmodel.stringPT, 0, 1);
 		
 		String expect = "\nexport class MaClasseTestDTO{\n" + 
-				"	\n" + 
-				"	@Map(maClasseDTO)\n" + 
-				"	maClasse: maClasseDTO;\n" + 
-				"	\n" + 
-				"	@Map(maClasse2DTO)\n" + 
-				"	maClasse2: maClasse2DTO;\n" + 
+				"\n" + 
+				"    @Map(maClasseDTO)\n" + 
+				"    maClasse: maClasseDTO;\n" + 
+				"\n" + 
+				"    @Map(maClasse2DTO)\n" + 
+				"    maClasse2: maClasse2DTO;\n" + 
 				"}\n";
 		assertEquals(expect, ClassifierDtoClassGenerator.generateNPTypeAssociationDto(prop, class_).toString());
 	}
@@ -534,18 +534,18 @@ public class ClassifierDtoClassGeneratorTest {
 		id2.applyStereotype(hmodel.keyAttribute);
 		
 		String expect = "\nexport class MaClasseTestDTO{\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	idMaClasse: string;\n" + 
-				"	\n" + 
-				"	@Map(maClasseDTO)\n" + 
-				"	maClasse: maClasseDTO;\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	id2MaClasse2: string;\n" + 
-				"	\n" + 
-				"	@Map(maClasse2DTO)\n" + 
-				"	maClasse2: maClasse2DTO;\n" + 
+				"    \n" + 
+				"    @Map()\n" + 
+				"    idMaClasse: string;\n" + 
+				"\n" + 
+				"    @Map(maClasseDTO)\n" + 
+				"    maClasse: maClasseDTO;\n" + 
+				"    \n" + 
+				"    @Map()\n" + 
+				"    id2MaClasse2: string;\n" + 
+				"\n" + 
+				"    @Map(maClasse2DTO)\n" + 
+				"    maClasse2: maClasse2DTO;\n" + 
 				"}\n";
 		assertEquals(expect, ClassifierDtoClassGenerator.generateNPTypeDto(prop, class_).toString());
 	}
@@ -583,17 +583,17 @@ public class ClassifierDtoClassGeneratorTest {
 		TestUtils.createAttribute(class2_, "test2", hmodel.stringPT, 0 , 1);
 		
 		String expect = "\nexport class MaClasseTestDTO{\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	idMaClasse: string;\n" + 
-				"	\n" + 
-				"	@Map(maClasseDTO)\n" + 
-				"	maClasse: maClasseDTO;\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	@Alias(\"test.test2\", \"testTest2\")\n" + 
-				"	testTest2: string;\n" + 
-				"	\n" + 
+				"    \n" + 
+				"    @Map()\n" + 
+				"    idMaClasse: string;\n" + 
+				"\n" + 
+				"    @Map(maClasseDTO)\n" + 
+				"    maClasse: maClasseDTO;\n" + 
+				"    \n" + 
+				"    @Map()\n" + 
+				"    @Alias(\"test.test2\", \"testTest2\")\n" + 
+				"    testTest2: string;\n" + 
+				"\n" + 
 				"}\n";
 		assertEquals(expect, ClassifierDtoClassGenerator.generateMultiValuedValueObjectDto(prop, class_).toString());
 	}
@@ -614,15 +614,15 @@ public class ClassifierDtoClassGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0 , -1);
 				
 		String expect = "\nexport class MaClasseTestDTO{\n" + 
-				"	\n" + 
-				"	@Map()\n" + 
-				"	idMaClasse: string;\n" + 
-				"	\n" + 
-				"	@Map(maClasseDTO)\n" + 
-				"	maClasse: maClasseDTO;\n" + 
-				"	\n" + 
-				"	@Map(maClasse2DTO)\n" + 
-				"	test: maClasse2DTO;\n" + 
+				"    \n" + 
+				"    @Map()\n" + 
+				"    idMaClasse: string;\n" + 
+				"\n" + 
+				"    @Map(maClasseDTO)\n" + 
+				"    maClasse: maClasseDTO;\n" + 
+				"\n" + 
+				"    @Map(maClasse2DTO)\n" + 
+				"    test: maClasse2DTO;\n" + 
 				"}\n";
 		assertEquals(expect, ClassifierDtoClassGenerator.generateMultiValuedEnumDto(prop, class_).toString());
 	}

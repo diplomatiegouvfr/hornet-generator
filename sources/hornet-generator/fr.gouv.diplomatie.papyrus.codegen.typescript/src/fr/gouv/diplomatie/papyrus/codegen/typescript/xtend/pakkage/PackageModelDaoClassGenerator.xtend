@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.pakkage;
@@ -710,8 +710,9 @@ class PackageModelDaoClassGenerator{
 				if(property.multivalued){
 					'''
 					«ids.fold("")[acc, id |
-						val idName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + Utils.toDbName(fromClass.name)
+						//val idName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + Utils.toDbName(fromClass.name)
 						var name = Utils.addAdditionnalName(additionnalName, property.name)
+						val idName = PropertyUtils.getDatabaseName(id, id.name, "") + "_" + Utils.toDbName(name)
 						if(property.association !== null){
 							val member = property.association.memberEnds.filter[member |
 								member.type == owner

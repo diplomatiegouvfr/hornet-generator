@@ -18,17 +18,17 @@ public class NomenclatureModelGeneratorTest {
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		class_.applyStereotype(hmodel.nomenclature);
 		
-		String expect = "import Sequelize = require(\"sequelize\");\n" + 
+		String expect = "import sequelize = require(\"sequelize\");\n" + 
 				"\n" + 
-				"export const maClasseModel: Sequelize.DefineAttributes={\n" + 
+				"export const maClasseModel: sequelize.DefineAttributes={\n" + 
 				"    code: {\n" + 
-				"        type: Sequelize.INTEGER,\n" + 
+				"        type: sequelize.INTEGER,\n" + 
 				"        field: \"code\",\n" + 
 				"        allowNull: false,\n" + 
 				"        primaryKey: true,\n" + 
 				"    },\n" + 
 				"    libelle: {\n" + 
-				"        type: Sequelize.TEXT,\n" + 
+				"        type: sequelize.TEXT,\n" + 
 				"        field: \"libelle\",\n" + 
 				"        allowNull: false,\n" + 
 				"    },\n" + 

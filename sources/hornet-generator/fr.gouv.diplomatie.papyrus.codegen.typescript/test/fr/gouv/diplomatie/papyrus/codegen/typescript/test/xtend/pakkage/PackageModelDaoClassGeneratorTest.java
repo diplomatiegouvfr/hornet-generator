@@ -41,7 +41,7 @@ public class PackageModelDaoClassGeneratorTest {
 		Property prop = TestUtils.createAttribute(class_, "test", hmodel.stringPT, 0, -1);
 		
 		String path = GeneratorUtils.getModelPath(class_, true);
-		String expect = "import { MaClasseTestModel } from \""+ path +"\";\n";
+		String expect = "import { maClasseTestModel } from \""+ path +"\";\n";
 		assertEquals(expect,PackageModelDaoClassGenerator.generateAttributImport(prop, class_).toString());
 	}
 
@@ -81,7 +81,7 @@ public class PackageModelDaoClassGeneratorTest {
 		Class class_ = TestUtils.createClass(hmodel.pckage, "maClasse", false);
 		Class class2_ = TestUtils.createClass(hmodel.pckage, "maClasse2", false);
 		Property prop = TestUtils.createAttribute(class_, "test", class2_, 0, -1);
-		String expect = "\n@Entity(\"ma_classe_test\", MaClasseTestModel)\n" + 
+		String expect = "\n@Entity(\"ma_classe_test\", maClasseTestModel)\n" + 
 				"public maClasseTestEntity: HornetSequelizeInstanceModel<any>;\n";
 		assertEquals(expect, PackageModelDaoClassGenerator.generateMultivaluedAttributEntityDeclaration(prop, class_).toString());
 	}

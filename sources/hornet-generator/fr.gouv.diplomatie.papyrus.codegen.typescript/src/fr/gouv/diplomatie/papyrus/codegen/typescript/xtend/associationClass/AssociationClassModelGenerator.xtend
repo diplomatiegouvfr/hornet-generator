@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.associationClass
@@ -93,9 +93,9 @@ public class AssociationClassModelGenerator {
 	
 	static def generateCode(AssociationClass clazz){
 		'''
-		import Sequelize = require("sequelize");
+		import sequelize = require("sequelize");
 		
-		export const «AssociationClassUtils.getModelName(clazz)»: Sequelize.DefineAttributes = {
+		export const «AssociationClassUtils.getModelName(clazz)»: sequelize.DefineAttributes = {
 		    «clazz.generateAttributes»
 		    «ClassifierModelGenerator.generateAttributes(clazz, "", "", clazz, false, false)»
 		};
@@ -160,7 +160,7 @@ public class AssociationClassModelGenerator {
 		val name = id.name + Utils.getFirstToUpperCase(property.name)
 		'''
 		«name»: {
-		    type: Sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
+		    type: sequelize.«TypeUtils.getSequelizeType(id.type)»«id.generateIdAttributeTypeLength»,
 		    field: "«fieldName»",
 		    allowNull: «PropertyUtils.isNullable(property)»,
 		    primaryKey: true,

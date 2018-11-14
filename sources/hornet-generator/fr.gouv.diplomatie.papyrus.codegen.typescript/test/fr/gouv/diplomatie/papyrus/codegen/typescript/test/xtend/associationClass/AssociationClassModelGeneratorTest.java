@@ -24,7 +24,7 @@ public class AssociationClassModelGeneratorTest {
 		Property id = TestUtils.createAttribute(class2_, "id", hmodel.integerPT, 0, 1);
 		
 		String expect = "idAtt: {\n" + 
-				"    type: Sequelize.STRING,\n" + 
+				"    type: sequelize.STRING,\n" + 
 				"    field: \"id_att\",\n" + 
 				"    allowNull: true,\n" + 
 				"    primaryKey: true,\n" + 

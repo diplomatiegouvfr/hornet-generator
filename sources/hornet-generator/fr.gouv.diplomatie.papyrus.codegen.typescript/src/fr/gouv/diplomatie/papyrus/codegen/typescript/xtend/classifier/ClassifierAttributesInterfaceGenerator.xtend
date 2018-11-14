@@ -74,7 +74,7 @@
  * des applications Hornet JS
  *
  * @author MEAE - Ministère de l'Europe et des Affaires étrangères
- * @version v1.2.1
+ * @version v1.3.2
  * @license CECILL-2.1
  */
 package fr.gouv.diplomatie.papyrus.codegen.typescript.xtend.classifier;
@@ -97,7 +97,7 @@ public class ClassifierAttributesInterfaceGenerator {
 		«clazz.generateImports»
 		
 		export interface «ClassifierUtils.getAttributesInterfaceName(clazz)» «clazz.generateExtends»{
-		    
+		
 		    «clazz.generateAttributes("")»
 
 		    «clazz.generateNotPrimitiveTypeAttributes("")»
